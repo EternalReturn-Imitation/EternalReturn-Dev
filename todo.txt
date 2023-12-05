@@ -1,0 +1,68 @@
+Script multi (완)
+Object Hierachy
+Object Create / Delete
+EventMgr
+DebugDraw
+CollisionMgr
+Collider2D
+Light2D
+StructuredBuffer
+TileMap
+Animator2D
+
+ComputeShader
+
+StructuredBuffer 개선
+ParticleSystem
+
+PostProcess
+
+
+Editor
+ - Editor Camera
+ - Level Status ( Play, Pause, Stop )
+ - Level Save / Load
+
+
+ImGui
+ - InspectorUI
+    - ComponentUI
+
+ - TreeUI
+   - OutlinerUI, ContentUI 에 활용
+
+ - OutlinerUI
+   - GameObject Hierachy 구조 표현
+
+ - ContentUI
+  - 로딩된 리소스 표현 및 Content 폴더 변경점 감시
+
+ - MenuBar
+  - Level Save Load, GameObject, Component 생성 및 추가
+  
+
+
+
+PARTICLE
+ - 파티클 스폰 모듈 ( 위치, 크기, 라이프 등등 랜덤 적용 )
+   파티클 초기값 세팅
+ 
+ - 파티클 스폰 영역 모듈
+ - 랜덤 포스 배율
+ - 색상 변화 모듈
+ - 크기 변화 모듈
+ - 
+
+PARTICLE RANDOM
+
+Compte Shader Sync
+
+
+
+
+
+
+
+
+
+
