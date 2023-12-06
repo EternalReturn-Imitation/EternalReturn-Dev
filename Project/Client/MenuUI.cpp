@@ -162,8 +162,15 @@ int MenuUI::render_update()
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Resource"))
+        {
+            if (ImGui::MenuItem("Create Emty Material"))
+            {
+                CreateEmptyMaterial();
+            }
 
-
+            ImGui::EndMenu();
+        }
 
         ImGui::EndMainMenuBar();
     }
@@ -183,6 +190,13 @@ void MenuUI::CreateEmptyObject()
 
     // 새로추가된 오브젝트를 데이터로 하는 노드가 추가되면, 선택상태로 두게 한다.
     outliner->SetSelectedNodeData(DWORD_PTR(pNewObject));    
+}
+
+void MenuUI::CreateEmptyMaterial()
+{
+    Ptr<CMaterial> pNewMtrl = new CMaterial;
+    CResMgr::GetInst()->AddRes<CMaterial>(L"material\\EmptyMtrl.mtrl", pNewMtrl);
+    pNewMtrl->Save(pNewMtrl->GetKey());
 }
 
 void MenuUI::AddComponent(COMPONENT_TYPE _type)

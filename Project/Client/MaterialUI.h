@@ -13,6 +13,9 @@ public:
 public:
     void SelectTexture(DWORD_PTR _Key);
 
+private:
+    void SelectShader(DWORD_PTR _data);
+
 public:
     MaterialUI();
     ~MaterialUI();

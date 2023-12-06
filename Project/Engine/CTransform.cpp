@@ -93,7 +93,7 @@ void CTransform::SaveToLevelFile(FILE* _File)
 	fwrite(&m_vRelativePos	, sizeof(Vec3), 1, _File);
 	fwrite(&m_vRelativeScale, sizeof(Vec3), 1, _File);
 	fwrite(&m_vRelativeRot	, sizeof(Vec3), 1, _File);
-	fwrite(&m_bAbsolute, sizeof(bool), 1, _File);	    
+	fwrite(&m_bAbsolute, sizeof(bool), 1, _File);
 }
 
 void CTransform::LoadFromLevelFile(FILE* _FILE)

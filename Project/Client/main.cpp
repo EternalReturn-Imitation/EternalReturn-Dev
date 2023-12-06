@@ -57,6 +57,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
     MSG msg;
 
+
+   
+
+
     while (true)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -77,7 +81,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             // 1 Frame
             // =======
             CEngine::GetInst()->progress();
-            CEditorObjMgr::GetInst()->progress();         
+            CEditorObjMgr::GetInst()->progress();       
+
+           
+
             ImGuiMgr::GetInst()->progress();            
             CDevice::GetInst()->Present(); // 렌더 종료
         }       

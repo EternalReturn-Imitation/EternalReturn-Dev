@@ -141,7 +141,7 @@ void CParticleSystem::render()
 	m_ModuleDataBuffer->UpdateData(21, PIPELINE_STAGE::PS_GEOMETRY);
 
 	// Particle Render	
-	Ptr<CTexture> pParticleTex = CResMgr::GetInst()->Load<CTexture>(L"Particle_0", L"texture\\particle\\AlphaCircle.png");
+	Ptr<CTexture> pParticleTex = CResMgr::GetInst()->Load<CTexture>(L"texture\\particle\\Bubbles99px.png", L"texture\\particle\\Bubbles99px.png");
 	GetMaterial()->SetTexParam(TEX_0, pParticleTex);
 
 	GetMaterial()->UpdateData();

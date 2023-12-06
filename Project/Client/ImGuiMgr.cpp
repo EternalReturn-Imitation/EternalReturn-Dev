@@ -75,15 +75,14 @@ void ImGuiMgr::init(HWND _hWnd)
     wstring strContentPath = CPathMgr::GetInst()->GetContentPath();
     m_hObserver = FindFirstChangeNotification(strContentPath.c_str(), true
         , FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME
-        | FILE_ACTION_REMOVED | FILE_ACTION_ADDED);    
+        | FILE_ACTION_REMOVED | FILE_ACTION_ADDED);   
 }
 
 void ImGuiMgr::progress()
 {
     begin();
-
+    
     tick();
-
     finaltick();
 
     render();

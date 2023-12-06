@@ -2,6 +2,8 @@
 #include "MaterialUI.h"
 
 #include "ParamUI.h"
+#include "TreeUI.h"
+#include "ListUI.h"
 
 #include <Engine\CResMgr.h>
 #include <Engine\CMaterial.h>
@@ -43,6 +45,42 @@ int MaterialUI::render_update()
         char szEmtpy[10] = {};
         ImGui::InputText("##ShaderUIName", szEmtpy, 10, ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
     }
+
+    // GraphicsShader 드랍 체크    
+    if (ImGui::BeginDragDropTarget())
+    {
+        // 해당 노드에서 마우스 뗀 경우, 지정한 PayLoad 키값이 일치한 경우
+        const ImGuiPayload* pPayLoad = ImGui::AcceptDragDropPayload("Resource");
+        if (pPayLoad)
+        {
+            TreeNode* pNode = (TreeNode*)pPayLoad->Data;
+            CRes* pRes = (CRes*)pNode->GetData();
+            if (RES_TYPE::GRAPHICS_SHADER == pRes->GetType())
+            {
+                ((CMaterial*)GetTargetRes().Get())->SetShader((CGraphicsShader*)pRes);
+            }
+        }
+
+        ImGui::EndDragDropTarget();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("##ShaderSelectBtn", ImVec2(18, 18)))
+    {
+        const map<wstring, Ptr<CRes>>& mapShader = CResMgr::GetInst()->GetResources(RES_TYPE::GRAPHICS_SHADER);
+
+        ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+        pListUI->Reset("GraphicsShader List", ImVec2(300.f, 500.f));
+        for (const auto& pair : mapShader)
+        {
+            pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+        }
+
+        // 항목 선택시 호출받을 델리게이트 등록
+        pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&MaterialUI::SelectShader);
+    }
+
 
     ImGui::NewLine();
     ImGui::Text("Parameter");
@@ -137,7 +175,12 @@ int MaterialUI::render_update()
         {
             m_eSelected = vecTexParam[i].eParam;
         }
-        //pMtrl->SetTexParam(vecTexParam[i].eParam, pCurTex);
+        pMtrl->SetTexParam(vecTexParam[i].eParam, pCurTex);
+    }
+
+    if (ImGui::Button("Save Material##MaterialSaveBtn", ImVec2(200, 18)))
+    {
+        pMtrl->Save(pMtrl->GetRelativePath());
     }
 
     return 0;
@@ -151,4 +194,11 @@ void MaterialUI::SelectTexture(DWORD_PTR _Key)
 
     Ptr<CMaterial> pMtrl = (CMaterial*)GetTargetRes().Get();
     pMtrl->SetTexParam(m_eSelected, pTex);
+}
+
+void MaterialUI::SelectShader(DWORD_PTR _data)
+{
+    string strKey = (char*)_data;
+    Ptr<CGraphicsShader> pShader = CResMgr::GetInst()->FindRes<CGraphicsShader>(wstring(strKey.begin(), strKey.end()));
+    ((CMaterial*)GetTargetRes().Get())->SetShader(pShader);
 }

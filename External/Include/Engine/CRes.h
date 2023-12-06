@@ -11,7 +11,7 @@ private:
     wstring         m_strKey;
     wstring         m_strRelativePath;
 
-    bool            m_bEngine;
+    bool            m_bEngine;  // 엔진이 관리하는 리소스
 
 private:
     void SetKey(const wstring& _strKey) { m_strKey = _strKey; }

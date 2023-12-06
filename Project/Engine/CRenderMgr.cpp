@@ -87,7 +87,6 @@ void CRenderMgr::render_editor()
     //   쉐이더 도메인에 따라서 렌더링 순서분류
     m_pEditorCam->SortObject();
 
-
     m_pEditorCam->render();    
 }
 

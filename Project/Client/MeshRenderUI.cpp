@@ -57,6 +57,8 @@ int MeshRenderUI::render_update()
 
 
 	ImGui::SameLine();
+	
+
 	if (ImGui::Button("##MeshSelectBtn", ImVec2(18, 18)))
 	{
 		const map<wstring, Ptr<CRes>>& mapMesh = CResMgr::GetInst()->GetResources(RES_TYPE::MESH);
@@ -87,7 +89,7 @@ int MeshRenderUI::render_update()
 			CRes* pRes = (CRes*)pNode->GetData();
 			if (RES_TYPE::MATERIAL == pRes->GetType())
 			{
-				GetTarget()->MeshRender()->SetMesh((CMesh*)pRes);
+				GetTarget()->MeshRender()->SetMaterial((CMaterial*)pRes);
 			}
 		}
 

@@ -169,8 +169,6 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
         vOutColor.rgb *= ParticleBuffer[_in.iInstID].vColor.rgb;
     }
     
-    vOutColor = float4(0.f, 1.f, 0.2f, 1.f);
-    
     return vOutColor;
 }
 
