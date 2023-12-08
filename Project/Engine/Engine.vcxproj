@@ -207,6 +207,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CSingleton.h" />
     <ClInclude Include="CSound.h" />
+    <ClInclude Include="CSQLMgr.h" />
     <ClInclude Include="CStructuredBuffer.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTileMap.h" />
@@ -260,6 +261,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CSetColorShader.cpp" />
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CSound.cpp" />
+    <ClCompile Include="CSQLMgr.cpp" />
     <ClCompile Include="CStructuredBuffer.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTileMap.cpp" />

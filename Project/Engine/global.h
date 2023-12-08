@@ -52,3 +52,7 @@ typedef Vector4 Vec4;
 #include "func.h"
 
 #include "CSingleton.h"
+
+#include "SQLLight/sqlite3.h"
+#pragma comment(lib, "SQLLite/sqlite3.lib")
+#pragma comment(lib, "SQLLite/sqlite3.dll")
