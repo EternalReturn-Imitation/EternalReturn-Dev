@@ -151,9 +151,6 @@
     <ClInclude Include="CFontMgr.h">
       <Filter>Source\03. Manager\10. FontMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CSQLMgr.h">
-      <Filter>Source\03. Manager\11. SQLMgr</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -288,8 +285,8 @@
     <ClCompile Include="CFontMgr.cpp">
       <Filter>Source\03. Manager\10. FontMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CSQLMgr.cpp">
-      <Filter>Source\03. Manager\11. SQLMgr</Filter>
+    <ClCompile Include="CResMgr_Init.cpp">
+      <Filter>Source\03. Manager\05. ResMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -434,9 +431,6 @@
     <Filter Include="Source\03. Manager\10. FontMgr">
       <UniqueIdentifier>{b1a42f85-f96c-490d-a570-365243b1a620}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\03. Manager\11. SQLMgr">
-      <UniqueIdentifier>{3f859635-884d-417c-8a6c-11bc87e91be3}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -476,6 +470,9 @@
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="test.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="std3d.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>
