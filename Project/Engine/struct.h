@@ -7,6 +7,10 @@ struct tVertex
 	Vec3 vPos;
 	Vec4 vColor;
 	Vec2 vUV;
+
+	Vec3 vNormal;
+	Vec3 vTangent;
+	Vec3 vBinormal;
 };
 
 typedef tVertex Vtx;

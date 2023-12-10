@@ -285,6 +285,9 @@
     <ClCompile Include="CFontMgr.cpp">
       <Filter>Source\03. Manager\10. FontMgr</Filter>
     </ClCompile>
+    <ClCompile Include="CResMgr_Init.cpp">
+      <Filter>Source\03. Manager\05. ResMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -467,6 +470,9 @@
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="test.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="std3d.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>
