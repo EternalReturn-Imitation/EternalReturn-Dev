@@ -6,6 +6,7 @@
 #include "CLight2D.h"
 #include "CCamera.h"
 #include "CAnimator2D.h"
+#include "CBehaviorTree.h"
 
 #include "CMeshRender.h"
 #include "CTileMap.h"

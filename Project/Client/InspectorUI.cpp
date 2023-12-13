@@ -149,7 +149,7 @@ void InspectorUI::SetTargetObject(CGameObject* _Target)
 	// 스크립트UI 가 스크립트 수 보다 적으면 그만큼 추가해준다.
 	if (m_vecScriptUI.size() < vecScript.size())
 	{
-		UINT iDiffer = vecScript.size() - m_vecScriptUI.size();
+		UINT iDiffer = (UINT)vecScript.size() - (UINT)m_vecScriptUI.size();
 		for (UINT i = 0; i < iDiffer; ++i)
 		{
 			ScriptUI* UI = new ScriptUI;

@@ -13,6 +13,7 @@ using std::map;
 using std::make_pair;
 using std::wstring;
 using std::string;
+using std::unordered_map;
 
 #include <typeinfo>
 #include <assert.h>

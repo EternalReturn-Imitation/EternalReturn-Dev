@@ -4,6 +4,8 @@
 #define DEVICE  CDevice::GetInst()->GetDevice()
 #define CONTEXT CDevice::GetInst()->GetDeviceContext()
 
+#define DELETE_UNVAILUBLE(key) if(key) { delete key; key = nullptr; }
+
 #define CLONE(type) public: virtual type* Clone() { return new type(*this); }
 #define CLONE_DISABLE(type) public: virtual type* Clone() { return nullptr; assert(nullptr); }
 
@@ -34,6 +36,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2차원 광원
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
+	BEHAVIORTREE,	// 행동트리
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링

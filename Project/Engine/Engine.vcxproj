@@ -172,6 +172,7 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClInclude Include="CAnim2D.h" />
     <ClInclude Include="CAnimator2D.h" />
+    <ClInclude Include="CBehaviorTree.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider2D.h" />
     <ClInclude Include="CCollisionMgr.h" />
@@ -224,6 +225,7 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClCompile Include="CAnim2D.cpp" />
     <ClCompile Include="CAnimator2D.cpp" />
+    <ClCompile Include="CBehaviorTree.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider2D.cpp" />
     <ClCompile Include="CCollisionMgr.cpp" />

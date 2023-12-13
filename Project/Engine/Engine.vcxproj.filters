@@ -151,6 +151,9 @@
     <ClInclude Include="CFontMgr.h">
       <Filter>Source\03. Manager\10. FontMgr</Filter>
     </ClInclude>
+    <ClInclude Include="CBehaviorTree.h">
+      <Filter>Source\06. Component\BehaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -287,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="CResMgr_Init.cpp">
       <Filter>Source\03. Manager\05. ResMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CBehaviorTree.cpp">
+      <Filter>Source\06. Component\BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +436,9 @@
     </Filter>
     <Filter Include="Source\03. Manager\10. FontMgr">
       <UniqueIdentifier>{b1a42f85-f96c-490d-a570-365243b1a620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\BehaviorTree">
+      <UniqueIdentifier>{cfbc5080-d40e-4c6f-bbe4-ce108bb031b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
