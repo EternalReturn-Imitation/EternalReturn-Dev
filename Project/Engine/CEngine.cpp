@@ -11,6 +11,7 @@
 #include "CRenderMgr.h"
 #include "CEventMgr.h"
 #include "CFontMgr.h"
+#include "CSQLMgr.h"
 
 CEngine::CEngine()
 	: m_hWnd(nullptr)
@@ -45,6 +46,8 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 
 	// Manager ÃÊ±âÈ­
 	CPathMgr::GetInst()->init();
+	
+	CSQLMgr::GetInst()->init();
 
 	CKeyMgr::GetInst()->init();
 

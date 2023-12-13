@@ -9,7 +9,7 @@ class CSQLMgr :
     SINGLE(CSQLMgr)
 
 public:
-    void Init();
+    void init();
 
 private:
     sqlite3* db;

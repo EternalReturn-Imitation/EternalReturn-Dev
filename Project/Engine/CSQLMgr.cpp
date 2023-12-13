@@ -11,16 +11,21 @@ CSQLMgr::CSQLMgr()
 
 CSQLMgr::~CSQLMgr()
 {
+	sqlite3_close(db);
 }
 
-void CSQLMgr::Init()
+void CSQLMgr::init()
 {
 	wstring strPath = CPathMgr::GetInst()->GetContentPath();
-	int rc = sqlite3_open("example.db", &db);
+	wstring upperPath = strPath + L"SQLLight\\EldenRing_DB.db";
+	
+	string stringResult;
+	stringResult.assign(upperPath.begin(), upperPath.end());
+
+	const char* cstr = stringResult.c_str();
+
+	int rc = sqlite3_open(cstr, &db);
 	if (rc) {
-		int a = 0;
-	}
-	else {
-		int a = 0;
+		assert(false);
 	}
 }
