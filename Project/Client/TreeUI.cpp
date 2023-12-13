@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "TreeUI.h"
 
-
-
 // ========
 // TreeNode
 // ========
@@ -44,6 +42,7 @@ void TreeNode::render_update()
 
     if (ImGui::TreeNodeEx(strFinalName.c_str(), flag))
     {
+
         // 해당 노드에 마우스 왼클릭이 발생하면 선택노드로 지정 준다.
         if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left))
         {            
@@ -86,8 +85,26 @@ void TreeNode::render_update()
 
             ImGui::EndDragDropTarget();
         }
+        
+        // 노드 상하 이동
+        if (m_Owner->m_ArrowBtn)
+        {
+            // 부모노드가 있고 동일계층 노드 수가 2개 이상인 경우
+            if (m_ParentNode && 1 < m_ParentNode->m_vecChildNode.size())
+            {
+                ImGui::SameLine();
+                if (ImGui::ArrowButtonSz("##up", ImGuiDir_Up, ImVec2(15, 15)))
+                {
 
+                }
 
+                ImGui::SameLine();
+                if (ImGui::ArrowButtonSz("##down", ImGuiDir_Down, ImVec2(15, 15)))
+                {
+
+                }
+            }
+        }
 
         for (size_t i = 0; i < m_vecChildNode.size(); ++i)
         {
@@ -110,6 +127,7 @@ TreeUI::TreeUI()
     , m_RootNode(nullptr)
     , g_NextId(0)
     , m_bShowRoot(true)
+    , m_ArrowBtn(false)
     , m_SelectedNode(nullptr)
     , m_dwPrevSelected(0)
     , m_SelectInst(nullptr)

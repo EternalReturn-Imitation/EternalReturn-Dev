@@ -3,7 +3,7 @@
 
 #include "ImGuiMgr.h"
 #include "InspectorUI.h"
-#include "NodeLinkerUI.h"
+#include "BehaviorTreeUI.h"
 
 #include <Engine\CEventMgr.h>
 #include <Engine\CLevelMgr.h>
@@ -88,8 +88,8 @@ void OutlinerUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 	InspectorUI* pInspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
 	pInspector->SetTargetObject(pSelectObject);
 
-	NodeLinkerUI* pNodeLinker = (NodeLinkerUI*)ImGuiMgr::GetInst()->FindUI("##NodeLinker");
-	pNodeLinker->SetTargetObject(pSelectObject);
+	BehaviorTreeUI* pBehaviorTree = (BehaviorTreeUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTree");
+	pBehaviorTree->SetTargetObject(pSelectObject);
 	
 }
 
@@ -119,11 +119,6 @@ CGameObject* OutlinerUI::GetSelectedObject()
 
 	return (CGameObject*)pSelectedNode->GetData();
 }
-
-
-
-
-
 
 void OutlinerUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 {

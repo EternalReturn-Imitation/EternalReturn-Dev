@@ -55,6 +55,7 @@ private:
     TreeNode*       m_RootNode; // 트리가 소유하고 있는 노드 중 루트 노드
     UINT            g_NextId;   // 생성되는 노드뒤에 붙여줄 고유 숫자
     bool            m_bShowRoot;
+    bool            m_ArrowBtn; // 화살표 버튼 유무
 
     TreeNode*       m_SelectedNode;
     TreeNode*       m_LbtDownNode;
@@ -80,6 +81,7 @@ public:
     void Clear();
     TreeNode* AddItem(const string& _strNodeName, DWORD_PTR _Data, TreeNode* _pParent = nullptr);
     void ShowRoot(bool _Show) { m_bShowRoot = _Show; }
+    void ShowArrowBtn(bool _Show) { m_ArrowBtn = _Show; }
 
     void AddDynamic_Select(UI* _UI, UI_DELEGATE_1 _MemFunc)
     {

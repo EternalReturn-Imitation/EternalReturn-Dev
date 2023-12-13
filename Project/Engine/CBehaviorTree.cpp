@@ -120,6 +120,21 @@ BTNode* CBehaviorTree::NodeAttach(BTNode* TargetNode, NODETYPE eType)
 	return NewAttachNode;
 }
 
+bool BTNode::IsAncestor(BTNode* _Node)
+{
+	BTNode* pParent = m_ParentNode;
+	while (pParent)
+	{
+		if (pParent == _Node)
+		{
+			return true;
+		}
+		pParent = pParent->m_ParentNode;
+	}
+
+	return false;
+}
+
 void BTNode::DisconnectFromParent()
 {
 	if (!m_ParentNode)

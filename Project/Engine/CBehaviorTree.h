@@ -136,8 +136,12 @@ protected:
 public:
     virtual BT_STATUS Run() = 0;
     
+    BTNode* GetParentNode() { return m_ParentNode; }
+
     BTNode* GetChildNode() { return m_ChildNode; }
     list<BTNode*> GetChildNodes() { return m_ChildNodes; }
+
+    bool IsAncestor(BTNode* _Node);
 
     void SetParentNode(BTNode* _ParentNode) { m_ParentNode = _ParentNode; }
 
@@ -202,6 +206,8 @@ public:
     virtual BTNode* AddChildNode(BTNode* pNode)
     {
         m_ChildNodes.emplace_back(pNode);
+        pNode->SetParentNode(this);
+
         return pNode;
     }
 

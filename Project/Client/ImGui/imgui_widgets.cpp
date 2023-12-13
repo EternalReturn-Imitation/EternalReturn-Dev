@@ -803,6 +803,11 @@ bool ImGui::ArrowButton(const char* str_id, ImGuiDir dir)
     return ArrowButtonEx(str_id, dir, ImVec2(sz, sz), ImGuiButtonFlags_None);
 }
 
+bool ImGui::ArrowButtonSz(const char* str_id, ImGuiDir dir, ImVec2 size_arg)
+{
+    return ArrowButtonEx(str_id, dir, size_arg, ImGuiButtonFlags_None);
+}
+
 // Button to close a window
 bool ImGui::CloseButton(ImGuiID id, const ImVec2& pos)
 {

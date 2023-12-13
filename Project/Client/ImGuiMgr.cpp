@@ -148,9 +148,10 @@ void ImGuiMgr::render()
 #include "InspectorUI.h"
 #include "ContentUI.h"
 #include "OutlinerUI.h"
-#include "NodeLinkerUI.h"
 #include "ListUI.h"
 #include "MenuUI.h"
+
+#include "BehaviorTreeUI.h"
 
 void ImGuiMgr::CreateUI()
 {
@@ -182,10 +183,11 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
-    // NodeLinkder
-    pUI = new NodeLinkerUI;
+    // BehaviorTree
+    pUI = new BehaviorTreeUI;
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
 
 
     for (const auto& pair : m_mapUI)
