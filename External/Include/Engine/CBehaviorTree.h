@@ -42,36 +42,7 @@ enum class BT_STATUS
     RUNNING,
 };
 
-class BTNode
-{
-private:
-    int         m_iProgressIdx; // 실행 인덱스
-    wstring     m_NodeName;     // 노드 이름
-    NODETYPE    m_NodeType;     // 노드 타입
-    BTNode*     m_ParentNode;   // 부모노드
-    CBehaviorTree* m_OwnerBT;   // 소유한 BehaviorTree Component
-
-private:
-    void SetRunningNode(); 
-
-protected:
-    BTNode* GetParentNode() { return m_ParentNode; }
-    void SetParentNode(BTNode* pNode) { m_ParentNode = pNode; }
-
-public:
-    NODETYPE GetNodeType() { return m_NodeType; }
-    void SetNodeName(const wstring& NodeName) { m_NodeName = NodeName; }
-
-    virtual BT_STATUS Run() = 0;
-    void SetOwnerTree(CBehaviorTree* OwnerTree) { m_OwnerBT = OwnerTree; }
-    void SetBehaviorTree(CBehaviorTree* pBehaviorTree) { m_OwnerBT = pBehaviorTree; }
-    CBehaviorTree* GetBehaviorTree() { return m_OwnerBT; }
-
-
-public:
-    BTNode(NODETYPE eType) : m_iProgressIdx(-1), m_NodeType(eType), m_ParentNode(nullptr), m_OwnerBT(nullptr) { m_NodeName = L"NoName"; }
-    ~BTNode() {}
-};
+// ========================= 블랙보드 클래스 =========================
 class BB
 {
 private:
@@ -146,11 +117,51 @@ public:
     BB() {}
     ~BB() { ClearCreatedItem(); }
 };
+
+// ========================= 기본 노드 =========================
+class BTNode
+{
+private:
+    int             m_iProgressIdx; // 실행 인덱스
+    wstring         m_NodeName;     // 노드 이름
+    NODETYPE        m_NodeType;     // 노드 타입
+    CBehaviorTree*  m_OwnerBT;      // 소유한 BehaviorTree Component
+
+protected:
+    BTNode*         m_ParentNode;   // 부모노드
+    BTNode*         m_AttachedNode; // 데코레이터,서비스 노드 장착
+    BTNode*         m_ChildNode;    // 단일 자식
+    list<BTNode*>   m_ChildNodes;   // 복수 자식목록
+
+public:
+    virtual BT_STATUS Run() = 0;
+    
+    BTNode* GetChildNode() { return m_ChildNode; }
+    list<BTNode*> GetChildNodes() { return m_ChildNodes; }
+
+    void SetParentNode(BTNode* _ParentNode) { m_ParentNode = _ParentNode; }
+
+    NODETYPE GetNodeType() { return m_NodeType; }
+    
+    const wstring& GetNodeName() { return m_NodeName; }
+    CBehaviorTree* GetBehaviorTree() { return m_OwnerBT; }
+    
+    void SetNodeName(const wstring& NodeName) { m_NodeName = NodeName; }
+    void SetBehaviorTree(CBehaviorTree* pBehaviorTree) { m_OwnerBT = pBehaviorTree; }
+
+    void DisconnectFromParent();
+
+
+public:
+    BTNode(NODETYPE eType) : m_iProgressIdx(-1), m_NodeType(eType), m_OwnerBT(nullptr), m_ParentNode(nullptr), m_ChildNode(nullptr), m_AttachedNode(nullptr) { m_NodeName = L"NoName"; }
+    virtual ~BTNode();
+};
+
+// ========================= 루트 노드 =========================
 class Root_Node : public BTNode
 {
 private:
     BB* m_BlackBoard;
-    BTNode* m_ChildNode;
     BTNode* m_RunningNode;
 
 public:
@@ -171,55 +182,66 @@ public:
         return BT_STATUS::NONE;
     };
     
+    void AddChildNode(BTNode* pNode);
     void SetRunningNode(BTNode* pNode) { m_RunningNode = pNode; }
     BB* GetBlackBoard() { return m_BlackBoard; }
 
 public:
-    Root_Node() : BTNode(NODETYPE::ROOT), m_BlackBoard(nullptr), m_ChildNode(nullptr), m_RunningNode(nullptr) { m_BlackBoard = new BB(); }
-    ~Root_Node() { DELETE_UNVAILUBLE(m_BlackBoard); DELETE_UNVAILUBLE(m_ChildNode); m_RunningNode = nullptr; }
+    Root_Node() : BTNode(NODETYPE::ROOT), m_BlackBoard(nullptr), m_RunningNode(nullptr) { m_BlackBoard = new BB(); }
+    virtual ~Root_Node() { DELETE_UNVAILUBLE(m_BlackBoard); m_RunningNode = nullptr; }
 };
+
+// ========================= 컴포짓 노드 =========================
 #pragma region Composite Node
 // 분기의 루트와 해당 분기가 실행되는 방식의 기본 규칙
 class Composite_Node : public BTNode
 {
-protected:
-    Decorator_Node* m_AttachedNode; // 데코레이터 노드 장착
-    list<BTNode*> m_ChildNodes;     // 자식노드
-
 public:
     virtual BT_STATUS Run();
-    virtual void NodeAttach(Decorator_Node* pNode);
-    virtual void AddChildNode(BTNode* pNode)
+    virtual BTNode* NodeAttach(BTNode* pNode);
+    virtual BTNode* AddChildNode(BTNode* pNode)
     {
         m_ChildNodes.emplace_back(pNode);
+        return pNode;
     }
 
 public:
-    Composite_Node() : BTNode(NODETYPE::COMPOSITE), m_AttachedNode(nullptr) {}
-    ~Composite_Node() {}
+    Composite_Node() : BTNode(NODETYPE::COMPOSITE) {}
+    virtual ~Composite_Node() {}
 };
 
 class Selector : public Composite_Node
 {
 public:
     virtual BT_STATUS Run();
+
+public:
+    Selector() { SetNodeName(L"NewSelectorNode"); }
+    virtual ~Selector() {}
 };
 
 class Sequence : public Composite_Node
 {
 public:
     virtual BT_STATUS Run();
+
+public:
+    Sequence() { SetNodeName(L"NewSequenceNode"); }
 };
 
 class RandomSelector : public Composite_Node
 {
 public:
     virtual BT_STATUS Run();
+
+public:
+    RandomSelector() { SetNodeName(L"NewRandomSelectorNode"); }
 };
 
 #pragma endregion
+
+// ========================= 데코레이터 노드 =========================
 #pragma region Decorator Node
-// 조건식
 class Decorator_Node : public BTNode
 {
 private:
@@ -227,7 +249,7 @@ private:
 
 public:
     Decorator_Node() : BTNode(NODETYPE::DECORATOR) {}
-    ~Decorator_Node() {}
+    virtual ~Decorator_Node() {}
     
 };
 // ===============================
@@ -243,10 +265,12 @@ public:
     
 public:
     Compare_BBEntries() : IsEqualTo(false) {}
-    ~Compare_BBEntries() {}
+    virtual ~Compare_BBEntries() {}
 };
 
 #pragma endregion
+
+// ========================= 서비스 노드 =========================
 #pragma region Service Node
 // 컴포짓 노드에 어태치, 블랙보드의 확인 및 업데이트에 사용.
 class Service_Node : public BTNode
@@ -256,26 +280,27 @@ private:
 
 public:
     Service_Node() : BTNode(NODETYPE::SERVICE) {}
-    ~Service_Node() {}
+    virtual ~Service_Node() {}
 
 };
 #pragma endregion
+
+// ========================= 테스크(리프) 노드 =========================
 #pragma region Task Node
-// 리프노드
 class Task_Node : public BTNode
 {
-protected:
-    Decorator_Node* m_AttachedNode; // 데코레이터 노드 장착
-
 public:
     virtual BT_STATUS Run();
+    virtual BTNode* NodeAttach(BTNode* pNode);
 
 public:
-    Task_Node() : BTNode(NODETYPE::TASK), m_AttachedNode(nullptr) {}
-    ~Task_Node() {}
+    Task_Node() : BTNode(NODETYPE::TASK) { SetNodeName(L"NewTaskNode"); }
+    virtual ~Task_Node() {}
 };
 #pragma endregion
 
+
+// ========================= 행동트리 컴포넌트 =========================
 class CBehaviorTree :
     public CComponent
 {
@@ -291,11 +316,9 @@ public:
     virtual void finaltick();
 
 public:
-    void SetRunningNode(BTNode* pNode) { m_RootNode->SetRunningNode(pNode); }
-    void AddChildNode(BTNode* ParentNode, NODETYPE eType);
-    void NodeAttach(BTNode* TargetNode ,NODETYPE eType);
-    void SetNodeName(const wstring& name);
-
+    BTNode* AddChildNode(BTNode* ParentNode, NODETYPE eType);
+    BTNode* NodeAttach(BTNode* TargetNode, NODETYPE eType);
+    BTNode* GetRootNode() { return m_RootNode; }
 
 public:
     template<typename T>

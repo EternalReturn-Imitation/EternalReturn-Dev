@@ -23,6 +23,7 @@
 #include "ComputeShaderUI.h"
 #include "MaterialUI.h"
 #include "ScriptUI.h"
+#include "BehaviorTreeUI.h"
 
 
 
@@ -61,6 +62,10 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP] = new TileMapUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP]);
+
+	m_arrComUI[(UINT)COMPONENT_TYPE::BEHAVIORTREE] = new BehaviorTreeUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::BEHAVIORTREE]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::BEHAVIORTREE]);
 
 	// ResUI
 	m_arrResUI[(UINT)RES_TYPE::MESHDATA] = new MeshDataUI;

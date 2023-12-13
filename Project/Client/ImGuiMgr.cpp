@@ -148,6 +148,7 @@ void ImGuiMgr::render()
 #include "InspectorUI.h"
 #include "ContentUI.h"
 #include "OutlinerUI.h"
+#include "NodeLinkerUI.h"
 #include "ListUI.h"
 #include "MenuUI.h"
 
@@ -175,10 +176,14 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(true);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
-
     // ListUI
     pUI = new ListUI;
     pUI->SetModal(true);
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    // NodeLinkder
+    pUI = new NodeLinkerUI;
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 

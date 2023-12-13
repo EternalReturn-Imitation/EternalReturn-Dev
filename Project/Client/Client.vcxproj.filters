@@ -110,6 +110,12 @@
     <Filter Include="Manager\LevelSaveLoad">
       <UniqueIdentifier>{bd45bcb0-5b2d-4b83-a548-af8817de8f6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\BehaviorTreeUI">
+      <UniqueIdentifier>{fda887b2-66c7-4bb9-ba7a-4422d8633a12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\NodeLinkerUI">
+      <UniqueIdentifier>{24e2bcc7-4061-4a37-a48c-f4aded1b1455}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -232,6 +238,12 @@
     </ClInclude>
     <ClInclude Include="CLevelSaveLoad.h">
       <Filter>Manager\LevelSaveLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\BehaviorTreeUI</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeLinkerUI.h">
+      <Filter>UI\NodeLinkerUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -363,6 +375,12 @@
     </ClCompile>
     <ClCompile Include="CLevelSaveLoad.cpp">
       <Filter>Manager\LevelSaveLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTreeUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\BehaviorTreeUI</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeLinkerUI.cpp">
+      <Filter>UI\NodeLinkerUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

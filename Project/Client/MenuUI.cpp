@@ -237,6 +237,9 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
     case COMPONENT_TYPE::CAMERA:
         pSelectedObject->AddComponent(new CCamera);
         break;
+    case COMPONENT_TYPE::BEHAVIORTREE:
+        pSelectedObject->AddComponent(new CBehaviorTree);
+        break;
     case COMPONENT_TYPE::MESHRENDER:
         pSelectedObject->AddComponent(new CMeshRender);
         break;
