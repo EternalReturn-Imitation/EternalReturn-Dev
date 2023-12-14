@@ -176,7 +176,7 @@
     <ClInclude Include="MeshRenderUI.h" />
     <ClInclude Include="MeshUI.h" />
     <ClInclude Include="NodeInfoUI.h" />
-    <ClInclude Include="BehaviorTreeUI.h" />
+    <ClInclude Include="BehaviorTreeListUI.h" />
     <ClInclude Include="OutlinerUI.h" />
     <ClInclude Include="ParamUI.h" />
     <ClInclude Include="pch.h" />
@@ -222,7 +222,7 @@
     <ClCompile Include="MeshRenderUI.cpp" />
     <ClCompile Include="MeshUI.cpp" />
     <ClCompile Include="NodeInfoUI.cpp" />
-    <ClCompile Include="BehaviorTreeUI.cpp" />
+    <ClCompile Include="BehaviorTreeListUI.cpp" />
     <ClCompile Include="OutlinerUI.cpp" />
     <ClCompile Include="ParamUI.cpp" />
     <ClCompile Include="pch.cpp">

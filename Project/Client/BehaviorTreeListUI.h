@@ -5,7 +5,7 @@ class TreeUI;
 class TreeNode;
 class BTNode;
 
-class BehaviorTreeUI :
+class BehaviorTreeListUI :
     public UI
 {
 private:
@@ -35,7 +35,7 @@ private:
     void DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode);
 
 public:
-    BehaviorTreeUI();
-    virtual ~BehaviorTreeUI();
+    BehaviorTreeListUI();
+    virtual ~BehaviorTreeListUI();
 };
 

@@ -15,7 +15,7 @@
 #include "ImGuiMgr.h"
 #include "OutlinerUI.h"
 #include "InspectorUI.h"
-#include "BehaviorTreeUI.h"
+#include "BehaviorTreeListUI.h"
 #include "CLevelSaveLoad.h"
 
 
@@ -107,9 +107,9 @@ int MenuUI::render_update()
 
             ImGui::Separator();
 
-            if (ImGui::MenuItem("BehaviorTree Window"))
+            if (ImGui::MenuItem("AiTree Window"))
             {
-                BehaviorTreeUI* pNodeUI = (BehaviorTreeUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTree");
+                BehaviorTreeListUI* pNodeUI = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
                 pNodeUI->SetActive(true);
                 pNodeUI->ResetNodeLinker();
             }

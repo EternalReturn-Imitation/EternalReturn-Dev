@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "BehaviorTreeUI.h"
+#include "BehaviorTreeListUI.h"
 
 #include "ImGuiMgr.h"
 #include "InspectorUI.h"
@@ -8,41 +8,43 @@
 
 #include "TreeUI.h"
 
-BehaviorTreeUI::BehaviorTreeUI()
-	: UI("##BehaviorTree")
+BehaviorTreeListUI::BehaviorTreeListUI()
+	: UI("##BehaviorTreeList")
 	, m_Tree(nullptr)
 	, m_dwSelectedData(0)
 	, m_RootNode(0)
 {
-	SetName("BehaviorTree");
+	SetName("BehaviorTreeList");
 	
 	m_Tree = new TreeUI;
 	m_Tree->SetName("BehaviorTree");
 	m_Tree->SetActive(true);
 	m_Tree->ShowRoot(true);
 	m_Tree->ShowArrowBtn(true);
+	m_Tree->ShowGroupIdx(true);
 
-	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&BehaviorTreeUI::SetTargetToInspector);
-	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&BehaviorTreeUI::DragDrop);
+	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&BehaviorTreeListUI::SetTargetToInspector);
+	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&BehaviorTreeListUI::DragDrop);
 	m_Tree->SetDragDropID("BTNode");
+
 
 	AddChildUI(m_Tree);
 }
 
-BehaviorTreeUI::~BehaviorTreeUI()
+BehaviorTreeListUI::~BehaviorTreeListUI()
 {
 }
 
-void BehaviorTreeUI::tick()
+void BehaviorTreeListUI::tick()
 {
 }
 
-int BehaviorTreeUI::render_update()
+int BehaviorTreeListUI::render_update()
 {
 	return 0;
 }
 
-void BehaviorTreeUI::ResetNodeLinker()
+void BehaviorTreeListUI::ResetNodeLinker()
 {
 	SetSize(300.f, 500.f);
 
@@ -54,7 +56,7 @@ void BehaviorTreeUI::ResetNodeLinker()
 		AddNode((BTNode*)m_RootNode, nullptr);
 }
 
-void BehaviorTreeUI::SetTargetObject(CGameObject* _Target)
+void BehaviorTreeListUI::SetTargetObject(CGameObject* _Target)
 {
 	// ClearTargetResource()
 
@@ -69,27 +71,56 @@ void BehaviorTreeUI::SetTargetObject(CGameObject* _Target)
 	ResetNodeLinker();
 }
 
-void BehaviorTreeUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
+void BehaviorTreeListUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 {
 	TreeNode* pSelectedNode = (TreeNode*)_SelectedNode;
 }
 
-BTNode* BehaviorTreeUI::GetSelectedNode()
+BTNode* BehaviorTreeListUI::GetSelectedNode()
 {
 	return nullptr;
 }
 
-void BehaviorTreeUI::AddNode(BTNode* _Node, TreeNode* _ParentNode)
+void BehaviorTreeListUI::AddNode(BTNode* _Node, TreeNode* _ParentNode)
 {
+
 	// 노드를 트리에 넣고, 생성된 노드 주소를 받아둔다.
 	TreeNode* pNode = m_Tree->AddItem(string(_Node->GetNodeName().begin(), _Node->GetNodeName().end())
 									, (DWORD_PTR)_Node
 									, _ParentNode);
 
+
+	switch (_Node->GetNodeType())
+	{
+	case NODETYPE::ROOT:
+		pNode->SetNodeColor(0);
+		break;
+	case NODETYPE::COMPOSITE:
+		pNode->SetNodeColor(4);
+		break;
+	case NODETYPE::TASK:
+		pNode->SetNodeColor(5);
+		break;
+	}
+	
+
+	int	NodeGroupIdx = 1;
+	
+	if (_ParentNode != nullptr)
+	{
+		NodeGroupIdx = _ParentNode->GetChildNodeSize() + 1;
+		_ParentNode->SetChildNodeSize(NodeGroupIdx);
+	}
+
+	pNode->SetGroupIdx(NodeGroupIdx);
+
+
 	// 노드의 자식노드들을 기존 노드를 부모로해서 그 밑으로 다시 넣어준다.
 	BTNode* ChildNode = _Node->GetChildNode();
 	if (ChildNode)
+	{
 		AddNode(ChildNode, pNode);
+	}
 
 	list<BTNode*> ChildNodes = _Node->GetChildNodes();
 	if (!(ChildNodes.empty()))
@@ -99,11 +130,12 @@ void BehaviorTreeUI::AddNode(BTNode* _Node, TreeNode* _ParentNode)
 		for (; iter != ChildNodes.end(); ++iter)
 		{
 			AddNode(*iter, pNode);
+			NodeGroupIdx++;
 		}
 	}
 }
 
-void BehaviorTreeUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
+void BehaviorTreeListUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 {
 	TreeNode* pDragNode = (TreeNode*)_DragNode;
 	TreeNode* pDropNode = (TreeNode*)_DropNode;
@@ -122,6 +154,8 @@ void BehaviorTreeUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 		if (pDropBT->IsAncestor(pDragBT))
 			return;
 	}
+	else if (nullptr == pDropBT)
+		return;
 
 	// 행동트리 노드 변경
 	if ((pDragBT->GetParentNode() == pDropBT)
@@ -138,4 +172,3 @@ void BehaviorTreeUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 	m_Tree->Clear();
 	AddNode((BTNode*)m_RootNode, nullptr);
 }
-

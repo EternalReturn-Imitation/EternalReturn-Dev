@@ -239,7 +239,7 @@
     <ClInclude Include="CLevelSaveLoad.h">
       <Filter>Manager\LevelSaveLoad</Filter>
     </ClInclude>
-    <ClInclude Include="BehaviorTreeUI.h">
+    <ClInclude Include="BehaviorTreeListUI.h">
       <Filter>UI\BehaviorTreeUI</Filter>
     </ClInclude>
     <ClInclude Include="NodeInfoUI.h">
@@ -376,7 +376,7 @@
     <ClCompile Include="CLevelSaveLoad.cpp">
       <Filter>Manager\LevelSaveLoad</Filter>
     </ClCompile>
-    <ClCompile Include="BehaviorTreeUI.cpp">
+    <ClCompile Include="BehaviorTreeListUI.cpp">
       <Filter>UI\BehaviorTreeUI</Filter>
     </ClCompile>
     <ClCompile Include="NodeInfoUI.cpp">

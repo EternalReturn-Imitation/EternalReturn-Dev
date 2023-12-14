@@ -3,7 +3,7 @@
 
 #include "ImGuiMgr.h"
 #include "InspectorUI.h"
-#include "BehaviorTreeUI.h"
+#include "BehaviorTreeListUI.h"
 
 #include <Engine\CEventMgr.h>
 #include <Engine\CLevelMgr.h>
@@ -88,8 +88,8 @@ void OutlinerUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 	InspectorUI* pInspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
 	pInspector->SetTargetObject(pSelectObject);
 
-	BehaviorTreeUI* pBehaviorTree = (BehaviorTreeUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTree");
-	pBehaviorTree->SetTargetObject(pSelectObject);
+	BehaviorTreeListUI* pBehaviorTreeList = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
+	pBehaviorTreeList->SetTargetObject(pSelectObject);
 	
 }
 

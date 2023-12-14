@@ -7,10 +7,15 @@
 TreeNode::TreeNode()
     : m_Owner(nullptr)
     , m_ParentNode(nullptr)
+    , m_CurGroupIdx(0)
+    , m_ChildNodeSize(0)
+    , m_NodeColorNum(0)
     , m_ID(0)
     , m_Data(0)
     , m_CategoryNode(false)
     , m_Hilight(false)    
+    , m_ColorChange(false)
+    , m_bHovered(false)
 {
 }
 
@@ -40,9 +45,123 @@ void TreeNode::render_update()
     if(m_Hilight || m_CategoryNode)
         flag |= ImGuiTreeNodeFlags_Selected;
 
+    flag |= ImGuiTreeNodeFlags_SpanAvailWidth;
+    
+    ImGui::Text("%d", m_CurGroupIdx);
+    ImGui::SameLine();
+    
+    // 노드 상하 이동
+    if (m_Owner->m_ArrowBtn)
+    {
+        
+        float FrmHeight = ImGui::GetFrameHeight();
+        ImVec2 BtnSize = { FrmHeight,FrmHeight };
+
+        // 부모노드가 있고 동일계층 노드 수가 2개 이상인 경우
+        if (m_ParentNode && 1 < m_ParentNode->m_vecChildNode.size())
+        {
+            // 두번째 순서부터
+            if (m_CurGroupIdx > 1)
+            {
+                if (ImGui::ArrowButtonSz("##Up", ImGuiDir_Up, BtnSize))
+                {
+                    /*
+                    vector<TreeNode*>::iterator iter = m_ParentNode->m_vecChildNode.begin();
+
+                    if (this != *iter)
+                    {
+                        TreeNode* BeforeNode = nullptr;
+
+                        while (iter != m_ParentNode->m_vecChildNode.end())
+                        {
+                            if (*iter == this)
+                                break;
+
+                            BeforeNode = *iter;
+                            iter++;
+                        }
+
+                        if (m_Owner->m_SwapInst && m_Owner->m_SwapFunc)
+                            (m_Owner->m_SwapInst->*m_Owner->m_SwapFunc)((DWORD_PTR)BeforeNode, (DWORD_PTR)this);
+                    }
+                    */
+                }
+            }
+            else
+            {
+                ImGui::InvisibleButton("##", BtnSize);
+            }
+
+            // 동일 그룹 마지막 순서인 경우
+            if (m_CurGroupIdx == m_ParentNode->m_vecChildNode.size())
+            {
+                ImGui::SameLine();
+                ImGui::InvisibleButton("##", BtnSize);
+            }
+            else
+            {
+                ImGui::SameLine();
+                if (ImGui::ArrowButtonSz("##Down", ImGuiDir_Down, BtnSize))
+                {
+                    /*
+                    vector<TreeNode*>::reverse_iterator iter = m_ParentNode->m_vecChildNode.rbegin();
+
+                    if (this != *iter)
+                    {
+                        TreeNode* AfterNode = nullptr;
+
+                        while (iter != m_ParentNode->m_vecChildNode.rend())
+                        {
+                            if (*iter == this)
+                                break;
+
+                            AfterNode = *iter;
+                            iter++;
+                        }
+
+                        if (m_Owner->m_SwapInst && m_Owner->m_SwapFunc)
+                            (m_Owner->m_SwapInst->*m_Owner->m_SwapFunc)((DWORD_PTR)this, (DWORD_PTR)AfterNode);
+                    }
+                    */
+                }
+            }
+        }
+    }
+    ImGui::SameLine();
+
+    // 노드 색상 변경
+    int ChangCnt = 0;
+    if (m_ColorChange)
+    {
+        if (!m_Hilight && !m_bHovered)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.9f, 0.9f));
+            ChangCnt += 1;
+        }
+
+        ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.6f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.7f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.8f, 0.8f));
+        ChangCnt += 3;
+    }
+
+
     if (ImGui::TreeNodeEx(strFinalName.c_str(), flag))
     {
+        if (ImGui::IsItemHovered())
+            m_bHovered = true;
+        else
+            m_bHovered = false;
+        
 
+        // 노드 색상이 변경되었으면 해제처리
+        if (0 < ChangCnt)
+        {
+            ImGui::PopStyleColor(ChangCnt);
+            ChangCnt = 0;
+        }
+    
+        
         // 해당 노드에 마우스 왼클릭이 발생하면 선택노드로 지정 준다.
         if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left))
         {            
@@ -58,6 +177,8 @@ void TreeNode::render_update()
             m_Owner->m_dwPrevSelected = 0;
             m_Owner->SetSelectedNode(this);
         }
+
+        
 
         // 해당 노드 위에서 드래그 스타트 체크
         if (ImGui::BeginDragDropSource())
@@ -85,26 +206,6 @@ void TreeNode::render_update()
 
             ImGui::EndDragDropTarget();
         }
-        
-        // 노드 상하 이동
-        if (m_Owner->m_ArrowBtn)
-        {
-            // 부모노드가 있고 동일계층 노드 수가 2개 이상인 경우
-            if (m_ParentNode && 1 < m_ParentNode->m_vecChildNode.size())
-            {
-                ImGui::SameLine();
-                if (ImGui::ArrowButtonSz("##up", ImGuiDir_Up, ImVec2(15, 15)))
-                {
-
-                }
-
-                ImGui::SameLine();
-                if (ImGui::ArrowButtonSz("##down", ImGuiDir_Down, ImVec2(15, 15)))
-                {
-
-                }
-            }
-        }
 
         for (size_t i = 0; i < m_vecChildNode.size(); ++i)
         {
@@ -113,7 +214,13 @@ void TreeNode::render_update()
 
         ImGui::TreePop();
     }
-
+    
+    // 노드 색상이 변경되었으면 해제처리 : if문에 들어가지 않아 해제되지 않았을 경우 예외처리
+    if (0 < ChangCnt)
+    {
+        ImGui::PopStyleColor(ChangCnt);
+        ChangCnt = 0;
+    }
 }
 
 
@@ -128,12 +235,18 @@ TreeUI::TreeUI()
     , g_NextId(0)
     , m_bShowRoot(true)
     , m_ArrowBtn(false)
+    , m_GroupIdx(false)
     , m_SelectedNode(nullptr)
+    , m_LbtDownNode(nullptr)
+    , m_DragNode(nullptr)
+    , m_DropNode(nullptr)
     , m_dwPrevSelected(0)
     , m_SelectInst(nullptr)
     , m_SelectFunc(nullptr)    
     , m_DragDropInst(nullptr)
     , m_DragDropFunc(nullptr)
+    , m_SwapInst(nullptr)
+    , m_SwapFunc(nullptr)
 {   
     m_strDragDropID = "PayLoad";
 }
@@ -272,6 +385,15 @@ void TreeUI::SetDragNode(TreeNode* _Node)
 void TreeUI::SetDropNode(TreeNode* _Node)
 {
     m_DropNode = _Node;
+}
+
+void TreeUI::SwapBefore(TreeNode* _Node)
+{
+    
+}
+
+void TreeUI::SwapAfter(TreeNode* _Node)
+{
 }
 
 bool TreeUI::GetSelectedNode(DWORD_PTR _Data)
