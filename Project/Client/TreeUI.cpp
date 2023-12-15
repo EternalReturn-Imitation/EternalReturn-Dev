@@ -135,7 +135,7 @@ void TreeNode::render_update()
     {
         if (!m_Hilight && !m_bHovered)
         {
-            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.9f, 0.9f));
+            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.5f, 0.9f));
             ChangCnt += 1;
         }
 
