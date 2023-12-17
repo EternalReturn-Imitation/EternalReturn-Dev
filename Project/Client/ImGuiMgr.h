@@ -42,5 +42,8 @@ private:
     void tick();
     void finaltick();
     void render();
+
+public:
+    void InitInspector();
 };
 
