@@ -1,0 +1,25 @@
+주어진 설명을 기반으로 ER(엔티티-관계) 관계도를 작성할 때, 각 테이블(엔티티)와 그들 사이의 관계를 고려해야 합니다. 여기서는 네 개의 테이블이 있으며, 각 테이블은 다음과 같은 속성을 가집니다:
+
+Level 테이블:
+
+속성: Level ID (기본 키), Level Name
+관계: 각 Level은 여러 Layer를 가질 수 있습니다.
+Layer 테이블:
+
+속성: Layer ID (기본 키), Layer Name, Level ID (외래 키)
+관계: 각 Layer는 여러 GameObject를 가질 수 있습니다.
+GameObject 테이블:
+
+속성: GameObject ID (기본 키), GameObject Name, Layer ID (외래 키)
+관계: 각 GameObject는 여러 Component를 가질 수 있습니다.
+Component 테이블:
+
+속성: Component ID (기본 키), Component Type, GameObject ID (외래 키), 기타 필요한 속성들
+관계: 각 Component는 특정 GameObject에 속합니다.
+ER 관계도
+Level - Layer 관계: 일대다 (One-to-Many). 하나의 Level은 여러 Layer를 포함할 수 있습니다.
+Layer - GameObject 관계: 일대다 (One-to-Many). 하나의 Layer는 여러 GameObject를 포함할 수 있습니다.
+GameObject - Component 관계: 일대다 (One-to-Many). 하나의 GameObject는 여러 Component를 포함할 수 있습니다.
+이 관계들은 ER 다이어그램에서 선으로 표시되며, 일대다 관계는 "1"과 "N"으로 표시됩니다. 이러한 구조는 게임 개발과 같은 복잡한 시스템에서 매우 일반적입니다. 각 엔티티는 고유한 ID(기본 키)를 가지고, 상위 엔티티와의 연결을 위한 외래 키를 포함합니다.
+
+실제 다이어그램을 그릴 때는 전문적인 ER 다이어그램 도구를 사용하여 보다 명확하고 시각적으로 표현할 수 있습니다.

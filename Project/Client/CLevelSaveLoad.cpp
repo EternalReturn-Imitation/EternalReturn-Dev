@@ -10,6 +10,7 @@
 #include <Engine\CScript.h>
 
 #include <Script\CScriptMgr.h>
+#include <Engine/CSQLMgr.h>
 
 
 
@@ -108,6 +109,18 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 	{
 		SaveGameObject(vecChild[i], _File);		
 	}
+
+	return 0;
+}
+
+int CLevelSaveLoad::SaveLevelToDB(const wstring& _LevelPath, CLevel* _Level)
+{
+	if (_Level->GetState() != LEVEL_STATE::STOP)
+		return E_FAIL;
+
+	CSQLMgr::GetInst()->DeleteAllRecordToAllTable();
+
+	CSQLMgr::GetInst()->InsertToLevel(_Level->GetName());
 
 	return 0;
 }
