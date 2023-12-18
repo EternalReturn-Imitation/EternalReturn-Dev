@@ -21,9 +21,9 @@
 
 
 MenuUI::MenuUI()
-	: UI("##Menu")
+    : UI("##Menu")
 {
-	SetName("Menu");
+    SetName("Menu");
 }
 
 MenuUI::~MenuUI()
@@ -47,7 +47,7 @@ int MenuUI::render_update()
             if (ImGui::MenuItem("Save Level"))
             {
                 // Level 저장
-                CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());                
+                CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
             }
 
             if (ImGui::MenuItem("Load Level"))
@@ -60,6 +60,8 @@ int MenuUI::render_update()
                 evn.wParam = (DWORD_PTR)pLoadedLevel;
 
                 CEventMgr::GetInst()->AddEvent(evn);
+
+                ImGuiMgr::GetInst()->InitInspector();
             }
 
             ImGui::EndMenu();
@@ -73,7 +75,7 @@ int MenuUI::render_update()
             }
             ImGui::Separator();
 
-            
+
             if (ImGui::BeginMenu("Add Component"))
             {
                 for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
@@ -92,7 +94,7 @@ int MenuUI::render_update()
             {
                 vector<wstring> vecScripts;
                 CScriptMgr::GetScriptInfo(vecScripts);
-                
+
                 for (size_t i = 0; i < vecScripts.size(); ++i)
                 {
                     string strScriptName = string(vecScripts[i].begin(), vecScripts[i].end());
@@ -101,7 +103,7 @@ int MenuUI::render_update()
                         AddScript(vecScripts[i]);
                     }
                 }
-                
+
                 ImGui::EndMenu();
             }
 
@@ -146,7 +148,7 @@ int MenuUI::render_update()
 
 
             if (ImGui::MenuItem("Play", nullptr, nullptr, PlayEnable))
-            {                
+            {
                 CLevelSaveLoad::SaveLevel(L"Level\\Temp.lv", CurLevel);
                 CurLevel->ChangeState(LEVEL_STATE::PLAY);
             }
@@ -158,7 +160,7 @@ int MenuUI::render_update()
             {
                 CurLevel->ChangeState(LEVEL_STATE::STOP);
                 CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Level\\Temp.lv");
-             
+
                 tEvent evn = {};
                 evn.Type = EVENT_TYPE::LEVEL_CHANGE;
                 evn.wParam = DWORD_PTR(pNewLevel);
@@ -185,7 +187,7 @@ int MenuUI::render_update()
         ImGui::EndMainMenuBar();
     }
 
-	return 0;
+    return 0;
 }
 
 void MenuUI::CreateEmptyObject()
@@ -199,7 +201,7 @@ void MenuUI::CreateEmptyObject()
     OutlinerUI* outliner = (OutlinerUI*)ImGuiMgr::GetInst()->FindUI("##Outliner");
 
     // 새로추가된 오브젝트를 데이터로 하는 노드가 추가되면, 선택상태로 두게 한다.
-    outliner->SetSelectedNodeData(DWORD_PTR(pNewObject));    
+    outliner->SetSelectedNodeData(DWORD_PTR(pNewObject));
 }
 
 void MenuUI::CreateEmptyMaterial()
@@ -264,7 +266,7 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         break;
     case COMPONENT_TYPE::DECAL:
         //pSelectedObject->AddComponent(new CDecal);
-        break;            
+        break;
     }
 
     // Inspector 에 새롭게 추가된 컴포넌트를 알리기 위해서 타겟을 다시 알려준다.

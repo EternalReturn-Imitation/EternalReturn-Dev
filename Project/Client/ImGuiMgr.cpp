@@ -13,7 +13,7 @@
 
 
 ImGuiMgr::ImGuiMgr()
-    : m_hMainHwnd(nullptr)   
+    : m_hMainHwnd(nullptr)
     , m_hObserver(nullptr)
 {
 
@@ -75,13 +75,13 @@ void ImGuiMgr::init(HWND _hWnd)
     wstring strContentPath = CPathMgr::GetInst()->GetContentPath();
     m_hObserver = FindFirstChangeNotification(strContentPath.c_str(), true
         , FILE_NOTIFY_CHANGE_FILE_NAME | FILE_NOTIFY_CHANGE_DIR_NAME
-        | FILE_ACTION_REMOVED | FILE_ACTION_ADDED);   
+        | FILE_ACTION_REMOVED | FILE_ACTION_ADDED);
 }
 
 void ImGuiMgr::progress()
 {
     begin();
-    
+
     tick();
     finaltick();
 
@@ -90,8 +90,6 @@ void ImGuiMgr::progress()
     // Content 폴더 변경 감시
     ObserveContent();
 }
-
-
 
 void ImGuiMgr::begin()
 {
@@ -107,7 +105,7 @@ void ImGuiMgr::tick()
     for (const auto& pair : m_mapUI)
     {
         pair.second->tick();
-    }    
+    }
 }
 
 void ImGuiMgr::finaltick()
@@ -121,7 +119,7 @@ void ImGuiMgr::finaltick()
         if (pair.second->IsActive())
         {
             pair.second->finaltick();
-        }        
+        }
     }
 
     if (KEY_TAP(KEY::ENTER))
@@ -206,7 +204,7 @@ void ImGuiMgr::ObserveContent()
         ContentUI* UI = (ContentUI*)FindUI("##Content");
         UI->Reload();
 
-        FindNextChangeNotification(m_hObserver);        
+        FindNextChangeNotification(m_hObserver);
     }
 }
 
@@ -215,8 +213,16 @@ UI* ImGuiMgr::FindUI(const string& _UIName)
 {
     map<string, UI*>::iterator iter = m_mapUI.find(_UIName);
 
-    if(iter == m_mapUI.end())
+    if (iter == m_mapUI.end())
         return nullptr;
 
     return iter->second;
+}
+
+void ImGuiMgr::InitInspector()
+{
+    for (const auto& pair : m_mapUI)
+    {
+        pair.second->init();
+    }
 }
