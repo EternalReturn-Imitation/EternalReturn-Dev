@@ -102,3 +102,29 @@ void CCollider2D::LoadFromLevelFile(FILE* _File)
 	fread(&m_bAbsolute, sizeof(bool), 1, _File);
 	fread(&m_Shape, sizeof(UINT), 1, _File);
 }
+
+void CCollider2D::SaveToDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	wstring wOffsetPos = Vec3ToWString(m_vOffsetPos);
+	wstring wOffsetScale = Vec3ToWString(m_vOffsetScale);
+	int bAbsolute = m_bAbsolute;
+	wstring wColliderType = ToWString(m_Shape);
+
+	wstring query = L"INSERT INTO COLLIDER2D(GameObject_ID, Pos, Scale, Absolute, ColliderType) VALUES("
+		+ std::to_wstring(_gameObjectID) + L","
+		+ L"'" + wOffsetPos + L"',"
+		+ L"'" + wOffsetScale + L"',"
+		+ std::to_wstring(bAbsolute) + L","
+		+ L"'" + wColliderType + L"');";
+
+	CONVERTQUERY(query, Query);
+
+	char* errMsg;
+	EXECQUERY(Query, errMsg);
+}
+
+void CCollider2D::LoadToDB(int _gameObjectID)
+{
+}

@@ -51,6 +51,9 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
+    virtual void SaveToDB(int _gameObjectID) override;
+    virtual void LoadToDB(int _gameObjectID) override;
+
     CLONE(CTransform);
 public:
     CTransform();

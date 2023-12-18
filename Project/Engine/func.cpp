@@ -136,6 +136,16 @@ const char* ToString(COMPONENT_TYPE type)
 	return COMPONENT_TYPE_STR[(UINT)type];
 }
 
+const char* ToString(COLLIDER2D_TYPE type)
+{
+	return COLLIDER2D_TYPE_STR[(UINT)type];
+}
+
+const wchar_t* ToWString(COLLIDER2D_TYPE type)
+{
+	return COLLIDER2D_TYPE_WSTR[(UINT)type];
+}
+
 void SaveWString(const wstring& _str, FILE* _File)
 {	
 	UINT iLen = (UINT)_str.length();
@@ -173,4 +183,9 @@ void SaveResRef(Ptr<CRes> _Res, FILE* _File)
 const wchar_t* ToWString(COMPONENT_TYPE type)
 {
 	return COMPONENT_TYPE_WSTR[(UINT)type];
+}
+
+std::wstring Vec3ToWString(const Vec3& vec) {
+	wstring result = std::to_wstring(vec.x) + L"," + std::to_wstring(vec.y) + L"," + std::to_wstring(vec.z);
+	return result;
 }

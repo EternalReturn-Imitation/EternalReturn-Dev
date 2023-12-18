@@ -103,3 +103,29 @@ void CTransform::LoadFromLevelFile(FILE* _FILE)
 	fread(&m_vRelativeRot, sizeof(Vec3), 1, _FILE);
 	fread(&m_bAbsolute, sizeof(bool), 1, _FILE);
 }
+
+void CTransform::SaveToDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	wstring wRelativePos = Vec3ToWString(m_vRelativePos);
+	wstring wRelativeScale = Vec3ToWString(m_vRelativeScale);
+	wstring wRelativeRot = Vec3ToWString(m_vRelativeRot);
+	int bAbsolute = m_bAbsolute;
+
+	wstring query = L"INSERT INTO TRANSFORM(GameObject_ID, Pos, Scale, Rot, Absolute) VALUES("
+		+ std::to_wstring(_gameObjectID) + L","
+		+ L"'" + wRelativePos + L"',"
+		+ L"'" + wRelativeScale + L"',"
+		+ L"'" + wRelativeRot + L"',"
+		+ std::to_wstring(bAbsolute) + L");";
+
+	CONVERTQUERY(query, Query);
+
+	char* errMsg;
+	EXECQUERY(Query, errMsg);
+}
+
+void CTransform::LoadToDB(int _gameObjectID)
+{
+}

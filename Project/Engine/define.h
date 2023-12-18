@@ -51,7 +51,6 @@ enum class COMPONENT_TYPE
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];
 extern const wchar_t* COMPONENT_TYPE_WSTR[(UINT)COMPONENT_TYPE::END];
 
-
 enum class RES_TYPE
 {
 	MESHDATA,
@@ -227,8 +226,11 @@ enum class COLLIDER2D_TYPE
 {
 	RECT,
 	CIRCLE,
+	END,
 };
 
+extern const char* COLLIDER2D_TYPE_STR[(UINT)COLLIDER2D_TYPE::END];
+extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COLLIDER2D_TYPE::END];
 
 enum class LIGHT_TYPE
 {

@@ -3,6 +3,20 @@
 
 #include <SQLLight/sqlite3.h>
 
+//쿼리 실행 매크로
+#define EXECQUERY(Query, ErrMsg)		\
+	if (sqlite3_exec(db, Query, 0, 0, &ErrMsg) != SQLITE_OK)	\
+		{ \
+			assert(false);	\
+		}
+
+//wstring to query 매크로
+#define CONVERTQUERY(wstring, Query)	\
+	string sQuery;	\
+	sQuery.assign(query.begin(), query.end());		\
+	\
+	const char* Query = sQuery.c_str();	
+
 class CSQLMgr :
     public CSingleton<CSQLMgr>
 {
@@ -23,6 +37,9 @@ public:
     void SelectToComponent();
 
     void DeleteAllRecordToAllTable();
+
+public:
+    sqlite3* GetDB() { return db; }
 
 private:
     sqlite3* db;

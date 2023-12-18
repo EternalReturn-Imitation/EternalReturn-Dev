@@ -150,6 +150,21 @@ int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object)
 	//게임오브젝트 저장
 	int gameObjectId = CSQLMgr::GetInst()->InsertToGameObject(_layerID, _Object->GetName());
 
+	// 컴포넌트
+	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		CComponent* Com = _Object->GetComponent((COMPONENT_TYPE)i);
+		if (nullptr == Com)
+			continue;
+
+		// 컴포넌트 타입 저장
+		//fwrite(&i, sizeof(UINT), 1, _File);
+
+		// 컴포넌트 정보 저장
+		//Com->SaveToLevelFile(_File);
+	}
+
+
 	return 0;
 }
 

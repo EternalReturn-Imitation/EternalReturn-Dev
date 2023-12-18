@@ -133,3 +133,14 @@ void CAnimator2D::LoadFromLevelFile(FILE* _File)
 
 	m_pCurAnim = FindAnim(strCurAnimName);		
 }
+
+void CAnimator2D::SaveToDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+
+}
+
+void CAnimator2D::LoadToDB(int _gameObjectID)
+{
+}
