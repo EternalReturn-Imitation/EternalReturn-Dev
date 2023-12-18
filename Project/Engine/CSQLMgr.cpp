@@ -37,7 +37,7 @@ void CSQLMgr::init()
 	}
 }
 
-void CSQLMgr::InsertToLevel(wstring _levelName)
+int CSQLMgr::InsertToLevel(wstring _levelName)
 {
 	wstring query = L"INSERT INTO Level(Level_Name) VALUES('" + _levelName + L"');";
 
@@ -49,15 +49,43 @@ void CSQLMgr::InsertToLevel(wstring _levelName)
 	char* errMsg;
 	EXECQUERY(cQuery, errMsg);
 
+	long long insertedId = sqlite3_last_insert_rowid(db);
 
+	return insertedId;
 }
 
-void CSQLMgr::InsertToLayer(int _levelID, wstring _layerName)
+int CSQLMgr::InsertToLayer(int _levelID, wstring _layerName)
 {
+	wstring query = L"INSERT INTO Layer(Layer_Name, Level_ID) VALUES('" + _layerName + L" '," + std::to_wstring(_levelID)+ L");";
+
+	string sQuery;
+	sQuery.assign(query.begin(), query.end());
+
+	const char* cQuery = sQuery.c_str();
+
+	char* errMsg;
+	EXECQUERY(cQuery, errMsg);
+
+	long long insertedId = sqlite3_last_insert_rowid(db);
+
+	return insertedId;
 }
 
-void CSQLMgr::InsertToGameObject(int _layerID, wstring _levelName)
+int CSQLMgr::InsertToGameObject(int _layerID, wstring _gameObjectName)
 {
+	wstring query = L"INSERT INTO GameObject(GameObject_Name, Layer_ID) VALUES('" + _gameObjectName + L" '," + std::to_wstring(_layerID) + L");";
+
+	string sQuery;
+	sQuery.assign(query.begin(), query.end());
+
+	const char* cQuery = sQuery.c_str();
+
+	char* errMsg;
+	EXECQUERY(cQuery, errMsg);
+
+	long long insertedId = sqlite3_last_insert_rowid(db);
+
+	return insertedId;
 }
 
 void CSQLMgr::InsertToComponent(int _gameObjectID, int _type, wstring _attribute)
@@ -70,5 +98,20 @@ void CSQLMgr::DeleteAllRecordToAllTable()
 	const char* cQuery = sQuery.c_str();
 
 	char* errMsg;
+	EXECQUERY(cQuery, errMsg);
+
+	sQuery = "DELETE FROM Layer;";
+	cQuery = sQuery.c_str();
+
+	EXECQUERY(cQuery, errMsg);
+
+	sQuery = "DELETE FROM GameObject;";
+	cQuery = sQuery.c_str();
+
+	EXECQUERY(cQuery, errMsg);
+
+	sQuery = "DELETE FROM Component;";
+	cQuery = sQuery.c_str();
+
 	EXECQUERY(cQuery, errMsg);
 }

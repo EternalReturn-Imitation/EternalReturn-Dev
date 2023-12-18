@@ -12,9 +12,9 @@ public:
     void init();
 
 public:
-    void InsertToLevel(wstring _levelName);
-    void InsertToLayer(int _levelID, wstring _layerName);
-    void InsertToGameObject(int _layerID, wstring _levelName);
+    int InsertToLevel(wstring _levelName);
+    int InsertToLayer(int _levelID, wstring _layerName);
+    int InsertToGameObject(int _layerID, wstring _gameObjectName);
     void InsertToComponent(int _gameObjectID, int _type, wstring _attribute);
 
     void SelectFromLevel();

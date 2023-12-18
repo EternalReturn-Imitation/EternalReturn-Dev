@@ -118,9 +118,37 @@ int CLevelSaveLoad::SaveLevelToDB(const wstring& _LevelPath, CLevel* _Level)
 	if (_Level->GetState() != LEVEL_STATE::STOP)
 		return E_FAIL;
 
+	//기존 데이터 삭제
 	CSQLMgr::GetInst()->DeleteAllRecordToAllTable();
 
-	CSQLMgr::GetInst()->InsertToLevel(_Level->GetName());
+	//레벨 저장
+	int levelId = CSQLMgr::GetInst()->InsertToLevel(_Level->GetName());
+
+	// 레벨의 레이어 저장
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		CLayer* pLayer = _Level->GetLayer(i);
+
+		// 레이어 저장
+		int layerId = CSQLMgr::GetInst()->InsertToLayer(levelId, pLayer->GetName());
+
+		// 레이어의 게임오브젝트들 저장
+		const vector<CGameObject*>& vecParent = pLayer->GetParentObject();
+
+		// 각 게임오브젝트
+		for (size_t i = 0; i < vecParent.size(); ++i)
+		{
+			SaveGameObjectToDB(layerId, vecParent[i]);
+		}
+	}
+
+	return 0;
+}
+
+int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object)
+{
+	//게임오브젝트 저장
+	int gameObjectId = CSQLMgr::GetInst()->InsertToGameObject(_layerID, _Object->GetName());
 
 	return 0;
 }
