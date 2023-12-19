@@ -102,7 +102,6 @@ void CreateTestLevel()
 	pParent->SetName(L"Player");
 	pParent->AddComponent(new CTransform);
 	pParent->AddComponent(new CMeshRender);
-	pParent->AddComponent(new CBehaviorTree);
 	pParent->AddComponent(new CPlayerScript);
 
 	pParent->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));

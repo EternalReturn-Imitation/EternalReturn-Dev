@@ -294,6 +294,9 @@
     <ClCompile Include="CBehaviorTree.cpp">
       <Filter>Source\06. Component\BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviorTreeFunc.cpp">
+      <Filter>Source\06. Component\BehaviorTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">

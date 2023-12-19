@@ -4,7 +4,7 @@
 #include "ImGuiMgr.h"
 #include "InspectorUI.h"
 
-#include <Engine\CBehaviorTree.h>
+#include <Engine/CBehaviorTree.h>
 
 #include "TreeUI.h"
 
@@ -26,7 +26,6 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&BehaviorTreeListUI::SetTargetToInspector);
 	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&BehaviorTreeListUI::DragDrop);
 	m_Tree->SetDragDropID("BTNode");
-
 
 	AddChildUI(m_Tree);
 }
@@ -115,14 +114,7 @@ void BehaviorTreeListUI::AddNode(BTNode* _Node, TreeNode* _ParentNode)
 	pNode->SetGroupIdx(NodeGroupIdx);
 
 
-	// 노드의 자식노드들을 기존 노드를 부모로해서 그 밑으로 다시 넣어준다.
-	BTNode* ChildNode = _Node->GetChildNode();
-	if (ChildNode)
-	{
-		AddNode(ChildNode, pNode);
-	}
-
-	list<BTNode*> ChildNodes = _Node->GetChildNodes();
+	list<BTNode*> ChildNodes = _Node->GetChild();
 	if (!(ChildNodes.empty()))
 	{
 		list<BTNode*>::iterator iter = ChildNodes.begin();
@@ -151,22 +143,13 @@ void BehaviorTreeListUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 	// AddChild 처리하지 않는다.
 	if (nullptr != pDropBT)
 	{
-		if (pDropBT->IsAncestor(pDragBT))
+		if (pDropBT->IsAncestorNode(pDragBT))
 			return;
 	}
 	else if (nullptr == pDropBT)
 		return;
 
-	// 행동트리 노드 변경
-	if ((pDragBT->GetParentNode() == pDropBT)
-		|| (NODETYPE::COMPOSITE != pDropBT->GetNodeType())
-		|| (NODETYPE::ROOT == pDropBT->GetNodeType()))
-		return;
-
-	Composite_Node* ParentNode = dynamic_cast<Composite_Node*>(pDropBT);
-	pDragBT->DisconnectFromParent();
-
-	ParentNode->AddChildNode(pDragBT);
+	pDropBT->AddChild(pDragBT);
 
 	// AddChild
 	m_Tree->Clear();

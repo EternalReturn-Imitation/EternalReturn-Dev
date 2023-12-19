@@ -6,45 +6,74 @@
 #pragma endregion
 
 #pragma region BT_NODE
+BTNode::BTNode(NODETYPE eType)
+	: m_NodeType(eType)
+	, m_RootNode(nullptr)
+	, m_NodeFlag(0)
+	, m_Parent(nullptr)
+	, m_ChildCnt(0)
+{
+}
+
 BTNode::~BTNode()
+{
+	for (const auto& node : m_Child)
 	{
-		for (const auto& node : m_Child)
-		{
-			delete node;
-		}
+		delete node;
 	}
-bool BTNode::IsAncestor(BTNode* _Node)
-	{
-		BTNode* pParent = m_Parent;
-		while (pParent)
-		{
-			if (pParent == _Node)
-			{
-				return true;
-			}
-			pParent = pParent->m_Parent;
-		}
+}
 
-		return false;
-	}
-void BTNode::DisconnectFromParent()
+void BTNode::MoveFront()
+{
+	if (!m_Parent 
+		|| m_Parent->m_ChildCnt <= 1
+		|| m_Parent->m_Child.front() == this)
+		return;
+
+	list<BTNode*>::iterator iter = m_Parent->m_Child.begin();
+
+	while (iter != m_Parent->m_Child.end())
 	{
-		if (!m_Parent)
+		if (*iter == this)
+		{
+			iter = m_Parent->m_Child.erase(iter);
+			iter--;
+
+			m_Parent->m_Child.insert(iter, this);
 			return;
-
-		list<BTNode*>::iterator iter = m_Parent->m_Child.begin();
-		for (; iter != m_Parent->m_Child.end(); ++iter)
-		{
-			if (this == *iter)
-			{
-				m_Parent->m_Child.erase(iter);
-				m_Parent = nullptr;
-				return;
-			}
 		}
-
-		assert(nullptr);
+		iter++;
 	}
+
+	// 순회가 끝날동안 부모의 자식리스트중 자신을 찾지못했다.
+	assert(nullptr);
+}
+void BTNode::MoveBack()
+{
+	if (!m_Parent
+		|| m_Parent->m_ChildCnt <= 1
+		|| m_Parent->m_Child.back() == this)
+		return;
+
+	list<BTNode*>::iterator iter = m_Parent->m_Child.begin();
+
+	while (iter != m_Parent->m_Child.end())
+	{
+		if (*iter == this)
+		{
+			iter = m_Parent->m_Child.erase(iter);
+			iter++;
+
+			m_Parent->m_Child.insert(iter, this);
+			return;
+		}
+		iter++;
+	}
+
+	// 순회가 끝날동안 부모의 자식리스트중 자신을 찾지못했다.
+	assert(nullptr);
+}
+
 #pragma endregion
 
 #pragma region Nodes
@@ -82,7 +111,7 @@ BT_STATUS Composite_Node::Run()
 
 			if (res == BT_RUNNING)
 			{
-				m_RootNode->SetRunningNode(child);
+				((Root_Node*)m_RootNode)->SetRunningNode(child);
 				return BT_SUCCESS;
 			}
 		}
@@ -104,7 +133,7 @@ BT_STATUS Composite_Node::Run()
 
 			if (res == BT_RUNNING)
 			{
-				m_RootNode->SetRunningNode(child);
+				((Root_Node*)m_RootNode)->SetRunningNode(child);
 				return BT_SUCCESS;
 			}
 		}
@@ -136,7 +165,7 @@ BT_STATUS Composite_Node::Run()
 
 			if (res == BT_RUNNING)
 			{
-				m_RootNode->SetRunningNode(child);
+				((Root_Node*)m_RootNode)->SetRunningNode(child);
 				return BT_SUCCESS;
 			}
 		}
@@ -151,11 +180,16 @@ BT_STATUS Composite_Node::Run()
 
 	return BT_STATUS::NONE;
 }
-
-void Root_Node::AddChild(BTNode* ChildNode)
+BT_STATUS Decorator_Node::Run()
 {
-	// 자식을 사이에 끼워넣는 방식.
+	return BT_STATUS::NONE;
 }
+BT_STATUS Task_Node::Run()
+{
+	return BT_STATUS::NONE;
+}
+
+
 #pragma endregion
 
 #pragma region BehaviorTree
@@ -176,5 +210,3 @@ void CBehaviorTree::tick()
 		m_RootNode->Run();
 }
 #pragma endregion
-
-

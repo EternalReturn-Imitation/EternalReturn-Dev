@@ -1,6 +1,10 @@
 #pragma once
 #include "CComponent.h"
 
+#define BT_SUCCESS BT_STATUS::SUCCESS
+#define BT_FAILURE BT_STATUS::FAILURE
+#define BT_RUNNING BT_STATUS::RUNNING
+
 class CBehaviorTree;
 class Decorator_Node;
 class BTNode;
@@ -21,9 +25,24 @@ enum class BT_STATUS
     RUNNING,
 };
 
-#define BT_SUCCESS BT_STATUS::SUCCESS
-#define BT_FAILURE BT_STATUS::FAILURE
-#define BT_RUNNING BT_STATUS::RUNNING
+enum class BBType
+{
+    BOOL,       // boolen
+    INT,        // int
+    FLOAT,      // float
+    Vec2,       // float2
+    Vec3,       // float3
+    Vec4,       // float4
+    STRING,     // string
+    GAMEOBJECT, // Object
+};
+
+struct BBkey
+{
+    wstring key;
+    BBType  type;
+};
+
 
 // ========================= 블랙보드 클래스 =========================
 class BB
@@ -32,6 +51,11 @@ private:
     unordered_map<wstring, void*> m_ExternedItem;   // 외부 데이터
     unordered_map<wstring, void*> m_CreatedItem;    // 자체 생성 데이터
     
+
+    // ExternedItem 은 Load 했을때 가져올 수 있도록
+    // GameObject에서 얻어오는 함수나, System에서 가져올 수 있는 함수의
+    // 인자를 저장한다.
+
 public:
     // 외부에서 사용중인 메모리주소를 블랙보드에 가져온다.
     template<typename T>
@@ -60,7 +84,7 @@ public:
             return (T*)(iter->second);
 
         T* NewItem = new T();
-        *NewItem = T;
+        *NewItem = Data;
 
         m_CreatedItem.insert(make_pair(key, NewItem));
         iter = m_CreatedItem.find(key);
@@ -107,8 +131,8 @@ class BTNode
 protected:
     wstring         m_NodeName;     // 노드 이름
     NODETYPE        m_NodeType;     // 노드 타입 : ROOT,COMPOSITE,DECORATOR,TASK
-    Root_Node*      m_RootNode;     // Root_Node
-    int             m_NodeFlag;     // FlagType
+    BTNode*         m_RootNode;     // Root_Node
+    UINT            m_NodeFlag;     // FlagType
     
     BTNode*         m_Parent;       // 부모노드
     list<BTNode*>   m_Child;        // 자식노드 리스트
@@ -116,15 +140,97 @@ protected:
     UINT            m_ChildCnt;     // 자식노드 수
 
 public:
-    virtual BT_STATUS Run() = 0;
-    
+    virtual BT_STATUS Run() { return BT_STATUS::NONE; }
+
+    // ========= 노드 관계 =========
+   
+    void MoveFront();
+    void MoveBack();
+
+    BTNode* DisconnectFromParent()
+    {
+        if (!m_Parent)
+            return nullptr;
+
+        BTNode* BeforeParentNode = m_Parent;
+
+        list<BTNode*>::iterator iter = m_Parent->m_Child.begin();
+
+        for (; iter != m_Parent->m_Child.end(); ++iter)
+        {
+            if (this == *iter)
+            {
+                m_Parent->m_Child.erase(iter);
+                m_Parent->m_ChildCnt--;
+                m_Parent = nullptr;
+
+                return BeforeParentNode;
+            }
+        }
+
+        assert(nullptr);
+
+        return nullptr;
+    }
+
+    bool IsAncestorNode(BTNode* _Node)
+    {
+        BTNode* pParent = m_Parent;
+        while (pParent)
+        {
+            if (pParent == _Node)
+            {
+                return true;
+            }
+            pParent = pParent->m_Parent;
+        }
+
+        return false;
+    }
+
     // ========= 부모 노드 =========
     BTNode* GetParentNode() { return m_Parent; }
     void SetParentNode(BTNode* _ParentNode) { m_Parent = _ParentNode; }
 
+
     // ========= 자식 노드 =========
-    virtual void AddChild(BTNode* ChildNode) {};
+    void AddChild(BTNode* ChildNode)
+    {
+        // Task Node라면 자식을 가질 수 없음.
+        if (m_NodeType == NODETYPE::TASK)
+        {
+            assert(nullptr);
+        }
+
+        // 자식이 1개 이상 있을 경우
+        if (0 < m_ChildCnt)
+        {
+            // 단일자식을 가지는 노드
+            if (m_NodeType == NODETYPE::ROOT
+                || m_NodeType == NODETYPE::DECORATOR)
+            {
+                // 기존 자식과 부모 관계끊기
+                BTNode* BeforeChild = m_Child.front();
+                BeforeChild->DisconnectFromParent();
+
+                ChildNode->AddChild(BeforeChild);
+
+                m_Child.emplace_back(ChildNode);
+                ChildNode->SetParentNode(this);
+                m_ChildCnt++;
+
+                return;
+            }
+        }
+
+        m_Child.emplace_back(ChildNode);
+        ChildNode->SetParentNode(this);
+        m_ChildCnt++;
+    }
+
     UINT GetChildCnt() { return m_ChildCnt; }
+    list<BTNode*> GetChild() { return m_Child; }
+
 
     // ========= 노드 정보 =========
     const wstring& GetNodeName() { return m_NodeName; }
@@ -132,17 +238,16 @@ public:
     
     NODETYPE GetNodeType() { return m_NodeType; }
     
-    Root_Node* GetRootNode() { return m_RootNode; }
-    void SetRootNode(Root_Node* _RootNode) { m_RootNode = _RootNode; }
+    BTNode* GetRootNode() { return m_RootNode; }
+    void SetRootNode(BTNode* _RootNode) { m_RootNode = _RootNode; }
 
     const int GetNodeFlag() { return m_NodeFlag; }
     void SetNodeFlag(UINT _flag) { m_NodeFlag = _flag; }
 
-    void DisconnectFromParent();
-    bool IsAncestor(BTNode* _Node);
+    
 
 public:
-    BTNode(NODETYPE eType) {}
+    BTNode(NODETYPE eType);
     virtual ~BTNode();
 };
 
@@ -154,24 +259,23 @@ private:
     BTNode* m_RunningNode;
 
 public:
-    virtual BT_STATUS Run() override 
-    {
-        if (m_RunningNode != nullptr)
-        {
-            if (m_RunningNode->Run() == BT_STATUS::RUNNING)
-                return BT_STATUS::RUNNING;
-
-            m_RunningNode = nullptr;
-
-            return BT_STATUS::SUCCESS;
-        }
-        else if (GetChildCnt() != 0)
-            return m_Child.front()->Run();
-
-        return BT_STATUS::NONE;
-    };
+    virtual BT_STATUS Run() override;
     
-    virtual void AddChild(BTNode* ChildNode);
+    // ========= 블랙 보드 =========
+    template<typename T>
+    T* FindItem(const wstring& key) { return m_BlackBoard->FindItem(key); }
+
+    // 외부 아이템 추가
+    template<typename T>
+    T* AddItem(const wstring& key, T* Item) { return m_BlackBoard->AddItem(key, Item); }
+
+    // 신규 아이템 생성 및 데이터 입력
+    template<typename T>
+    T* AddItem(const wstring& key, T Data) { return m_BlackBoard->AddItem(key, Data); }
+
+    // 신규 아이템 생성 (메모리 생성만 진행)
+    template<typename T>
+    T* AddItem(const wstring& key) { return m_BlackBoard->AddItem(key); }
 
     void SetRunningNode(BTNode* pNode) { m_RunningNode = pNode; }
     BB* GetBlackBoard() { return m_BlackBoard; }
@@ -196,7 +300,6 @@ public:
 
 public:
     virtual BT_STATUS Run();
-    virtual void AddChild(BTNode* ChildNode) {};
 
 public:
     Composite_Node() : BTNode(NODETYPE::COMPOSITE) {}
@@ -237,7 +340,7 @@ public:
         TaskNodeFlag_WAIT,                   // 대기시간 설정 : 임의의 값 설정하여 사용
         TaskNodeFlag_WAIT_BLACKBOARD_TIME,   // 대기시간 설정 : 블랙보드에 설정된 값 사용
     };
-
+    
     virtual BT_STATUS Run();
 
 public:
@@ -246,35 +349,6 @@ public:
 };
 #pragma endregion
 
-BTNode* CreateBTNode(NODETYPE _type, int _flag = -1)
-{
-    BTNode* NewNode = nullptr;
-
-    switch (_type)
-    {
-    case NODETYPE::ROOT:
-        NewNode = new Root_Node;
-        break;
-    case NODETYPE::COMPOSITE:
-        NewNode = new Composite_Node;
-        break;
-    case NODETYPE::DECORATOR:
-        NewNode = new Decorator_Node;
-        break;
-    case NODETYPE::TASK:
-        NewNode = new Task_Node;
-        break;
-    }
-
-    // Flag 정보가 있음
-    if (0 <= _flag)
-    {
-        NewNode->SetNodeFlag(_flag);
-    }
-
-    return NewNode;
-}
-
 // ========================= 행동트리 컴포넌트 =========================
 class CBehaviorTree :
     public CComponent
@@ -282,32 +356,16 @@ class CBehaviorTree :
 private:
     Root_Node* m_RootNode;
 
-private:
-    BTNode* CreateNewNode(NODETYPE eType);
-
 public:
     virtual void begin() {}
     virtual void tick();
-    virtual void finaltick();
+    virtual void finaltick() {}
 
 public:
     BTNode* GetRootNode() { return m_RootNode; }
 
 public:
-    template<typename T>
-    T* FindItem(const wstring& key) { return m_RootNode->GetBlackBoard()->FindItem(key); }
-
-    // 외부 아이템 추가
-    template<typename T>
-    T* AddItem(const wstring& key, T* Item) { return m_RootNode->GetBlackBoard()->AddItem(key, Item); }
-
-    // 신규 아이템 생성 및 데이터 입력
-    template<typename T>
-    T* AddItem(const wstring& key, T Data) { return m_RootNode->GetBlackBoard()->AddItem(key, Data); }
-
-    // 신규 아이템 생성 (메모리 생성만 진행)
-    template<typename T>
-    T* AddItem(const wstring& key) { return m_RootNode->GetBlackBoard()->AddItem(key); }
+    
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
