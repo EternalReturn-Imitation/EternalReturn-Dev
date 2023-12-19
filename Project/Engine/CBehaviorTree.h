@@ -21,6 +21,21 @@ enum class BT_STATUS
     RUNNING,
 };
 
+enum class BBType
+{
+    INT,
+    FLOAT,
+    BOOL,
+    GAMEOBJECT,
+    STRING,
+};
+
+struct BBkey
+{
+    wstring key;
+    BBType  type;
+};
+
 #define BT_SUCCESS BT_STATUS::SUCCESS
 #define BT_FAILURE BT_STATUS::FAILURE
 #define BT_RUNNING BT_STATUS::RUNNING
@@ -154,22 +169,7 @@ private:
     BTNode* m_RunningNode;
 
 public:
-    virtual BT_STATUS Run() override 
-    {
-        if (m_RunningNode != nullptr)
-        {
-            if (m_RunningNode->Run() == BT_STATUS::RUNNING)
-                return BT_STATUS::RUNNING;
-
-            m_RunningNode = nullptr;
-
-            return BT_STATUS::SUCCESS;
-        }
-        else if (GetChildCnt() != 0)
-            return m_Child.front()->Run();
-
-        return BT_STATUS::NONE;
-    };
+    virtual BT_STATUS Run() override;
     
     virtual void AddChild(BTNode* ChildNode);
 
@@ -237,7 +237,7 @@ public:
         TaskNodeFlag_WAIT,                   // 대기시간 설정 : 임의의 값 설정하여 사용
         TaskNodeFlag_WAIT_BLACKBOARD_TIME,   // 대기시간 설정 : 블랙보드에 설정된 값 사용
     };
-
+    
     virtual BT_STATUS Run();
 
 public:
