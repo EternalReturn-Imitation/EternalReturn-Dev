@@ -110,16 +110,6 @@ void CreateTestLevel()
 	pParent->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pParent->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
 
-	// =============== BT ===============
-	CBehaviorTree* BT = pParent->BehaviorTree();
-	BTNode* Node1 = BT->AddChildNode(BT->GetRootNode(), NODETYPE::SELECTOR);
-	BTNode* Node2 = BT->AddChildNode(Node1, NODETYPE::SEQUENCE);
-	BTNode* Node3 = BT->AddChildNode(Node1, NODETYPE::SELECTOR);
-	BTNode* Node4 = BT->AddChildNode(Node2, NODETYPE::TASK);
-	BTNode* Node5 = BT->AddChildNode(Node2, NODETYPE::TASK);
-	BTNode* Node6 = BT->AddChildNode(Node2, NODETYPE::SEQUENCE);
-	BTNode* Node7 = BT->AddChildNode(Node2, NODETYPE::SEQUENCE);
-	BTNode* Node8 = BT->AddChildNode(Node2, NODETYPE::SEQUENCE);
 
 	SpawnGameObject(pParent, Vec3(0.f, 0.f, 500.f), L"Player");
 

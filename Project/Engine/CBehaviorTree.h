@@ -7,33 +7,12 @@ class BTNode;
 
 enum class NODETYPE
 {
-    ROOT = 0,
-    COMPOSITE = 1,
-    DECORATOR = 2,
-    SERVICE = 3,
-    TASK = 4,
-
-    // Composite
-    SELECTOR = 10,
-    SEQUENCE = 11,
-    RANDSELECTOR = 12,
-
-    // Decorator
-    BLACKBOARD = 20,             // 특정 블랙보드 Key에 값이 설정되어있는지 확인
-    COMPARE_BBENTRIES = 21,      // 두 블랙보드 키 값을 비교하여 결과의 동일 여부 판단
-
-    // Service
-
-
-    // Task
-    CUSTOM_TASK = 40,            // Client에서 생성한 TASK 실행
-    PLAY_ANIMATION = 41,         // 애니메이션 재생
-    PLAY_SOUND = 42,             // 사운드 재생
-    WAIT = 43,                   // 대기시간 설정 : 임의의 값 설정하여 사용
-    WAIT_BLACKBOARD_TIME = 44,   // 대기시간 설정 : 블랙보드에 설정된 값 사용
-    
-                            // Transform 제어
+    ROOT,       // 루트노드
+    COMPOSITE,  // 브랜치노드   : 복수 자식
+    DECORATOR,  // 조건노드     : 단일 자식
+    TASK        // 실행노드     : 자식 불가
 };
+
 enum class BT_STATUS
 {
     NONE,
@@ -41,6 +20,10 @@ enum class BT_STATUS
     FAILURE,
     RUNNING,
 };
+
+#define BT_SUCCESS BT_STATUS::SUCCESS
+#define BT_FAILURE BT_STATUS::FAILURE
+#define BT_RUNNING BT_STATUS::RUNNING
 
 // ========================= 블랙보드 클래스 =========================
 class BB
@@ -121,43 +104,45 @@ public:
 // ========================= 기본 노드 =========================
 class BTNode
 {
-private:
-    int             m_iProgressIdx; // 실행 인덱스
-    wstring         m_NodeName;     // 노드 이름
-    NODETYPE        m_NodeType;     // 노드 타입
-    CBehaviorTree*  m_OwnerBT;      // 소유한 BehaviorTree Component
-
 protected:
-    BTNode*         m_ParentNode;   // 부모노드
-    BTNode*         m_AttachedNode; // 데코레이터,서비스 노드 장착
-    BTNode*         m_ChildNode;    // 단일 자식
-    list<BTNode*>   m_ChildNodes;   // 복수 자식목록
+    wstring         m_NodeName;     // 노드 이름
+    NODETYPE        m_NodeType;     // 노드 타입 : ROOT,COMPOSITE,DECORATOR,TASK
+    Root_Node*      m_RootNode;     // Root_Node
+    int             m_NodeFlag;     // FlagType
+    
+    BTNode*         m_Parent;       // 부모노드
+    list<BTNode*>   m_Child;        // 자식노드 리스트
+    
+    UINT            m_ChildCnt;     // 자식노드 수
 
 public:
     virtual BT_STATUS Run() = 0;
     
-    BTNode* GetParentNode() { return m_ParentNode; }
+    // ========= 부모 노드 =========
+    BTNode* GetParentNode() { return m_Parent; }
+    void SetParentNode(BTNode* _ParentNode) { m_Parent = _ParentNode; }
 
-    BTNode* GetChildNode() { return m_ChildNode; }
-    list<BTNode*> GetChildNodes() { return m_ChildNodes; }
+    // ========= 자식 노드 =========
+    virtual void AddChild(BTNode* ChildNode) {};
+    UINT GetChildCnt() { return m_ChildCnt; }
 
-    bool IsAncestor(BTNode* _Node);
-
-    void SetParentNode(BTNode* _ParentNode) { m_ParentNode = _ParentNode; }
-
+    // ========= 노드 정보 =========
+    const wstring& GetNodeName() { return m_NodeName; }
+    void SetNodeName(const wstring& NodeName) { m_NodeName = NodeName; }
+    
     NODETYPE GetNodeType() { return m_NodeType; }
     
-    const wstring& GetNodeName() { return m_NodeName; }
-    CBehaviorTree* GetBehaviorTree() { return m_OwnerBT; }
-    
-    void SetNodeName(const wstring& NodeName) { m_NodeName = NodeName; }
-    void SetBehaviorTree(CBehaviorTree* pBehaviorTree) { m_OwnerBT = pBehaviorTree; }
+    Root_Node* GetRootNode() { return m_RootNode; }
+    void SetRootNode(Root_Node* _RootNode) { m_RootNode = _RootNode; }
+
+    const int GetNodeFlag() { return m_NodeFlag; }
+    void SetNodeFlag(UINT _flag) { m_NodeFlag = _flag; }
 
     void DisconnectFromParent();
-
+    bool IsAncestor(BTNode* _Node);
 
 public:
-    BTNode(NODETYPE eType) : m_iProgressIdx(-1), m_NodeType(eType), m_OwnerBT(nullptr), m_ParentNode(nullptr), m_ChildNode(nullptr), m_AttachedNode(nullptr) { m_NodeName = L"NoName"; }
+    BTNode(NODETYPE eType) {}
     virtual ~BTNode();
 };
 
@@ -180,13 +165,14 @@ public:
 
             return BT_STATUS::SUCCESS;
         }
-        else if (m_ChildNode != nullptr)
-            return m_ChildNode->Run();
+        else if (GetChildCnt() != 0)
+            return m_Child.front()->Run();
 
         return BT_STATUS::NONE;
     };
     
-    void AddChildNode(BTNode* pNode);
+    virtual void AddChild(BTNode* ChildNode);
+
     void SetRunningNode(BTNode* pNode) { m_RunningNode = pNode; }
     BB* GetBlackBoard() { return m_BlackBoard; }
 
@@ -201,47 +187,20 @@ public:
 class Composite_Node : public BTNode
 {
 public:
-    virtual BT_STATUS Run();
-    virtual BTNode* NodeAttach(BTNode* pNode);
-    virtual BTNode* AddChildNode(BTNode* pNode)
+    enum CompositNodeFlag
     {
-        m_ChildNodes.emplace_back(pNode);
-        pNode->SetParentNode(this);
+        CompositeNodeFlag_SEQUENCE,
+        CompositeNodeFlag_SELECTOR,
+        CompositeNodeFlag_RANDOM_SELECTOR,
+    };
 
-        return pNode;
-    }
+public:
+    virtual BT_STATUS Run();
+    virtual void AddChild(BTNode* ChildNode) {};
 
 public:
     Composite_Node() : BTNode(NODETYPE::COMPOSITE) {}
     virtual ~Composite_Node() {}
-};
-
-class Selector : public Composite_Node
-{
-public:
-    virtual BT_STATUS Run();
-
-public:
-    Selector() { SetNodeName(L"NewSelectorNode"); }
-    virtual ~Selector() {}
-};
-
-class Sequence : public Composite_Node
-{
-public:
-    virtual BT_STATUS Run();
-
-public:
-    Sequence() { SetNodeName(L"NewSequenceNode"); }
-};
-
-class RandomSelector : public Composite_Node
-{
-public:
-    virtual BT_STATUS Run();
-
-public:
-    RandomSelector() { SetNodeName(L"NewRandomSelectorNode"); }
 };
 
 #pragma endregion
@@ -250,44 +209,19 @@ public:
 #pragma region Decorator Node
 class Decorator_Node : public BTNode
 {
-private:
-
+public:
+    enum DecoratorNodeFlag
+    {
+        DecoratorNodeFlag_BLACKBOARD,           // 특정 블랙보드 Key에 값이 설정되어있는지 확인
+        DecoratorNodeFlag_COMPARE_BBENTRIES,    // 두 블랙보드 키 값을 비교하여 결과의 동일 여부 판단
+    };
 
 public:
+    virtual BT_STATUS Run();
+
     Decorator_Node() : BTNode(NODETYPE::DECORATOR) {}
     virtual ~Decorator_Node() {}
     
-};
-// ===============================
-class Compare_BBEntries : public Decorator_Node
-{
-private:
-    bool    IsEqualTo;
-    wstring BBKeyA;
-    wstring BBKeyB;
-
-public:
-    virtual BT_STATUS Run() override {}
-    
-public:
-    Compare_BBEntries() : IsEqualTo(false) {}
-    virtual ~Compare_BBEntries() {}
-};
-
-#pragma endregion
-
-// ========================= 서비스 노드 =========================
-#pragma region Service Node
-// 컴포짓 노드에 어태치, 블랙보드의 확인 및 업데이트에 사용.
-class Service_Node : public BTNode
-{
-private:
-
-
-public:
-    Service_Node() : BTNode(NODETYPE::SERVICE) {}
-    virtual ~Service_Node() {}
-
 };
 #pragma endregion
 
@@ -296,15 +230,50 @@ public:
 class Task_Node : public BTNode
 {
 public:
+    enum TaskNodeFlag
+    {
+        TaskNodeFlag_PLAY_ANIMATION,         // 애니메이션 재생
+        TaskNodeFlag_PLAY_SOUND,             // 사운드 재생
+        TaskNodeFlag_WAIT,                   // 대기시간 설정 : 임의의 값 설정하여 사용
+        TaskNodeFlag_WAIT_BLACKBOARD_TIME,   // 대기시간 설정 : 블랙보드에 설정된 값 사용
+    };
+
     virtual BT_STATUS Run();
-    virtual BTNode* NodeAttach(BTNode* pNode);
 
 public:
-    Task_Node() : BTNode(NODETYPE::TASK) { SetNodeName(L"NewTaskNode"); }
+    Task_Node() : BTNode(NODETYPE::TASK) {}
     virtual ~Task_Node() {}
 };
 #pragma endregion
 
+BTNode* CreateBTNode(NODETYPE _type, int _flag = -1)
+{
+    BTNode* NewNode = nullptr;
+
+    switch (_type)
+    {
+    case NODETYPE::ROOT:
+        NewNode = new Root_Node;
+        break;
+    case NODETYPE::COMPOSITE:
+        NewNode = new Composite_Node;
+        break;
+    case NODETYPE::DECORATOR:
+        NewNode = new Decorator_Node;
+        break;
+    case NODETYPE::TASK:
+        NewNode = new Task_Node;
+        break;
+    }
+
+    // Flag 정보가 있음
+    if (0 <= _flag)
+    {
+        NewNode->SetNodeFlag(_flag);
+    }
+
+    return NewNode;
+}
 
 // ========================= 행동트리 컴포넌트 =========================
 class CBehaviorTree :
@@ -322,8 +291,6 @@ public:
     virtual void finaltick();
 
 public:
-    BTNode* AddChildNode(BTNode* ParentNode, NODETYPE eType);
-    BTNode* NodeAttach(BTNode* TargetNode, NODETYPE eType);
     BTNode* GetRootNode() { return m_RootNode; }
 
 public:
@@ -354,4 +321,3 @@ public:
 
     friend class BTNode;
 };
-
