@@ -25,6 +25,9 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 
 	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&BehaviorTreeListUI::SetTargetToInspector);
 	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&BehaviorTreeListUI::DragDrop);
+	m_Tree->AddDynamic_SwapFront(this, (UI_DELEGATE_1)&BehaviorTreeListUI::SwapNodeFront);
+	m_Tree->AddDynamic_SwapBack(this, (UI_DELEGATE_1)&BehaviorTreeListUI::SwapNodeBack);
+
 	m_Tree->SetDragDropID("BTNode");
 
 	AddChildUI(m_Tree);
@@ -91,13 +94,13 @@ void BehaviorTreeListUI::AddNode(BTNode* _Node, TreeNode* _ParentNode)
 
 	switch (_Node->GetNodeType())
 	{
-	case NODETYPE::ROOT:
+	case BT_ROOT:
 		pNode->SetNodeColor(0);
 		break;
-	case NODETYPE::COMPOSITE:
+	case BT_COMPOSITE:
 		pNode->SetNodeColor(4);
 		break;
-	case NODETYPE::TASK:
+	case BT_TASK:
 		pNode->SetNodeColor(5);
 		break;
 	}
@@ -151,7 +154,31 @@ void BehaviorTreeListUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 
 	pDropBT->AddChild(pDragBT);
 
-	// AddChild
+	// Tree Update
+	m_Tree->Clear();
+	AddNode((BTNode*)m_RootNode, nullptr);
+}
+
+void BehaviorTreeListUI::SwapNodeFront(DWORD_PTR _pNode)
+{
+	TreeNode* pNode = (TreeNode*)_pNode;
+	BTNode* pBTNode = (BTNode*)pNode->GetData();
+
+	pBTNode->SwapFront();
+
+	// Tree Update
+	m_Tree->Clear();
+	AddNode((BTNode*)m_RootNode, nullptr);
+}
+
+void BehaviorTreeListUI::SwapNodeBack(DWORD_PTR _pNode)
+{
+	TreeNode* pNode = (TreeNode*)_pNode;
+	BTNode* pBTNode = (BTNode*)pNode->GetData();
+
+	pBTNode->SwapBack();
+
+	// Tree Update
 	m_Tree->Clear();
 	AddNode((BTNode*)m_RootNode, nullptr);
 }

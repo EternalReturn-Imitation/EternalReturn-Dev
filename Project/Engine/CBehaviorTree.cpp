@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CBehaviorTree.h"
+#include "CBehaviorTreeMgr.h"
 
 #pragma region BB
 
@@ -23,7 +24,7 @@ BTNode::~BTNode()
 	}
 }
 
-void BTNode::MoveFront()
+void BTNode::SwapFront()
 {
 	if (!m_Parent 
 		|| m_Parent->m_ChildCnt <= 1
@@ -48,7 +49,7 @@ void BTNode::MoveFront()
 	// 순회가 끝날동안 부모의 자식리스트중 자신을 찾지못했다.
 	assert(nullptr);
 }
-void BTNode::MoveBack()
+void BTNode::SwapBack()
 {
 	if (!m_Parent
 		|| m_Parent->m_ChildCnt <= 1
@@ -77,7 +78,7 @@ void BTNode::MoveBack()
 #pragma endregion
 
 #pragma region Nodes
-BT_STATUS Root_Node::Run()
+BTNode::BT_STATUS Root_Node::Run()
 {
 	if (m_RunningNode != nullptr)
 	{
@@ -93,7 +94,7 @@ BT_STATUS Root_Node::Run()
 
 	return BT_STATUS::NONE;
 }
-BT_STATUS Composite_Node::Run()
+BTNode::BT_STATUS Composite_Node::Run()
 {
 	switch (m_NodeFlag)
 	{
@@ -180,11 +181,11 @@ BT_STATUS Composite_Node::Run()
 
 	return BT_STATUS::NONE;
 }
-BT_STATUS Decorator_Node::Run()
+BTNode::BT_STATUS Decorator_Node::Run()
 {
-	return BT_STATUS::NONE;
+	return BTNode::BT_STATUS::NONE;
 }
-BT_STATUS Task_Node::Run()
+BTNode::BT_STATUS Task_Node::Run()
 {
 	return BT_STATUS::NONE;
 }

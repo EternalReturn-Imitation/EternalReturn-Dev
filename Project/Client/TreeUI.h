@@ -72,6 +72,8 @@ private:
 
     TreeNode* m_DragNode;
     TreeNode* m_DropNode;
+    TreeNode* m_SwapFrontNode;
+    TreeNode* m_SwapBackNode;
 
     DWORD_PTR       m_dwPrevSelected;
 
@@ -81,8 +83,11 @@ private:
     UI* m_DragDropInst;
     UI_DELEGATE_2   m_DragDropFunc;
 
-    UI* m_SwapInst;
-    UI_DELEGATE_2   m_SwapFunc;
+    UI* m_SwapFrontInst;
+    UI_DELEGATE_1   m_SwapFrontFunc;
+
+    UI* m_SwapBackInst;
+    UI_DELEGATE_1   m_SwapBackFunc;
 
     string          m_strDragDropID;
 
@@ -109,10 +114,16 @@ public:
         m_DragDropFunc = _MemFunc;
     }
 
-    void AddDynamic_Swap(UI* _UI, UI_DELEGATE_2 _MemFunc)
+    void AddDynamic_SwapFront(UI* _UI, UI_DELEGATE_1 _MemFunc)
     {
-        m_SwapInst = _UI;
-        m_SwapFunc = _MemFunc;
+        m_SwapFrontInst = _UI;
+        m_SwapFrontFunc = _MemFunc;
+    }
+
+    void AddDynamic_SwapBack(UI* _UI, UI_DELEGATE_1 _MemFunc)
+    {
+        m_SwapBackInst = _UI;
+        m_SwapBackFunc = _MemFunc;
     }
 
     void SetDragDropID(const string& _strID) { m_strDragDropID = _strID; }
@@ -122,8 +133,8 @@ private:
     void SetSelectedNode(TreeNode* _Node);   
     void SetDragNode(TreeNode* _Node);
     void SetDropNode(TreeNode* _Node);
-    void SwapBefore(TreeNode* _Node);
-    void SwapAfter(TreeNode* _Node);
+    void SetSwapFrontNode(TreeNode* _Node);
+    void SetSwapBackNode(TreeNode* _Node);
 
 public:
     TreeNode* GetSelectedNode() { return m_SelectedNode; }

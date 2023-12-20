@@ -1,52 +1,40 @@
 #pragma once
 #include "CComponent.h"
 
-#define BT_SUCCESS BT_STATUS::SUCCESS
-#define BT_FAILURE BT_STATUS::FAILURE
-#define BT_RUNNING BT_STATUS::RUNNING
+#define BT_SUCCESS BTNode::BT_STATUS::SUCCESS
+#define BT_FAILURE BTNode::BT_STATUS::FAILURE
+#define BT_RUNNING BTNode::BT_STATUS::RUNNING
+#define BT_ROOT BTNode::NODETYPE::ROOT
+#define BT_COMPOSITE BTNode::NODETYPE::COMPOSITE
+#define BT_DECORATOR BTNode::NODETYPE::DECORATOR
+#define BT_TASK BTNode::NODETYPE::TASK
 
 class CBehaviorTree;
 class Decorator_Node;
 class BTNode;
 
-enum class NODETYPE
-{
-    ROOT,       // 루트노드
-    COMPOSITE,  // 브랜치노드   : 복수 자식
-    DECORATOR,  // 조건노드     : 단일 자식
-    TASK        // 실행노드     : 자식 불가
-};
-
-enum class BT_STATUS
-{
-    NONE,
-    SUCCESS,
-    FAILURE,
-    RUNNING,
-};
-
-enum class BBType
-{
-    BOOL,       // boolen
-    INT,        // int
-    FLOAT,      // float
-    Vec2,       // float2
-    Vec3,       // float3
-    Vec4,       // float4
-    STRING,     // string
-    GAMEOBJECT, // Object
-};
-
-struct BBkey
-{
-    wstring key;
-    BBType  type;
-};
-
-
 // ========================= 블랙보드 클래스 =========================
 class BB
 {
+public:
+    enum class BBType
+    {
+        BOOL,       // boolen
+        INT,        // int
+        FLOAT,      // float
+        Vec2,       // float2
+        Vec3,       // float3
+        Vec4,       // float4
+        STRING,     // string
+        GAMEOBJECT, // Object
+    };
+
+    struct BBkey
+    {
+        wstring key;
+        BBType  type;
+    };
+
 private:
     unordered_map<wstring, void*> m_ExternedItem;   // 외부 데이터
     unordered_map<wstring, void*> m_CreatedItem;    // 자체 생성 데이터
@@ -128,6 +116,23 @@ public:
 // ========================= 기본 노드 =========================
 class BTNode
 {
+public:
+    enum class NODETYPE
+    {
+        ROOT,       // 루트노드
+        COMPOSITE,  // 브랜치노드   : 복수 자식
+        DECORATOR,  // 조건노드     : 단일 자식
+        TASK        // 실행노드     : 자식 불가
+    };
+
+    enum class BT_STATUS
+    {
+        NONE,
+        SUCCESS,
+        FAILURE,
+        RUNNING,
+    };
+
 protected:
     wstring         m_NodeName;     // 노드 이름
     NODETYPE        m_NodeType;     // 노드 타입 : ROOT,COMPOSITE,DECORATOR,TASK
@@ -144,8 +149,8 @@ public:
 
     // ========= 노드 관계 =========
    
-    void MoveFront();
-    void MoveBack();
+    void SwapFront();
+    void SwapBack();
 
     BTNode* DisconnectFromParent()
     {
@@ -194,11 +199,12 @@ public:
 
 
     // ========= 자식 노드 =========
-    void AddChild(BTNode* ChildNode)
+    BTNode* AddChild(BTNode* ChildNode)
     {
         // Task Node라면 자식을 가질 수 없음.
         if (m_NodeType == NODETYPE::TASK)
         {
+            return ChildNode;
             assert(nullptr);
         }
 
@@ -215,17 +221,24 @@ public:
 
                 ChildNode->AddChild(BeforeChild);
 
+                ChildNode->SetRootNode(m_RootNode);
+
                 m_Child.emplace_back(ChildNode);
                 ChildNode->SetParentNode(this);
                 m_ChildCnt++;
 
-                return;
+                return ChildNode;
             }
         }
 
+        ChildNode->DisconnectFromParent();
+
         m_Child.emplace_back(ChildNode);
         ChildNode->SetParentNode(this);
+        ChildNode->SetRootNode(m_RootNode);
         m_ChildCnt++;
+
+        return ChildNode;
     }
 
     UINT GetChildCnt() { return m_ChildCnt; }
@@ -281,7 +294,8 @@ public:
     BB* GetBlackBoard() { return m_BlackBoard; }
 
 public:
-    Root_Node() : BTNode(NODETYPE::ROOT), m_BlackBoard(nullptr), m_RunningNode(nullptr) { m_BlackBoard = new BB(); }
+    Root_Node() : BTNode(NODETYPE::ROOT), m_BlackBoard(nullptr), m_RunningNode(nullptr) { m_BlackBoard = new BB(); SetNodeName(L"NewRoot");
+    }
     virtual ~Root_Node() { DELETE_UNVAILUBLE(m_BlackBoard); m_RunningNode = nullptr; }
 };
 
@@ -302,7 +316,7 @@ public:
     virtual BT_STATUS Run();
 
 public:
-    Composite_Node() : BTNode(NODETYPE::COMPOSITE) {}
+    Composite_Node() : BTNode(NODETYPE::COMPOSITE) { SetNodeName(L"NewComposite"); }
     virtual ~Composite_Node() {}
 };
 
@@ -322,7 +336,7 @@ public:
 public:
     virtual BT_STATUS Run();
 
-    Decorator_Node() : BTNode(NODETYPE::DECORATOR) {}
+    Decorator_Node() : BTNode(NODETYPE::DECORATOR) { SetNodeName(L"NewDecorator"); }
     virtual ~Decorator_Node() {}
     
 };
@@ -344,7 +358,7 @@ public:
     virtual BT_STATUS Run();
 
 public:
-    Task_Node() : BTNode(NODETYPE::TASK) {}
+    Task_Node() : BTNode(NODETYPE::TASK) { SetNodeName(L"NewTask"); }
     virtual ~Task_Node() {}
 };
 #pragma endregion
@@ -365,7 +379,12 @@ public:
     BTNode* GetRootNode() { return m_RootNode; }
 
 public:
-    
+    Root_Node* SetRootNode(Root_Node* _Root)
+    { 
+        m_RootNode = _Root; 
+
+        return m_RootNode;
+    }
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}

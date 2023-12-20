@@ -34,6 +34,9 @@ private:
     void AddNode(BTNode* _Node, TreeNode* _ParentNode);
     void DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode);
 
+    void SwapNodeFront(DWORD_PTR _pNode);
+    void SwapNodeBack(DWORD_PTR _pNode);
+
 public:
     BehaviorTreeListUI();
     virtual ~BehaviorTreeListUI();

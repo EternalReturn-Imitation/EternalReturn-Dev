@@ -103,12 +103,39 @@ void CreateTestLevel()
 	pParent->AddComponent(new CTransform);
 	pParent->AddComponent(new CMeshRender);
 	pParent->AddComponent(new CPlayerScript);
+	pParent->AddComponent(new CBehaviorTree);
 
 	pParent->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
 
 	pParent->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pParent->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"));
 
+	CBehaviorTree* pBT = pParent->BehaviorTree();
+	Root_Node* MainRoot = pBT->SetRootNode((Root_Node*)CBehaviorTreeMgr::CreateBTNode(BT_ROOT, 0));
+	MainRoot->SetNodeName(L"RootNode");
+
+	BTNode* N_1 = MainRoot->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
+	BTNode* N_1_1 = N_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
+	BTNode* N_1_2 = N_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SELECTOR));
+
+	BTNode* N_1_1_1 = N_1_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
+	BTNode* N_1_1_2 = N_1_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SELECTOR));
+	BTNode* N_1_1_3 = N_1_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
+
+	BTNode* N_1_2_1 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
+	N_1_2_1->SetNodeName(L"N_1_2_1");
+	BTNode* N_1_2_2 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
+	N_1_2_2->SetNodeName(L"N_1_2_2");
+	BTNode* N_1_2_3 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
+	N_1_2_3->SetNodeName(L"N_1_2_3");
+	BTNode* N_1_2_4 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
+	N_1_2_4->SetNodeName(L"N_1_2_4");
+	BTNode* N_1_2_5 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
+	N_1_2_5->SetNodeName(L"N_1_2_5");
+
+	BTNode* N_1_1_2_1 = N_1_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
+	BTNode* N_1_2_3_1 = N_1_2_3->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
+	
 
 	SpawnGameObject(pParent, Vec3(0.f, 0.f, 500.f), L"Player");
 

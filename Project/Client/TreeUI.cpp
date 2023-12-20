@@ -29,7 +29,7 @@ void TreeNode::render_update()
     // FinalName 만들기
     string strFinalName = m_strName;
     strFinalName += "##";
-
+    
     char szBuff[100] = {};
     _itoa_s(m_ID, szBuff, 10);
     strFinalName += szBuff;
@@ -53,77 +53,43 @@ void TreeNode::render_update()
     // 노드 상하 이동
     if (m_Owner->m_ArrowBtn)
     {
-        
         float FrmHeight = ImGui::GetFrameHeight();
         ImVec2 BtnSize = { FrmHeight,FrmHeight };
 
         // 부모노드가 있고 동일계층 노드 수가 2개 이상인 경우
         if (m_ParentNode && 1 < m_ParentNode->m_vecChildNode.size())
         {
-            // 두번째 순서부터
-            if (m_CurGroupIdx > 1)
-            {
-                if (ImGui::ArrowButtonSz("##Up", ImGuiDir_Up, BtnSize))
-                {
-                    /*
-                    vector<TreeNode*>::iterator iter = m_ParentNode->m_vecChildNode.begin();
 
-                    if (this != *iter)
-                    {
-                        TreeNode* BeforeNode = nullptr;
-
-                        while (iter != m_ParentNode->m_vecChildNode.end())
-                        {
-                            if (*iter == this)
-                                break;
-
-                            BeforeNode = *iter;
-                            iter++;
-                        }
-
-                        if (m_Owner->m_SwapInst && m_Owner->m_SwapFunc)
-                            (m_Owner->m_SwapInst->*m_Owner->m_SwapFunc)((DWORD_PTR)BeforeNode, (DWORD_PTR)this);
-                    }
-                    */
-                }
-            }
-            else
-            {
-                ImGui::InvisibleButton("##", BtnSize);
-            }
-
-            // 동일 그룹 마지막 순서인 경우
             if (m_CurGroupIdx == m_ParentNode->m_vecChildNode.size())
             {
+                ImGui::InvisibleButton("NONE", BtnSize);
+            }
+            else
+            {
+                string UpBtn = "u##";
+                UpBtn += szBuff;
+                if (ImGui::ArrowButtonSz(UpBtn.c_str(), ImGuiDir_Down, BtnSize))
+                {
+                    if (m_Owner->m_SwapBackInst && m_Owner->m_SwapBackFunc)
+                        m_Owner->SetSwapBackNode(this);
+                }
+            }
+
+            if (m_CurGroupIdx > 1)
+            {
                 ImGui::SameLine();
-                ImGui::InvisibleButton("##", BtnSize);
+                string DownBtn = "d##";
+                DownBtn += szBuff;
+                if (ImGui::ArrowButtonSz(DownBtn.c_str(), ImGuiDir_Up, BtnSize))
+                {
+                    if (m_Owner->m_SwapFrontInst && m_Owner->m_SwapFrontFunc)
+                        m_Owner->SetSwapFrontNode(this);
+                }
             }
             else
             {
                 ImGui::SameLine();
-                if (ImGui::ArrowButtonSz("##Down", ImGuiDir_Down, BtnSize))
-                {
-                    /*
-                    vector<TreeNode*>::reverse_iterator iter = m_ParentNode->m_vecChildNode.rbegin();
-
-                    if (this != *iter)
-                    {
-                        TreeNode* AfterNode = nullptr;
-
-                        while (iter != m_ParentNode->m_vecChildNode.rend())
-                        {
-                            if (*iter == this)
-                                break;
-
-                            AfterNode = *iter;
-                            iter++;
-                        }
-
-                        if (m_Owner->m_SwapInst && m_Owner->m_SwapFunc)
-                            (m_Owner->m_SwapInst->*m_Owner->m_SwapFunc)((DWORD_PTR)this, (DWORD_PTR)AfterNode);
-                    }
-                    */
-                }
+                ImGui::InvisibleButton("NONE", BtnSize);
             }
         }
     }
@@ -240,13 +206,17 @@ TreeUI::TreeUI()
     , m_LbtDownNode(nullptr)
     , m_DragNode(nullptr)
     , m_DropNode(nullptr)
+    , m_SwapFrontNode(nullptr)
+    , m_SwapBackNode(nullptr)
     , m_dwPrevSelected(0)
     , m_SelectInst(nullptr)
     , m_SelectFunc(nullptr)    
     , m_DragDropInst(nullptr)
     , m_DragDropFunc(nullptr)
-    , m_SwapInst(nullptr)
-    , m_SwapFunc(nullptr)
+    , m_SwapFrontInst(nullptr)
+    , m_SwapFrontFunc(nullptr)
+    , m_SwapBackInst(nullptr)
+    , m_SwapBackFunc(nullptr)
 {   
     m_strDragDropID = "PayLoad";
 }
@@ -284,6 +254,28 @@ int TreeUI::render_update()
         
         m_DragNode = nullptr;
         m_DropNode = nullptr;
+    }
+
+    // SwapFront 실행
+    if (m_SwapFrontNode)
+    {
+        if (m_SwapFrontInst && m_SwapFrontFunc)
+        {
+            (m_SwapFrontInst->*m_SwapFrontFunc)((DWORD_PTR)m_SwapFrontNode);
+        }
+
+        m_SwapFrontNode = nullptr;
+    }
+    
+    // SwapBack 실행
+    if (m_SwapBackNode)
+    {
+        if (m_SwapBackInst && m_SwapBackFunc)
+        {
+            (m_SwapBackInst->*m_SwapBackFunc)((DWORD_PTR)m_SwapBackNode);
+        }
+
+        m_SwapBackNode = nullptr;
     }
 
     return 0;
@@ -387,13 +379,14 @@ void TreeUI::SetDropNode(TreeNode* _Node)
     m_DropNode = _Node;
 }
 
-void TreeUI::SwapBefore(TreeNode* _Node)
+void TreeUI::SetSwapFrontNode(TreeNode* _Node)
 {
-    
+    m_SwapFrontNode = _Node;
 }
 
-void TreeUI::SwapAfter(TreeNode* _Node)
+void TreeUI::SetSwapBackNode(TreeNode* _Node)
 {
+    m_SwapBackNode = _Node;
 }
 
 bool TreeUI::GetSelectedNode(DWORD_PTR _Data)

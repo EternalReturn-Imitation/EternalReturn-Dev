@@ -154,6 +154,9 @@
     <ClInclude Include="CBehaviorTree.h">
       <Filter>Source\06. Component\BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="CBehaviorTreeMgr.h">
+      <Filter>Source\06. Component\BehaviorTree\BehaviorTreeMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -294,8 +297,8 @@
     <ClCompile Include="CBehaviorTree.cpp">
       <Filter>Source\06. Component\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="BehaviorTreeFunc.cpp">
-      <Filter>Source\06. Component\BehaviorTree</Filter>
+    <ClCompile Include="CBehaviorTreeMgr.cpp">
+      <Filter>Source\06. Component\BehaviorTree\BehaviorTreeMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -442,6 +445,9 @@
     </Filter>
     <Filter Include="Source\06. Component\BehaviorTree">
       <UniqueIdentifier>{cfbc5080-d40e-4c6f-bbe4-ce108bb031b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\BehaviorTree\BehaviorTreeMgr">
+      <UniqueIdentifier>{0c382bc1-e8e5-4d0d-860a-16f4f827ef87}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
