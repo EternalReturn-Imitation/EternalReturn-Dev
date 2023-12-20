@@ -180,6 +180,42 @@ void SaveResRef(Ptr<CRes> _Res, FILE* _File)
 	}
 }
 
+wstring SaveResRefToDB(Ptr<CRes> _Res)
+{
+	std::wstringstream wss;
+
+	int i = 0;
+	if (nullptr == _Res)
+	{
+		wss << L"0\n";
+	}
+	else
+	{
+		wss << L"1\n";
+		wss << _Res->GetKey() << L"\n";
+		wss << _Res->GetRelativePath() << L"\n";
+	}
+	
+	return wss.str();
+}
+
+template<typename T>
+void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
+	int exists;
+	wss >> exists;
+	std::wstring line;
+	std::getline(wss, line); // 숫자 뒤의 개행 문자를 소비
+
+	if (exists) {
+		std::wstring strKey, strRelativePath;
+
+		std::getline(wss, strKey);
+		std::getline(wss, strRelativePath);
+
+		_Res = CResMgr::GetInst()->Load<T>(strKey, strRelativePath);
+	}
+}
+
 const wchar_t* ToWString(COMPONENT_TYPE type)
 {
 	return COMPONENT_TYPE_WSTR[(UINT)type];

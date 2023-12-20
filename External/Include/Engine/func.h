@@ -61,6 +61,11 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 	}
 }
 
+wstring SaveResRefToDB(Ptr<CRes> _Res);
+
+template<typename T>
+void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss);
+
 const wchar_t* ToWString(COMPONENT_TYPE type);
 
 std::wstring Vec3ToWString(const Vec3& vec);
