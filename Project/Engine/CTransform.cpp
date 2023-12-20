@@ -128,4 +128,38 @@ void CTransform::SaveToDB(int _gameObjectID)
 
 void CTransform::LoadToDB(int _gameObjectID)
 {
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	sqlite3_stmt* stmt;
+	const char* szQuery = "SELECT Pos, Scale, Rot, Absolute FROM TRANSFORM WHERE GameObject_ID = ?";
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			const unsigned char* posPtr = sqlite3_column_text(stmt, 0);
+			std::string sRelativePos = reinterpret_cast<const char*>(posPtr);
+
+			const unsigned char* scalePtr = sqlite3_column_text(stmt, 1);
+			std::string sRelativeScale = reinterpret_cast<const char*>(scalePtr);
+
+			const unsigned char* rotPtr = sqlite3_column_text(stmt, 2);
+			std::string sRelativeRot = reinterpret_cast<const char*>(rotPtr);
+
+			wstring wRelativePos = ToWString(sRelativePos);
+			wstring wRelativeScale = ToWString(sRelativeScale);
+			wstring wRelativeRot = ToWString(sRelativeRot);
+			int bAbsolute = sqlite3_column_int(stmt, 3);
+
+			// 여기서 wRelativePos, wRelativeScale, wRelativeRot을 Vec3으로 변환하여 멤버 변수에 할당하십시오
+			m_vRelativePos = WStringToVec3(wRelativePos);
+			m_vRelativeScale = WStringToVec3(wRelativeScale);
+			m_vRelativeRot = WStringToVec3(wRelativeRot);
+			m_bAbsolute = bAbsolute;
+		}
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// 쿼리 준비에 실패했을 경우의 처리
+		assert(false);
+	}
 }

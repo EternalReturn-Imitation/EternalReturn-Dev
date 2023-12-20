@@ -146,6 +146,22 @@ const wchar_t* ToWString(COLLIDER2D_TYPE type)
 	return COLLIDER2D_TYPE_WSTR[(UINT)type];
 }
 
+string ToString(wstring _wstring)
+{
+	string sString;
+	sString.assign(_wstring.begin(), _wstring.end());
+
+	return sString;
+}
+
+wstring ToWString(string _string)
+{
+	wstring wString;
+	wString.assign(_string.begin(), _string.end());
+
+	return wString;
+}
+
 void SaveWString(const wstring& _str, FILE* _File)
 {	
 	UINT iLen = (UINT)_str.length();
@@ -224,4 +240,14 @@ const wchar_t* ToWString(COMPONENT_TYPE type)
 std::wstring Vec3ToWString(const Vec3& vec) {
 	wstring result = std::to_wstring(vec.x) + L"," + std::to_wstring(vec.y) + L"," + std::to_wstring(vec.z);
 	return result;
+}
+
+Vec3 WStringToVec3(const std::wstring& wstr)
+{
+	Vec3 vec;
+	std::wistringstream wss(wstr);
+	wchar_t comma; // 쉼표를 저장하기 위한 임시 변수
+
+	wss >> vec.x >> comma >> vec.y >> comma >> vec.z;
+	return vec;
 }
