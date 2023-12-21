@@ -125,6 +125,38 @@ void CCollider2D::SaveToDB(int _gameObjectID)
 	EXECQUERY(Query, errMsg);
 }
 
-void CCollider2D::LoadToDB(int _gameObjectID)
+void CCollider2D::LoadFromDB(int _gameObjectID)
 {
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	sqlite3_stmt* stmt;
+	const char* szQuery = "SELECT Pos, Scale, Absolute, ColliderType FROM COLLIDER2D WHERE GameObject_ID = ?";
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			std::string offsetPos(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0)));
+			std::string offsetScale(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)));
+			int bAbsolute = sqlite3_column_int(stmt, 2);
+			std::string colliderType(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)));
+
+			wstring wOffsetPos = ToWString(offsetPos);
+			wstring wOffsetScale = ToWString(offsetScale);
+
+			wstring wColliderType = ToWString(colliderType);
+
+			// 여기서 wOffsetPos, wOffsetScale을 Vec3으로 변환하여 멤버 변수에 할당
+			m_vOffsetPos = WStringToVec3(wOffsetPos);
+			m_vOffsetScale = WStringToVec3(wOffsetScale);
+			m_bAbsolute = bAbsolute;
+
+			// ColliderType을 적절한 타입으로 변환하여 할당
+			m_Shape = ToCollider2DType(wColliderType);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// 쿼리 준비에 실패했을 경우의 처리
+		assert(false);
+	}
 }

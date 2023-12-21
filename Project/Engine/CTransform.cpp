@@ -126,7 +126,7 @@ void CTransform::SaveToDB(int _gameObjectID)
 	EXECQUERY(Query, errMsg);
 }
 
-void CTransform::LoadToDB(int _gameObjectID)
+void CTransform::LoadFromDB(int _gameObjectID)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 	sqlite3_stmt* stmt;

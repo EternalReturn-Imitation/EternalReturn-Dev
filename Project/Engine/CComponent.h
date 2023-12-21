@@ -35,7 +35,7 @@ public:
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
 
     virtual void SaveToDB(int _gameObjectID) abstract;
-    virtual void LoadToDB(int _gameObjectID) abstract;
+    virtual void LoadFromDB(int _gameObjectID) abstract;
 
 public:
     GET_OTHER_COMPONENT(Transform);

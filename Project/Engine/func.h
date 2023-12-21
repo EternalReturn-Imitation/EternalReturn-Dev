@@ -33,6 +33,8 @@ const wchar_t* ToWSTring(COMPONENT_TYPE);
 const char* ToString(COLLIDER2D_TYPE);
 const wchar_t* ToWString(COLLIDER2D_TYPE);
 
+COLLIDER2D_TYPE ToCollider2DType(wstring _wstring);
+
 string ToString(wstring _wstring);
 wstring ToWString(string _string);
 
