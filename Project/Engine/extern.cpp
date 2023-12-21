@@ -72,7 +72,7 @@ extern const char* COLLIDER2D_TYPE_STR[(UINT)COLLIDER2D_TYPE::END] =
 	"CIRCLE",
 };
 
-extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COMPONENT_TYPE::END] =
+extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COLLIDER2D_TYPE::END] =
 {
 	L"RECT",
 	L"CIRCLE",

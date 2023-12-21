@@ -33,6 +33,11 @@ const wchar_t* ToWSTring(COMPONENT_TYPE);
 const char* ToString(COLLIDER2D_TYPE);
 const wchar_t* ToWString(COLLIDER2D_TYPE);
 
+COLLIDER2D_TYPE ToCollider2DType(wstring _wstring);
+
+string ToString(wstring _wstring);
+wstring ToWString(string _string);
+
 
 // Save / Load
 void SaveWString(const wstring& _str, FILE* _File);
@@ -69,6 +74,7 @@ void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss);
 const wchar_t* ToWString(COMPONENT_TYPE type);
 
 std::wstring Vec3ToWString(const Vec3& vec);
+Vec3 WStringToVec3(const std::wstring& wstr);
 
 
 
