@@ -10,6 +10,7 @@ TreeNode::TreeNode()
     , m_CurGroupIdx(0)
     , m_ChildNodeSize(0)
     , m_NodeColorNum(0)
+    , m_CustomFlags(0)
     , m_ID(0)
     , m_Data(0)
     , m_CategoryNode(false)
@@ -45,7 +46,8 @@ void TreeNode::render_update()
     if(m_Hilight || m_CategoryNode)
         flag |= ImGuiTreeNodeFlags_Selected;
 
-    flag |= ImGuiTreeNodeFlags_SpanAvailWidth;
+    flag |= ImGuiTreeNodeFlags_OpenOnArrow;
+    flag |= m_CustomFlags;
     
     ImGui::Text("%d", m_CurGroupIdx);
     ImGui::SameLine();
@@ -199,6 +201,7 @@ TreeUI::TreeUI()
     : UI("##Tree")
     , m_RootNode(nullptr)
     , g_NextId(0)
+    , m_NodeFlags(0)
     , m_bShowRoot(true)
     , m_ArrowBtn(false)
     , m_GroupIdx(false)

@@ -204,6 +204,7 @@ public:
         // Task Node라면 자식을 가질 수 없음.
         if (m_NodeType == NODETYPE::TASK)
         {
+            return ChildNode;
             assert(nullptr);
         }
 
@@ -216,12 +217,12 @@ public:
             {
                 // 기존 자식과 부모 관계끊기
                 BTNode* BeforeChild = m_Child.front();
-                BeforeChild->DisconnectFromParent();
 
                 ChildNode->AddChild(BeforeChild);
 
+                
+                ChildNode->DisconnectFromParent();
                 ChildNode->SetRootNode(m_RootNode);
-
                 m_Child.emplace_back(ChildNode);
                 ChildNode->SetParentNode(this);
                 m_ChildCnt++;
@@ -229,9 +230,9 @@ public:
                 return ChildNode;
             }
         }
-
+        
+        ChildNode->DisconnectFromParent();
         ChildNode->SetRootNode(m_RootNode);
-
         m_Child.emplace_back(ChildNode);
         ChildNode->SetParentNode(this);
         m_ChildCnt++;
@@ -246,6 +247,7 @@ public:
     // ========= 노드 정보 =========
     const wstring& GetNodeName() { return m_NodeName; }
     void SetNodeName(const wstring& NodeName) { m_NodeName = NodeName; }
+
     
     NODETYPE GetNodeType() { return m_NodeType; }
     

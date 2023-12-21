@@ -14,6 +14,7 @@ private:
     UINT                m_CurGroupIdx;  // 동일부모자식 노드중 순서
     UINT                m_ChildNodeSize;// 자식노드 갯수
     UINT                m_NodeColorNum; // 노드글씨 색상
+    UINT                m_CustomFlags;  // 사용자 플래그
         
     string              m_strName;      // 노드의 출력 이름
     UINT                m_ID;           // 노드의 고유 ID
@@ -38,6 +39,7 @@ public:
     DWORD_PTR GetData() { return m_Data; }
     UINT GetChildNodeSize() { return m_ChildNodeSize; }
     
+    void SetFlags(UINT _flags) { m_CustomFlags = _flags; }
     void SetGroupIdx(UINT _idx) { m_CurGroupIdx = _idx; }
     void SetChildNodeSize(UINT _i) { m_ChildNodeSize = _i; }
     void SetNodeColor(UINT _colorNum) { m_NodeColorNum = _colorNum; m_ColorChange = true; }
@@ -63,6 +65,8 @@ class TreeUI :
 private:
     TreeNode* m_RootNode; // 트리가 소유하고 있는 노드 중 루트 노드
     UINT            g_NextId;       // 생성되는 노드뒤에 붙여줄 고유 숫자
+    UINT            m_NodeFlags;    // 노드 플래그
+
     bool            m_bShowRoot;
     bool            m_ArrowBtn;     // 화살표 버튼 유무
     bool            m_GroupIdx;     // 그룹 순서 표기 유무
@@ -101,6 +105,7 @@ public:
     void ShowRoot(bool _Show) { m_bShowRoot = _Show; }
     void ShowArrowBtn(bool _Show) { m_ArrowBtn = _Show; }
     void ShowGroupIdx(bool _Show) { m_GroupIdx = _Show; }
+    void SetFlags(UINT _flags) { m_NodeFlags = _flags; }
 
     void AddDynamic_Select(UI* _UI, UI_DELEGATE_1 _MemFunc)
     {

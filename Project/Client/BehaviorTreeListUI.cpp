@@ -3,6 +3,7 @@
 
 #include "ImGuiMgr.h"
 #include "InspectorUI.h"
+#include "NodeInfoUI.h"
 
 #include <Engine/CBehaviorTree.h>
 
@@ -13,15 +14,18 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 	, m_Tree(nullptr)
 	, m_dwSelectedData(0)
 	, m_RootNode(0)
+	, m_NodeInfo(nullptr)
 {
 	SetName("BehaviorTreeList");
 	
 	m_Tree = new TreeUI;
 	m_Tree->SetName("BehaviorTree");
+	
 	m_Tree->SetActive(true);
 	m_Tree->ShowRoot(true);
 	m_Tree->ShowArrowBtn(true);
 	m_Tree->ShowGroupIdx(true);
+	m_Tree->SetFlags(ImGuiTreeNodeFlags_CollapsingHeader);
 
 	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&BehaviorTreeListUI::SetTargetToInspector);
 	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&BehaviorTreeListUI::DragDrop);
@@ -30,19 +34,52 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 
 	m_Tree->SetDragDropID("BTNode");
 
-	AddChildUI(m_Tree);
+	m_NodeInfo = new NodeInfoUI;
+	// m_NodeInfo->SetActive(true);
+
+	// AddChildUI(m_Tree);
+	// AddChildUI(m_NodeInfo);
 }
 
 BehaviorTreeListUI::~BehaviorTreeListUI()
 {
+	delete m_Tree;
+	delete m_NodeInfo;
 }
 
 void BehaviorTreeListUI::tick()
 {
+	// m_NodeInfo->SetActive(true);
+	m_Tree->tick();
+	m_NodeInfo->tick();
 }
 
 int BehaviorTreeListUI::render_update()
 {
+	ImVec2 size = ImGui::GetWindowSize();
+	string strFullName = m_Tree->GetName() + m_Tree->GetID();
+	{
+		ImGui::GetWindowSize();
+		ImGui::BeginChild(strFullName.c_str(), ImVec2(size.x - 225, -ImGui::GetFrameHeightWithSpacing()));
+		ImGui::BeginGroup();
+		m_Tree->render_update();
+		ImGui::EndGroup();
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+		{
+			ImGui::BeginGroup();
+			strFullName = m_NodeInfo->GetName() + m_NodeInfo->GetID();
+			ImGui::BeginChild(strFullName.c_str(), ImVec2(200, -ImGui::GetFrameHeightWithSpacing()), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+			m_NodeInfo->render_update();
+			ImGui::EndChild();
+			if (ImGui::Button("Save")) {}
+			ImGui::SameLine();
+			if (ImGui::Button("Load")) {}
+			ImGui::EndGroup();
+		}
+	}
+
 	return 0;
 }
 
@@ -65,10 +102,15 @@ void BehaviorTreeListUI::SetTargetObject(CGameObject* _Target)
 	// 새 타겟
 	CComponent* Com = _Target->BehaviorTree();
 	if (Com)
+	{
 		m_RootNode = (DWORD_PTR)_Target->BehaviorTree()->GetRootNode();
+	}
 
 	else
+	{
 		m_RootNode = 0;
+		m_NodeInfo->SetTargetNode(nullptr);
+	}
 	
 	ResetNodeLinker();
 }
@@ -76,11 +118,12 @@ void BehaviorTreeListUI::SetTargetObject(CGameObject* _Target)
 void BehaviorTreeListUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 {
 	TreeNode* pSelectedNode = (TreeNode*)_SelectedNode;
+	m_NodeInfo->SetTargetNode((BTNode*)pSelectedNode->GetData());
 }
 
 BTNode* BehaviorTreeListUI::GetSelectedNode()
 {
-	return nullptr;
+	return m_NodeInfo->GetTargetNode();
 }
 
 void BehaviorTreeListUI::AddNode(BTNode* _Node, TreeNode* _ParentNode)
@@ -150,6 +193,10 @@ void BehaviorTreeListUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 			return;
 	}
 	else if (nullptr == pDropBT)
+		return;
+
+	// 드롭노드에 자식이 있을 때 드래그노드가 task인경우
+	if (0 < pDropBT->GetChildCnt() && pDragBT->GetNodeType() == BT_TASK)
 		return;
 
 	pDropBT->AddChild(pDragBT);

@@ -4,6 +4,7 @@
 class TreeUI;
 class TreeNode;
 class BTNode;
+class NodeInfoUI;
 
 class BehaviorTreeListUI :
     public UI
@@ -12,6 +13,8 @@ private:
     TreeUI*     m_Tree;
     DWORD_PTR   m_dwSelectedData;
     DWORD_PTR   m_RootNode;
+
+    NodeInfoUI* m_NodeInfo;
 
 public:
     virtual void tick() override;
