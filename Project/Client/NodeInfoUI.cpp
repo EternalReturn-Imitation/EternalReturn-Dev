@@ -39,7 +39,9 @@ int NodeInfoUI::render_update()
 
     string strNodeType;
     UINT TypeColor = 0;
-
+    bool bUseFlag = false;
+    
+    
     switch (eNodeType)
     {
     case BTNode::NODETYPE::ROOT:
@@ -49,16 +51,20 @@ int NodeInfoUI::render_update()
     case BTNode::NODETYPE::COMPOSITE:
         strNodeType = "COMPOSITE";
         TypeColor = 4;
+        bUseFlag = true;
         break;
     case BTNode::NODETYPE::DECORATOR:
         strNodeType = "DECORATOR";
         TypeColor = 3;
+        bUseFlag = true;
         break;
     case BTNode::NODETYPE::TASK:
         strNodeType = "TASK";
         TypeColor = 5;
+        bUseFlag = true;
         break;
     }
+    
     strNodeType = "NodeType : " + strNodeType + " NODE";
 
     wstring tmp = pNode->GetNodeName();
@@ -74,6 +80,17 @@ int NodeInfoUI::render_update()
     ImGui::PopID();
 
     ImGui::Text(strNodeType.c_str());
+    
+    if (bUseFlag)
+    {
+        ImGui::Text("Flags : ");
+        ImGui::SameLine();
+        
+        int iCurrnetFlag = pNode->GetNodeFlag();
+        const char** FlagsList = pNode->GetFlagList();
+        ImGui::Combo("##NodeFlags", &iCurrnetFlag, FlagsList, pNode->GetFlagCnt());
+        pNode->SetNodeFlag(iCurrnetFlag);
+    }
 
     return TRUE;
 }

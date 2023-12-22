@@ -116,6 +116,12 @@ int MenuUI::render_update()
                 pNodeUI->ResetNodeLinker();
             }
 
+            if (ImGui::MenuItem("BlackBoardList Window"))
+            {
+                BehaviorTreeListUI* pNodeUI = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
+                pNodeUI->OpenBlackBoardListUI();
+            }
+
             ImGui::EndMenu();
         }
 

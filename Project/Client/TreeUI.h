@@ -63,7 +63,7 @@ class TreeUI :
     public UI
 {
 private:
-    TreeNode* m_RootNode; // 트리가 소유하고 있는 노드 중 루트 노드
+    TreeNode*       m_RootNode; // 트리가 소유하고 있는 노드 중 루트 노드
     UINT            g_NextId;       // 생성되는 노드뒤에 붙여줄 고유 숫자
     UINT            m_NodeFlags;    // 노드 플래그
 

@@ -1,10 +1,10 @@
 #pragma once
 #include "UI.h"
 
-class TreeUI;
-class TreeNode;
 class BTNode;
+class TreeUI;
 class NodeInfoUI;
+class BlackBoardListUI;
 
 class BehaviorTreeListUI :
     public UI
@@ -15,12 +15,15 @@ private:
     DWORD_PTR   m_RootNode;
 
     NodeInfoUI* m_NodeInfo;
+    BlackBoardListUI* m_BBList;
 
 public:
     virtual void tick() override;
+    virtual void finaltick() override;
     virtual int render_update() override;
 
 public:
+    void OpenBlackBoardListUI();
     void SetRootNode(BTNode* _Node) { m_RootNode = (DWORD_PTR)_Node; }
     void ResetNodeLinker();
     void SetTargetObject(CGameObject* _Target);

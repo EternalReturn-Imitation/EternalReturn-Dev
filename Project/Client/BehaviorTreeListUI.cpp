@@ -4,6 +4,7 @@
 #include "ImGuiMgr.h"
 #include "InspectorUI.h"
 #include "NodeInfoUI.h"
+#include "BlackBoardListUI.h"
 
 #include <Engine/CBehaviorTree.h>
 
@@ -15,6 +16,7 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 	, m_dwSelectedData(0)
 	, m_RootNode(0)
 	, m_NodeInfo(nullptr)
+	, m_BBList(nullptr)
 {
 	SetName("BehaviorTreeList");
 	
@@ -25,7 +27,6 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 	m_Tree->ShowRoot(true);
 	m_Tree->ShowArrowBtn(true);
 	m_Tree->ShowGroupIdx(true);
-	m_Tree->SetFlags(ImGuiTreeNodeFlags_CollapsingHeader);
 
 	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&BehaviorTreeListUI::SetTargetToInspector);
 	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&BehaviorTreeListUI::DragDrop);
@@ -35,6 +36,11 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 	m_Tree->SetDragDropID("BTNode");
 
 	m_NodeInfo = new NodeInfoUI;
+	m_BBList = new BlackBoardListUI;
+	m_BBList->SetFlags(ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
+	m_BBList->SetActive(true);
+	// m_BBList->SetFlags(ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+	
 	// m_NodeInfo->SetActive(true);
 
 	// AddChildUI(m_Tree);
@@ -45,6 +51,7 @@ BehaviorTreeListUI::~BehaviorTreeListUI()
 {
 	delete m_Tree;
 	delete m_NodeInfo;
+	delete m_BBList;
 }
 
 void BehaviorTreeListUI::tick()
@@ -52,6 +59,13 @@ void BehaviorTreeListUI::tick()
 	// m_NodeInfo->SetActive(true);
 	m_Tree->tick();
 	m_NodeInfo->tick();
+	m_BBList->tick();
+}
+
+void BehaviorTreeListUI::finaltick()
+{
+	UI::finaltick();
+	m_BBList->finaltick();
 }
 
 int BehaviorTreeListUI::render_update()
@@ -59,8 +73,10 @@ int BehaviorTreeListUI::render_update()
 	ImVec2 size = ImGui::GetWindowSize();
 	string strFullName = m_Tree->GetName() + m_Tree->GetID();
 	{
+		int NodeInfoWidth = 250;
+
 		ImGui::GetWindowSize();
-		ImGui::BeginChild(strFullName.c_str(), ImVec2(size.x - 225, -ImGui::GetFrameHeightWithSpacing()));
+		ImGui::BeginChild(strFullName.c_str(), ImVec2(size.x - (NodeInfoWidth + 40) , -ImGui::GetFrameHeightWithSpacing()));
 		ImGui::BeginGroup();
 		m_Tree->render_update();
 		ImGui::EndGroup();
@@ -70,7 +86,7 @@ int BehaviorTreeListUI::render_update()
 		{
 			ImGui::BeginGroup();
 			strFullName = m_NodeInfo->GetName() + m_NodeInfo->GetID();
-			ImGui::BeginChild(strFullName.c_str(), ImVec2(200, -ImGui::GetFrameHeightWithSpacing()), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+			ImGui::BeginChild(strFullName.c_str(), ImVec2(NodeInfoWidth, -ImGui::GetFrameHeightWithSpacing()), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
 			m_NodeInfo->render_update();
 			ImGui::EndChild();
 			if (ImGui::Button("Save")) {}
@@ -79,8 +95,15 @@ int BehaviorTreeListUI::render_update()
 			ImGui::EndGroup();
 		}
 	}
+	ImGui::SetNextWindowSize(ImVec2(450.f, 300.f));
+	m_BBList->render_update();
 
 	return 0;
+}
+
+void BehaviorTreeListUI::OpenBlackBoardListUI()
+{
+	m_BBList->SetActive(true);
 }
 
 void BehaviorTreeListUI::ResetNodeLinker()
@@ -103,13 +126,16 @@ void BehaviorTreeListUI::SetTargetObject(CGameObject* _Target)
 	CComponent* Com = _Target->BehaviorTree();
 	if (Com)
 	{
-		m_RootNode = (DWORD_PTR)_Target->BehaviorTree()->GetRootNode();
+		BTNode* Root = _Target->BehaviorTree()->GetRootNode();
+		m_RootNode = (DWORD_PTR)Root;
+		m_BBList->SetBlackBoard(((Root_Node*)Root)->GetBlackBoard());
 	}
 
 	else
 	{
 		m_RootNode = 0;
 		m_NodeInfo->SetTargetNode(nullptr);
+		m_BBList->SetBlackBoard(nullptr);
 	}
 	
 	ResetNodeLinker();
@@ -118,7 +144,9 @@ void BehaviorTreeListUI::SetTargetObject(CGameObject* _Target)
 void BehaviorTreeListUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 {
 	TreeNode* pSelectedNode = (TreeNode*)_SelectedNode;
-	m_NodeInfo->SetTargetNode((BTNode*)pSelectedNode->GetData());
+
+	BTNode* SelectNode = (BTNode*)pSelectedNode->GetData();
+	m_NodeInfo->SetTargetNode(SelectNode);
 }
 
 BTNode* BehaviorTreeListUI::GetSelectedNode()
@@ -195,8 +223,10 @@ void BehaviorTreeListUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 	else if (nullptr == pDropBT)
 		return;
 
-	// 드롭노드에 자식이 있을 때 드래그노드가 task인경우
-	if (0 < pDropBT->GetChildCnt() && pDragBT->GetNodeType() == BT_TASK)
+	// 드롭노드에 자식이 있는데 드래그노드가 task인경우
+	if (0 < pDropBT->GetChildCnt() 
+		&& pDropBT->GetNodeType() != BT_COMPOSITE
+		&& pDragBT->GetNodeType() == BT_TASK)
 		return;
 
 	pDropBT->AddChild(pDragBT);

@@ -116,6 +116,9 @@
     <Filter Include="UI\BehaviorTreeUI\NodeInfoUI">
       <UniqueIdentifier>{0717bc42-0298-4386-9236-c0b130e24664}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\BehaviorTreeUI\BlackBoardList">
+      <UniqueIdentifier>{3aea27f2-766c-4319-ad9c-f949919a3e38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="NodeInfoUI.h">
       <Filter>UI\BehaviorTreeUI\NodeInfoUI</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackBoardListUI.h">
+      <Filter>UI\BehaviorTreeUI\BlackBoardList</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -381,6 +387,9 @@
     </ClCompile>
     <ClCompile Include="NodeInfoUI.cpp">
       <Filter>UI\BehaviorTreeUI\NodeInfoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoardListUI.cpp">
+      <Filter>UI\BehaviorTreeUI\BlackBoardList</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

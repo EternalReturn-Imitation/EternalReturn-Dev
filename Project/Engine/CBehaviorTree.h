@@ -13,59 +13,166 @@ class CBehaviorTree;
 class Decorator_Node;
 class BTNode;
 
+struct tBBKey
+{
+    enum eDataType
+    {
+        UNKNOWN,
+        INT,
+        FLOAT,
+        VECTOR2,
+        VECTOR3,
+        VECTOR4,
+    };
+
+    enum eDataSlot
+    {
+        EXTERNED,
+        CREATED,
+    };
+
+    string Key;
+    eDataType Type = eDataType::UNKNOWN;
+    eDataSlot Slot = eDataSlot::CREATED;
+
+    void GetBBKeyInfoString(string& _Type, string& _Slot)
+    {
+        _Type = GetType();
+        _Slot = GetSlot();
+    }
+
+    const char* GetType()
+    {
+        const char* type = nullptr;
+
+        switch (Type)
+        {
+        case tBBKey::UNKNOWN:
+            type = "Unknown";
+            break;
+        case tBBKey::INT:
+            type = "int";
+            break;
+        case tBBKey::FLOAT:
+            type = "float";
+            break;
+        case tBBKey::VECTOR2:
+            type = "Vec2";
+            break;
+        case tBBKey::VECTOR3:
+            type = "Vec3";
+            break;
+        case tBBKey::VECTOR4:
+            type = "Vec4";
+            break;
+        }
+
+        return type;
+    }
+
+    const char* GetSlot()
+    {
+        const char* slot= nullptr;
+
+        switch (Slot)
+        {
+        case tBBKey::EXTERNED:
+            slot = "Externed";
+            break;
+        case tBBKey::CREATED:
+            slot = "Created";
+            break;
+        default:
+            break;
+        }
+        return slot;
+    }
+    
+};
+
 // ========================= 블랙보드 클래스 =========================
 class BB
 {
-public:
-    enum class BBType
-    {
-        BOOL,       // boolen
-        INT,        // int
-        FLOAT,      // float
-        Vec2,       // float2
-        Vec3,       // float3
-        Vec4,       // float4
-        STRING,     // string
-        GAMEOBJECT, // Object
-    };
-
-    struct BBkey
-    {
-        wstring key;
-        BBType  type;
-    };
-
 private:
-    unordered_map<wstring, void*> m_ExternedItem;   // 외부 데이터
-    unordered_map<wstring, void*> m_CreatedItem;    // 자체 생성 데이터
-    
+    unordered_map<string, void*> m_ExternedItem;   // 외부 데이터
+    unordered_map<string, void*> m_CreatedItem;    // 자체 생성 데이터
+    list<tBBKey> m_DataKeyList;                    // 보유중인 데이터 리스트
 
     // ExternedItem 은 Load 했을때 가져올 수 있도록
     // GameObject에서 얻어오는 함수나, System에서 가져올 수 있는 함수의
     // 인자를 저장한다.
 
+private:
+    template<typename T>
+    void AddBBKey(string _key, bool _IsExterned)
+    {
+        tBBKey tmp;
+        tmp.Key = _key;
+
+        string type = typeid(T).name();
+
+        if (type == typeid(int).name())
+        {
+            tmp.Type = tBBKey::eDataType::INT;
+        }
+        else if (type == typeid(float).name())
+        {
+            tmp.Type = tBBKey::eDataType::FLOAT;
+        }
+        else if (type == typeid(Vector2).name())
+        {
+            tmp.Type = tBBKey::eDataType::VECTOR2;
+        }
+        else if (type == typeid(Vector3).name())
+        {
+            tmp.Type = tBBKey::eDataType::VECTOR3;
+        }
+        else if (type == typeid(Vector4).name())
+        {
+            tmp.Type = tBBKey::eDataType::VECTOR4;
+        }
+        else
+        {
+            tmp.Type = tBBKey::eDataType::UNKNOWN;
+        }
+
+        if (_IsExterned)
+        {
+            tmp.Slot = tBBKey::eDataSlot::EXTERNED;
+            
+        }
+        else
+        {
+            tmp.Slot = tBBKey::eDataSlot::CREATED;
+        }
+        
+        m_DataKeyList.push_back(tmp);
+    }
+
 public:
     // 외부에서 사용중인 메모리주소를 블랙보드에 가져온다.
     template<typename T>
-    T* AddItem(const wstring& key, T* Item)
+    T* AddItem(const string& key, T* ItemAdress)
     {
-        unordered_map<wstring, void*>::iterator iter
+        unordered_map<string, void*>::iterator iter
             = m_ExternedItem.find(key);
 
         if (iter != m_ExternedItem.end())
             return (T*)(iter->second);
 
-        m_ExternedItem.insert(make_pair(key, Item));
+        m_ExternedItem.insert(make_pair(key, ItemAdress));
         iter = m_ExternedItem.find(key);
+
+        AddBBKey<T>(key, true);
 
         return (T*)(iter->second);
     }
 
     // 블랙보드 내부에 새로 메모리를 할당하여 데이터를 입력한다.
     template<typename T>
-    T* AddItem(const wstring& key, T Data)
+    T* AddItem(const string& key, T Data)
     {
-        unordered_map<wstring, void*>::iterator iter
+        unordered_map<string, void*>::iterator iter
             = m_CreatedItem.find(key);
 
         if (iter != m_CreatedItem.end())
@@ -77,13 +184,35 @@ public:
         m_CreatedItem.insert(make_pair(key, NewItem));
         iter = m_CreatedItem.find(key);
 
+        AddBBKey<T>(key, false);
+
         return (T*)(iter->second);
     }
 
     template<typename T>
-    T* FindItem(const wstring& key)
+    T* AddItem(const string& key)
     {
-        unordered_map<wstring, void*>::iterator iter
+        unordered_map<string, void*>::iterator iter
+            = m_CreatedItem.find(key);
+
+        if (iter != m_CreatedItem.end())
+            return (T*)(iter->second);
+
+        T* NewItem = new T();
+        *NewItem = 0;
+
+        m_CreatedItem.insert(make_pair(key, NewItem));
+        iter = m_CreatedItem.find(key);
+
+        AddBBKey<T>(key, false);
+
+        return (T*)(iter->second);
+    }
+
+    template<typename T>
+    T* FindItem(const string& key)
+    {
+        unordered_map<string, void*>::iterator iter
             = m_ExternedItem.find(key);
 
         if (iter != m_ExternedItem.end())
@@ -97,9 +226,53 @@ public:
         return nullptr;
     }
 
+    void GetvalueStr(tBBKey _key, string& _Dest)
+    {
+        char tmp[100] = {};
+
+        switch (_key.Type)
+        {
+        case tBBKey::UNKNOWN:
+            _Dest = "--";
+            break;
+        case tBBKey::INT:
+        {
+            int* data = FindItem<int>(_key.Key);
+            sprintf_s(tmp, "%d", *data);
+            break;
+        }
+        case tBBKey::FLOAT:
+        {
+            float* data = FindItem<float>(_key.Key);
+            sprintf_s(tmp, "%.3f", *data);
+            break;
+        }
+        case tBBKey::VECTOR2:
+        {
+            Vector2* data = FindItem<Vector2>(_key.Key);
+            sprintf_s(tmp, "{ %.3f, %.3f}", (*data).x, (*data).y);
+            break;
+        }
+        case tBBKey::VECTOR3:
+        {
+            Vector3* data = FindItem<Vector3>(_key.Key);
+            sprintf_s(tmp, "{ %.3f, %.3f, %.3f}", (*data).x, (*data).y, (*data).z);
+            break;
+        }
+        case tBBKey::VECTOR4:
+        {
+            Vector4* data = FindItem<Vector4>(_key.Key);
+            sprintf_s(tmp, "{ %.3f, %.3f, %.3f, %.3f}", (*data).x, (*data).y, (*data).z, (*data).w);
+        }
+        break;
+        }
+
+        _Dest = tmp;
+    }
+
     void ClearCreatedItem()
     {
-        unordered_map<wstring, void*>::iterator iter = m_CreatedItem.begin();
+        unordered_map<string, void*>::iterator iter = m_CreatedItem.begin();
         
         while (iter != m_CreatedItem.end())
         {
@@ -108,8 +281,10 @@ public:
         }
     }
 
+    const list<tBBKey>& GetKeyList() { return m_DataKeyList; }
+
 public:
-    BB() {}
+    BB() { }
     ~BB() { ClearCreatedItem(); }
 };
 
@@ -254,20 +429,25 @@ public:
     BTNode* GetRootNode() { return m_RootNode; }
     void SetRootNode(BTNode* _RootNode) { m_RootNode = _RootNode; }
 
-    const int GetNodeFlag() { return m_NodeFlag; }
+    int GetNodeFlag() { return m_NodeFlag; }
     void SetNodeFlag(UINT _flag) { m_NodeFlag = _flag; }
+    virtual const char** GetFlagList() { return nullptr; }
+    virtual UINT GetFlagCnt() { return 0; }
 
     
 
 public:
     BTNode(NODETYPE eType);
     virtual ~BTNode();
+
+    
 };
 
 // ========================= 루트 노드 =========================
 class Root_Node : public BTNode
 {
 private:
+    CGameObject* m_OwnerObj;
     BB* m_BlackBoard;
     BTNode* m_RunningNode;
 
@@ -294,9 +474,12 @@ public:
     BB* GetBlackBoard() { return m_BlackBoard; }
 
 public:
-    Root_Node() : BTNode(NODETYPE::ROOT), m_BlackBoard(nullptr), m_RunningNode(nullptr) { m_BlackBoard = new BB(); SetNodeName(L"NewRoot");
-    }
+    Root_Node() : BTNode(NODETYPE::ROOT), m_BlackBoard(nullptr), m_RunningNode(nullptr), m_OwnerObj(nullptr) { m_BlackBoard = new BB(); SetNodeName(L"NewRoot"); }
     virtual ~Root_Node() { DELETE_UNVAILUBLE(m_BlackBoard); m_RunningNode = nullptr; }
+
+    friend class CBehaviorTree;
+    friend class Decorator_Node;
+    friend class Task_Node;
 };
 
 // ========================= 컴포짓 노드 =========================
@@ -310,10 +493,23 @@ public:
         CompositeNodeFlag_SEQUENCE,
         CompositeNodeFlag_SELECTOR,
         CompositeNodeFlag_RANDOM_SELECTOR,
+        END,
     };
 
 public:
     virtual BT_STATUS Run();
+    virtual UINT GetFlagCnt() { return CompositNodeFlag::END; }
+    virtual const char** GetFlagList()
+    { 
+        static const char* CompositeFlags[] =
+        {
+            "SEQUENCE",
+            "SELECTOR",
+            "RANDOM_SELECTOR"
+        };
+
+        return CompositeFlags;
+    }
 
 public:
     Composite_Node() : BTNode(NODETYPE::COMPOSITE) { SetNodeName(L"NewComposite"); }
@@ -331,10 +527,22 @@ public:
     {
         DecoratorNodeFlag_BLACKBOARD,           // 특정 블랙보드 Key에 값이 설정되어있는지 확인
         DecoratorNodeFlag_COMPARE_BBENTRIES,    // 두 블랙보드 키 값을 비교하여 결과의 동일 여부 판단
+        END,
     };
 
 public:
     virtual BT_STATUS Run();
+    virtual UINT GetFlagCnt() { return DecoratorNodeFlag::END; }
+    virtual const char** GetFlagList()
+    {
+        static const char* DecoratorFlags[] =
+        {
+            "BLACKBOARD",
+            "COMPARE_BBENTRIES"
+        };
+
+        return DecoratorFlags;
+    }
 
     Decorator_Node() : BTNode(NODETYPE::DECORATOR) { SetNodeName(L"NewDecorator"); }
     virtual ~Decorator_Node() {}
@@ -353,9 +561,23 @@ public:
         TaskNodeFlag_PLAY_SOUND,             // 사운드 재생
         TaskNodeFlag_WAIT,                   // 대기시간 설정 : 임의의 값 설정하여 사용
         TaskNodeFlag_WAIT_BLACKBOARD_TIME,   // 대기시간 설정 : 블랙보드에 설정된 값 사용
+        END,
     };
     
     virtual BT_STATUS Run();
+    virtual UINT GetFlagCnt() { return TaskNodeFlag::END; }
+    virtual const char** GetFlagList()
+    {
+        static const char* TaskFlags[] =
+        {
+            "PLAY_ANIMATION",
+            "PLAY_SOUND",
+            "WAIT",
+            "WAIT_BLACKBOARD_TIME"
+        };
+
+        return TaskFlags;
+    }
 
 public:
     Task_Node() : BTNode(NODETYPE::TASK) { SetNodeName(L"NewTask"); }
@@ -381,7 +603,8 @@ public:
 public:
     Root_Node* SetRootNode(Root_Node* _Root)
     { 
-        m_RootNode = _Root; 
+        m_RootNode = _Root;
+        m_RootNode->m_OwnerObj = GetOwner();
 
         return m_RootNode;
     }

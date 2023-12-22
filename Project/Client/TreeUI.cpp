@@ -46,11 +46,14 @@ void TreeNode::render_update()
     if(m_Hilight || m_CategoryNode)
         flag |= ImGuiTreeNodeFlags_Selected;
 
-    flag |= ImGuiTreeNodeFlags_OpenOnArrow;
+    flag |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
     flag |= m_CustomFlags;
     
-    ImGui::Text("%d", m_CurGroupIdx);
-    ImGui::SameLine();
+    if (m_Owner->m_GroupIdx)
+    {
+        ImGui::Text("%d", m_CurGroupIdx);
+        ImGui::SameLine();
+    }
     
     // 노드 상하 이동
     if (m_Owner->m_ArrowBtn)
@@ -94,8 +97,8 @@ void TreeNode::render_update()
                 ImGui::InvisibleButton("NONE", BtnSize);
             }
         }
+        ImGui::SameLine();
     }
-    ImGui::SameLine();
 
     // 노드 색상 변경
     int ChangCnt = 0;

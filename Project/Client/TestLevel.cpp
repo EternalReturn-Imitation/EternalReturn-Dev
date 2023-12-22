@@ -114,6 +114,26 @@ void CreateTestLevel()
 	Root_Node* MainRoot = pBT->SetRootNode((Root_Node*)CBehaviorTreeMgr::CreateBTNode(BT_ROOT, 0));
 	MainRoot->SetNodeName(L"RootNode");
 
+	BB* MainBB = MainRoot->GetBlackBoard();
+	MainBB->AddItem<Vector2>("Test2", { 1,2 });
+	MainBB->AddItem<float>("Test3", 0.2f);
+	MainBB->AddItem("Color", Vector4{ 1.0f,0.f,1.f,1.f });
+	MainBB->AddItem("FloatData", 0.2f);
+	MainBB->AddItem("Ine", 158);
+	MainBB->AddItem("1", 158);
+	MainBB->AddItem("2", 158);
+	MainBB->AddItem("3", 158);
+	MainBB->AddItem("4", 158);
+	MainBB->AddItem("5", 158);
+	MainBB->AddItem("6", 158);
+	MainBB->AddItem("7", 158);
+	MainBB->AddItem("8", 158);
+	MainBB->AddItem("9", 158);
+	MainBB->AddItem("0", 158);
+	MainBB->AddItem("10", 158);
+	MainBB->AddItem("11", 158);
+
+
 	BTNode* N_1 = MainRoot->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
 	BTNode* N_1_1 = N_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
 	BTNode* N_1_2 = N_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SELECTOR));
@@ -123,15 +143,15 @@ void CreateTestLevel()
 	BTNode* N_1_1_3 = N_1_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
 
 	BTNode* N_1_2_1 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
-	N_1_2_1->SetNodeName(L"N_1_2_1");
-	BTNode* N_1_2_2 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
-	N_1_2_2->SetNodeName(L"N_1_2_2");
+	N_1_2_1->SetNodeName(L"N_1_2_1WAIT");
+	BTNode* N_1_2_2 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_PLAY_SOUND));
+	N_1_2_2->SetNodeName(L"N_1_2_2PLAY_SOUND");
 	BTNode* N_1_2_3 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	N_1_2_3->SetNodeName(L"N_1_2_3");
-	BTNode* N_1_2_4 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	N_1_2_4->SetNodeName(L"N_1_2_4");
+	N_1_2_3->SetNodeName(L"N_1_2_3SEQ");
+	BTNode* N_1_2_4 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SELECTOR));
+	N_1_2_4->SetNodeName(L"N_1_2_4SEL");
 	BTNode* N_1_2_5 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	N_1_2_5->SetNodeName(L"N_1_2_5");
+	N_1_2_5->SetNodeName(L"N_1_2_5SEQ");
 
 	BTNode* N_1_1_2_1 = N_1_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
 	BTNode* N_1_2_3_1 = N_1_2_3->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
