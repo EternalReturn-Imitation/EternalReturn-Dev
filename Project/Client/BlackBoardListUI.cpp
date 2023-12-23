@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "BlackBoardListUI.h"
 
-#include <Engine\CBehaviorTree.h>
 #include <Engine\CBehaviorTreeMgr.h>
 
 BlackBoardListUI::BlackBoardListUI()
@@ -48,14 +47,14 @@ int BlackBoardListUI::render_update()
         const char* DataType = nullptr;
         string DataValue;
 
-        list<tBBKey> BBList = m_pTargetBB->GetKeyList();
-        list<tBBKey>::iterator iter = BBList.begin();
+        unordered_map<string, BB::tBBData*> BBList = m_pTargetBB->GetBBList();
 
-        for (auto BBinfo : BBList)
+        for (auto iter : BBList)
         {
-            DataKey   = BBinfo.Key.c_str();
-            DataType  = BBinfo.GetType();
-            m_pTargetBB->GetvalueStr(BBinfo, DataValue);
+            
+            DataKey     = iter.second->strKey.c_str();
+            DataType    = iter.second->strDataType;
+            DataValue   = GetDataStr(iter.second, DataType);
             
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
@@ -75,5 +74,38 @@ int BlackBoardListUI::render_update()
 void BlackBoardListUI::SetBlackBoard(BB* _Target)
 {
 	m_pTargetBB = _Target;
+}
+
+string BlackBoardListUI::GetDataStr(BB::tBBData* _Data, const char* _DataType)
+{
+    string res;
+
+    if (_DataType == "int")
+    {
+        res = std::to_string(*(int*)_Data->pDataPtr);
+    }
+    else if (_DataType == "float")
+    {
+        char fstr[10] = {};
+        float f = *((float*)_Data->pDataPtr);
+
+        sprintf_s(fstr, "%.3f", f);
+        res = fstr;
+    }
+    else if (_DataType == "GameObject")
+    {
+        wstring ObjName = ((CGameObject*)_Data->pDataPtr)->GetName();
+        res.assign(ObjName.begin(), ObjName.end());
+    }
+    else if (_DataType == "string")
+    {
+        res = _Data->strData;
+    }
+    else if (_DataType == "wstring")
+    {
+        res = _Data->strData;
+    }
+
+    return res;
 }
 

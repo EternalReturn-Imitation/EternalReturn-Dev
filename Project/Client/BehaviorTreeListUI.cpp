@@ -76,7 +76,7 @@ int BehaviorTreeListUI::render_update()
 		int NodeInfoWidth = 250;
 
 		ImGui::GetWindowSize();
-		ImGui::BeginChild(strFullName.c_str(), ImVec2(size.x - (NodeInfoWidth + 40) , -ImGui::GetFrameHeightWithSpacing()));
+		ImGui::BeginChild(strFullName.c_str(), ImVec2((float)(size.x - (NodeInfoWidth + 40)) , -ImGui::GetFrameHeightWithSpacing()));
 		ImGui::BeginGroup();
 		m_Tree->render_update();
 		ImGui::EndGroup();
@@ -86,7 +86,7 @@ int BehaviorTreeListUI::render_update()
 		{
 			ImGui::BeginGroup();
 			strFullName = m_NodeInfo->GetName() + m_NodeInfo->GetID();
-			ImGui::BeginChild(strFullName.c_str(), ImVec2(NodeInfoWidth, -ImGui::GetFrameHeightWithSpacing()), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+			ImGui::BeginChild(strFullName.c_str(), ImVec2((float)NodeInfoWidth, -ImGui::GetFrameHeightWithSpacing()), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
 			m_NodeInfo->render_update();
 			ImGui::EndChild();
 			if (ImGui::Button("Save")) {}

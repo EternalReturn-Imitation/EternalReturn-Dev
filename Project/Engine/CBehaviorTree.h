@@ -13,279 +13,63 @@ class CBehaviorTree;
 class Decorator_Node;
 class BTNode;
 
-struct tBBKey
-{
-    enum eDataType
-    {
-        UNKNOWN,
-        INT,
-        FLOAT,
-        VECTOR2,
-        VECTOR3,
-        VECTOR4,
-    };
-
-    enum eDataSlot
-    {
-        EXTERNED,
-        CREATED,
-    };
-
-    string Key;
-    eDataType Type = eDataType::UNKNOWN;
-    eDataSlot Slot = eDataSlot::CREATED;
-
-    void GetBBKeyInfoString(string& _Type, string& _Slot)
-    {
-        _Type = GetType();
-        _Slot = GetSlot();
-    }
-
-    const char* GetType()
-    {
-        const char* type = nullptr;
-
-        switch (Type)
-        {
-        case tBBKey::UNKNOWN:
-            type = "Unknown";
-            break;
-        case tBBKey::INT:
-            type = "int";
-            break;
-        case tBBKey::FLOAT:
-            type = "float";
-            break;
-        case tBBKey::VECTOR2:
-            type = "Vec2";
-            break;
-        case tBBKey::VECTOR3:
-            type = "Vec3";
-            break;
-        case tBBKey::VECTOR4:
-            type = "Vec4";
-            break;
-        }
-
-        return type;
-    }
-
-    const char* GetSlot()
-    {
-        const char* slot= nullptr;
-
-        switch (Slot)
-        {
-        case tBBKey::EXTERNED:
-            slot = "Externed";
-            break;
-        case tBBKey::CREATED:
-            slot = "Created";
-            break;
-        default:
-            break;
-        }
-        return slot;
-    }
-    
-};
-
 // ========================= 블랙보드 클래스 =========================
 class BB
 {
-private:
-    unordered_map<string, void*> m_ExternedItem;   // 외부 데이터
-    unordered_map<string, void*> m_CreatedItem;    // 자체 생성 데이터
-    list<tBBKey> m_DataKeyList;                    // 보유중인 데이터 리스트
-
-    // ExternedItem 은 Load 했을때 가져올 수 있도록
-    // GameObject에서 얻어오는 함수나, System에서 가져올 수 있는 함수의
-    // 인자를 저장한다.
-
-private:
-    template<typename T>
-    void AddBBKey(string _key, bool _IsExterned)
-    {
-        tBBKey tmp;
-        tmp.Key = _key;
-
-        string type = typeid(T).name();
-
-        if (type == typeid(int).name())
-        {
-            tmp.Type = tBBKey::eDataType::INT;
-        }
-        else if (type == typeid(float).name())
-        {
-            tmp.Type = tBBKey::eDataType::FLOAT;
-        }
-        else if (type == typeid(Vector2).name())
-        {
-            tmp.Type = tBBKey::eDataType::VECTOR2;
-        }
-        else if (type == typeid(Vector3).name())
-        {
-            tmp.Type = tBBKey::eDataType::VECTOR3;
-        }
-        else if (type == typeid(Vector4).name())
-        {
-            tmp.Type = tBBKey::eDataType::VECTOR4;
-        }
-        else
-        {
-            tmp.Type = tBBKey::eDataType::UNKNOWN;
-        }
-
-        if (_IsExterned)
-        {
-            tmp.Slot = tBBKey::eDataSlot::EXTERNED;
-            
-        }
-        else
-        {
-            tmp.Slot = tBBKey::eDataSlot::CREATED;
-        }
-        
-        m_DataKeyList.push_back(tmp);
-    }
-
 public:
-    // 외부에서 사용중인 메모리주소를 블랙보드에 가져온다.
-    template<typename T>
-    T* AddItem(const string& key, T* ItemAdress)
+    struct tBBData
     {
-        unordered_map<string, void*>::iterator iter
-            = m_ExternedItem.find(key);
-
-        if (iter != m_ExternedItem.end())
-            return (T*)(iter->second);
-
-        m_ExternedItem.insert(make_pair(key, ItemAdress));
-        iter = m_ExternedItem.find(key);
-
-        AddBBKey<T>(key, true);
-
-        return (T*)(iter->second);
-    }
-
-    // 블랙보드 내부에 새로 메모리를 할당하여 데이터를 입력한다.
-    template<typename T>
-    T* AddItem(const string& key, T Data)
-    {
-        unordered_map<string, void*>::iterator iter
-            = m_CreatedItem.find(key);
-
-        if (iter != m_CreatedItem.end())
-            return (T*)(iter->second);
-
-        T* NewItem = new T();
-        *NewItem = Data;
-
-        m_CreatedItem.insert(make_pair(key, NewItem));
-        iter = m_CreatedItem.find(key);
-
-        AddBBKey<T>(key, false);
-
-        return (T*)(iter->second);
-    }
-
-    template<typename T>
-    T* AddItem(const string& key)
-    {
-        unordered_map<string, void*>::iterator iter
-            = m_CreatedItem.find(key);
-
-        if (iter != m_CreatedItem.end())
-            return (T*)(iter->second);
-
-        T* NewItem = new T();
-        *NewItem = 0;
-
-        m_CreatedItem.insert(make_pair(key, NewItem));
-        iter = m_CreatedItem.find(key);
-
-        AddBBKey<T>(key, false);
-
-        return (T*)(iter->second);
-    }
-
-    template<typename T>
-    T* FindItem(const string& key)
-    {
-        unordered_map<string, void*>::iterator iter
-            = m_ExternedItem.find(key);
-
-        if (iter != m_ExternedItem.end())
-            return (T*)(iter->second);
-
-        iter = m_CreatedItem.find(key);
-
-        if (iter != m_CreatedItem.end())
-            return (T*)(iter->second);
-
-        return nullptr;
-    }
-
-    void GetvalueStr(tBBKey _key, string& _Dest)
-    {
-        char tmp[100] = {};
-
-        switch (_key.Type)
-        {
-        case tBBKey::UNKNOWN:
-            _Dest = "--";
-            break;
-        case tBBKey::INT:
-        {
-            int* data = FindItem<int>(_key.Key);
-            sprintf_s(tmp, "%d", *data);
-            break;
-        }
-        case tBBKey::FLOAT:
-        {
-            float* data = FindItem<float>(_key.Key);
-            sprintf_s(tmp, "%.3f", *data);
-            break;
-        }
-        case tBBKey::VECTOR2:
-        {
-            Vector2* data = FindItem<Vector2>(_key.Key);
-            sprintf_s(tmp, "{ %.3f, %.3f}", (*data).x, (*data).y);
-            break;
-        }
-        case tBBKey::VECTOR3:
-        {
-            Vector3* data = FindItem<Vector3>(_key.Key);
-            sprintf_s(tmp, "{ %.3f, %.3f, %.3f}", (*data).x, (*data).y, (*data).z);
-            break;
-        }
-        case tBBKey::VECTOR4:
-        {
-            Vector4* data = FindItem<Vector4>(_key.Key);
-            sprintf_s(tmp, "{ %.3f, %.3f, %.3f, %.3f}", (*data).x, (*data).y, (*data).z, (*data).w);
-        }
-        break;
-        }
-
-        _Dest = tmp;
-    }
-
-    void ClearCreatedItem()
-    {
-        unordered_map<string, void*>::iterator iter = m_CreatedItem.begin();
+        string      strKey;
+        const char* strDataType;
+        DWORD_PTR   pDataPtr;
+        string      strData;
         
-        while (iter != m_CreatedItem.end())
+        tBBData(string _key, const char* _Type, DWORD_PTR _Dataptr) : strKey(_key), strDataType(_Type), pDataPtr(_Dataptr) {}
+        tBBData(string _key, const char* _Type, string _strData) : strKey(_key), strDataType(_Type), pDataPtr(0), strData(_strData) {}
+    };
+
+private:
+    unordered_map<string, tBBData*> m_BBDataList;    // Total BB List
+ 
+public:
+    HRESULT AddBBData(const string& _BBKey, int _ItemPtr);
+    HRESULT AddBBData(const string& _BBKey, float _ItemPtr);
+    HRESULT AddBBData(const string& _BBKey, CGameObject* _ItemPtr);
+    HRESULT AddBBData(const string& _BBKey, string _string);
+    HRESULT AddBBData(const string& _BBKey, wstring _wstring);
+
+    unordered_map<string, tBBData*> GetBBList() { return m_BBDataList; }
+
+    HRESULT FindBBData(const string& _BBKey, int& _Dest);
+    HRESULT FindBBData(const string& _BBKey, float& _Dest);
+    HRESULT FindBBData(const string& _BBKey, CGameObject* _Dest);
+    HRESULT FindBBData(const string& _BBKey, string& _Dest);
+    HRESULT FindBBData(const string& _BBKey, wstring& _Dest);
+
+    void CleartBBData()
+    {
+        unordered_map<string, tBBData*>::iterator iter = m_BBDataList.begin();;
+        
+        while (iter != m_BBDataList.end())
         {
+            if (iter->second->strDataType == "int")
+            {
+                delete (int*)iter->second->pDataPtr;
+            }
+
+            if(iter->second->strDataType == "float")
+            {
+                delete (float*)iter->second->pDataPtr;
+            }
+
             delete iter->second;
-            iter = m_CreatedItem.erase(iter);
+            iter = m_BBDataList.erase(iter);
         }
     }
-
-    const list<tBBKey>& GetKeyList() { return m_DataKeyList; }
 
 public:
     BB() { }
-    ~BB() { ClearCreatedItem(); }
+    ~BB() { CleartBBData(); }
 };
 
 // ========================= 기본 노드 =========================
@@ -308,6 +92,13 @@ public:
         RUNNING,
     };
 
+    struct tSrcItem
+    {
+        int     INT[4] = {};
+        float   FLOAT[4] = {};
+        string  STRING;
+    };
+
 protected:
     wstring         m_NodeName;     // 노드 이름
     NODETYPE        m_NodeType;     // 노드 타입 : ROOT,COMPOSITE,DECORATOR,TASK
@@ -318,6 +109,7 @@ protected:
     list<BTNode*>   m_Child;        // 자식노드 리스트
     
     UINT            m_ChildCnt;     // 자식노드 수
+    tSrcItem        m_SrcItem;      // 노드자체 보유 Item
 
 public:
     virtual BT_STATUS Run() { return BT_STATUS::NONE; }
@@ -439,8 +231,6 @@ public:
 public:
     BTNode(NODETYPE eType);
     virtual ~BTNode();
-
-    
 };
 
 // ========================= 루트 노드 =========================
@@ -453,24 +243,9 @@ private:
 
 public:
     virtual BT_STATUS Run() override;
+    void SetRunningNode(BTNode* pNode) { m_RunningNode = pNode; }
     
     // ========= 블랙 보드 =========
-    template<typename T>
-    T* FindItem(const wstring& key) { return m_BlackBoard->FindItem(key); }
-
-    // 외부 아이템 추가
-    template<typename T>
-    T* AddItem(const wstring& key, T* Item) { return m_BlackBoard->AddItem(key, Item); }
-
-    // 신규 아이템 생성 및 데이터 입력
-    template<typename T>
-    T* AddItem(const wstring& key, T Data) { return m_BlackBoard->AddItem(key, Data); }
-
-    // 신규 아이템 생성 (메모리 생성만 진행)
-    template<typename T>
-    T* AddItem(const wstring& key) { return m_BlackBoard->AddItem(key); }
-
-    void SetRunningNode(BTNode* pNode) { m_RunningNode = pNode; }
     BB* GetBlackBoard() { return m_BlackBoard; }
 
 public:

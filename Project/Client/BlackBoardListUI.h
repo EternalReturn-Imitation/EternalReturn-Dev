@@ -1,7 +1,7 @@
 #pragma once
 #include "UI.h"
 
-class BB;
+#include <Engine\CBehaviorTree.h>
 
 class BlackBoardListUI :
     public UI
@@ -17,6 +17,7 @@ public:
 public:
     void SetBlackBoard(BB* _Target);
     BB* GetBlackBoard() { return m_pTargetBB; }
+    string GetDataStr(BB::tBBData* _Data, const char* _DataType);
 
 public:
     BlackBoardListUI();

@@ -3,6 +3,180 @@
 #include "CBehaviorTreeMgr.h"
 
 #pragma region BB
+HRESULT BB::AddBBData(const string& _BBkey, int _Item)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBkey);
+
+	if (iter != m_BBDataList.end())
+		return S_FALSE;
+
+	int* NewData = new int;
+	*NewData = _Item;
+	
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "int", (DWORD_PTR)NewData)));
+
+	return S_OK;
+}
+
+HRESULT BB::AddBBData(const string& _BBkey, float _Item)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBkey);
+
+	if (iter != m_BBDataList.end())
+		return S_FALSE;
+
+	float* NewData = new float;
+	*NewData = _Item;
+
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "float", (DWORD_PTR)NewData)));
+
+	return S_OK;
+}
+
+HRESULT BB::AddBBData(const string& _BBkey, CGameObject* _ItemPtr)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBkey);
+
+	if (iter != m_BBDataList.end())
+		return S_FALSE;
+
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "GameObject", (DWORD_PTR)_ItemPtr)));
+
+	return S_OK;
+}
+
+HRESULT BB::AddBBData(const string& _BBkey, string _string)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBkey);
+
+	if (iter != m_BBDataList.end())
+		return S_FALSE;
+
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "string", _string)));
+
+	return S_OK;
+}
+
+HRESULT BB::AddBBData(const string& _BBkey, wstring _wstring)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBkey);
+
+	if (iter != m_BBDataList.end())
+		return S_FALSE;
+
+	string string;
+	string.assign(_wstring.begin(), _wstring.end());
+
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "wstring", string)));
+
+	return S_OK;
+}
+
+HRESULT BB::FindBBData(const string& _BBKey, int& _Dest)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBKey);
+
+	if (iter == m_BBDataList.end())
+		return S_FALSE;
+
+	tBBData* Data = iter->second;
+	const char* type = Data->strDataType;
+
+	if (type == "int")
+	{
+		_Dest = *(int*)Data->pDataPtr;
+		return S_OK;
+	}
+
+	return  S_FALSE;
+}
+
+HRESULT BB::FindBBData(const string& _BBKey, float& _Dest)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBKey);
+
+	if (iter == m_BBDataList.end())
+		return S_FALSE;
+
+	tBBData* Data = iter->second;
+	const char* type = Data->strDataType;
+
+	if (type == "float")
+	{
+		_Dest = *(float*)Data->pDataPtr;
+		return S_OK;
+	}
+
+	return  S_FALSE;
+}
+
+HRESULT BB::FindBBData(const string& _BBKey, CGameObject* _Dest)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBKey);
+
+	if (iter == m_BBDataList.end())
+		return S_FALSE;
+
+	tBBData* Data = iter->second;
+	const char* type = Data->strDataType;
+
+	if (type == "GameObject")
+	{
+		_Dest = (CGameObject*)(Data->pDataPtr);
+		return S_OK;
+	}
+
+	return  S_FALSE;
+}
+
+HRESULT BB::FindBBData(const string& _BBKey, string& _Dest)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBKey);
+
+	if (iter == m_BBDataList.end())
+		return S_FALSE;
+
+	tBBData* Data = iter->second;
+	const char* type = Data->strDataType;
+
+	if (type == "string")
+	{
+		_Dest = Data->strData;
+		return S_OK;
+	}
+
+	return  S_FALSE;
+}
+
+HRESULT BB::FindBBData(const string& _BBKey, wstring& _Dest)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBKey);
+
+	if (iter == m_BBDataList.end())
+		return S_FALSE;
+
+	tBBData* Data = iter->second;
+	const char* type = Data->strDataType;
+
+	if (type == "wstring")
+	{
+		_Dest.assign(Data->strData.begin(), Data->strData.end());
+
+		return S_OK;
+	}
+
+	return  S_FALSE;
+}
 
 #pragma endregion
 
@@ -13,6 +187,7 @@ BTNode::BTNode(NODETYPE eType)
 	, m_NodeFlag(0)
 	, m_Parent(nullptr)
 	, m_ChildCnt(0)
+	, m_SrcItem{}
 {
 }
 
@@ -212,3 +387,4 @@ void CBehaviorTree::tick()
 		m_RootNode->Run();
 }
 #pragma endregion
+

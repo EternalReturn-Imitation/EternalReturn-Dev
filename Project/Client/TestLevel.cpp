@@ -115,24 +115,18 @@ void CreateTestLevel()
 	MainRoot->SetNodeName(L"RootNode");
 
 	BB* MainBB = MainRoot->GetBlackBoard();
-	MainBB->AddItem<Vector2>("Test2", { 1,2 });
-	MainBB->AddItem<float>("Test3", 0.2f);
-	MainBB->AddItem("Color", Vector4{ 1.0f,0.f,1.f,1.f });
-	MainBB->AddItem("FloatData", 0.2f);
-	MainBB->AddItem("Ine", 158);
-	MainBB->AddItem("1", 158);
-	MainBB->AddItem("2", 158);
-	MainBB->AddItem("3", 158);
-	MainBB->AddItem("4", 158);
-	MainBB->AddItem("5", 158);
-	MainBB->AddItem("6", 158);
-	MainBB->AddItem("7", 158);
-	MainBB->AddItem("8", 158);
-	MainBB->AddItem("9", 158);
-	MainBB->AddItem("0", 158);
-	MainBB->AddItem("10", 158);
-	MainBB->AddItem("11", 158);
+	MainBB->AddBBData("PlayerObj", pParent);
+	int Testint = 158;
+	MainBB->AddBBData("Ine", Testint);
+	float Testfloat = 0.158f;
+	MainBB->AddBBData("Inefloat", Testfloat);
+	string Teststring = "Ine";
+	MainBB->AddBBData("Inestring", Teststring);
+	wstring Testwstring = L"Ine158";
+	MainBB->AddBBData("IneWstring", Testwstring);
 
+	string TestIne;
+	MainBB->FindBBData("Inestring", TestIne);
 
 	BTNode* N_1 = MainRoot->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
 	BTNode* N_1_1 = N_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
