@@ -37,7 +37,7 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 
 	m_NodeInfo = new NodeInfoUI;
 	m_BBList = new BlackBoardListUI;
-	m_BBList->SetFlags(ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking);
+	m_BBList->SetFlags(ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_MenuBar);
 	m_BBList->SetActive(true);
 	// m_BBList->SetFlags(ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 	
@@ -96,7 +96,6 @@ int BehaviorTreeListUI::render_update()
 		}
 	}
 	ImGui::SetNextWindowSize(ImVec2(450.f, 300.f));
-	m_BBList->render_update();
 
 	return 0;
 }

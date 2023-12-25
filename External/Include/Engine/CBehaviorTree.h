@@ -46,6 +46,8 @@ public:
     HRESULT FindBBData(const string& _BBKey, string& _Dest);
     HRESULT FindBBData(const string& _BBKey, wstring& _Dest);
 
+    void DeleteBBData(const string& _BBKey);
+
     void CleartBBData()
     {
         unordered_map<string, tBBData*>::iterator iter = m_BBDataList.begin();;

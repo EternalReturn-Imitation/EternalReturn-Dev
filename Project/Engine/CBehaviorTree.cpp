@@ -178,6 +178,24 @@ HRESULT BB::FindBBData(const string& _BBKey, wstring& _Dest)
 	return  S_FALSE;
 }
 
+void BB::DeleteBBData(const string& _BBKey)
+{
+	unordered_map<string, tBBData*>::iterator iter = m_BBDataList.find(_BBKey);
+
+	if (iter->second->strDataType == "int")
+	{
+		delete (int*)iter->second->pDataPtr;
+	}
+
+	if (iter->second->strDataType == "float")
+	{
+		delete (float*)iter->second->pDataPtr;
+	}
+
+	delete iter->second;
+	m_BBDataList.erase(iter);
+}
+
 #pragma endregion
 
 #pragma region BT_NODE
