@@ -70,24 +70,42 @@ void CreateTestLevel()
 	pSkyBox->AddComponent(new CSkyBox);
 
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
-	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::CUBE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\SkyWater.dds"));
+	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\Sky02.jpg"));
 
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 광원 추가
 	CGameObject* pLightObj = new CGameObject;
-	pLightObj->SetName(L"Directional Light");
+	pLightObj->SetName(L"Point Light 1");
 
 	pLightObj->AddComponent(new CTransform);
 	pLightObj->AddComponent(new CLight3D);
 
 	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-	pLightObj->Light3D()->SetLightColor(Vec3(0.4f, 0.4f, 0.4f));	
-	pLightObj->Light3D()->SetLightAmbient(Vec3(0.15f, 0.15f, 0.15f));
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pLightObj->Light3D()->SetRadius(500.f);
+	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
+	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 	
-	SpawnGameObject(pLightObj, Vec3(-500.f, -250.f, 0.f), 0);
+	SpawnGameObject(pLightObj, Vec3(-250.f, -750.f, 0.f), 0);
+
+
+
+	pLightObj = new CGameObject;
+	pLightObj->SetName(L"Point Light 2");
+
+	pLightObj->AddComponent(new CTransform);
+	pLightObj->AddComponent(new CLight3D);
+
+	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pLightObj->Light3D()->SetRadius(500.f);
+	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
+	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
+
+	SpawnGameObject(pLightObj, Vec3(250.f, -750.f, 0.f), 0);
+
 
 
 	// 오브젝트 생성
