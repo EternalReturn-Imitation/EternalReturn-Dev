@@ -98,13 +98,6 @@ void CreateTestLevel()
 	pParent->AddComponent(new CPlayerScript);
 	pParent->AddComponent(new CBehaviorTree);
 
-	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
-	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));	
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
 
 	CBehaviorTree* pBT = pParent->BehaviorTree();
 	Root_Node* MainRoot = pBT->SetRootNode((Root_Node*)CBehaviorTreeMgr::CreateBTNode(BT_ROOT, 0));
@@ -145,8 +138,22 @@ void CreateTestLevel()
 
 	BTNode* N_1_1_2_1 = N_1_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
 	BTNode* N_1_2_3_1 = N_1_2_3->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Player");
+	SpawnGameObject(pParent, Vec3(0.f, 0.f, 0.f), L"Player");
 	
+
+	CGameObject* pObject = new CGameObject;
+	pObject->SetName(L"Sphere");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
+	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
+
 	pObject = new CGameObject;
 	pObject->SetName(L"Plane");
 	pObject->AddComponent(new CTransform);
@@ -161,7 +168,6 @@ void CreateTestLevel()
 	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
 
 	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Default");
-
 
 	pObject = new CGameObject;
 	pObject->SetName(L"Decal");

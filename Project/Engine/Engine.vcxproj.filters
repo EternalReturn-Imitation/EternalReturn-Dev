@@ -128,10 +128,10 @@
       <Filter>Source\06. Component\RenderComponent\3. TileMap</Filter>
     </ClInclude>
     <ClInclude Include="CAnimator2D.h">
-      <Filter>Source\06. Component\5. Animator2D</Filter>
+      <Filter>Source\06. Component\6. Animator2D</Filter>
     </ClInclude>
     <ClInclude Include="CAnim2D.h">
-      <Filter>Source\06. Component\5. Animator2D</Filter>
+      <Filter>Source\06. Component\6. Animator2D</Filter>
     </ClInclude>
     <ClInclude Include="CComputeShader.h">
       <Filter>Source\07. Resource\4. Shader\ComputeShader</Filter>
@@ -152,10 +152,22 @@
       <Filter>Source\03. Manager\10. FontMgr</Filter>
     </ClInclude>
     <ClInclude Include="CBehaviorTree.h">
-      <Filter>Source\06. Component\BehaviorTree</Filter>
+      <Filter>Source\06. Component\8. BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="CBehaviorTreeMgr.h">
-      <Filter>Source\06. Component\BehaviorTree\BehaviorTreeMgr</Filter>
+      <Filter>Source\06. Component\8. BehaviorTree\BehaviorTreeMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight3D.h">
+      <Filter>Source\06. Component\5. Light3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CDecal.h">
+      <Filter>Source\06. Component\RenderComponent\4. Decal</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkyBox.h">
+      <Filter>Source\06. Component\RenderComponent\6.SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="CMRT.h">
+      <Filter>Source\02. Device\MRT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -268,10 +280,10 @@
       <Filter>Source\06. Component\RenderComponent\3. TileMap</Filter>
     </ClCompile>
     <ClCompile Include="CAnimator2D.cpp">
-      <Filter>Source\06. Component\5. Animator2D</Filter>
+      <Filter>Source\06. Component\6. Animator2D</Filter>
     </ClCompile>
     <ClCompile Include="CAnim2D.cpp">
-      <Filter>Source\06. Component\5. Animator2D</Filter>
+      <Filter>Source\06. Component\6. Animator2D</Filter>
     </ClCompile>
     <ClCompile Include="CComputeShader.cpp">
       <Filter>Source\07. Resource\4. Shader\ComputeShader</Filter>
@@ -295,10 +307,25 @@
       <Filter>Source\03. Manager\05. ResMgr</Filter>
     </ClCompile>
     <ClCompile Include="CBehaviorTree.cpp">
-      <Filter>Source\06. Component\BehaviorTree</Filter>
+      <Filter>Source\06. Component\8. BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="CBehaviorTreeMgr.cpp">
-      <Filter>Source\06. Component\BehaviorTree\BehaviorTreeMgr</Filter>
+      <Filter>Source\06. Component\8. BehaviorTree\BehaviorTreeMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CLight3D.cpp">
+      <Filter>Source\06. Component\5. Light3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CDecal.cpp">
+      <Filter>Source\06. Component\RenderComponent\4. Decal</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkyBox.cpp">
+      <Filter>Source\06. Component\RenderComponent\6.SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="CMRT.cpp">
+      <Filter>Source\02. Device\MRT</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderMgr_init.cpp">
+      <Filter>Source\03. Manager\06. RenderMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -425,9 +452,6 @@
     <Filter Include="Source\02. Device\StructuredBuffer">
       <UniqueIdentifier>{4133d464-b1f7-4ff4-b41c-071f2f05dc08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\5. Animator2D">
-      <UniqueIdentifier>{7d787944-7b75-432b-91a9-8452604ba075}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\08. ShaderCode\Compute">
       <UniqueIdentifier>{e7e58685-e989-40bc-92c9-4f79bf523b39}</UniqueIdentifier>
     </Filter>
@@ -443,11 +467,26 @@
     <Filter Include="Source\03. Manager\10. FontMgr">
       <UniqueIdentifier>{b1a42f85-f96c-490d-a570-365243b1a620}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\BehaviorTree">
+    <Filter Include="Source\06. Component\5. Light3D">
+      <UniqueIdentifier>{a18393c7-26e2-42d2-82b6-7eacb63487db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\8. BehaviorTree">
       <UniqueIdentifier>{cfbc5080-d40e-4c6f-bbe4-ce108bb031b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\BehaviorTree\BehaviorTreeMgr">
+    <Filter Include="Source\06. Component\8. BehaviorTree\BehaviorTreeMgr">
       <UniqueIdentifier>{0c382bc1-e8e5-4d0d-860a-16f4f827ef87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\6. Animator2D">
+      <UniqueIdentifier>{7d787944-7b75-432b-91a9-8452604ba075}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\7. Animator3D">
+      <UniqueIdentifier>{306ed43e-28a0-4961-aed9-5562fcaecb07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\RenderComponent\6.SkyBox">
+      <UniqueIdentifier>{857f4b1c-9fc1-4349-9a03-88ba124fc1e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\02. Device\MRT">
+      <UniqueIdentifier>{16d7cd40-5202-4830-9771-8a2bf70982af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -491,6 +530,18 @@
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="std3d.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="std3d_deferred.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="decal.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="light.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="skybox.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>

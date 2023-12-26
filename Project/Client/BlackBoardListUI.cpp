@@ -109,6 +109,11 @@ void BlackBoardListUI::render_Table(ImGuiTableFlags _flags)
 
                 if (ImGui::BeginPopupContextItem())
                 {
+                    if (ImGui::MenuItem("Modify"))
+                    {
+                        // ¼öÁ¤
+                        ImGui::CloseCurrentPopup();
+                    }
                     if (ImGui::MenuItem("Delete"))
                     {
                         m_pTargetBB->DeleteBBData(DataKey);
