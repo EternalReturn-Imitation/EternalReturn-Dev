@@ -34,6 +34,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2차원 광원
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
+	BEHAVIORTREE,	// 행동트리
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링
