@@ -9,6 +9,8 @@
 // RS_TYPE  : CULL_NONE
 // DS_TYPE  : NO_TEST_NO_WRITE
 // BS_TYPE  : Default
+
+// Parameter
 // g_vec4_0 : OutColor
 // ==================
 struct VS_DEBUG_IN
