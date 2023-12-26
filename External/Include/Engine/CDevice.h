@@ -15,11 +15,8 @@ private:
 
 	ComPtr<IDXGISwapChain>			m_SwapChain;
 
-	Ptr<CTexture>					m_RTTex;
-	Ptr<CTexture>					m_DSTex;
-
 	// Sampler
-	ComPtr<ID3D11SamplerState>		m_Sampler[2];
+	ComPtr<ID3D11SamplerState>		m_Sampler[3];
 
 	// RasterizerState
 	ComPtr<ID3D11RasterizerState>	m_RSState[(UINT)RS_TYPE::END];
@@ -37,16 +34,9 @@ private:
 	Vec2							m_vRenderResolution;							
 	CConstBuffer*					m_arrConstBuffer[(UINT)CB_TYPE::END];
 
-
-
-
-
 public:
-	int init(HWND _hWnd, UINT _iWidth, UINT _iHeight);
-	void ClearTarget(float(&_color)[4]);
-	void OMSet() { m_Context->OMSetRenderTargets(1, m_RTTex->GetRTV().GetAddressOf(), m_DSTex->GetDSV().Get()); }
+	int init(HWND _hWnd, UINT _iWidth, UINT _iHeight);	
 	void Present()	{ m_SwapChain->Present(0, 0); }
-
 	Vec2 GetRenderResolution() { return m_vRenderResolution; }
 
 private:

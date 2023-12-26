@@ -156,10 +156,10 @@ int CDevice::CreateView()
     m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)tex2D.GetAddressOf());
     
     // RenderTarget 용 텍스쳐 등록
-    m_RTTex = CResMgr::GetInst()->CreateTexture(L"RenderTargetTex", tex2D);
+    CResMgr::GetInst()->CreateTexture(L"RenderTargetTex", tex2D);
 
     // DepthStencil 용도 텍스쳐 생성
-    m_DSTex = CResMgr::GetInst()->CreateTexture(L"DepthStencilTex"
+    CResMgr::GetInst()->CreateTexture(L"DepthStencilTex"
         , (UINT)m_vRenderResolution.x, (UINT)m_vRenderResolution.y
         , DXGI_FORMAT_D24_UNORM_S8_UINT, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT);        
 
@@ -265,8 +265,8 @@ int CDevice::CreateBlendState()
     Desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 
     Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-    Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-    Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+    Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
 
     Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     DEVICE->CreateBlendState(&Desc, m_BSState[(UINT)BS_TYPE::ALPHA_BLEND].GetAddressOf());
@@ -289,6 +289,36 @@ int CDevice::CreateBlendState()
 
     Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     DEVICE->CreateBlendState(&Desc, m_BSState[(UINT)BS_TYPE::ONE_ONE].GetAddressOf());
+
+
+    // DEFEREED_DECAL_BLEND
+    Desc.AlphaToCoverageEnable = false;
+    Desc.IndependentBlendEnable = true;
+
+    Desc.RenderTarget[0].BlendEnable = true;
+    Desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    Desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    Desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+
+    Desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    Desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+    Desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+
+    Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+
+    Desc.RenderTarget[1].BlendEnable = true;
+    Desc.RenderTarget[1].BlendOp = D3D11_BLEND_OP_ADD;
+    Desc.RenderTarget[1].SrcBlend = D3D11_BLEND_ONE;
+    Desc.RenderTarget[1].DestBlend = D3D11_BLEND_ONE;
+
+    Desc.RenderTarget[1].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    Desc.RenderTarget[1].SrcBlendAlpha = D3D11_BLEND_ZERO;
+    Desc.RenderTarget[1].DestBlendAlpha = D3D11_BLEND_ONE;
+
+    Desc.RenderTarget[1].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+    DEVICE->CreateBlendState(&Desc, m_BSState[(UINT)BS_TYPE::DEFEREED_DECAL_BLEND].GetAddressOf());
 
     return S_OK;
 }
@@ -315,6 +345,8 @@ int CDevice::CreateSampler()
     tSamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
     DEVICE->CreateSamplerState(&tSamDesc, m_Sampler[1].GetAddressOf());
 
+
+
     CONTEXT->VSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
     CONTEXT->HSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
     CONTEXT->DSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
@@ -327,13 +359,8 @@ int CDevice::CreateSampler()
     CONTEXT->GSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
     CONTEXT->PSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
 
-    return S_OK;
-}
 
-void CDevice::ClearTarget(float(&_color)[4])
-{
-    m_Context->ClearRenderTargetView(m_RTTex->GetRTV().Get(), _color);
-    m_Context->ClearDepthStencilView(m_DSTex->GetDSV().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+    return S_OK;
 }
 
 void CDevice::CreateConstBuffer()

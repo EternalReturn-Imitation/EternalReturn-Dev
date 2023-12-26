@@ -43,7 +43,7 @@ int ParamUI::Param_Float(const string& _strDesc, float* _pData, bool _bDrag)
     ImGui::Text(_strDesc.c_str());
     ImGui::SameLine(100);
 
-    string strIntName = GetNextName("##Param_Int");
+    string strIntName = GetNextName("##Param_Float");
     ImGui::SetNextItemWidth(150);
 
     if (_bDrag)

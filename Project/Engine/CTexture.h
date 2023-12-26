@@ -53,6 +53,7 @@ public:
     static void Clear(int _iRegisterNum);
     void Clear_CS(bool _bShaderRes);
 
+    bool IsCube() { return m_Desc.MiscFlags & D3D11_RESOURCE_MISC_TEXTURECUBE ? true : false; }
 
 private:
     virtual void UpdateData() override;

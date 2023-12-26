@@ -97,7 +97,7 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
         if (ModuleData.VelocityAlignment)
         {
             // 파티클 월드 기준 속도를 View 공간으로 변환
-            float3 vVelocity = normalize(ParticleBuffer[id].vVelocity);
+            float3 vVelocity = normalize(ParticleBuffer[id].vVelocity.xyz);
             vVelocity = mul(float4(vVelocity, 0.f), g_matView).xyz;
                        
             // 파티클 Right 방향과 이동 방향을 내적해서 둘 사이의 각도를 구한다.
