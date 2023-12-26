@@ -43,8 +43,10 @@ enum class COMPONENT_TYPE
 	PARTICLESYSTEM, // 입자 렌더링
 	TILEMAP,		// 2차원 타일
 	LANDSCAPE,		// 3차원 지형
+	SKYBOX,			// SkyBox
 	DECAL,			// 내부 렌더링
-		
+	
+
 	END,
 
 	// custom
@@ -172,6 +174,8 @@ enum class BS_TYPE
 	MASK,			// Alpha Coverage
 	ALPHA_BLEND,	// Alpha 계수 
 	ONE_ONE,		// 1:1 혼합
+
+	DEFEREED_DECAL_BLEND, // 0 타겟은 AlphaBlend, 1 타겟은 ONE-ONE Blend
 	END,
 };
 
@@ -194,12 +198,18 @@ enum class PROJ_TYPE
 
 enum class SHADER_DOMAIN
 {
-	DOMAIN_OPAQUE,		// 불투명 오브젝트
-	DOMAIN_MASK,		// 불투명, 완전 투명
-	DOMAIN_TRANSPARENT,	// 반투명
-	DOMAIN_POSTPROCESS, // 후 처리
+	DOMAIN_DEFERRED,		// 지연 렌더링 오브젝트
+	DOMAIN_DEFERRED_DECAL,	// Deferred Decal(광원 적용 가능한 Decal)
+
+	DOMAIN_OPAQUE,			// 불투명 오브젝트
+	DOMAIN_MASK,			// 불투명, 완전 투명
+	DOMAIN_DECAL,			// 데칼 오브젝트
+	DOMAIN_TRANSPARENT,		// 반투명
+	DOMAIN_POSTPROCESS,		// 후 처리
 	DOMAIN_UI,
-	DOMAIN_UNDEFINED,	// 미정
+
+	DOMAIN_LIGHT,			// 광원 타입 
+	DOMAIN_UNDEFINED,		// 미정
 };
 
 
@@ -264,6 +274,21 @@ enum class PARTICLE_MODULE
 	NOISE_FORCE,
 	RENDER,
 	DUMMY_3,
+
+	END,
+};
+
+enum class MRT_TYPE
+{
+	SWAPCHAIN,
+
+	DEFERRED,
+
+	DEFERRED_DECAL,
+
+	LIGHT,
+
+	SHADOWMAP,
 
 	END,
 };

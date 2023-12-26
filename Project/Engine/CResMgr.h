@@ -39,7 +39,7 @@ public:
 
     // _BindFlag = D3D11_BIND_FLAG
     Ptr<CTexture> CreateTexture(const wstring& _strKey, UINT _Width, UINT _Height
-        , DXGI_FORMAT _pixelformat, UINT _BindFlag, D3D11_USAGE _Usage);
+        , DXGI_FORMAT _pixelformat, UINT _BindFlag, D3D11_USAGE _Usage = D3D11_USAGE_DEFAULT);
 
     Ptr<CTexture> CreateTexture(const wstring& _strKey, ComPtr<ID3D11Texture2D> _Tex2D);
 

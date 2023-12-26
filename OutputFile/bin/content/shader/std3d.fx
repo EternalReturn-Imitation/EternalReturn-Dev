@@ -4,13 +4,6 @@
 #include "value.fx"
 #include "func.fx"
 
-static float3 g_vLightPos = float3(0.f, 0.f, 0.f);
-static float3 g_vLightDir = float3(1.f, -1.f, 1.f);
-
-static float3 g_vLightColor = float3(1.f, 1.f, 1.f);
-static float g_fLightSpecCoeff = 1.0f;
-static float3 g_vLightAmb = float3(0.15f, 0.15f, 0.15f); // 환경광
-
 struct VS_IN
 {
     float3 vPos : POSITION;
@@ -25,27 +18,35 @@ struct VS_OUT
 {
     float4 vPosition : SV_Position;
     float2 vUV : TEXCOORD;   
-    
+        
     float3 vViewPos : POSITION;
+    
     float3 vViewNormal : NORMAL;
     float3 vViewTangent : TANGENT;
-    float3 vViewBinormal: BINORMAL;
-    
+    float3 vViewBinormal: BINORMAL;    
 };
 
+
+//
+// Std3DShader
+//
+// Param
+#define SPEC_COEFF      saturate(g_float_0) // 반사 계수
+
+#define IS_SKYBOX_ENV   g_btexcube_0
+#define SKYBOX_ENV_TEX  g_cube_0
 
 VS_OUT VS_Std3D(VS_IN _in)
 {
     VS_OUT output = (VS_OUT) 0.f;
         
-    // 로컬에서의 Normal 방향을 월드로 이동    
-    output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
+    // 로컬에서의 Normal 방향을 월드로 이동      
+    output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);    
     
     output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV)).xyz;
     output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV)).xyz;
     output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV)).xyz;
-    
-    
+       
         
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);    
     output.vUV = _in.vUV;
@@ -78,27 +79,30 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
             _in.vViewNormal        
         };
         
-        vViewNormal = mul(vNormal, vRotateMat);        
+        vViewNormal = normalize(mul(vNormal, vRotateMat));
     }
     
+    tLightColor lightcolor = (tLightColor) 0.f;
+    float fSpecPow = 0.f;
+    
+    for (uint i = 0; i < g_Light3DCount; ++i)
+    {
+        CalcLight3D(_in.vViewPos, vViewNormal, i, lightcolor, fSpecPow);
+    }
+                 
+    vOutColor.xyz = vOutColor.xyz * lightcolor.vDiffuse.xyz
+                    + vOutColor.xyz * lightcolor.vAmbient.xyz
+                    + saturate(g_Light3DBuffer[0].Color.vDiffuse.xyz) * 0.3f * fSpecPow * SPEC_COEFF;
+    
+    if(IS_SKYBOX_ENV)
+    {        
+        float3 vEye = normalize(_in.vViewPos);
+        float3 vEyeReflect = normalize(reflect(vEye, vViewNormal));
         
-    // ViewSpace 에서의 광원의 방향
-    float3 vViewLightDir = normalize(mul(float4(normalize(g_vLightDir), 0.f), g_matView)).xyz;
-    
-    // ViewSpace 에서의 노말벡터와 광원의 방향을 내적 (램버트 코사인 법칙)    
-    float fLightPow = saturate(dot(vViewNormal, -vViewLightDir));
-    
-    // 반사광
-    float3 vViewReflect = normalize(vViewLightDir + 2.f * (dot(-vViewLightDir, vViewNormal)) * vViewNormal);
-    float3 vEye = normalize(_in.vViewPos);
-   
-    // 반사광의 세기 구하기
-    float fSpecPow = saturate(dot(vViewReflect, -vEye));
-    fSpecPow = pow(fSpecPow, 20);
-           
-    vOutColor.xyz = (vOutColor.xyz * g_vLightColor * fLightPow) // 물체 기본색상 출력
-                    + (vOutColor.xyz * g_vLightColor * g_vLightAmb) // 환경광
-                    + (g_vLightColor * g_fLightSpecCoeff * fSpecPow * fLightPow); //반사광
+        vEyeReflect = normalize(mul(float4(vEyeReflect, 0.f), g_matViewInv));
+        
+        vOutColor *= SKYBOX_ENV_TEX.Sample(g_sam_0, vEyeReflect);
+    }
     
     return vOutColor;
 }

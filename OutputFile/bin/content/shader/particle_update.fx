@@ -107,7 +107,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         // Fixed Direction
                         else
                         {
-                            particle.vVelocity.xyz = normalize(ModuleData.vVelocityDir) * ModuleData.Speed;
+                            particle.vVelocity.xyz = normalize(ModuleData.vVelocityDir.xyz) * ModuleData.Speed;
                         }
                     }                    
                     

@@ -37,6 +37,7 @@ struct tDebugShapeInfo
 	Vec4		vColor;
 	float		fMaxTime;
 	float		fCurTime;
+	bool		bDepthTest;
 };
 
 
@@ -169,8 +170,11 @@ struct tParticleModule
 struct tTransform
 {
 	Matrix matWorld;
+	Matrix matWorldInv;
 	Matrix matView;
+	Matrix matViewInv;
 	Matrix matProj;
+	Matrix matProjInv;
 
 	Matrix matWV;
 	Matrix matWVP;
