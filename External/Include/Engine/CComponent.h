@@ -35,7 +35,7 @@ public:
     virtual void SaveToDB(int _gameObjectID) abstract;
     virtual void LoadFromDB(int _gameObjectID) abstract;
 
-public:
+public:  
     GET_OTHER_COMPONENT(Transform);
     GET_OTHER_COMPONENT(MeshRender);
     GET_OTHER_COMPONENT(Camera);

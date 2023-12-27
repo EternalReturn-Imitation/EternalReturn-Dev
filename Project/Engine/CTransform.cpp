@@ -111,22 +111,31 @@ void CTransform::SaveToDB(int _gameObjectID)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
-	wstring wRelativePos = Vec3ToWString(m_vRelativePos);
-	wstring wRelativeScale = Vec3ToWString(m_vRelativeScale);
-	wstring wRelativeRot = Vec3ToWString(m_vRelativeRot);
-	int bAbsolute = m_bAbsolute;
+	// 쿼리 문자열 준비
+	const char* szQuery = "INSERT INTO TRANSFORM(GameObject_ID, Pos, Scale, Rot, Absolute) VALUES (?, ?, ?, ?, ?)";
+	sqlite3_stmt* stmt;
 
-	wstring query = L"INSERT INTO TRANSFORM(GameObject_ID, Pos, Scale, Rot, Absolute) VALUES("
-		+ std::to_wstring(_gameObjectID) + L","
-		+ L"'" + wRelativePos + L"',"
-		+ L"'" + wRelativeScale + L"',"
-		+ L"'" + wRelativeRot + L"',"
-		+ std::to_wstring(bAbsolute) + L");";
+	// 쿼리 준비
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+		sqlite3_bind_blob(stmt, 2, &m_vRelativePos, sizeof(Vec3), SQLITE_STATIC);
+		sqlite3_bind_blob(stmt, 3, &m_vRelativeScale, sizeof(Vec3), SQLITE_STATIC);
+		sqlite3_bind_blob(stmt, 4, &m_vRelativeRot, sizeof(Vec3), SQLITE_STATIC);
+		sqlite3_bind_blob(stmt, 5, &m_bAbsolute, sizeof(bool), SQLITE_STATIC);
 
-	CONVERTQUERY(query, Query);
+		// 쿼리 실행
+		if (sqlite3_step(stmt) != SQLITE_DONE) {
+			// 에러 처리: 쿼리 실행에 실패했을 경우
+			assert(false);
+		}
 
-	char* errMsg;
-	EXECQUERY(Query, errMsg);
+		// 스테이트먼트 종료
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// 쿼리 준비에 실패했을 경우의 처리
+		assert(false);
+	}
 }
 
 void CTransform::LoadFromDB(int _gameObjectID)
@@ -139,26 +148,39 @@ void CTransform::LoadFromDB(int _gameObjectID)
 		sqlite3_bind_int(stmt, 1, _gameObjectID);
 
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			const unsigned char* posPtr = sqlite3_column_text(stmt, 0);
-			std::string sRelativePos = reinterpret_cast<const char*>(posPtr);
+			// Pos 데이터 불러오기
+			const void* posData = sqlite3_column_blob(stmt, 0);
+			int posBytes = sqlite3_column_bytes(stmt, 0);
+			if (posBytes == sizeof(Vec3)) {
+				memcpy(&m_vRelativePos, posData, posBytes);
+			}
 
-			const unsigned char* scalePtr = sqlite3_column_text(stmt, 1);
-			std::string sRelativeScale = reinterpret_cast<const char*>(scalePtr);
+			// Scale 데이터 불러오기
+			const void* scaleData = sqlite3_column_blob(stmt, 1);
+			int scaleBytes = sqlite3_column_bytes(stmt, 1);
+			if (scaleBytes == sizeof(Vec3)) {
+				memcpy(&m_vRelativeScale, scaleData, scaleBytes);
+			}
 
-			const unsigned char* rotPtr = sqlite3_column_text(stmt, 2);
-			std::string sRelativeRot = reinterpret_cast<const char*>(rotPtr);
+			// Rot 데이터 불러오기
+			const void* rotData = sqlite3_column_blob(stmt, 2);
+			int rotBytes = sqlite3_column_bytes(stmt, 2);
+			if (rotBytes == sizeof(Vec3)) {
+				memcpy(&m_vRelativeRot, rotData, rotBytes);
+			}
 
-			wstring wRelativePos = ToWString(sRelativePos);
-			wstring wRelativeScale = ToWString(sRelativeScale);
-			wstring wRelativeRot = ToWString(sRelativeRot);
-			int bAbsolute = sqlite3_column_int(stmt, 3);
-
-			// 여기서 wRelativePos, wRelativeScale, wRelativeRot을 Vec3으로 변환하여 멤버 변수에 할당하십시오
-			m_vRelativePos = WStringToVec3(wRelativePos);
-			m_vRelativeScale = WStringToVec3(wRelativeScale);
-			m_vRelativeRot = WStringToVec3(wRelativeRot);
-			m_bAbsolute = bAbsolute;
+			// Absolute 데이터 불러오기
+			const void* absoluteData = sqlite3_column_blob(stmt, 3);
+			int absoluteBytes = sqlite3_column_bytes(stmt, 3);
+			if (absoluteBytes == sizeof(bool)) {
+				memcpy(&m_bAbsolute, absoluteData, absoluteBytes);
+			}
 		}
+		else {
+			// 레코드를 찾지 못했거나 쿼리에 실패했을 때의 처리
+			assert(false);
+		}
+
 		sqlite3_finalize(stmt);
 	}
 	else {
