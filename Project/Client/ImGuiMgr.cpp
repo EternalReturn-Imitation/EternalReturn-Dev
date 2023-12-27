@@ -183,7 +183,7 @@ void ImGuiMgr::CreateUI()
 
     // BehaviorTree
     pUI = new BehaviorTreeListUI;
-    pUI->SetActive(true);
+    pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
 

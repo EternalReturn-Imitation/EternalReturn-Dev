@@ -7,8 +7,9 @@ class ContentUI :
     public UI
 {
 private:
-    TreeUI*             m_Tree;
-    vector<wstring>     m_vecResPath;    
+    TreeUI*                 m_Tree;
+    vector<wstring>         m_vecResPath;
+    map<wstring, wstring>   m_mapFolderPath;
 
 public:
     virtual void init() override;

@@ -308,10 +308,8 @@ void CResMgr::CreateDefaultMesh()
 
 	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"CubeMesh_Debug", pMesh);
+	vecVtx.clear();
 	vecIdx.clear();
-
-
-
 
 
 	// ===========
@@ -421,6 +419,10 @@ void CResMgr::CreateDefaultMesh()
 	pMesh = new CMesh(true);
 	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"SphereMesh", pMesh);
+
+	pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	AddRes<CMesh>(L"SphereeMesh_Debug", pMesh);
 	vecVtx.clear();
 	vecIdx.clear();
 }

@@ -8,6 +8,7 @@
 
 CLight3D::CLight3D()
 	: CComponent(COMPONENT_TYPE::LIGHT3D)
+	, m_bDebug(false)
 {	
 	SetLightType(LIGHT_TYPE::DIRECTIONAL);
 }
@@ -24,7 +25,18 @@ void CLight3D::finaltick()
 	
 	m_LightIdx = (UINT)CRenderMgr::GetInst()->RegisterLight3D(this, m_LightInfo);
 
-	DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 1.f), 0.f, true);
+	UINT LightType = m_LightInfo.LightType;
+	if (m_bDebug)
+	{
+		if (LightType == (UINT)LIGHT_TYPE::POINT)
+		{
+			DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 0.5f), 0.f, true);
+		}
+		else if (LightType == (UINT)LIGHT_TYPE::SPOT)
+		{
+			// 콘 디버그
+		}
+	}
 }
 
 void CLight3D::render()

@@ -23,7 +23,6 @@ BehaviorTreeListUI::BehaviorTreeListUI()
 	m_Tree = new TreeUI;
 	m_Tree->SetName("BehaviorTree");
 	
-	m_Tree->SetActive(true);
 	m_Tree->ShowRoot(true);
 	m_Tree->ShowArrowBtn(true);
 	m_Tree->ShowGroupIdx(true);

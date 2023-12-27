@@ -51,153 +51,101 @@ void CreateTestLevel()
 	// UI cameara
 	CGameObject* pUICam = new CGameObject;
 	pUICam->SetName(L"UICamera");
-
+	
 	pUICam->AddComponent(new CTransform);
 	pUICam->AddComponent(new CCamera);
-
+	
 	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-
+	
 	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
-
-
+	 
+	 
 	// SkyBox 추가
 	CGameObject* pSkyBox = new CGameObject;
 	pSkyBox->SetName(L"SkyBox");
-
+	
 	pSkyBox->AddComponent(new CTransform);
 	pSkyBox->AddComponent(new CSkyBox);
-
+	
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\Sky02.jpg"));
-
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\stars_milky_way.jpg"));
+	
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
-
+	 
 	// 광원 추가
 	CGameObject* pLightObj = new CGameObject;
-	pLightObj->SetName(L"Point Light 1");
-
+	pLightObj->SetName(L"DirectionalLight");
+	
 	pLightObj->AddComponent(new CTransform);
 	pLightObj->AddComponent(new CLight3D);
-
+	
 	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
 	pLightObj->Light3D()->SetRadius(500.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 	
-	SpawnGameObject(pLightObj, Vec3(-250.f, -750.f, 0.f), 0);
-
-
-
-	pLightObj = new CGameObject;
-	pLightObj->SetName(L"Point Light 2");
-
-	pLightObj->AddComponent(new CTransform);
-	pLightObj->AddComponent(new CLight3D);
-
-	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
-	pLightObj->Light3D()->SetRadius(500.f);
-	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
-	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
-
-	SpawnGameObject(pLightObj, Vec3(250.f, -750.f, 0.f), 0);
-
-
-
-	// 오브젝트 생성
-	CGameObject* pParent = new CGameObject;
-	pParent->SetName(L"Player");
-	pParent->AddComponent(new CTransform);
-	pParent->AddComponent(new CMeshRender);
-	pParent->AddComponent(new CPlayerScript);
-	pParent->AddComponent(new CBehaviorTree);
-
-
-	CBehaviorTree* pBT = pParent->BehaviorTree();
-	Root_Node* MainRoot = pBT->SetRootNode((Root_Node*)CBehaviorTreeMgr::CreateBTNode(BT_ROOT, 0));
-	MainRoot->SetNodeName(L"RootNode");
-
-	BB* MainBB = MainRoot->GetBlackBoard();
-	MainBB->AddBBData("PlayerObj", pParent);
-	int Testint = 158;
-	MainBB->AddBBData("Ine", Testint);
-	float Testfloat = 0.158f;
-	MainBB->AddBBData("Inefloat", Testfloat);
-	string Teststring = "Ine";
-	MainBB->AddBBData("Inestring", Teststring);
-	wstring Testwstring = L"Ine158";
-	MainBB->AddBBData("IneWstring", Testwstring);
-
-	string TestIne;
-	MainBB->FindBBData("Inestring", TestIne);
-
-	BTNode* N_1 = MainRoot->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	BTNode* N_1_1 = N_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	BTNode* N_1_2 = N_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SELECTOR));
-
-	BTNode* N_1_1_1 = N_1_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	BTNode* N_1_1_2 = N_1_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SELECTOR));
-	BTNode* N_1_1_3 = N_1_1->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
-
-	BTNode* N_1_2_1 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
-	N_1_2_1->SetNodeName(L"N_1_2_1WAIT");
-	BTNode* N_1_2_2 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_PLAY_SOUND));
-	N_1_2_2->SetNodeName(L"N_1_2_2PLAY_SOUND");
-	BTNode* N_1_2_3 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	N_1_2_3->SetNodeName(L"N_1_2_3SEQ");
-	BTNode* N_1_2_4 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SELECTOR));
-	N_1_2_4->SetNodeName(L"N_1_2_4SEL");
-	BTNode* N_1_2_5 = N_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_COMPOSITE, Composite_Node::CompositeNodeFlag_SEQUENCE));
-	N_1_2_5->SetNodeName(L"N_1_2_5SEQ");
-
-	BTNode* N_1_1_2_1 = N_1_1_2->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
-	BTNode* N_1_2_3_1 = N_1_2_3->AddChild(CBehaviorTreeMgr::CreateBTNode(BT_TASK, Task_Node::TaskNodeFlag_WAIT));
-	SpawnGameObject(pParent, Vec3(0.f, 0.f, 0.f), L"Player");
+	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
 	
-
+	
+	// 오브젝트 생성
 	CGameObject* pObject = new CGameObject;
-	pObject->SetName(L"Sphere");
+	pObject->SetName(L"Earth");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
 	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_nightmap.jpg"));
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_N.tga"));
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_spec.tga"));
+
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
+
+	pObject = new CGameObject;
+	pObject->SetName(L"Cloud");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetRelativeScale(Vec3(1300.f, 1300.f, 1300.f));
+	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_clouds.jpg"));
 
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
+	
 	pObject = new CGameObject;
 	pObject->SetName(L"Plane");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
-
+	
 	pObject->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 2000.f));
 	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-
+	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
-
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_nightmap.jpg"));
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_N.tga"));
+	
 	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Default");
-
+	
 	pObject = new CGameObject;
 	pObject->SetName(L"Decal");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CDecal);
-
+	
 	pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
 	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
+	
 	pObject->Decal()->SetDeferredDecal(true);
 	pObject->Decal()->ActivateEmissive(true);
-
+	
 	SpawnGameObject(pObject, Vec3(0.f, 0.f, 500.f), L"Default");
 
 
