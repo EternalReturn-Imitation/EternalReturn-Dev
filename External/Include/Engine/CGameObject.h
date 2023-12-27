@@ -9,9 +9,12 @@ class CParticleSystem;
 class CCollider2D;
 class CAnimator2D;
 class CLight2D;
+class CLight3D;
 class CCamera;
 class CRenderComponent;
+class CSkyBox;
 class CTileMap;
+class CDecal;
 class CScript;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
@@ -61,6 +64,10 @@ public:
     GET_COMPONENT(Light2D, LIGHT2D);
     GET_COMPONENT(TileMap, TILEMAP);
     GET_COMPONENT(Animator2D, ANIMATOR2D);
+    GET_COMPONENT(Light3D, LIGHT3D);  
+    GET_COMPONENT(SkyBox, SKYBOX);
+    GET_COMPONENT(Decal, DECAL);
+
 
     CRenderComponent* GetRenderComponent() const {  return m_RenderCom; }
 

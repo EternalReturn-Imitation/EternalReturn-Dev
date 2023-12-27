@@ -11,8 +11,6 @@ class CMeshRender;
 #define GET_OTHER_COMPONENT(Type) C##Type* Type() {return m_pOwner->Type();}
 
 
-
-
 class CComponent :
     public CEntity
 {
