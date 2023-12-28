@@ -38,33 +38,33 @@ int Light3DUI::render_update()
     ImGui::SameLine();
     ImGui::Combo("##LightType", &CurrentType, lighttype, IM_ARRAYSIZE(lighttype));
 
-    switch (eLightType)
-    {
-    case LIGHT_TYPE::DIRECTIONAL:
-        if (vMemLightAmbient != Vec3{ 0.f,0.f,0.f }
-            && vLightAmbient == Vec3{ 0.f,0.f,0.f })
-            vLightAmbient = vMemLightAmbient;
-
-        vMemLightAmbient = vLightAmbient;
-
-        fAngle = 0.f;
-        fRadius = 0.f;
-        break;
-    case LIGHT_TYPE::SPOT:
-        if (fMemAngle != 0.f
-            && fAngle == 0.f)
-            fAngle = fMemAngle;
-
-        fMemAngle = fAngle;
-    case LIGHT_TYPE::POINT:
-        if (fMemRadius != 0.f
-            && fRadius == 0.f)
-            fRadius = fMemRadius;
-
-        fMemRadius = fRadius;
-        vLightAmbient = {};
-        break;
-    }
+    // switch (eLightType)
+    // {
+    // case LIGHT_TYPE::DIRECTIONAL:
+    //     if (vMemLightAmbient != Vec3{ 0.f,0.f,0.f }
+    //         && vLightAmbient == Vec3{ 0.f,0.f,0.f })
+    //         vLightAmbient = vMemLightAmbient;
+    // 
+    //     vMemLightAmbient = vLightAmbient;
+    // 
+    //     fAngle = 0.f;
+    //     fRadius = 0.f;
+    //     break;
+    // case LIGHT_TYPE::SPOT:
+    //     if (fMemAngle != 0.f
+    //         && fAngle == 0.f)
+    //         fAngle = fMemAngle;
+    // 
+    //     fMemAngle = fAngle;
+    // case LIGHT_TYPE::POINT:
+    //     if (fMemRadius != 0.f
+    //         && fRadius == 0.f)
+    //         fRadius = fMemRadius;
+    // 
+    //     fMemRadius = fRadius;
+    //     vLightAmbient = {};
+    //     break;
+    // }
 
     ImGui::Text("LightColor  ");
     ImGui::SameLine();

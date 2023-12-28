@@ -191,6 +191,7 @@
     <ClInclude Include="TestLevel.h" />
     <ClInclude Include="TextureUI.h" />
     <ClInclude Include="TileMapUI.h" />
+    <ClInclude Include="TransformControllerUI.h" />
     <ClInclude Include="TransformUI.h" />
     <ClInclude Include="TreeUI.h" />
     <ClInclude Include="UI.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="TestLevel.cpp" />
     <ClCompile Include="TextureUI.cpp" />
     <ClCompile Include="TileMapUI.cpp" />
+    <ClCompile Include="TransformControllerUI.cpp" />
     <ClCompile Include="TransformUI.cpp" />
     <ClCompile Include="TreeUI.cpp" />
     <ClCompile Include="UI.cpp" />

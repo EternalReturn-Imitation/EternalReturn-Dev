@@ -420,11 +420,115 @@ void CResMgr::CreateDefaultMesh()
 	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"SphereMesh", pMesh);
 
-	pMesh = new CMesh(true);
-	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
-	AddRes<CMesh>(L"SphereeMesh_Debug", pMesh);
 	vecVtx.clear();
 	vecIdx.clear();
+
+	// ===========
+	// Cone Mesh
+	// ===========
+	
+	// ºÏ±ØÁ¡
+	v.vPos = Vec3(0.f, 0.5, 0.f);
+	v.vUV = Vec2(0.5f, 0.5f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = v.vPos;
+	v.vNormal.Normalize();
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 0.f, -1.f);
+	vecVtx.push_back(v);
+
+	// Body
+	iSliceCount = 40; // ¼¼·Î ºÐÇÒ °³¼ö
+
+	fSliceAngle = XM_2PI / iSliceCount;
+
+	fUVXStep = 1.f / (float)iSliceCount;
+
+	for (UINT j = 0; j <= iSliceCount; ++j)
+	{
+		float theta = j * fSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fSliceAngle));
+
+		v.vUV = Vec2(fUVXStep * j, 0.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+
+	// bottom
+	for (UINT j = 0; j <= iSliceCount; ++j)
+	{
+		float theta = j * fSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fSliceAngle));
+
+		v.vUV = Vec2(fUVXStep * j, 0.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.y = -1.f;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+
+	// ³²±ØÁ¡
+	v.vPos = Vec3(0.f, 0.f, 0.f);
+	v.vUV = Vec2(0.5f, 0.5f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = Vec3(0.f, -1.f, 0.f);
+	v.vNormal.Normalize();
+
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, -1.f, 0.f);
+	vecVtx.push_back(v);
+
+	// ÀÎµ¦½º
+	// ºÏ±ØÁ¡
+	for (UINT i = 0; i < iSliceCount; ++i)
+	{
+		vecIdx.push_back(0);
+		vecIdx.push_back(i + 2);
+		vecIdx.push_back(i + 1);
+	}
+
+	// ³²±ØÁ¡
+	iBottomIdx = (UINT)vecVtx.size() - 1;
+	
+	for (UINT i = 0; i <= iSliceCount; ++i)
+	{
+		vecIdx.push_back(iBottomIdx);
+		vecIdx.push_back(iBottomIdx - (iSliceCount + i + 2));
+		vecIdx.push_back(iBottomIdx - (iSliceCount + i + 1));
+	}
+
+	pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	AddRes<CMesh>(L"ConeMesh", pMesh);
+
+	
 }
 
 void CResMgr::CreateDefaultGraphicsShader()
@@ -508,6 +612,28 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetRSType(RS_TYPE::CULL_NONE);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 	pShader->SetBSType(BS_TYPE::DEFAULT);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// =================
+	// DebugShape Shader OutLiner
+	// Topology : LineStrip
+	// RS_TYPE  : CULL_NONE
+	// DS_TYPE  : NO_TEST_NO_WRITE
+	// BS_TYPE  : AlphaBlend
+	// g_vec4_0 : OutColor
+	// ==================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"DebugShape_OutLineShader");
+	pShader->CreateVertexShader(L"shader\\debugshape.fx", "VS_DebugShape");
+	pShader->CreatePixelShader(L"shader\\debugshape.fx", "PS_DebugShape_OutLine");
+
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
 
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
 
@@ -856,6 +982,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShapeShader"));
 	AddRes(L"DebugShapeMtrl", pMtrl);
+
+	// DebugShape Sphere Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_OutLineShader"));
+	AddRes(L"DebugShapeSphereMtrl", pMtrl);
 
 	// TileMap Material
 	pMtrl = new CMaterial(true);

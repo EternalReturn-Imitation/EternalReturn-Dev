@@ -128,6 +128,9 @@
     <Filter Include="UI\InspectorUI\ComponentUI\09. Light3DUI">
       <UniqueIdentifier>{fc7ce2a0-0867-42ce-883d-da084a917b11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\TransformUI">
+      <UniqueIdentifier>{5996168c-c935-4f44-833d-d4215ac0948c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="Light3DUI.h">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformControllerUI.h">
+      <Filter>UI\TransformUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -405,6 +411,9 @@
     </ClCompile>
     <ClCompile Include="Light3DUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformControllerUI.cpp">
+      <Filter>UI\TransformUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

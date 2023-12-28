@@ -11,6 +11,8 @@ CLight3D::CLight3D()
 	, m_bDebug(false)
 {	
 	SetLightType(LIGHT_TYPE::DIRECTIONAL);
+	SetLightColor(Vec3(1.f, 1.f, 1.f));
+	SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 }
 
 CLight3D::~CLight3D()

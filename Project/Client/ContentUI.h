@@ -24,7 +24,7 @@ public:
 
 private:
     void FindFileName(const wstring& _FolderPath);
-    RES_TYPE GetResTypeByExt(const wstring& _relativepath);
+    RES_TYPE GetResTypeByExt(const wstring& _relativepath, wstring& _FileKey, wstring& _Dir);
 
 public:
     ContentUI();

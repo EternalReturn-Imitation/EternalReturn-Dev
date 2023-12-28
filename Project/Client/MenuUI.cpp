@@ -213,8 +213,8 @@ void MenuUI::CreateEmptyObject()
 void MenuUI::CreateEmptyMaterial()
 {
     Ptr<CMaterial> pNewMtrl = new CMaterial;
-    CResMgr::GetInst()->AddRes<CMaterial>(L"material\\EmptyMtrl.mtrl", pNewMtrl);
-    pNewMtrl->Save(pNewMtrl->GetKey());
+    CResMgr::GetInst()->AddRes<CMaterial>(L"EmptyMtrl", L"material\\Custom\\", L".mtrl", pNewMtrl);
+    pNewMtrl->Save(pNewMtrl->GetRelativePath());
 }
 
 void MenuUI::AddComponent(COMPONENT_TYPE _type)
@@ -250,7 +250,7 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         pSelectedObject->AddComponent(new CLight2D);
         break;
     case COMPONENT_TYPE::LIGHT3D:
-        //pSelectedObject->AddComponent(new CLight3D);
+        pSelectedObject->AddComponent(new CLight3D);
         break;
     case COMPONENT_TYPE::CAMERA:
         pSelectedObject->AddComponent(new CCamera);
@@ -268,10 +268,10 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         pSelectedObject->AddComponent(new CTileMap);
         break;
     case COMPONENT_TYPE::LANDSCAPE:
-        //pSelectedObject->AddComponent(new CLandScape);
+        // pSelectedObject->AddComponent(new CLandScape);
         break;
     case COMPONENT_TYPE::DECAL:
-        //pSelectedObject->AddComponent(new CDecal);
+        pSelectedObject->AddComponent(new CDecal);
         break;
     }
 

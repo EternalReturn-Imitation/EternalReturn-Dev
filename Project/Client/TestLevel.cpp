@@ -71,69 +71,39 @@ void CreateTestLevel()
 	
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\stars_milky_way.jpg"));
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"stars_milky_way.jpg"));
 	
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 	 
 	// 광원 추가
 	CGameObject* pLightObj = new CGameObject;
-	pLightObj->SetName(L"DirectionalLight");
+	pLightObj->SetName(L"SunLight");
 	
 	pLightObj->AddComponent(new CTransform);
 	pLightObj->AddComponent(new CLight3D);
 	
-	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
+	pLightObj->Transform()->SetRelativeRot(0.f, 0.f, 0.f);
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
 	pLightObj->Light3D()->SetRadius(500.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 	
 	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
 	
-	
-	// 오브젝트 생성
+	// 행성
+
 	CGameObject* pObject = new CGameObject;
 	pObject->SetName(L"Earth");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
-	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
+	pObject->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
 	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_nightmap.jpg"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_N.tga"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_spec.tga"));
-
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
-
-	pObject = new CGameObject;
-	pObject->SetName(L"Cloud");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	pObject->Transform()->SetRelativeScale(Vec3(1300.f, 1300.f, 1300.f));
-	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_clouds.jpg"));
-
+	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ironcone.png"));
 	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
 	
-	pObject = new CGameObject;
-	pObject->SetName(L"Plane");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	
-	pObject->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 2000.f));
-	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-	
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_nightmap.jpg"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\PlanetTex\\earth_N.tga"));
-	
-	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Default");
 	
 	pObject = new CGameObject;
 	pObject->SetName(L"Decal");
