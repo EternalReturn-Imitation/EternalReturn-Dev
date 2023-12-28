@@ -9,6 +9,8 @@ private:
     float       m_fScale;           // Orthograpic 에서 사용하는 카메라 배율
     float       m_Far;
 
+    bool        m_bMainCamera;      // 메인카메라 여부
+
     PROJ_TYPE   m_ProjType;
 
     Matrix      m_matView;
@@ -36,6 +38,7 @@ private:
 
 public:
     void SetProjType(PROJ_TYPE _Type) { m_ProjType = _Type; }
+    void SetMainCamera() { m_bMainCamera = true; }
     PROJ_TYPE GetProjType() { return m_ProjType; }
 
     void SetScale(float _fScale) { m_fScale = _fScale; }

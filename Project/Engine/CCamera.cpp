@@ -30,6 +30,7 @@ CCamera::CCamera()
 	, m_ProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_iLayerMask(0)
 	, m_iCamIdx(-1)
+	, m_bMainCamera(false)
 {
 	SetName(L"Camera");
 
@@ -142,6 +143,11 @@ void CCamera::SetLayerMaskAll(bool _Visible)
 
 void CCamera::SetCameraIndex(int _idx)
 {
+	if (_idx == 0)
+		m_bMainCamera = true;
+	else
+		m_bMainCamera = false;
+
 	m_iCamIdx = _idx;
 	CRenderMgr::GetInst()->RegisterCamera(this, m_iCamIdx);
 }
@@ -217,42 +223,45 @@ void CCamera::render()
 	g_transform.matProj = m_matProj;
 	g_transform.matProjInv = m_matProjInv;
 
-	// 쉐이더 도메인에 따라서 순차적으로 그리기
-	// Deferred MRT 로 변경
-	// Deferred 물체들을 Deferred MRT 에 그리기
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
-	render_deferred();
-	
-	// Light MRT 로 변경
-	// 물체들에 적용될 광원을 그리기
-	// Deferred 물체에 광원 적용시키기
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
-
-	const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
-	for (size_t i = 0; i < vecLight3D.size(); ++i)
+	if (m_bMainCamera)
 	{
-		vecLight3D[i]->render();
-	}
-	
-	// Deferred MRT 에 그린 물체에 Light MRT 출력한 광원과 합쳐서
-	// 다시 SwapChain 타겟으로 으로 그리기
-	// SwapChain MRT 로 변경
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
-	static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-	static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
+		// 쉐이더 도메인에 따라서 순차적으로 그리기
+		// Deferred MRT 로 변경
+		// Deferred 물체들을 Deferred MRT 에 그리기
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
+		render_deferred();
 
-	static bool bSet = false;
-	if (!bSet)
-	{
-		bSet = true;
-		pMtrl->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex"));
-		pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
-		pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
-		pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
-	}
+		// Light MRT 로 변경
+		// 물체들에 적용될 광원을 그리기
+		// Deferred 물체에 광원 적용시키기
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
 
-	pMtrl->UpdateData();
-	pRectMesh->render();
+		const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
+		for (size_t i = 0; i < vecLight3D.size(); ++i)
+		{
+			vecLight3D[i]->render();
+		}
+
+		// Deferred MRT 에 그린 물체에 Light MRT 출력한 광원과 합쳐서
+		// 다시 SwapChain 타겟으로 으로 그리기
+		// SwapChain MRT 로 변경
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
+		static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+		static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
+
+		static bool bSet = false;
+		if (!bSet)
+		{
+			bSet = true;
+			pMtrl->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex"));
+			pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
+			pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
+			pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
+		}
+
+		pMtrl->UpdateData();
+		pRectMesh->render();
+	}
 	
 	// Forward Rendering
 	render_opaque();
@@ -352,6 +361,7 @@ void CCamera::SaveToLevelFile(FILE* _File)
 	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
 	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
+	fwrite(&m_bMainCamera, sizeof(bool), 1, _File);
 }
 
 void CCamera::LoadFromLevelFile(FILE* _File)
@@ -361,4 +371,5 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 	fread(&m_ProjType, sizeof(UINT), 1, _File);
 	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
+	fread(&m_bMainCamera, sizeof(bool), 1, _File);
 }

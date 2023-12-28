@@ -55,6 +55,7 @@ void CRenderMgr::render()
 
 void CRenderMgr::render_play()
 {
+    ClearMRT();
     // 카메라 기준 렌더링
     for (size_t i = 0; i < m_vecCam.size(); ++i)
     {
@@ -67,7 +68,8 @@ void CRenderMgr::render_play()
         //   쉐이더 도메인에 따라서 렌더링 순서분류
         m_vecCam[i]->SortObject();
 
-
+        m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
+        
         m_vecCam[i]->render();
     }
 }

@@ -40,6 +40,18 @@ void CSkyBox::SetSkyBoxTexture(Ptr<CTexture> _Tex)
 	m_SkyBoxTex = _Tex;	
 }
 
+void CSkyBox::SaveToLevelFile(FILE* _File)
+{
+	fwrite(&m_Type, sizeof(UINT), 1, _File);
+	CRenderComponent::SaveToLevelFile(_File);
+}
+
+void CSkyBox::LoadFromLevelFile(FILE* _File)
+{
+	fread(&m_Type, sizeof(UINT), 1, _File);
+	CRenderComponent::LoadFromLevelFile(_File);
+}
+
 void CSkyBox::finaltick()
 {
 

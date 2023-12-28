@@ -95,11 +95,28 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 
 void CLight3D::SaveToLevelFile(FILE* _File)
 {
+	fwrite(&m_LightInfo.Color.vAmbient, sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.Color.vDiffuse, sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.vWorldPos,sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.vWorldDir,sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.LightType,sizeof(UINT), 1, _File);
+	fwrite(&m_LightInfo.Radius,sizeof(float), 1, _File);
+	fwrite(&m_LightInfo.Angle,sizeof(float), 1, _File);
+	fwrite(&m_LightInfo.padding, sizeof(int), 1, _File);
+	fwrite(&m_LightIdx, sizeof(float), 1, _File);
+
 
 }
 
 void CLight3D::LoadFromLevelFile(FILE* _File)
 {
-
+	fread(&m_LightInfo.Color.vAmbient, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.Color.vDiffuse, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.vWorldPos, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.vWorldDir, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.LightType, sizeof(UINT), 1, _File);
+	fread(&m_LightInfo.Radius, sizeof(float), 1, _File);
+	fread(&m_LightInfo.Angle, sizeof(float), 1, _File);
+	fread(&m_LightInfo.padding, sizeof(int), 1, _File);
+	fread(&m_LightIdx, sizeof(float), 1, _File);
 }
-
