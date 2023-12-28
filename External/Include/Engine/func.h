@@ -10,8 +10,6 @@ void DeleteArray(T* (&Arr)[_Size])
 	}
 }
 
-
-
 // 오브젝트 생성
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
@@ -114,6 +112,4 @@ void Safe_Del_Map(map<T1, T2>& _map)
 
 	_map.clear();
 }
-
-
 

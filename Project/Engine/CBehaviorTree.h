@@ -380,6 +380,8 @@ public:
 public:
     Root_Node* SetRootNode(Root_Node* _Root)
     { 
+        delete m_RootNode;
+
         m_RootNode = _Root;
         m_RootNode->m_OwnerObj = GetOwner();
 

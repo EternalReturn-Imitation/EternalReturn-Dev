@@ -83,7 +83,7 @@ void CreateTestLevel()
 	pLightObj->AddComponent(new CLight3D);
 	
 	pLightObj->Transform()->SetRelativeRot(0.f, 0.f, 0.f);
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
 	pLightObj->Light3D()->SetRadius(500.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
@@ -91,34 +91,30 @@ void CreateTestLevel()
 	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
 	
 	// 행성
-
 	CGameObject* pObject = new CGameObject;
 	pObject->SetName(L"Earth");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CBehaviorTree);
 	pObject->Transform()->SetRelativeScale(Vec3(500.f, 500.f, 500.f));
 	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"));
-	pObject->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ironcone.png"));
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"EarthMtrl.mtrl"));
 	
-	
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 500.f), L"Player");
+
 	pObject = new CGameObject;
-	pObject->SetName(L"Decal");
+	pObject->SetName(L"EarthCloud");
 	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CDecal);
-	
-	pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+	pObject->AddComponent(new CMeshRender);
+	pObject->Transform()->SetRelativeScale(Vec3(520.f, 520.f, 520.f));
 	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-	
-	pObject->Decal()->SetDeferredDecal(true);
-	pObject->Decal()->ActivateEmissive(true);
-	
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 500.f), L"Default");
 
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"EarthCloudMtrl.mtrl"));
 
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 500.f), L"Player");
 	
 	// 충돌 시킬 레이어 짝 지정
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");	

@@ -392,6 +392,8 @@ CBehaviorTree::CBehaviorTree()
 	: CComponent(COMPONENT_TYPE::BEHAVIORTREE)
 	, m_RootNode(nullptr)
 {
+	m_RootNode = new Root_Node;
+	m_RootNode->m_OwnerObj = GetOwner();
 }
 
 CBehaviorTree::~CBehaviorTree()
