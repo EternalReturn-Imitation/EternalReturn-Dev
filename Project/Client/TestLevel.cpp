@@ -31,6 +31,7 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(0)->SetName(L"Default");
 	pCurLevel->GetLayer(1)->SetName(L"SkyBox");
 	pCurLevel->GetLayer(2)->SetName(L"Planet");
+	pCurLevel->GetLayer(3)->SetName(L"Line");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 
@@ -42,14 +43,14 @@ void CreateTestLevel()
 	pMainCam->AddComponent(new CCamera);
 	pMainCam->AddComponent(new CCameraMoveScript);
 
-	pMainCam->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	pMainCam->Transform()->SetRelativeRot(Vec3(XM_PI / 6.f, -XM_PI / 6.f, 0.f));
 
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
 
-	SpawnGameObject(pMainCam, Vec3(500.f, 100.f, 0.f), 0);
+	SpawnGameObject(pMainCam, Vec3(430.f, 490.f, -780.f), 0);
 
 	// UI cameara
 	// CGameObject* pUICam = new CGameObject;
@@ -84,19 +85,17 @@ void CreateTestLevel()
 	
 	pLightObj->AddComponent(new CTransform);
 	pLightObj->AddComponent(new CLight3D);
-	
-	pLightObj->Transform()->SetRelativeRot(0.f, 0.f, 0.f);
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-	pLightObj->Light3D()->SetRadius(500.f);
+
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pLightObj->Light3D()->SetRadius(4000.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
-	pLightObj->Light3D()->SetLightAmbient(Vec3(0.6f, 0.6f, 0.6f));
+	pLightObj->Light3D()->SetLightAmbient(Vec3(0.1f, 0.1f, 0.1f));
 	
 	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
 	
+
 	float dist = 100.f;
 	float radius = 0.f;
-
-	
 
 	// 행성 오브젝트
 	// 태양
@@ -105,13 +104,21 @@ void CreateTestLevel()
 	Sun->AddComponent(new CTransform);
 	Sun->AddComponent(new CMeshRender);
 	Sun->AddComponent(new CPlanetScript);
-	Sun->Transform()->SetRelativeScale(Vec3(170.f, 170.f, 170.f));
+	Sun->AddComponent(new CLight3D);
+
+	Sun->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	Sun->Light3D()->SetRadius(110.f);
+	Sun->Light3D()->SetLightColor(Vec3(10.f, 10.f, 10.f));
+	Sun->Light3D()->SetLightAmbient(Vec3(1.f, 1.f, 1.f));
+
+	Sun->Transform()->SetRelativeScale(Vec3(220.f, 220.f, 220.f));
 	Sun->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 	Sun->GetScript<CPlanetScript>()->SetPlanet(radius, 0.f, 0.99f, Vec3(0.f, 1.f, 0.f), Vec3(0.f, 10.f, 0.7f));
 
 	Sun->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	Sun->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SunMtrl.mtrl"));
+	
 
 	SpawnGameObject(Sun, Vec3(0.f, 0.f, 0.f), L"Planet");
 
@@ -119,7 +126,7 @@ void CreateTestLevel()
 	SunEffect->SetName(L"SunEffect");
 	SunEffect->AddComponent(new CTransform);
 	SunEffect->AddComponent(new CMeshRender);
-	SunEffect->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
+	SunEffect->Transform()->SetRelativeScale(Vec3(0.95f, 0.95f, 0.95f));
 	SunEffect->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
 
 	SunEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
@@ -133,10 +140,10 @@ void CreateTestLevel()
 	Mercury->AddComponent(new CTransform);
 	Mercury->AddComponent(new CMeshRender);
 	Mercury->AddComponent(new CPlanetScript);
-	Mercury->Transform()->SetRelativeScale(Vec3(16.f, 16.f, 16.f));
+	Mercury->Transform()->SetRelativeScale(Vec3(42.f, 42.f, 42.f));
 	Mercury->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
-	radius = dist * 1.7f;
+	radius = dist * 2.2f;
 	Mercury->GetScript<CPlanetScript>()->SetPlanet(radius, 0.478f, 0.03f, Vec3(0.f, 1.f, 0.07f) , Vec3(0.f, 10.f, 0.01f));
 
 	Mercury->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
@@ -150,10 +157,10 @@ void CreateTestLevel()
 	Venus->AddComponent(new CTransform);
 	Venus->AddComponent(new CMeshRender);
 	Venus->AddComponent(new CPlanetScript);
-	Venus->Transform()->SetRelativeScale(Vec3(28.f, 28.f, 28.f));
+	Venus->Transform()->SetRelativeScale(Vec3(56.f, 56.f, 56.f));
 	Venus->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
-	radius = dist * 2.4f;
+	radius = dist * 2.9f;
 	Venus->GetScript<CPlanetScript>()->SetPlanet(radius, 0.358f, 0.001f, Vec3(0.f, 1.f, 0.03f), Vec3(0.f, 10.f, 0.2f));
 
 	Venus->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
@@ -166,7 +173,7 @@ void CreateTestLevel()
 	VenusAtmoSphere->AddComponent(new CTransform);
 	VenusAtmoSphere->AddComponent(new CMeshRender);
 	VenusAtmoSphere->AddComponent(new CCloudScript);
-	VenusAtmoSphere->Transform()->SetRelativeScale(Vec3(1.02f, 1.02f, 1.02f));
+	VenusAtmoSphere->Transform()->SetRelativeScale(Vec3(1.05f, 1.05f, 1.05f));
 	VenusAtmoSphere->Transform()->SetRelativeRot(Vec3(0.f, 1.f, 0.2f));
 
 	VenusAtmoSphere->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
@@ -180,10 +187,10 @@ void CreateTestLevel()
 	Earth->AddComponent(new CTransform);
 	Earth->AddComponent(new CMeshRender);
 	Earth->AddComponent(new CPlanetScript);
-	Earth->Transform()->SetRelativeScale(Vec3(40.f, 40.f, 40.f));
+	Earth->Transform()->SetRelativeScale(Vec3(70.f, 70.f, 70.f));
 	Earth->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 	
-	radius = dist * 3.f;
+	radius = dist * 3.8f;
 	Earth->GetScript<CPlanetScript>()->SetPlanet(radius, 0.297f, 0.46f, Vec3(0.f, 1.f, 0.f), Vec3(0.f, 10.f, 2.3f));
 
 	Earth->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
@@ -196,8 +203,8 @@ void CreateTestLevel()
 	Moon->AddComponent(new CTransform);
 	Moon->AddComponent(new CMeshRender);
 	Moon->AddComponent(new CPlanetScript);
-	Moon->Transform()->SetRelativePos(Vec3(0.7f, 0.7f, 0.7f));
-	Moon->Transform()->SetRelativeScale(Vec3(0.2f, 0.2f, 0.2f));
+	Moon->Transform()->SetRelativePos(Vec3(1.f, 1.f, 0.f));
+	Moon->Transform()->SetRelativeScale(Vec3(0.3f, 0.3f, 0.3f));
 	Moon->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 	radius = dist * 1.f;
@@ -228,11 +235,11 @@ void CreateTestLevel()
 	Mars->AddComponent(new CTransform);
 	Mars->AddComponent(new CMeshRender);
 	Mars->AddComponent(new CPlanetScript);
-	Mars->Transform()->SetRelativeScale(Vec3(32.f, 32.f, 32.f));
+	Mars->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
 	Mars->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
-	radius = dist * 4.f;
-	Mars->GetScript<CPlanetScript>()->SetPlanet(radius, 0.241f, 0.2, Vec3(0.f, 1.f, 0.18f), Vec3(0.f, 10.f, 2.5f));
+	radius = dist * 4.6f;
+	Mars->GetScript<CPlanetScript>()->SetPlanet(radius, 0.241f, 0.2f, Vec3(0.f, 1.f, 0.18f), Vec3(0.f, 10.f, 2.5f));
 
 	Mars->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	Mars->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"MarsMtrl.mtrl"));
@@ -262,7 +269,7 @@ void CreateTestLevel()
 	Saturn->AddComponent(new CTransform);
 	Saturn->AddComponent(new CMeshRender);
 	Saturn->AddComponent(new CPlanetScript);
-	Saturn->Transform()->SetRelativeScale(Vec3(80.f, 80.f, 80.f));
+	Saturn->Transform()->SetRelativeScale(Vec3(130.f, 130.f, 130.f));
 	Saturn->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 	radius = dist * 10.5f;
@@ -289,7 +296,7 @@ void CreateTestLevel()
 	Uranus->AddComponent(new CTransform);
 	Uranus->AddComponent(new CMeshRender);
 	Uranus->AddComponent(new CPlanetScript);
-	Uranus->Transform()->SetRelativeScale(Vec3(60.f, 60.f, 60.f));
+	Uranus->Transform()->SetRelativeScale(Vec3(120.f, 120.f, 120.f));
 	Uranus->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 	radius = dist * 13.2f;
@@ -306,7 +313,7 @@ void CreateTestLevel()
 	Neptune->AddComponent(new CTransform);
 	Neptune->AddComponent(new CMeshRender);
 	Neptune->AddComponent(new CPlanetScript);
-	Neptune->Transform()->SetRelativeScale(Vec3(60.f, 60.f, 60.f));
+	Neptune->Transform()->SetRelativeScale(Vec3(120.f, 120.f, 120.f));
 	Neptune->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 	radius = dist * 15.1f;

@@ -11,6 +11,7 @@ CPlanetScript::CPlanetScript()
 	, m_vOrbitAxis{ 0.f, 0.1f, 0.f }
 	, m_vRotAxis{ 0.f, 0.1f, 0.f }
 	, m_fRadius(0.f)
+	, m_OrbitLineObj(nullptr)
 {
 }
 

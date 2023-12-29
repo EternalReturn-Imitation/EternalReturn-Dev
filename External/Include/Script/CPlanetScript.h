@@ -19,6 +19,8 @@ public:
     Vec3    m_vRotAxis;             // 자전 축
     float   m_fRadius;         
 
+    CGameObject* m_OrbitLineObj;    // 공전궤도 라인오브젝트
+
     void SetParentPlanet(CGameObject* _pObj) { m_pParent = _pObj; }
 
     void SetPlanet(float _fRadius, float _OrbitSpd, float _RotSpd, Vec3 _OrbitAxis, Vec3 _RotAxis)
