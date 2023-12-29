@@ -34,22 +34,19 @@ extern const wchar_t* RES_TYPE_WSTR[(UINT)RES_TYPE::END] =
 
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END] =
 {
-
-	"TRANSFORM",		// 위치, 크기, 회전
-	"COLLIDER2D",		// 2차원 충돌
-	"COLLIDER3D",		// 3차원 충돌
-	"ANIMATOR2D",		// Sprite Animation
-	"ANIMATOR3D",		// Bone Sknning Animation
-	"LIGHT2D",		// 2차원 광원
-	"LIGHT3D",		// 3차원 광원
-	"CAMERA",			// Camera
-	"BEHAVIORTREE",	// 행동트리
-	"MESHRENDER",		// 기본적인 렌더링
-	"PARTICLESYSTEM", // 입자 렌더링
-	"TILEMAP",		// 2차원 타일
-	"LANDSCAPE",		// 3차원 지형
-	"SKYBOX",			// SkyBox
-	"DECAL",			// 내부 렌더링
+	"TRANSFORM",
+	"COLLIDER2D",
+	"COLLIDER3D",
+	"ANIMATOR2D",
+	"ANIMATOR3D",
+	"LIGHT2D",
+	"LIGHT3D",
+	"CAMERA",
+	"MESHRENDER",
+	"PARTICLESYSTEM",
+	"TILEMAP",
+	"LANDSCAPE",
+	"DECAL",
 };
 
 extern const wchar_t* COMPONENT_TYPE_WSTR[(UINT)COMPONENT_TYPE::END] =
@@ -62,12 +59,10 @@ extern const wchar_t* COMPONENT_TYPE_WSTR[(UINT)COMPONENT_TYPE::END] =
 	L"LIGHT2D",
 	L"LIGHT3D",
 	L"CAMERA",
-	L"BEHAVIORTREE",
 	L"MESHRENDER",
 	L"PARTICLESYSTEM",
 	L"TILEMAP",
 	L"LANDSCAPE",
-	L"SKYBOX",
 	L"DECAL",
 };
 

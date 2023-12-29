@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "CCamera.h"
 
+
 #include "CDevice.h"
 #include "CRenderMgr.h"
 #include "CTransform.h"
-#include "CLight3D.h"
 
 #include "CLevelMgr.h"
 #include "CLevel.h"
@@ -14,19 +14,11 @@
 #include "CMaterial.h"
 #include "CGraphicsShader.h"
 
-#include "CRenderMgr.h"
-#include "CMRT.h"
-
-#include "CResMgr.h"
-#include "CMesh.h"
-#include "CMaterial.h"
-
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
 	, m_fAspectRatio(1.f)
 	, m_fScale(1.f)
-	, m_Far(10000.f)
 	, m_ProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_iLayerMask(0)
 	, m_iCamIdx(-1)
@@ -89,10 +81,6 @@ void CCamera::CalcViewMat()
 	matViewRot._31 = vR.z;	matViewRot._32 = vU.z;	matViewRot._33 = vF.z;
 
 	m_matView = matViewTrans * matViewRot;
-
-
-	// View 역행렬 구하기
-	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 }
 
 void CCamera::CalcProjMat()
@@ -111,11 +99,9 @@ void CCamera::CalcProjMat()
 	else
 	{	
 		// 원근 투영
-		m_matProj = XMMatrixPerspectiveFovLH(XM_PI / 2.f, m_fAspectRatio, 1.f, m_Far);
+		m_matProj = XMMatrixPerspectiveFovLH(XM_PI / 2.f, m_fAspectRatio, 1.f, 10000.f);
 	}
 
-	// 투영행렬 역행렬 구하기
-	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
 }
 
 
@@ -176,22 +162,11 @@ void CCamera::SortObject()
 				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
 				switch (eDomain)
 				{
-				case SHADER_DOMAIN::DOMAIN_DEFERRED:
-					m_vecDeferred.push_back(vecObject[j]);
-					break;
-
-				case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
-					m_vecDeferredDecal.push_back(vecObject[j]);
-					break;
-
 				case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					m_vecOpaque.push_back(vecObject[j]);
 					break;
 				case SHADER_DOMAIN::DOMAIN_MASK:
 					m_vecMask.push_back(vecObject[j]);
-					break;
-				case SHADER_DOMAIN::DOMAIN_DECAL:
-					m_vecDecal.push_back(vecObject[j]);
 					break;
 				case SHADER_DOMAIN::DOMAIN_TRANSPARENT:
 					m_vecTransparent.push_back(vecObject[j]);
@@ -212,52 +187,11 @@ void CCamera::render()
 {
 	// 행렬 업데이트
 	g_transform.matView = m_matView;
-	g_transform.matViewInv = m_matViewInv;
-
 	g_transform.matProj = m_matProj;
-	g_transform.matProjInv = m_matProjInv;
 
 	// 쉐이더 도메인에 따라서 순차적으로 그리기
-	// Deferred MRT 로 변경
-	// Deferred 물체들을 Deferred MRT 에 그리기
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
-	render_deferred();
-	
-	// Light MRT 로 변경
-	// 물체들에 적용될 광원을 그리기
-	// Deferred 물체에 광원 적용시키기
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
-
-	const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
-	for (size_t i = 0; i < vecLight3D.size(); ++i)
-	{
-		vecLight3D[i]->render();
-	}
-	
-	// Deferred MRT 에 그린 물체에 Light MRT 출력한 광원과 합쳐서
-	// 다시 SwapChain 타겟으로 으로 그리기
-	// SwapChain MRT 로 변경
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
-	static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-	static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
-
-	static bool bSet = false;
-	if (!bSet)
-	{
-		bSet = true;
-		pMtrl->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex"));
-		pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
-		pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
-		pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
-	}
-
-	pMtrl->UpdateData();
-	pRectMesh->render();
-	
-	// Forward Rendering
 	render_opaque();
 	render_mask();
-	render_decal();
 	render_transparent();
 
 	// PostProcess - 후처리
@@ -270,30 +204,11 @@ void CCamera::render()
 
 void CCamera::clear()
 {
-	m_vecDeferred.clear();
-	m_vecDeferredDecal.clear();
-
 	m_vecOpaque.clear();
 	m_vecMask.clear();
-	m_vecDecal.clear();
 	m_vecTransparent.clear();
 	m_vecPost.clear();
 	m_vecUI.clear();
-}
-
-void CCamera::render_deferred()
-{
-	for (size_t i = 0; i < m_vecDeferred.size(); ++i)
-	{
-		m_vecDeferred[i]->render();
-	}
-
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED_DECAL)->OMSet();
-
-	for (size_t i = 0; i < m_vecDeferredDecal.size(); ++i)
-	{
-		m_vecDeferredDecal[i]->render();
-	}
 }
 
 void CCamera::render_opaque()
@@ -309,14 +224,6 @@ void CCamera::render_mask()
 	for (size_t i = 0; i < m_vecMask.size(); ++i)
 	{
 		m_vecMask[i]->render();
-	}
-}
-
-void CCamera::render_decal()
-{
-	for (size_t i = 0; i < m_vecDecal.size(); ++i)
-	{
-		m_vecDecal[i]->render();
 	}
 }
 

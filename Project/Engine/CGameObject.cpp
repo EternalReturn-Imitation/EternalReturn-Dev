@@ -10,7 +10,6 @@
 #include "CLevel.h"
 #include "CLayer.h"
 
-#include "CRenderComponent.h"
 
 CGameObject::CGameObject()
 	: m_arrCom{}
@@ -158,12 +157,11 @@ void CGameObject::AddComponent(CComponent* _Component)
 		m_arrCom[(UINT)_Component->GetType()] = _Component;
 
 		// RenderComponent 확인
-		CRenderComponent* pRenderCom = dynamic_cast<CRenderComponent*>(_Component);
-		if (pRenderCom)
+		if (COMPONENT_TYPE::MESHRENDER <= _Component->GetType()
+			&& _Component->GetType() <= COMPONENT_TYPE::DECAL)
 		{
-			// 이미 1개 이상의 렌더컴포넌트를 보유하고 있다면 assert
 			assert(!m_RenderCom);
-			m_RenderCom = pRenderCom;
+			m_RenderCom = (CRenderComponent*)_Component;
 		}
 	}
 }
