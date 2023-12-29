@@ -6,7 +6,7 @@
 
 CCameraMoveScript::CCameraMoveScript()
 	: CScript((UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT)
-	, m_fCamSpeed(1000.f)
+	, m_fCamSpeed(100.f)
 {
 }
 
@@ -81,7 +81,7 @@ void CCameraMoveScript::Camera3DMove()
 	float fSpeed = m_fCamSpeed;
 
 	if (KEY_PRESSED(KEY::LSHIFT))
-		fSpeed *= 10.f;
+		fSpeed *= 5.f;
 
 	if (KEY_PRESSED(KEY::W))
 	{

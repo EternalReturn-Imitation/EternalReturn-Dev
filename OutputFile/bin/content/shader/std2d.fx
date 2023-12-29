@@ -157,7 +157,7 @@ float4 PS_Std2DLight(VS_Light_OUT _in) : SV_Target
     if(g_btex_1)
     {
         // Normal 값 추출
-        vNormal = g_tex_1.Sample(g_sam_0, _in.vUV).xyz;
+        vNormal = g_tex_1.Sample(g_sam_0, _in.vUV);
         
         // 0 ~ 1 범위를 -1 ~ 1 로 변경
         vNormal = (vNormal * 2.f) - 1.f;
