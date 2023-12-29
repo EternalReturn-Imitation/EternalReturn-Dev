@@ -72,6 +72,8 @@ void CTransform::finaltick()
 			m_vWorldDir[i].Normalize();
 		}
 	}
+
+	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
 }
 
 void CTransform::UpdateData()
@@ -80,6 +82,7 @@ void CTransform::UpdateData()
 	CConstBuffer* pTransformBuffer = CDevice::GetInst()->GetConstBuffer(CB_TYPE::TRANSFORM);
 
 	g_transform.matWorld = m_matWorld;
+	g_transform.matWorldInv = m_matWorldInv;
 	g_transform.matWV = g_transform.matWorld * g_transform.matView;
 	g_transform.matWVP = g_transform.matWV * g_transform.matProj;
 

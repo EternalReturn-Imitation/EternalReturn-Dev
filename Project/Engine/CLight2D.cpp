@@ -28,7 +28,7 @@ void CLight2D::finaltick()
 	m_LightInfo.vWorldPos = Transform()->GetWorldPos();
 	m_LightInfo.vWorldDir = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
 
-	CRenderMgr::GetInst()->RegisterLight2D(m_LightInfo);
+	CRenderMgr::GetInst()->RegisterLight2D(this, m_LightInfo);
 }
 
 void CLight2D::SaveToLevelFile(FILE* _File)

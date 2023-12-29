@@ -6,8 +6,13 @@
 cbuffer TRANSFORM : register(b0)
 {
     row_major matrix g_matWorld;
+    row_major matrix g_matWorldInv;
+    
     row_major matrix g_matView;
+    row_major matrix g_matViewInv;
+    
     row_major matrix g_matProj;
+    row_major matrix g_matProjInv;
     
     row_major matrix g_matWV;
     row_major matrix g_matWVP;
@@ -47,7 +52,11 @@ cbuffer MATERIAL : register(b1)
     int g_btex_4;
     int g_btex_5;
     int g_btex_6;
-    int g_btex_7;   
+    int g_btex_7;    
+    int g_btexcube_0;
+    int g_btexcube_1;    
+    int g_btexarr_0;
+    int g_btexarr_1;
 };
 
 cbuffer GLOBAL : register(b2)
@@ -82,5 +91,8 @@ StructuredBuffer<tLightInfo> g_Light3DBuffer : register(t13);
 SamplerState g_sam_0 : register(s0);
 SamplerState g_sam_1 : register(s1);
 
+
+
+#define PI 3.1415926535f
 
 #endif
