@@ -39,7 +39,12 @@
     <ClInclude Include="CTestScript.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="CCircularMotionScript.h" />
+    <ClInclude Include="CPlanetScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="CCloudScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -69,6 +74,11 @@
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="CCircularMotionScript.cpp" />
+    <ClCompile Include="CPlanetScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CCloudScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

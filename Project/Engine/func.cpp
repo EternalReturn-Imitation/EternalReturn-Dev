@@ -236,6 +236,24 @@ void SaveResRef(Ptr<CRes> _Res, FILE* _File)
 	}
 }
 
+void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File)
+{
+	int i = 0;
+	if (nullptr == _Obj)
+	{
+		fwrite(&i, sizeof(i), 1, _File);
+	}
+	else
+	{
+		i = 1;
+		fwrite(&i, sizeof(i), 1, _File);
+	}
+}
+
+void LoadGameObjectPtr(wstring& _ObjName, FILE* _File)
+{
+}
+
 const wchar_t* ToWString(COMPONENT_TYPE type)
 {
 	return COMPONENT_TYPE_WSTR[(UINT)type];

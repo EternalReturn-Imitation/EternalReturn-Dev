@@ -151,6 +151,92 @@ void CResMgr::CreateDefaultMesh()
 
 
 	// ========
+	// RingMesh
+	// ========
+
+	fRadius = 0.7f;
+	int iRingSliceCount = 40; // 세로 분할 개수
+	float fRingSliceAngle = XM_2PI / iRingSliceCount;
+	float fRingUVXStep = 1.f / (float)iRingSliceCount;
+
+	// out
+	for (UINT j = 0; j <= iRingSliceCount; ++j)
+	{
+		float theta = j * fRingSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fRingSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fRingSliceAngle));
+
+		v.vUV = Vec2(fRingUVXStep * j, 1.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+	
+	fRadius = 0.3f;
+	// in
+	for (UINT j = 0; j <= iRingSliceCount; ++j)
+	{
+		float theta = j * fRingSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fRingSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fRingSliceAngle));
+
+		v.vUV = Vec2(fRingUVXStep * j, 0.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.y = -1.f;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+
+	for (UINT i = 0; i < iRingSliceCount; ++i)
+	{
+		vecIdx.push_back(i);
+		vecIdx.push_back(i + (iRingSliceCount + 1));
+		vecIdx.push_back(i + 1);
+		vecIdx.push_back(i + (iRingSliceCount + 1));
+		vecIdx.push_back(i + (iRingSliceCount + 2));
+		vecIdx.push_back(i + 1);
+	}
+
+	vecIdx.push_back(iRingSliceCount);
+	vecIdx.push_back(iRingSliceCount * 2 + 1);
+	vecIdx.push_back(0);
+	vecIdx.push_back(iRingSliceCount * 2 + 1);
+	vecIdx.push_back(iRingSliceCount + 1);
+	vecIdx.push_back(0);
+
+
+	pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	AddRes(L"RingMesh", pMesh);
+
+	vecVtx.clear();
+	vecIdx.clear();
+
+	// ========
 	// CubeMesh
 	// ========
 	Vtx arrCube[24] = {};
@@ -776,6 +862,30 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->AddTexParam(TEX_1, "Normal Texture");
 
 	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// StdRingShader
+	// RS_TYPE : CULL_BACK
+	// DS_TYPE : LESS
+	// BS_TYPE : DEFAULT
+	// Domain : MASK
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"StdRingShader");
+
+	pShader->CreateVertexShader(L"shader\\std3d.fx", "VS_Std3D");
+	pShader->CreatePixelShader(L"shader\\std3d.fx", "PS_Std3D");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_TRANSPARENT);
+
+	// Parameter	
+	pShader->AddTexParam(TEX_0, "Output Texture");
+
+	AddRes(pShader->GetKey(), pShader);
+
 
 	// ============================
 	// SkyBoxShader

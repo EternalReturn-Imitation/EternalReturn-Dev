@@ -70,6 +70,8 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 	}
 }
 
+void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File);
+void LoadGameObjectPtr(wstring& _ObjName, FILE* _File);
 
 
 
