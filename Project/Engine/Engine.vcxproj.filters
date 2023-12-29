@@ -163,6 +163,9 @@
     <ClInclude Include="CMRT.h">
       <Filter>Source\03. Manager\06. RenderMgr\MRT</Filter>
     </ClInclude>
+    <ClInclude Include="CSQLMgr.h">
+      <Filter>Source\03. Manager\11. SQLMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -314,6 +317,9 @@
     </ClCompile>
     <ClCompile Include="CRenderMgr_init.cpp">
       <Filter>Source\03. Manager\06. RenderMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CSQLMgr.cpp">
+      <Filter>Source\03. Manager\11. SQLMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,6 +481,9 @@
     </Filter>
     <Filter Include="Source\03. Manager\06. RenderMgr\MRT">
       <UniqueIdentifier>{fb1e3652-0419-433e-a994-f0c90d9dc1e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\11. SQLMgr">
+      <UniqueIdentifier>{87fcd018-8ac4-4f73-a181-d6fe920412a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
