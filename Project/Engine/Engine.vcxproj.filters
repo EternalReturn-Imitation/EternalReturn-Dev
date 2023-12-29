@@ -151,8 +151,6 @@
     <ClInclude Include="CFontMgr.h">
       <Filter>Source\03. Manager\10. FontMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CSQLMgr.h">
-      <Filter>Source\03. Manager\11. SQLMgr</Filter>
     <ClInclude Include="CLight3D.h">
       <Filter>Source\06. Component\5. Light3D</Filter>
     </ClInclude>
@@ -302,8 +300,6 @@
     <ClCompile Include="CResMgr_Init.cpp">
       <Filter>Source\03. Manager\05. ResMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CSQLMgr.cpp">
-      <Filter>Source\03. Manager\11. SQLMgr</Filter>
     <ClCompile Include="CLight3D.cpp">
       <Filter>Source\06. Component\5. Light3D</Filter>
     </ClCompile>
@@ -459,8 +455,6 @@
     <Filter Include="Source\03. Manager\10. FontMgr">
       <UniqueIdentifier>{b1a42f85-f96c-490d-a570-365243b1a620}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\03. Manager\11. SQLMgr">
-      <UniqueIdentifier>{1feb0975-634e-4d59-9912-0b9a5cc29541}</UniqueIdentifier>
     <Filter Include="Source\06. Component\5. Light3D">
       <UniqueIdentifier>{f77d9737-0c18-4b57-bc1f-0e4a650b0a9f}</UniqueIdentifier>
     </Filter>
