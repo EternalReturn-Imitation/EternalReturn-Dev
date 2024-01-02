@@ -62,3 +62,11 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 
 	SetMaterial(m_pSharedMtrl);
 }
+
+void CRenderComponent::SaveToDB(int _gameObjectID)
+{
+}
+
+void CRenderComponent::LoadFromDB(int _gameObjectID)
+{
+}

@@ -271,9 +271,14 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::TILEMAP:
 			Component = new CTileMap;
 			break;
-		case COMPONENT_TYPE::LANDSCAPE:			
+		case COMPONENT_TYPE::LANDSCAPE:
+			Component = nullptr;
 			break;
-		case COMPONENT_TYPE::DECAL:			
+		case COMPONENT_TYPE::SKYBOX:
+			Component = new CSkyBox;
+			break;
+		case COMPONENT_TYPE::DECAL:
+			Component = new CDecal;
 			break;
 		}
 
