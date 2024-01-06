@@ -169,6 +169,9 @@
     <ClInclude Include="CMRT.h">
       <Filter>Source\02. Device\MRT</Filter>
     </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Source\06. Component\3. Camera\Frustum</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -326,6 +329,9 @@
     </ClCompile>
     <ClCompile Include="CRenderMgr_init.cpp">
       <Filter>Source\03. Manager\06. RenderMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CFrustum.cpp">
+      <Filter>Source\06. Component\3. Camera\Frustum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -487,6 +493,9 @@
     </Filter>
     <Filter Include="Source\02. Device\MRT">
       <UniqueIdentifier>{16d7cd40-5202-4830-9771-8a2bf70982af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\3. Camera\Frustum">
+      <UniqueIdentifier>{d5e264ca-0a77-43bd-b295-0f3283f7920e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

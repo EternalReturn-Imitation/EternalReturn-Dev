@@ -62,4 +62,13 @@ float4 PS_DebugShape_OutLine(VS_DEBUG_OUT _in) : SV_Target
     return vOutColor;
 }
 
+float4 PS_DebugShape_Frustum(VS_DEBUG_OUT _in) : SV_Target
+{
+    float4 vOutColor = (float4) 0.f;
+    
+    vOutColor = g_vec4_0;
+    
+    return vOutColor;
+}
+
 #endif

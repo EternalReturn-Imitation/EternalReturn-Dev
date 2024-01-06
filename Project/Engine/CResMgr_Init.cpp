@@ -155,7 +155,7 @@ void CResMgr::CreateDefaultMesh()
 	// ========
 
 	fRadius = 0.7f;
-	int iRingSliceCount = 40; // 세로 분할 개수
+	UINT iRingSliceCount = 40; // 세로 분할 개수
 	float fRingSliceAngle = XM_2PI / iRingSliceCount;
 	float fRingUVXStep = 1.f / (float)iRingSliceCount;
 
@@ -394,9 +394,48 @@ void CResMgr::CreateDefaultMesh()
 
 	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"CubeMesh_Debug", pMesh);
+	
+
+	// 윗면
+	arrCube[0].vPos = Vec3(-1.f, 1.f, 1.f);
+	arrCube[1].vPos = Vec3(1.f, 1.f, 1.f);
+	arrCube[2].vPos = Vec3(1.f, 1.f, -1.f);
+	arrCube[3].vPos = Vec3(-1.f, 1.f, -1.f);
+
+	// 아랫 면	
+	arrCube[4].vPos = Vec3(-1.f, -1.f, -1.f);
+	arrCube[5].vPos = Vec3(1.f, -1.f, -1.f);
+	arrCube[6].vPos = Vec3(1.f, -1.f, 1.f);
+	arrCube[7].vPos = Vec3(-1.f, -1.f, 1.f);
+	
+	// 왼쪽 면
+	arrCube[8].vPos = Vec3(-1.f, 1.f, 1.f);
+	arrCube[9].vPos = Vec3(-1.f, 1.f, -1.f);
+	arrCube[10].vPos = Vec3(-1.f, -1.f, -1.f);
+	arrCube[11].vPos = Vec3(-1.f, -1.f, 1.f);
+
+	// 오른쪽 면
+	arrCube[12].vPos = Vec3(1.f, 1.f, -1.f);
+	arrCube[13].vPos = Vec3(1.f, 1.f, 1.f);
+	arrCube[14].vPos = Vec3(1.f, -1.f, 1.f);
+	arrCube[15].vPos = Vec3(1.f, -1.f, -1.f);
+	
+	// 뒷 면
+	arrCube[16].vPos = Vec3(1.f, 1.f, 1.f);
+	arrCube[17].vPos = Vec3(-1.f, 1.f, 1.f);
+	arrCube[18].vPos = Vec3(-1.f, -1.f, 1.f);
+	arrCube[19].vPos = Vec3(1.f, -1.f, 1.f);
+
+	// 앞 면
+	arrCube[20].vPos = Vec3(-1.f, 1.f, -1.f);;
+	arrCube[21].vPos = Vec3(1.f, 1.f, -1.f);
+	arrCube[22].vPos = Vec3(1.f, -1.f, -1.f);
+	arrCube[23].vPos = Vec3(-1.f, -1.f, -1.f);
+
+	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
+	AddRes<CMesh>(L"FrustumMesh_Debug", pMesh);
 	vecVtx.clear();
 	vecIdx.clear();
-
 
 	// ===========
 	// Sphere Mesh
@@ -725,6 +764,28 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	AddRes(pShader->GetKey(), pShader);
 
+	// =================
+	// DebugShape Shader Frustum
+	// Topology : LineStrip
+	// RS_TYPE  : CULL_NONE
+	// DS_TYPE  : NO_TEST_NO_WRITE
+	// BS_TYPE  : AlphaBlend
+	// g_vec4_0 : OutColor
+	// ==================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"DebugShape_FrustumShader");
+	pShader->CreateVertexShader(L"shader\\debugshape.fx", "VS_DebugShape");
+	pShader->CreatePixelShader(L"shader\\debugshape.fx", "PS_DebugShape_Frustum");
+
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+
+	AddRes(pShader->GetKey(), pShader);
+
 	// ============================
 	// TileMap Shader
 	// 
@@ -1018,8 +1079,6 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetBSType(BS_TYPE::ONE_ONE);
 
 	AddRes(pShader->GetKey(), pShader);
-
-
 	
 	// =====================================
 	// MergeShader
@@ -1064,11 +1123,10 @@ void CResMgr::CreateDefaultMaterial()
 {
 	Ptr<CMaterial> pMtrl = nullptr;
 
-	// Test Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
-	AddRes(L"TestMtrl", pMtrl);
-
+	// ===========
+	// ==  2 D  ==
+	// ===========
+	 
 	// Std2D Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
@@ -1089,40 +1147,9 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DLightShader"));
 	AddRes(L"Std2DAnimLightMtrl", pMtrl);
 
-	// DebugShape Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShapeShader"));
-	AddRes(L"DebugShapeMtrl", pMtrl);
-
-	// DebugShape Sphere Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_OutLineShader"));
-	AddRes(L"DebugShapeSphereMtrl", pMtrl);
-
-	// TileMap Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TileMapShader"));
-	AddRes(L"TileMapMtrl", pMtrl);
-
-	// Particle Render Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ParticleRenderShader"));
-	AddRes(L"ParticleRenderMtrl", pMtrl);
-
-	// GrayShader(PostProcess)
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"GrayShader"));
-	AddRes(L"GrayMtrl", pMtrl);
-
-	// DistortionShader(PostProcess)
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DistortionShader"));
-	AddRes(L"DistortionMtrl", pMtrl);
-
-	// TestShader
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
-	AddRes(L"TestShaderMtrl", pMtrl);
+	// ===========
+	// ==  3 D  ==
+	// ===========
 
 	// Std3DMtrl	
 	pMtrl = new CMaterial(true);
@@ -1134,37 +1161,91 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"SkyBoxShader"));
 	AddRes(L"SkyBoxMtrl", pMtrl);
 
-	// DecalMtrl
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DecalShader"));
-	AddRes(L"DecalMtrl", pMtrl);
-
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DeferredDecalShader"));
-	AddRes(L"DeferredDecalMtrl", pMtrl);
-
-	
-
-
 	// Std3D_DeferredShader
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
 	AddRes(L"Std3D_DeferredMtrl", pMtrl);
 
+
+	// ===========
+	// == Decal ==
+	// ===========
+
+	// DecalMtrl
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DecalShader"));
+	AddRes(L"DecalMtrl", pMtrl);
+	
+	// DeferredDecal
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DeferredDecalShader"));
+	AddRes(L"DeferredDecalMtrl", pMtrl);
+
+
+	// ===========
+	// == Light ==
+	// ===========
+
 	// DirLightMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DirLightShader"));
-	AddRes(L"DirLightMtrl", pMtrl);	
+	AddRes(L"DirLightMtrl", pMtrl);
 
 	// PointLightMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"PointLightShader"));
 	AddRes(L"PointLightMtrl", pMtrl);
 
+	// ===========
+	// == Debug ==
+	// ===========
+	
+	// DebugShape Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShapeShader"));
+	AddRes(L"DebugShapeMtrl", pMtrl);
+
+	// DebugShape Sphere Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_OutLineShader"));
+	AddRes(L"DebugShapeSphereMtrl", pMtrl);
+
+	// DebugShape Frustum Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_FrustumShader"));
+	AddRes(L"DebugShapeFrustumMtrl", pMtrl);
+
+	// =============
+	// == Graphic ==
+	// =============
+
+	// TileMap Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TileMapShader"));
+	AddRes(L"TileMapMtrl", pMtrl);
+
+	// Particle Render Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ParticleRenderShader"));
+	AddRes(L"ParticleRenderMtrl", pMtrl);
+
 	// MergeMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"MergeShader"));
-	AddRes(L"MergeMtrl", pMtrl);	
+	AddRes(L"MergeMtrl", pMtrl);
 
+	// =================
+	// == PostProcess ==
+	// =================
+
+	// GrayShader(PostProcess)
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"GrayShader"));
+	AddRes(L"GrayMtrl", pMtrl);
+
+	// DistortionShader(PostProcess)
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DistortionShader"));
+	AddRes(L"DistortionMtrl", pMtrl);
 
 }

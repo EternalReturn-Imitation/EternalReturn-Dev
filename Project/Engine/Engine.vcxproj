@@ -186,6 +186,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEventMgr.h" />
     <ClInclude Include="CFontMgr.h" />
+    <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicsShader.h" />
     <ClInclude Include="CKeyMgr.h" />
@@ -247,6 +248,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEventMgr.cpp" />
     <ClCompile Include="CFontMgr.cpp" />
+    <ClCompile Include="CFrustum.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicsShader.cpp" />
     <ClCompile Include="CKeyMgr.cpp" />

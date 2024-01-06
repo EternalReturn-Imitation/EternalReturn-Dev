@@ -24,27 +24,44 @@
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
+	, m_Frustum(this)
 	, m_fAspectRatio(1.f)
 	, m_fScale(1.f)
+	, m_Near(1.f)
 	, m_Far(10000.f)
+	, m_FOV(XM_PI / 2.f)
+	, m_OrthoWidth(0.f)
+	, m_OrthoHeight(0.f)
 	, m_ProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_iLayerMask(0)
 	, m_iCamIdx(-1)
 	, m_bMainCamera(false)
+	, m_bDebugView(true)
 {
 	SetName(L"Camera");
 
 	Vec2 vRenderResol = CDevice::GetInst()->GetRenderResolution();
 	m_fAspectRatio = vRenderResol.x / vRenderResol.y;
+
+	m_OrthoWidth = vRenderResol.x;
+	m_OrthoHeight = vRenderResol.y;
 }
 
 CCamera::CCamera(const CCamera& _Other)
 	: CComponent(_Other)
+	, m_Frustum(this)
 	, m_fAspectRatio(_Other.m_fAspectRatio)
 	, m_fScale(_Other.m_fScale)
+	, m_Near(_Other.m_Near)
+	, m_Far(_Other.m_Far)
+	, m_FOV(_Other.m_FOV)
+	, m_OrthoWidth(_Other.m_OrthoWidth)
+	, m_OrthoHeight(_Other.m_OrthoHeight)
 	, m_ProjType(_Other.m_ProjType)
 	, m_iLayerMask(_Other.m_iLayerMask)
 	, m_iCamIdx(-1)
+	, m_bMainCamera(false)
+	, m_bDebugView(_Other.m_bDebugView)
 {
 }
 
@@ -65,6 +82,8 @@ void CCamera::finaltick()
 	CalcViewMat();
 
 	CalcProjMat();	
+
+	m_Frustum.finaltick();
 }
 
 void CCamera::CalcViewMat()
@@ -107,12 +126,12 @@ void CCamera::CalcProjMat()
 	{
 		// 직교 투영
 		Vec2 vResolution = CDevice::GetInst()->GetRenderResolution();
-		m_matProj =  XMMatrixOrthographicLH(vResolution.x * (1.f / m_fScale), vResolution.y * (1.f / m_fScale), 1.f, 10000.f);
+		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), m_Near, m_Far);
 	}
 	else
-	{	
+	{
 		// 원근 투영
-		m_matProj = XMMatrixPerspectiveFovLH(XM_PI / 4.f, m_fAspectRatio, 1.f, m_Far);
+		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, m_Near, m_Far);
 	}
 
 	// 투영행렬 역행렬 구하기
@@ -177,6 +196,12 @@ void CCamera::SortObject()
 					|| nullptr == pRenderCom->GetMaterial()
 					|| nullptr == pRenderCom->GetMaterial()->GetShader())
 					continue;
+
+				// // Frustum Check
+				// if (pRenderCom->IsFrustumCheck()
+				// 	&& false == m_Frustum.FrustumCheckBound(vecObject[j]->Transform()->GetWorldPos(), vecObject[j]->Transform()->GetRelativeScale().x / 5.f))
+				// 	continue;
+
 
 				// 쉐이더 도메인에 따른 분류
 				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();

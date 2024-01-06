@@ -52,6 +52,12 @@ void CEditorObjMgr::init()
 	m_DebugShape[(UINT)SHAPE_TYPE::SPHERE]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	m_DebugShape[(UINT)SHAPE_TYPE::SPHERE]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeSphereMtrl"));
 
+	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM] = new CGameObjectEx;
+	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->AddComponent(new CTransform);
+	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->AddComponent(new CMeshRender);
+	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"FrustumMesh_Debug"));
+	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeFrustumMtrl"));
+
 	// EditorObject »ý¼º
 	CGameObjectEx* pEditorCamObj = new CGameObjectEx;
 	pEditorCamObj->AddComponent(new CTransform);
@@ -125,6 +131,9 @@ void CEditorObjMgr::render()
 		case SHAPE_TYPE::SPHERE:
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::SPHERE];
 			break;		
+		case SHAPE_TYPE::FRUSTUM:
+			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM];
+			break;
 		}
 
 		if (iter->matWorld != XMMatrixIdentity())

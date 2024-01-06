@@ -9,6 +9,7 @@ Light3DUI::Light3DUI()
     , vMemLightAmbient{}
     , fMemRadius(0.f)
     , fMemAngle(0.f)
+    , bDebug(false)
 {
     SetName("Light3D");
 }

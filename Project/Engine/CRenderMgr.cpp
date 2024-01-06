@@ -13,6 +13,7 @@
 
 CRenderMgr::CRenderMgr()
     : m_Light2DBuffer(nullptr)
+    , m_Light3DBuffer(nullptr)
     , RENDER_FUNC(nullptr)
     , m_pEditorCam(nullptr)
     , m_MRT{}
@@ -97,6 +98,12 @@ int CRenderMgr::RegisterCamera(CCamera* _Cam, int _idx)
 
     m_vecCam[_idx] = _Cam;    
     return _idx;
+}
+
+void CRenderMgr::RegisterEditorCamera(CCamera* _Cam)
+{
+    m_pEditorCam = _Cam;
+    m_pEditorCam->ViewDebugCube(false);
 }
 
 void CRenderMgr::SetRenderFunc(bool _IsPlay)
