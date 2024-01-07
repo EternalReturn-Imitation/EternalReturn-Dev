@@ -8,6 +8,8 @@
 #include <Engine\CLevel.h>
 #include <Engine\CLayer.h>
 
+#include <Engine\CTexture.h>
+
 CameraUI::CameraUI()
     : ComponentUI("##Camera", COMPONENT_TYPE::CAMERA)
     , m_bLayerCheckWindow(false)
@@ -44,25 +46,36 @@ int CameraUI::render_update()
     bool        bDebugView = pCamComponent->IsDebugView();         // 카메라 디버그큐브
 
     
-    ImGui::Text("Near       ");
+    ImGui::Text("Near         ");
     ImGui::SameLine();
     ImGui::SliderFloat("##CameraNear", &fNear, 1.f, fFar - 10.f);
     
-    ImGui::Text("Far        ");
+    ImGui::Text("Far          ");
     ImGui::SameLine();
     ImGui::SliderFloat("##CameraFar", &fFar, fNear + 10.f, 10000.f);
 
-    ImGui::Text("FOV        ");
+    ImGui::Text("FOV          ");
     ImGui::SameLine();
     ImGui::SliderAngle("##CameraFOV", &fFOV, 1, 179);
 
-    ImGui::Text("LayerCheck ");
+    ImGui::Text("LayerCheck   ");
     ImGui::SameLine();
+    
     if (ImGui::Button("OpenWindow##LayerCheckWindow"))
         m_bLayerCheckWindow = true;
+    
+    ImGui::Text("FrustumLayer ");
+    ImGui::SameLine();
+
+    if (ImGui::Button("OpenWindow##FrustumCheckWindow"))
+        m_bFrustumCheckWindow = true;
 
     if (m_bLayerCheckWindow)
         render_LayerCheck();
+    
+    if (m_bFrustumCheckWindow)
+        render_FrustumCheck();
+
 
     fScale = pCamComponent->GetScale();             // Orthograpic 에서 사용하는 카메라 배율
 
@@ -89,7 +102,7 @@ void CameraUI::render_LayerCheck()
     wstring     WLayerName;
 
 
-    if (ImGui::Begin("Camera_LayerCheckWindow", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDocking))
+    if (ImGui::Begin("Cam_LayerCheck", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDocking))
     {
         ImGui::BeginGroup();
         for (int i = 0; i < MAX_LAYER; ++i)
@@ -125,6 +138,53 @@ void CameraUI::render_LayerCheck()
 
         GetTarget()->Camera()->SetLayerMask(iLayerMask);
         
+        ImGui::End();
+    }
+}
+
+void CameraUI::render_FrustumCheck()
+{
+    CLevel* CurLevel = CLevelMgr::GetInst()->GetCurLevel();
+    UINT        iFrustumLayer = GetTarget()->Camera()->GetLayerFrustum();         // 촬영레이어 체크
+    wstring     WLayerName;
+
+
+    if (ImGui::Begin("Cam_FrustumCheck", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDocking))
+    {
+        ImGui::BeginGroup();
+        for (int i = 0; i < MAX_LAYER; ++i)
+        {
+            WLayerName = CurLevel->GetLayer(i)->GetName();
+
+            // 레이어이름이 설정되어있지 않은 경우
+            if (L"" == WLayerName)
+                continue;
+
+            string LayerNumb = "##Layer " + std::to_string(i);
+            string LayerName;
+            LayerName.assign(WLayerName.begin(), WLayerName.end());
+
+            bool bChecked = iFrustumLayer & (1 << i);
+
+            ImGui::Button(LayerName.c_str());
+            ImGui::SameLine();
+            ImGui::Checkbox(LayerNumb.c_str(), &bChecked);
+
+            if (bChecked)
+                iFrustumLayer |= 1 << i;
+            else
+                iFrustumLayer &= ~(1 << i);
+        }
+        ImGui::EndGroup();
+
+        if (ImGui::Button("Close##FrustumCheckWinCloseBtn"))
+        {
+            m_bFrustumCheckWindow = false;
+            ImGui::CloseCurrentPopup();
+        };
+
+        GetTarget()->Camera()->SetLayerFrustum(iFrustumLayer);
+
         ImGui::End();
     }
 }

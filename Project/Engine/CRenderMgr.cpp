@@ -81,7 +81,7 @@ void CRenderMgr::render_editor()
     ClearMRT();
 
     // 물체 분류
-    m_pEditorCam->SortObject();
+    m_pEditorCam->SortObject(m_vecCam[0]);
 
     // 출력 타겟 지정    
     m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();

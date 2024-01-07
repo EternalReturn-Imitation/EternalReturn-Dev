@@ -148,7 +148,7 @@ void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest)
 	info.matWorld = _matWorld;
 	info.eShape = SHAPE_TYPE::FRUSTUM;
 	info.fMaxTime = 0.0f;
-	info.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	info.vColor = Vec4(1.f, 1.f, 1.f, 0.3f);
 	info.bDepthTest = DepthTest;
 
 	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
@@ -163,7 +163,7 @@ void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	info.eShape = SHAPE_TYPE::SPHERE;
 	info.fMaxTime = _fTime;
 	info.vWorldPos = _vWorldPos;
-	info.vWorldScale = Vec3(_fRadius, _fRadius, 1.f);
+	info.vWorldScale = Vec3(_fRadius, _fRadius, _fRadius);
 	info.vWorldRotation = _vRotation;
 	info.vColor = _vColor;
 	info.bDepthTest = DepthTest;

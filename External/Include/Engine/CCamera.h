@@ -30,11 +30,13 @@ private:
     Matrix      m_matProj;
     Matrix      m_matProjInv;
 
-    UINT        m_iLayerMask;
+    UINT        m_iLayerMask;       // 촬영 레이어
+    UINT        m_iLayerFrustum;    // 절두체렌더 레이어
 
     int         m_iCamIdx;          // 카메라 우선순위
 
     bool        m_bDebugView;
+    bool        m_bDebugFrustumView;
 
 
     vector<CGameObject*>    m_vecDeferred;
@@ -71,6 +73,12 @@ public:
 
     UINT GetLayerMask() { return m_iLayerMask; }
 
+    void SetLayerFrustum(UINT _iLayerFrustum) { m_iLayerFrustum = _iLayerFrustum; }
+    void SetLayerFrustum(int _iLayer, bool _Visible);
+    void SetLayerFrustumAll(bool _Visible);
+
+    UINT GetLayerFrustum() { return m_iLayerFrustum; }
+
     void SetFOV(float _Radian) { m_FOV = _Radian; }
     float GetFOV() { return m_FOV; }
 
@@ -91,10 +99,14 @@ public:
     void ViewDebugCube(bool _view) { m_bDebugView = _view; }
     bool IsDebugView() { return m_bDebugView; }
 
+    void ViewDebugFrustum(bool _view) { m_bDebugFrustumView = _view; }
+    bool IsDebugFrustumView();
+
     int GetCamIdx() { return m_iCamIdx; }
 
 public:
     void SortObject();
+    void SortObject(CCamera* _MainCamera);
     void render();
 
 public:

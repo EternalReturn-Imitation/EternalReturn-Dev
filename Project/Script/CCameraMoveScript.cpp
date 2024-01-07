@@ -51,7 +51,6 @@ void CCameraMoveScript::Camera2DMove()
 		vPos.x += DT * fSpeed;
 	}
 
-
 	if (KEY_PRESSED(KEY::_1))
 	{
 		float fScale = Camera()->GetScale();
@@ -101,6 +100,16 @@ void CCameraMoveScript::Camera3DMove()
 	if (KEY_PRESSED(KEY::D))
 	{
 		vPos += DT * vRight * fSpeed;
+	}
+
+	if (KEY_PRESSED(KEY::E))
+	{
+		vPos += DT * vUp * fSpeed;
+	}
+
+	if (KEY_PRESSED(KEY::Q))
+	{
+		vPos -= DT * vUp * fSpeed;
 	}
 
 

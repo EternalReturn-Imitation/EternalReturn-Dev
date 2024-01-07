@@ -91,7 +91,7 @@ void CreateTestLevel()
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.1f, 0.1f, 0.1f));
 	
-	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
+	// SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
 	
 
 	float dist = 100.f;
@@ -133,6 +133,7 @@ void CreateTestLevel()
 	SunEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"));
 
 	Sun->AddChild(SunEffect);
+	Sun->AddChild(pLightObj);
 
 	// ¼ö¼º
 	CGameObject* Mercury = new CGameObject;

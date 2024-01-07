@@ -34,9 +34,11 @@ CCamera::CCamera()
 	, m_OrthoHeight(0.f)
 	, m_ProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_iLayerMask(0)
+	, m_iLayerFrustum(0)
 	, m_iCamIdx(-1)
 	, m_bMainCamera(false)
 	, m_bDebugView(true)
+	, m_bDebugFrustumView(true)
 {
 	SetName(L"Camera");
 
@@ -59,9 +61,11 @@ CCamera::CCamera(const CCamera& _Other)
 	, m_OrthoHeight(_Other.m_OrthoHeight)
 	, m_ProjType(_Other.m_ProjType)
 	, m_iLayerMask(_Other.m_iLayerMask)
+	, m_iLayerFrustum(_Other.m_iLayerFrustum)
 	, m_iCamIdx(-1)
 	, m_bMainCamera(false)
 	, m_bDebugView(_Other.m_bDebugView)
+	, m_bDebugFrustumView(_Other.m_bDebugFrustumView)
 {
 }
 
@@ -160,6 +164,26 @@ void CCamera::SetLayerMaskAll(bool _Visible)
 		m_iLayerMask = 0;
 }
 
+void CCamera::SetLayerFrustum(int _iLayer, bool _Visible)
+{
+	if (_Visible)
+	{
+		m_iLayerFrustum |= 1 << _iLayer;
+	}
+	else
+	{
+		m_iLayerFrustum &= ~(1 << _iLayer);
+	}
+}
+
+void CCamera::SetLayerFrustumAll(bool _Visible)
+{
+	if (_Visible)
+		m_iLayerFrustum = 0xffffffff;
+	else
+		m_iLayerFrustum = 0;
+}
+
 void CCamera::SetCameraIndex(int _idx)
 {
 	if (_idx == 0)
@@ -197,11 +221,16 @@ void CCamera::SortObject()
 					|| nullptr == pRenderCom->GetMaterial()->GetShader())
 					continue;
 
-				// // Frustum Check
-				// if (pRenderCom->IsFrustumCheck()
-				// 	&& false == m_Frustum.FrustumCheckBound(vecObject[j]->Transform()->GetWorldPos(), vecObject[j]->Transform()->GetRelativeScale().x / 5.f))
-				// 	continue;
+				// Frustum Check
+				if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// 절두체렌더 여부 판단, 소속 레이어 혹은 본인 자체 절두체렌더 체크가 되어있는 경우
+				{
+					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
+					if (IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
+						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
 
+					if (false == m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius()))
+						continue;
+				}
 
 				// 쉐이더 도메인에 따른 분류
 				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
@@ -233,6 +262,80 @@ void CCamera::SortObject()
 				case SHADER_DOMAIN::DOMAIN_UI:
 					m_vecUI.push_back(vecObject[j]);
 					break;				
+				}
+			}
+		}
+	}
+}
+
+void CCamera::SortObject(CCamera* _MainCamera)
+{
+	// 이전 프레임 분류정보 제거
+	clear();
+
+	// 현재 레벨 가져와서 분류
+	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		// 레이어 마스크 확인
+		if (_MainCamera->m_iLayerMask & (1 << i))
+		{
+			CLayer* pLayer = pCurLevel->GetLayer(i);
+			const vector<CGameObject*>& vecObject = pLayer->GetObjects();
+
+			for (size_t j = 0; j < vecObject.size(); ++j)
+			{
+				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
+
+				// 렌더링 기능이 없는 오브젝트는 제외
+				if (nullptr == pRenderCom
+					|| nullptr == pRenderCom->GetMaterial()
+					|| nullptr == pRenderCom->GetMaterial()->GetShader())
+					continue;
+
+				// Frustum Check
+				if (_MainCamera->m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// 절두체렌더 여부 판단, 소속 레이어 혹은 본인 자체 절두체렌더 체크가 되어있는 경우
+				{
+					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
+
+					if (false == _MainCamera->m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius() / 2.f))
+						continue;
+
+					if(vecObject[j]->GetParent() == nullptr && IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
+						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
+				}
+
+				// 쉐이더 도메인에 따른 분류
+				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
+				switch (eDomain)
+				{
+				case SHADER_DOMAIN::DOMAIN_DEFERRED:
+					m_vecDeferred.push_back(vecObject[j]);
+					break;
+
+				case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
+					m_vecDeferredDecal.push_back(vecObject[j]);
+					break;
+
+				case SHADER_DOMAIN::DOMAIN_OPAQUE:
+					m_vecOpaque.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_MASK:
+					m_vecMask.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_DECAL:
+					m_vecDecal.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_TRANSPARENT:
+					m_vecTransparent.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_POSTPROCESS:
+					m_vecPost.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_UI:
+					m_vecUI.push_back(vecObject[j]);
+					break;
 				}
 			}
 		}
@@ -397,4 +500,9 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
 	fread(&m_bMainCamera, sizeof(bool), 1, _File);
+}
+
+bool CCamera::IsDebugFrustumView()
+{
+	return m_bDebugFrustumView;
 }
