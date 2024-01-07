@@ -89,3 +89,11 @@ void CLight3D::LoadFromLevelFile(FILE* _File)
 
 }
 
+void CLight3D::SaveToDB(int _gameObjectID)
+{
+}
+
+void CLight3D::LoadFromDB(int _gameObjectID)
+{
+}
+

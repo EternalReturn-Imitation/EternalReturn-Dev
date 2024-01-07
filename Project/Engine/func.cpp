@@ -288,22 +288,44 @@ wstring SaveResRefToDB(Ptr<CRes> _Res)
 	return wss.str();
 }
 
-template<typename T>
-void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
-	int exists;
-	wss >> exists;
-	std::wstring line;
-	std::getline(wss, line); // 숫자 뒤의 개행 문자를 소비
-
-	if (exists) {
-		std::wstring strKey, strRelativePath;
-
-		std::getline(wss, strKey);
-		std::getline(wss, strRelativePath);
-
-		_Res = CResMgr::GetInst()->Load<T>(strKey, strRelativePath);
+void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
+{
+	if (nullptr == _Res)
+	{
+		_Key = L"0";
+		_RelativePath = L"0";
+	}
+	else
+	{
+		_Key = _Res->GetKey();
+		_RelativePath = _Res->GetRelativePath();
 	}
 }
+
+//template<typename T>
+//void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
+//	int exists;
+//	wss >> exists;
+//	std::wstring line;
+//	std::getline(wss, line); // 숫자 뒤의 개행 문자를 소비
+//
+//	if (exists) {
+//		std::wstring strKey, strRelativePath;
+//
+//		std::getline(wss, strKey);
+//		std::getline(wss, strRelativePath);
+//
+//		_Res = CResMgr::GetInst()->Load<T>(strKey, strRelativePath);
+//	}
+//}
+//
+//template<typename T>
+//void LoadResRefFromDB2(Ptr<T>& _Res, const wstring& _Key, const wstring& _RelativePath)
+//{
+//	if (_Key != L"0") {
+//		_Res = CResMgr::GetInst()->Load<T>(_Key, _RelativePath);
+//	}
+//}
 
 const wchar_t* ToWString(COMPONENT_TYPE type)
 {

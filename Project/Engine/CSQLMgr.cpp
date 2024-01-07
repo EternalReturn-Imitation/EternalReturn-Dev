@@ -28,6 +28,13 @@ void CSQLMgr::init()
 	if (rc) {
 		assert(false);
 	}
+
+	//초기화 할 때 RESOURCES에 있는 데이터들 삭제.
+	string sQuery = "DELETE FROM RESOURCES;";
+	const char* cQuery = sQuery.c_str();
+
+	char* errMsg;
+	EXECQUERY(cQuery, errMsg);
 }
 
 int CSQLMgr::InsertToLevel(wstring _levelName)

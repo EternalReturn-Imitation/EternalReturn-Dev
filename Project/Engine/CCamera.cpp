@@ -362,3 +362,78 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
 }
+
+void CCamera::SaveToDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	// 쿼리 문자열 준비
+	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx) VALUES (?, ?, ?, ?, ?, ?)";
+	sqlite3_stmt* stmt;
+
+	// 쿼리 준비
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+		sqlite3_bind_blob(stmt, 2, &m_fAspectRatio, sizeof(float), SQLITE_STATIC);
+		sqlite3_bind_blob(stmt, 3, &m_fScale, sizeof(float), SQLITE_STATIC);
+		sqlite3_bind_blob(stmt, 4, &m_ProjType, sizeof(UINT), SQLITE_STATIC);
+		sqlite3_bind_blob(stmt, 5, &m_iLayerMask, sizeof(UINT), SQLITE_STATIC);
+		sqlite3_bind_blob(stmt, 6, &m_iCamIdx, sizeof(int), SQLITE_STATIC);
+
+		// 쿼리 실행
+		if (sqlite3_step(stmt) != SQLITE_DONE) {
+			// 에러 처리: 쿼리 실행에 실패했을 경우
+			assert(false);
+		}
+
+		// 스테이트먼트 종료
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// 쿼리 준비에 실패했을 경우의 처리
+		assert(false);
+	}
+}
+
+void CCamera::LoadFromDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	sqlite3_stmt* stmt;
+	const char* szQuery = "SELECT AspectRatio, Scale, ProjType, LayerMask, CamIdx FROM CAMERA WHERE GameObject_ID = ?";
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			// AspectRatio 데이터 불러오기
+			const void* aspectRatioData = sqlite3_column_blob(stmt, 0);
+			memcpy(&m_fAspectRatio, aspectRatioData, sizeof(float));
+
+			// Scale 데이터 불러오기
+			const void* scaleData = sqlite3_column_blob(stmt, 1);
+			memcpy(&m_fScale, scaleData, sizeof(float));
+
+			// ProjType 데이터 불러오기
+			const void* projTypeData = sqlite3_column_blob(stmt, 2);
+			memcpy(&m_ProjType, projTypeData, sizeof(UINT));
+
+			// LayerMask 데이터 불러오기
+			const void* layerMaskData = sqlite3_column_blob(stmt, 3);
+			memcpy(&m_iLayerMask, layerMaskData, sizeof(UINT));
+
+			// CamIdx 데이터 불러오기
+			const void* camIdxData = sqlite3_column_blob(stmt, 4);
+			memcpy(&m_iCamIdx, camIdxData, sizeof(int));
+		}
+		else {
+			// 레코드를 찾지 못했거나 쿼리에 실패했을 때의 처리
+			assert(false);
+		}
+
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// 쿼리 준비에 실패했을 경우의 처리
+		assert(false);
+	}
+}
