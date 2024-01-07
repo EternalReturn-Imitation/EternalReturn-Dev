@@ -49,23 +49,23 @@ void CRenderMgr::CreateMRT()
         Vec2 vResol = CDevice::GetInst()->GetRenderResolution();
 
         Ptr<CTexture> arrRTTex[8] = {};
-        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"ColorTargetTex", vResol.x, vResol.y
+        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"ColorTargetTex", (UINT)vResol.x, (UINT)vResol.y
                                         , DXGI_FORMAT_R8G8B8A8_UNORM
                                         , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
-        arrRTTex[1] = CResMgr::GetInst()->CreateTexture(L"NormalTargetTex", vResol.x, vResol.y
+        arrRTTex[1] = CResMgr::GetInst()->CreateTexture(L"NormalTargetTex", (UINT)vResol.x, (UINT)vResol.y
                                         , DXGI_FORMAT_R32G32B32A32_FLOAT
                                         , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
-        arrRTTex[2] = CResMgr::GetInst()->CreateTexture(L"PositionTargetTex", vResol.x, vResol.y
+        arrRTTex[2] = CResMgr::GetInst()->CreateTexture(L"PositionTargetTex", (UINT)vResol.x, (UINT)vResol.y
                                         , DXGI_FORMAT_R32G32B32A32_FLOAT
                                         , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
-        arrRTTex[3] = CResMgr::GetInst()->CreateTexture(L"EmissiveTargetTex", vResol.x, vResol.y
+        arrRTTex[3] = CResMgr::GetInst()->CreateTexture(L"EmissiveTargetTex", (UINT)vResol.x, (UINT)vResol.y
                                         , DXGI_FORMAT_R8G8B8A8_UNORM
                                         , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
-        arrRTTex[4] = CResMgr::GetInst()->CreateTexture(L"DataTargetTex", vResol.x, vResol.y
+        arrRTTex[4] = CResMgr::GetInst()->CreateTexture(L"DataTargetTex", (UINT)vResol.x, (UINT)vResol.y
                                         , DXGI_FORMAT_R32G32B32A32_FLOAT
                                         , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
@@ -96,11 +96,11 @@ void CRenderMgr::CreateMRT()
         Vec2 vResol = CDevice::GetInst()->GetRenderResolution();
 
         Ptr<CTexture> arrRTTex[8] = {};
-        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DiffuseTargetTex", vResol.x, vResol.y
+        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DiffuseTargetTex", (UINT)vResol.x, (UINT)vResol.y
                                 , DXGI_FORMAT_R8G8B8A8_UNORM
                                 , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
-        arrRTTex[1] = CResMgr::GetInst()->CreateTexture(L"SpecularTargetTex", vResol.x, vResol.y
+        arrRTTex[1] = CResMgr::GetInst()->CreateTexture(L"SpecularTargetTex", (UINT)vResol.x, (UINT)vResol.y
                                 , DXGI_FORMAT_R8G8B8A8_UNORM
                                 , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 

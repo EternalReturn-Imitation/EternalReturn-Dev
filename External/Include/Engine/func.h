@@ -10,8 +10,6 @@ void DeleteArray(T* (&Arr)[_Size])
 	}
 }
 
-
-
 // 오브젝트 생성
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
@@ -32,6 +30,8 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bo
 
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);
+
+void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest);
 
 
 // GameObject 유효성 체크
@@ -72,6 +72,8 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 	}
 }
 
+void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File);
+void LoadGameObjectPtr(wstring& _ObjName, FILE* _File);
 
 
 
@@ -116,4 +118,6 @@ void Safe_Del_Map(map<T1, T2>& _map)
 }
 
 
-
+// math
+float Rad2Deg(float _radian); 
+float Deg2Rad(float _Degree); 

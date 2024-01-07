@@ -141,6 +141,19 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool Dep
 	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
 }
 
+void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest)
+{
+	tDebugShapeInfo info = {};
+
+	info.matWorld = _matWorld;
+	info.eShape = SHAPE_TYPE::FRUSTUM;
+	info.fMaxTime = 0.0f;
+	info.vColor = Vec4(1.f, 1.f, 1.f, 0.3f);
+	info.bDepthTest = DepthTest;
+
+	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
+}
+
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	, Vec3 _vRotation, float _fTime, bool DepthTest)
 {
@@ -150,7 +163,7 @@ void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	info.eShape = SHAPE_TYPE::SPHERE;
 	info.fMaxTime = _fTime;
 	info.vWorldPos = _vWorldPos;
-	info.vWorldScale = Vec3(_fRadius, _fRadius, 1.f);
+	info.vWorldScale = Vec3(_fRadius, _fRadius, _fRadius);
 	info.vWorldRotation = _vRotation;
 	info.vColor = _vColor;
 	info.bDepthTest = DepthTest;
@@ -234,6 +247,34 @@ void SaveResRef(Ptr<CRes> _Res, FILE* _File)
 		SaveWString(_Res->GetKey(), _File);
 		SaveWString(_Res->GetRelativePath(), _File);
 	}
+}
+
+void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File)
+{
+	int i = 0;
+	if (nullptr == _Obj)
+	{
+		fwrite(&i, sizeof(i), 1, _File);
+	}
+	else
+	{
+		i = 1;
+		fwrite(&i, sizeof(i), 1, _File);
+	}
+}
+
+void LoadGameObjectPtr(wstring& _ObjName, FILE* _File)
+{
+}
+
+float Rad2Deg(float _radian)
+{
+	return _radian * 180 / XM_PI;
+}
+
+float Deg2Rad(float _Degree)
+{
+	return _Degree * XM_PI / 180;
 }
 
 const wchar_t* ToWString(COMPONENT_TYPE type)

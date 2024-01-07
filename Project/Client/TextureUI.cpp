@@ -22,8 +22,8 @@ int TextureUI::render_update()
     {
         Ptr<CTexture> pTex = (CTexture*)GetTargetRes().Get();
 
-        int width = pTex->Width();
-        int height = pTex->Height();
+        int width = (int)pTex->Width();
+        int height = (int)pTex->Height();
 
         ImGui::Text("Width");
         ImGui::SameLine();

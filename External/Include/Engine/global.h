@@ -4,6 +4,9 @@
 #include <list>
 #include <map>
 #include <string>
+#include <unordered_map>
+#include <random>
+#include <sstream>
 
 using std::vector;
 using std::list;
@@ -11,10 +14,12 @@ using std::map;
 using std::make_pair;
 using std::wstring;
 using std::string;
+using std::unordered_map;
 
 #include <typeinfo>
 #include <assert.h>
 
+using std::type_info;
 
 // FileSystem
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING

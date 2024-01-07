@@ -13,6 +13,7 @@
 #include "Animator2DUI.h"
 #include "TileMapUI.h"
 #include "Light2DUI.h"
+#include "Light3DUI.h"
 
 #include "MeshDataUI.h"
 #include "TextureUI.h"
@@ -23,6 +24,7 @@
 #include "ComputeShaderUI.h"
 #include "MaterialUI.h"
 #include "ScriptUI.h"
+#include "BehaviorTreeListUI.h"
 
 
 
@@ -50,13 +52,21 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]);
 
+	// Collider 3D UI
+
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D] = new Animator2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D]);
 
+	// Animator 3D UI
+
 	m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT2D] = new Light2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT2D]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT2D]);
+
+	m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT3D] = new Light3DUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT3D]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT3D]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP] = new TileMapUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP]->SetSize(0.f, 150.f);
@@ -149,7 +159,7 @@ void InspectorUI::SetTargetObject(CGameObject* _Target)
 	// 스크립트UI 가 스크립트 수 보다 적으면 그만큼 추가해준다.
 	if (m_vecScriptUI.size() < vecScript.size())
 	{
-		UINT iDiffer = vecScript.size() - m_vecScriptUI.size();
+		UINT iDiffer = (UINT)vecScript.size() - (UINT)m_vecScriptUI.size();
 		for (UINT i = 0; i < iDiffer; ++i)
 		{
 			ScriptUI* UI = new ScriptUI;

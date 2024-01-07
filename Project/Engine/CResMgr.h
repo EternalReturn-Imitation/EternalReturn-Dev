@@ -52,7 +52,10 @@ public:
     void AddRes(const wstring& _strKey, Ptr<T>& _Res);
 
     template<typename T>
-    Ptr<T> Load(const wstring& _strKey, const wstring& _strRelativePath);
+    void AddRes(const wstring& _strKey, const wstring& _strPath, const wstring& _strExt, Ptr<T>& _Res);
+
+    template<typename T>
+    Ptr<T> Load(const wstring& _strKey, const wstring& _strRelativePath, const wstring& _strDirectoryPath = L"");
 
 private:
     void DeleteRes(RES_TYPE _type, const wstring& _strKey);
@@ -117,9 +120,35 @@ inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T>& _Res)
     m_Changed = true;
 }
 
+template<typename T>
+inline void CResMgr::AddRes(const wstring& _strKey, const wstring& _strPath, const wstring& _strExt, Ptr<T>& _Res)
+{
+    wstring FileKey;
+    UINT DuplicationNumb = 0;
+    FileKey = _strKey;
+    
+    wstring FilePath = _strPath;
+
+    // 중복키로 리소스 추가하려는 경우
+    // assert( ! FindRes<T>(FileKey).Get() );
+    while (FindRes<T>(FileKey).Get())
+    {
+        DuplicationNumb++;
+        FileKey = _strKey + std::to_wstring(DuplicationNumb);
+    }
+    FilePath += FileKey + _strExt;
+
+    RES_TYPE type = GetResType<T>();
+    m_arrRes[(UINT)type].insert(make_pair(FileKey, _Res.Get()));
+    _Res->SetKey(FileKey);
+    _Res->SetRelativePath(FilePath);
+
+    m_Changed = true;
+}
+
 
 template<typename T>
-inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strRelativePath)
+inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strRelativePath, const wstring& _strDirectoryPath)
 {
     Ptr<CRes> pRes = FindRes<T>(_strKey).Get();
     
@@ -130,6 +159,7 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strRelativeP
     pRes = new T;
     pRes->SetKey(_strKey);
     pRes->SetRelativePath(_strRelativePath);
+    pRes->SetDirectoryPath(_strDirectoryPath);
 
     wstring strFilePath = CPathMgr::GetInst()->GetContentPath();
     strFilePath += _strRelativePath;

@@ -8,8 +8,11 @@
 
 CLight3D::CLight3D()
 	: CComponent(COMPONENT_TYPE::LIGHT3D)
+	, m_bDebug(false)
 {	
 	SetLightType(LIGHT_TYPE::DIRECTIONAL);
+	SetLightColor(Vec3(1.f, 1.f, 1.f));
+	SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 }
 
 CLight3D::~CLight3D()
@@ -24,7 +27,18 @@ void CLight3D::finaltick()
 	
 	m_LightIdx = (UINT)CRenderMgr::GetInst()->RegisterLight3D(this, m_LightInfo);
 
-	DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 1.f), 0.f, true);
+	UINT LightType = m_LightInfo.LightType;
+	if (m_bDebug)
+	{
+		if (LightType == (UINT)LIGHT_TYPE::POINT)
+		{
+			DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 0.5f), 0.f, true);
+		}
+		else if (LightType == (UINT)LIGHT_TYPE::SPOT)
+		{
+			// 콘 디버그
+		}
+	}
 }
 
 void CLight3D::render()
@@ -81,11 +95,28 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 
 void CLight3D::SaveToLevelFile(FILE* _File)
 {
+	fwrite(&m_LightInfo.Color.vAmbient, sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.Color.vDiffuse, sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.vWorldPos,sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.vWorldDir,sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.LightType,sizeof(UINT), 1, _File);
+	fwrite(&m_LightInfo.Radius,sizeof(float), 1, _File);
+	fwrite(&m_LightInfo.Angle,sizeof(float), 1, _File);
+	fwrite(&m_LightInfo.padding, sizeof(int), 1, _File);
+	fwrite(&m_LightIdx, sizeof(float), 1, _File);
+
 
 }
 
 void CLight3D::LoadFromLevelFile(FILE* _File)
 {
-
+	fread(&m_LightInfo.Color.vAmbient, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.Color.vDiffuse, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.vWorldPos, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.vWorldDir, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.LightType, sizeof(UINT), 1, _File);
+	fread(&m_LightInfo.Radius, sizeof(float), 1, _File);
+	fread(&m_LightInfo.Angle, sizeof(float), 1, _File);
+	fread(&m_LightInfo.padding, sizeof(int), 1, _File);
+	fread(&m_LightIdx, sizeof(float), 1, _File);
 }
-

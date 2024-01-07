@@ -50,7 +50,7 @@ void CTileMap::render()
 
 void CTileMap::UpdateData()
 {
-	m_Buffer->SetData(m_vecTile.data(), sizeof(tTile) * m_vecTile.size());
+	m_Buffer->SetData(m_vecTile.data(), sizeof(tTile) * (UINT)m_vecTile.size());
 	m_Buffer->UpdateData(20, PIPELINE_STAGE::PS_PIXEL);
 }
 

@@ -30,7 +30,7 @@ void CAnim2D::finaltick()
 
 		if (m_vecFrm.size() <= m_iCurFrm)
 		{
-			m_iCurFrm = m_vecFrm.size() - 1;
+			m_iCurFrm = (UINT)m_vecFrm.size() - 1;
 			m_bFinish = true;
 		}
 	}

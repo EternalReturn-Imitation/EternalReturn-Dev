@@ -6,6 +6,7 @@
 
 class CCamera;
 class CLight2D;
+class CLight3D;
 class CStructuredBuffer;
 class CMRT;
 
@@ -42,20 +43,21 @@ public:
 
 public:
     int  RegisterCamera(CCamera* _Cam, int _idx);
-    void RegisterEditorCamera(CCamera* _Cam) { m_pEditorCam = _Cam; }
+    void RegisterEditorCamera(CCamera* _Cam);
+
     void SetRenderFunc(bool _IsPlay);
     UINT RegisterLight2D(CLight2D* _Light2D, const tLightInfo& _Info)
     { 
         m_vecLight2D.push_back(_Light2D); 
         m_vecLight2DInfo.push_back(_Info);  
-        return m_vecLight2D.size() - 1;
+        return (UINT)m_vecLight2D.size() - 1;
     }
 
     UINT RegisterLight3D(CLight3D* _Light3D, const tLightInfo& _Info) 
     { 
         m_vecLight3D.push_back(_Light3D); 
         m_vecLight3DInfo.push_back(_Info); 
-        return m_vecLight3D.size() - 1; 
+        return (UINT)m_vecLight3D.size() - 1;
     }
 
     void ClearCamera() { m_vecCam.clear(); }

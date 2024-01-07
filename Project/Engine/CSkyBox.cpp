@@ -15,6 +15,7 @@ CSkyBox::CSkyBox()
 	SetSkyBoxType(m_Type);
 
 	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"SkyBoxMtrl"));
+	SetFrustumCheck(false);
 }
 
 CSkyBox::~CSkyBox()
@@ -38,6 +39,18 @@ void CSkyBox::SetSkyBoxType(SKYBOX_TYPE _Type)
 void CSkyBox::SetSkyBoxTexture(Ptr<CTexture> _Tex)
 {
 	m_SkyBoxTex = _Tex;	
+}
+
+void CSkyBox::SaveToLevelFile(FILE* _File)
+{
+	fwrite(&m_Type, sizeof(UINT), 1, _File);
+	CRenderComponent::SaveToLevelFile(_File);
+}
+
+void CSkyBox::LoadFromLevelFile(FILE* _File)
+{
+	fread(&m_Type, sizeof(UINT), 1, _File);
+	CRenderComponent::LoadFromLevelFile(_File);
 }
 
 void CSkyBox::finaltick()
