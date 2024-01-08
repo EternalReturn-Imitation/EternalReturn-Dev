@@ -363,7 +363,7 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
 }
 
-void CCamera::SaveToDB(int _gameObjectID)
+void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 

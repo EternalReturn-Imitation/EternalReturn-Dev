@@ -103,7 +103,7 @@ void CCollider2D::LoadFromLevelFile(FILE* _File)
 	fread(&m_Shape, sizeof(UINT), 1, _File);
 }
 
-void CCollider2D::SaveToDB(int _gameObjectID)
+void CCollider2D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 

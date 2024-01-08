@@ -54,8 +54,8 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override {}
     virtual void LoadFromLevelFile(FILE* _FILE) override {}
 
-    virtual void SaveToDB(int _gameObjectID) {}
-    virtual void LoadFromDB(int _gameObjectID) {}
+    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
+    virtual void LoadFromDB(int _gameObjectID) override;
 
 protected:
     void AddScriptParam(SCRIPT_PARAM eParam, void* _pData, const string& _Desc);

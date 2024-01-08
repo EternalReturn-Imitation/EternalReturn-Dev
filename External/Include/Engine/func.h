@@ -101,7 +101,7 @@ void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
 }
 
 template<typename T>
-void LoadResRefFromDB2(Ptr<T>& _Res, const wstring& _Key, const wstring& _RelativePath) {
+void LoadResRefFromDB(Ptr<T>& _Res, const wstring& _Key, const wstring& _RelativePath) {
 	if (_Key != L"0") {
 		_Res = CResMgr::GetInst()->Load<T>(_Key, _RelativePath);
 	}
@@ -112,9 +112,8 @@ const wchar_t* ToWString(COMPONENT_TYPE type);
 std::wstring Vec3ToWString(const Vec3& vec);
 Vec3 WStringToVec3(const std::wstring& wstr);
 
-
-
-
+std::wstring IntArrayToWString(const std::vector<int>& intArray);
+std::vector<int> WStringToIntArray(const std::wstring& str);
 
 
 

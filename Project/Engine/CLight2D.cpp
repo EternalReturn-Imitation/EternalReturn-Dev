@@ -41,7 +41,7 @@ void CLight2D::LoadFromLevelFile(FILE* _File)
 	fread(&m_LightInfo, sizeof(tLightInfo), 1, _File);
 }
 
-void CLight2D::SaveToDB(int _gameObjectID)
+void CLight2D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 

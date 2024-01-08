@@ -47,7 +47,7 @@ int MenuUI::render_update()
             {
                 // Level ÀúÀå
                 CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
-                CLevelSaveLoad::SaveLevelToDB(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
+                CLevelSaveLoad::SaveLevelToDB(CLevelMgr::GetInst()->GetCurLevel());
             }
 
             if (ImGui::MenuItem("Load Level"))

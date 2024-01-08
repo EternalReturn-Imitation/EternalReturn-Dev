@@ -107,7 +107,7 @@ void CTransform::LoadFromLevelFile(FILE* _FILE)
 	fread(&m_bAbsolute, sizeof(bool), 1, _FILE);
 }
 
-void CTransform::SaveToDB(int _gameObjectID)
+void CTransform::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 

@@ -191,15 +191,19 @@ const char* ToString(RES_TYPE type)
 	return RES_TYPE_STR[(UINT)type];
 }
 
+const char* ToString(COMPONENT_TYPE _type)
+{
+	return COMPONENT_TYPE_STR[(UINT)_type];
+}
+
+const wchar_t* ToWSTring(COMPONENT_TYPE  _type)
+{
+	return COMPONENT_TYPE_WSTR[(UINT)_type];
+}
+
 const wchar_t* ToWString(RES_TYPE type)
 {
 	return RES_TYPE_WSTR[(UINT)type];
-}
-
-
-const char* ToString(COMPONENT_TYPE type)
-{
-	return COMPONENT_TYPE_STR[(UINT)type];
 }
 
 const char* ToString(COLLIDER2D_TYPE type)
@@ -327,11 +331,6 @@ void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
 //	}
 //}
 
-const wchar_t* ToWString(COMPONENT_TYPE type)
-{
-	return COMPONENT_TYPE_WSTR[(UINT)type];
-}
-
 std::wstring Vec3ToWString(const Vec3& vec) {
 	wstring result = std::to_wstring(vec.x) + L"," + std::to_wstring(vec.y) + L"," + std::to_wstring(vec.z);
 	return result;
@@ -345,4 +344,27 @@ Vec3 WStringToVec3(const std::wstring& wstr)
 
 	wss >> vec.x >> comma >> vec.y >> comma >> vec.z;
 	return vec;
+}
+
+std::wstring IntArrayToWString(const std::vector<int>& intArray)
+{
+	std::wstringstream wss;
+	for (size_t i = 0; i < intArray.size(); ++i) {
+		if (i > 0) {
+			wss << L",";
+		}
+		wss << intArray[i];
+	}
+	return wss.str();
+}
+
+std::vector<int> WStringToIntArray(const std::wstring& str)
+{
+	std::wstringstream wss(str);
+	std::vector<int> intArray;
+	std::wstring token;
+	while (std::getline(wss, token, L',')) {
+		intArray.push_back(std::stoi(token));
+	}
+	return intArray;
 }

@@ -12,7 +12,7 @@
 #include <Script\CScriptMgr.h>
 #include <Engine/CSQLMgr.h>
 
-
+int CLevelSaveLoad::m_LevelID = 0;
 
 int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 {
@@ -113,7 +113,7 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 	return 0;
 }
 
-int CLevelSaveLoad::SaveLevelToDB(const wstring& _LevelPath, CLevel* _Level)
+int CLevelSaveLoad::SaveLevelToDB(CLevel* _Level)
 {
 	if (_Level->GetState() != LEVEL_STATE::STOP)
 		return E_FAIL;
@@ -124,13 +124,15 @@ int CLevelSaveLoad::SaveLevelToDB(const wstring& _LevelPath, CLevel* _Level)
 	//레벨 저장
 	int levelId = CSQLMgr::GetInst()->InsertToLevel(_Level->GetName());
 
+	m_LevelID = levelId;
+
 	// 레벨의 레이어 저장
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
 		CLayer* pLayer = _Level->GetLayer(i);
 
 		// 레이어 저장
-		int layerId = CSQLMgr::GetInst()->InsertToLayer(levelId, pLayer->GetName());
+		int layerId = CSQLMgr::GetInst()->InsertToLayer(levelId, pLayer->GetName(), i);
 
 		// 레이어의 게임오브젝트들 저장
 		const vector<CGameObject*>& vecParent = pLayer->GetParentObject();
@@ -138,18 +140,19 @@ int CLevelSaveLoad::SaveLevelToDB(const wstring& _LevelPath, CLevel* _Level)
 		// 각 게임오브젝트
 		for (size_t i = 0; i < vecParent.size(); ++i)
 		{
-			SaveGameObjectToDB(layerId, vecParent[i]);
+			SaveGameObjectToDB(layerId, vecParent[i], -1);
 		}
 	}
 
 	return 0;
 }
 
-int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object)
+int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object, int _parentID)
 {
 	//게임오브젝트 저장
-	int gameObjectId = CSQLMgr::GetInst()->InsertToGameObject(_layerID, _Object->GetName());
+	int gameObjectId = CSQLMgr::GetInst()->InsertToGameObject(_layerID, _Object->GetName(), _parentID);
 
+	vector<int> comType;
 	// 컴포넌트
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
@@ -157,14 +160,35 @@ int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object)
 		if (nullptr == Com)
 			continue;
 
-		// 컴포넌트 타입 저장
-		//fwrite(&i, sizeof(UINT), 1, _File);
-
 		// 컴포넌트 정보 저장
-		//Com->SaveToLevelFile(_File);
+		Com->SaveToDB(gameObjectId, (COMPONENT_TYPE)i);
+
+		comType.push_back(i);
+	}
+	wstring wComType = IntArrayToWString(comType);
+	CSQLMgr::GetInst()->UpdateToGameObject(gameObjectId, wComType);
+
+	// 스크립트	
+	const vector<CScript*>& vecScript = _Object->GetScripts();
+	size_t ScriptCount = vecScript.size();
+
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		wstring ScriptName = CScriptMgr::GetScriptName(vecScript[i]);
+		//스크립트 이름 저장해주기.
+
+		vecScript[i]->SaveToDB(gameObjectId,(COMPONENT_TYPE)i);
 	}
 
 
+	// 자식 오브젝트
+	const vector<CGameObject*>& vecChild = _Object->GetChild();
+	size_t ChildCount = vecChild.size();
+
+	for (size_t i = 0; i < ChildCount; ++i)
+	{
+		SaveGameObjectToDB(-1, vecChild[i], gameObjectId);
+	}
 	return 0;
 }
 
@@ -311,4 +335,22 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 	}
 
 	return pObject;
+}
+
+CLevel* CLevelSaveLoad::LoadLevelByDB()
+{
+	CLevel* NewLevel = new CLevel;
+
+	CSQLMgr::GetInst()->SelectFromLevel(m_LevelID, NewLevel);
+
+	CSQLMgr::GetInst()->SelectFromLayer(m_LevelID, NewLevel);
+
+	NewLevel->ChangeState(LEVEL_STATE::STOP);
+
+	return NewLevel;
+}
+
+CGameObject* CLevelSaveLoad::LoadGameObjectByDB(int _layerID, int _parentID)
+{
+	return nullptr;
 }

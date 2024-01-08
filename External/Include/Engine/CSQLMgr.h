@@ -17,6 +17,7 @@
 	    \
 	    const char* Query = sQuery.c_str();	
 
+class CLevel;
 class CSQLMgr :
     public CSingleton<CSQLMgr>
 {
@@ -27,16 +28,20 @@ public:
 
 public:
     int InsertToLevel(wstring _levelName);
-    int InsertToLayer(int _levelID, wstring _layerName);
-    int InsertToGameObject(int _layerID, wstring _gameObjectName);
-    void InsertToComponent(int _gameObjectID, int _type, wstring _attribute);
+    int InsertToLayer(int _levelID, wstring _layerName, int _layerIdx);
+    int InsertToGameObject(int _layerID, wstring _gameObjectName, int _parentID);
 
-    void SelectFromLevel();
-    void SelectFromLayer();
-    void SelectFromGameObject();
-    void SelectToComponent();
+    void SelectFromLevel(int _levelID, CLevel*& _level);
+    void SelectFromLayer(int _levelID, CLevel*& _level);
+    void SelectFromGameObject(int _layerID, int layer_Idx, CLevel*& _level);
+    void SelectFromComponent(int _GameObjectID, CGameObject*& _gameObject);
+
+    void UpdateToGameObject(int _gameObjectID, wstring _comType);
 
     void DeleteAllRecordToAllTable();
+
+public:
+    CGameObject* CreateGameObject(int _gameObjectID, const wstring _gameObjectName, int _parentID, vector<int> _comTypeArr);
 
 public:
     sqlite3* GetDB() { return db; }

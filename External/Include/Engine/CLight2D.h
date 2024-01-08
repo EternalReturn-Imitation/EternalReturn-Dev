@@ -21,7 +21,7 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
-    virtual void SaveToDB(int _gameObjectID) override;
+    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
     virtual void LoadFromDB(int _gameObjectID) override;
 
     CLONE(CLight2D);

@@ -32,7 +32,7 @@ public:
     virtual void SaveToLevelFile(FILE* _File) = 0;
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
 
-    virtual void SaveToDB(int _gameObjectID) abstract;
+    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) abstract;
     virtual void LoadFromDB(int _gameObjectID) abstract;
 
 public:  

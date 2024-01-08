@@ -63,7 +63,7 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 	SetMaterial(m_pSharedMtrl);
 }
 
-void CRenderComponent::SaveToDB(int _gameObjectID)
+void CRenderComponent::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
@@ -114,8 +114,8 @@ void CRenderComponent::LoadFromDB(int _gameObjectID)
 			const wchar_t* mtrlKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
 			const wchar_t* mtrlPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
 
-			LoadResRefFromDB2(m_pMesh, meshKey, meshPath);
-			LoadResRefFromDB2(m_pSharedMtrl, mtrlKey, mtrlPath);
+			LoadResRefFromDB(m_pMesh, meshKey, meshPath);
+			LoadResRefFromDB(m_pSharedMtrl, mtrlKey, mtrlPath);
 
 			SetMaterial(m_pSharedMtrl);
 		}
