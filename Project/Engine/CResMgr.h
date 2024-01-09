@@ -116,28 +116,6 @@ inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T>& _Res)
     _Res->SetKey(_strKey);
 
     m_Changed = true;
-
-    //생성한 리소스의 Key를 DB에 넣기.
-    sqlite3* db = CSQLMgr::GetInst()->GetDB();
-    const char* szQuery = "INSERT INTO RESOURCES(KEY) VALUES (?)";
-    sqlite3_stmt* stmt;
-
-    if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_text16(stmt, 1, _strKey.c_str(), -1, SQLITE_TRANSIENT);
-
-        // 쿼리 실행
-        if (sqlite3_step(stmt) != SQLITE_DONE) {
-            // 에러 처리: 쿼리 실행에 실패했을 경우
-            assert(false);
-        }
-
-        // 스테이트먼트 종료
-        sqlite3_finalize(stmt);
-    }
-    else {
-        // 쿼리 준비에 실패했을 경우의 처리
-        assert(false);
-    }
 }
 
 
@@ -167,29 +145,6 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strRelativeP
 
 
     m_Changed = true;
-
-    //생성한 리소스의 Key를 DB에 넣기.
-    sqlite3* db = CSQLMgr::GetInst()->GetDB();
-    const char* szQuery = "INSERT INTO RESOURCES(KEY, RelativePath) VALUES (?, ?)";
-    sqlite3_stmt* stmt;
-
-    if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-        sqlite3_bind_text16(stmt, 1, _strKey.c_str(), -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text16(stmt, 2, _strRelativePath.c_str(), -1, SQLITE_TRANSIENT);
-
-        // 쿼리 실행
-        if (sqlite3_step(stmt) != SQLITE_DONE) {
-            // 에러 처리: 쿼리 실행에 실패했을 경우
-            assert(false);
-        }
-
-        // 스테이트먼트 종료
-        sqlite3_finalize(stmt);
-    }
-    else {
-        // 쿼리 준비에 실패했을 경우의 처리
-        assert(false);
-    }
 
     return (T*)pRes.Get();
 }

@@ -16,7 +16,9 @@ public:
 	static CLevel* LoadLevel(const wstring& _LevelPath);
 	static CGameObject* LoadGameObject(FILE* _File);
 	static CLevel* LoadLevelByDB();
-	static CGameObject* LoadGameObjectByDB(int _layerID, int _parentID);
+	static void LoadLayerByDB(int _levelID, CLevel*& _level);
+	static void LoadGameObjectByDB(int _layerID, int layer_Idx, CLevel*& _level);
+	static CGameObject* LoadComponentByDB(int _gameObjectID, const wstring _gameObjectName, int _parentID, vector<int> _comTypeArr);
 
 private:
 	static vector<int> m_vLevelID;

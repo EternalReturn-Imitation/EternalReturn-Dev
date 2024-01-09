@@ -42,6 +42,7 @@ public:
 
 public:
     CGameObject* CreateGameObject(int _gameObjectID, const wstring _gameObjectName, int _parentID, vector<int> _comTypeArr);
+    string CreateInsertQuery(const std::vector<std::wstring>& scriptNames, int gameObjectID);
 
 public:
     sqlite3* GetDB() { return db; }

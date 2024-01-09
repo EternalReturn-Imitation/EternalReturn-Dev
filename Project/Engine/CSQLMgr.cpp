@@ -34,13 +34,6 @@ void CSQLMgr::init()
 	if (rc) {
 		assert(false);
 	}
-
-	//초기화 할 때 RESOURCES에 있는 데이터들 삭제.
-	string sQuery = "DELETE FROM RESOURCES;";
-	const char* cQuery = sQuery.c_str();
-
-	char* errMsg;
-	EXECQUERY(cQuery, errMsg);
 }
 
 int CSQLMgr::InsertToLevel(wstring _levelName)
@@ -411,4 +404,19 @@ CGameObject* CSQLMgr::CreateGameObject(int _gameObjectID, const wstring _gameObj
 
 
 	return pNewGameObject;
+}
+
+string CSQLMgr::CreateInsertQuery(const std::vector<std::wstring>& scriptNames, int gameObjectID)
+{
+	std::stringstream query;
+	query << "INSERT INTO SCRIPT(Script_Name, GameObject_ID) VALUES ";
+
+	for (size_t i = 0; i < scriptNames.size(); ++i) {
+		query << "('" << ToString(scriptNames[i]) << "', " << gameObjectID << ")";
+		if (i < scriptNames.size() - 1) {
+			query << ", ";
+		}
+	}
+	
+	return query.str();
 }

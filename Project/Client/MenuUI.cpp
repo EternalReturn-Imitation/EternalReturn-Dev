@@ -46,7 +46,7 @@ int MenuUI::render_update()
             if (ImGui::MenuItem("Save Level"))
             {
                 // Level ÀúÀå
-                CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
+                //CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
                 CLevelSaveLoad::SaveLevelToDB(CLevelMgr::GetInst()->GetCurLevel());
             }
 
@@ -141,7 +141,7 @@ int MenuUI::render_update()
 
             if (ImGui::MenuItem("Play", nullptr, nullptr, PlayEnable))
             {
-                CLevelSaveLoad::SaveLevel(L"Level\\Temp.lv", CurLevel);
+                //CLevelSaveLoad::SaveLevel(L"Level\\Temp.lv", CurLevel);
                 CLevelSaveLoad::SaveLevelToDB(CurLevel);
                 CurLevel->ChangeState(LEVEL_STATE::PLAY);
             }
