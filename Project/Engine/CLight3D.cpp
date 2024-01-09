@@ -94,7 +94,7 @@ void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
 	// 쿼리 문자열 준비
-	const char* szQuery = "INSERT INTO RENDERCOMPONENT(GameObject_ID, LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	const char* szQuery = "INSERT INTO LIGHT3D(GameObject_ID, LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	sqlite3_stmt* stmt;
 
 	// 쿼리 준비
@@ -131,7 +131,7 @@ void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 void CLight3D::LoadFromDB(int _gameObjectID)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-	const char* szQuery = "SELECT LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx FROM RENDERCOMPONENT WHERE GameObject_ID = ?";
+	const char* szQuery = "SELECT LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx FROM LIGHT3D WHERE GameObject_ID = ?";
 	sqlite3_stmt* stmt;
 
 	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {

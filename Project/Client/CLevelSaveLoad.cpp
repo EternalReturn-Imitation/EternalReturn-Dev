@@ -12,7 +12,7 @@
 #include <Script\CScriptMgr.h>
 #include <Engine/CSQLMgr.h>
 
-int CLevelSaveLoad::m_LevelID = 0;
+vector<int> CLevelSaveLoad::m_vLevelID;
 
 int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 {
@@ -123,8 +123,6 @@ int CLevelSaveLoad::SaveLevelToDB(CLevel* _Level)
 
 	//레벨 저장
 	int levelId = CSQLMgr::GetInst()->InsertToLevel(_Level->GetName());
-
-	m_LevelID = levelId;
 
 	// 레벨의 레이어 저장
 	for (UINT i = 0; i < MAX_LAYER; ++i)
@@ -339,11 +337,30 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 
 CLevel* CLevelSaveLoad::LoadLevelByDB()
 {
+	m_vLevelID.clear();
+	m_vLevelID.shrink_to_fit();
+
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	const char* szQuery = "SELECT ID FROM LEVEL";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+			int id = sqlite3_column_int(stmt, 0);
+			m_vLevelID.push_back(id);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else {
+		assert(false);
+	}
+
 	CLevel* NewLevel = new CLevel;
 
-	CSQLMgr::GetInst()->SelectFromLevel(m_LevelID, NewLevel);
+	CSQLMgr::GetInst()->SelectFromLevel(m_vLevelID[0], NewLevel);
 
-	CSQLMgr::GetInst()->SelectFromLayer(m_LevelID, NewLevel);
+	CSQLMgr::GetInst()->SelectFromLayer(m_vLevelID[0], NewLevel);
 
 	NewLevel->ChangeState(LEVEL_STATE::STOP);
 

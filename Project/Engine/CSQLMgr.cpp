@@ -377,7 +377,7 @@ CGameObject* CSQLMgr::CreateGameObject(int _gameObjectID, const wstring _gameObj
 
 
 	//자식오브젝트
-	int parentID = _parentID;
+	int parentID = _gameObjectID;
 
 	// 쿼리 문자열 준비
 	const char* szQuery = "SELECT ID, GameObject_Name, Component_Type_Array FROM GAMEOBJECT WHERE Parent_ID = ?";
@@ -393,7 +393,7 @@ CGameObject* CSQLMgr::CreateGameObject(int _gameObjectID, const wstring _gameObj
 			// 결과를 얻습니다.
 			int gameObject_ID = (sqlite3_column_int(stmt, 0));
 			const wchar_t* gameObjectName = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
-			const wchar_t* comTypeArr = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
+			const wchar_t* comTypeArr = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
 
 			vector<int> vComTypeArr = WStringToIntArray(comTypeArr);
 

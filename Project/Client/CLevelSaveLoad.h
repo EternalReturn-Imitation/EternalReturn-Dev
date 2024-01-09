@@ -19,6 +19,6 @@ public:
 	static CGameObject* LoadGameObjectByDB(int _layerID, int _parentID);
 
 private:
-	static int m_LevelID;
+	static vector<int> m_vLevelID;
 };
 
