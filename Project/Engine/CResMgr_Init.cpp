@@ -432,6 +432,7 @@ void CResMgr::CreateDefaultMesh()
 	arrCube[22].vPos = Vec3(1.f, -1.f, -1.f);
 	arrCube[23].vPos = Vec3(-1.f, -1.f, -1.f);
 
+	pMesh = new CMesh(true);
 	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"FrustumMesh_Debug", pMesh);
 	vecVtx.clear();
