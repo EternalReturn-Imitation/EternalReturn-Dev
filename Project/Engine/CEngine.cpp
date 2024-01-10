@@ -35,10 +35,7 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 	SetWindowPos(m_hWnd, nullptr, 10, 10, rt.right - rt.left, rt.bottom - rt.top, 0);
 	ShowWindow(m_hWnd, true);
 
-	// Manager 초기화
-	CPathMgr::GetInst()->init();
-
-	CSQLMgr::GetInst()->init();
+	
 
 	// Device 초기화
 	if (FAILED(CDevice::GetInst()->init(m_hWnd, _iWidth, _iHeight)))
@@ -46,6 +43,11 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 		MessageBox(nullptr, L"Device 초기화 실패", L"에러", MB_OK);
 		return E_FAIL;
 	}	
+
+	// Manager 초기화
+	CPathMgr::GetInst()->init();
+
+	CSQLMgr::GetInst()->init();
 
 	CKeyMgr::GetInst()->init();
 

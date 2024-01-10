@@ -80,6 +80,7 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 	}
 }
 
+
 wstring SaveResRefToDB(Ptr<CRes> _Res);
 void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath);
 

@@ -50,7 +50,6 @@ int MenuUI::render_update()
                 //CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
                 CLevelSaveLoad::SaveLevelToDB(CLevelMgr::GetInst()->GetCurLevel());
             }
-
             if (ImGui::MenuItem("Load Level"))
             {
                 // Level 불러오기

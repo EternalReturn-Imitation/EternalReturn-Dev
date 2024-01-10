@@ -507,17 +507,18 @@ void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
 	// ���� ���ڿ� �غ�
-	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx) VALUES (?, ?, ?, ?, ?, ?)";
+	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	sqlite3_stmt* stmt;
 
 	// ���� �غ�
 	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, _gameObjectID);
-		sqlite3_bind_blob(stmt, 2, &m_fAspectRatio, sizeof(float), SQLITE_STATIC);
-		sqlite3_bind_blob(stmt, 3, &m_fScale, sizeof(float), SQLITE_STATIC);
-		sqlite3_bind_blob(stmt, 4, &m_ProjType, sizeof(UINT), SQLITE_STATIC);
-		sqlite3_bind_blob(stmt, 5, &m_iLayerMask, sizeof(UINT), SQLITE_STATIC);
-		sqlite3_bind_blob(stmt, 6, &m_iCamIdx, sizeof(int), SQLITE_STATIC);
+		sqlite3_bind_double(stmt, 2, static_cast<double>(m_fAspectRatio));
+		sqlite3_bind_double(stmt, 3, static_cast<double>(m_fScale));
+		sqlite3_bind_int(stmt, 4, static_cast<int>(m_ProjType));
+		sqlite3_bind_int(stmt, 5, static_cast<int>(m_iLayerMask));
+		sqlite3_bind_int(stmt, 6, m_iCamIdx);
+		sqlite3_bind_int(stmt, 7, static_cast<int>(m_bMainCamera));
 
 		// ���� ����
 		if (sqlite3_step(stmt) != SQLITE_DONE) {
@@ -537,42 +538,27 @@ void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 void CCamera::LoadFromDB(int _gameObjectID)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	const char* szQuery = "SELECT AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera FROM CAMERA WHERE GameObject_ID = ?";
 	sqlite3_stmt* stmt;
-	const char* szQuery = "SELECT AspectRatio, Scale, ProjType, LayerMask, CamIdx FROM CAMERA WHERE GameObject_ID = ?";
 
 	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, _gameObjectID);
 
 		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			// AspectRatio ������ �ҷ�����
-			const void* aspectRatioData = sqlite3_column_blob(stmt, 0);
-			memcpy(&m_fAspectRatio, aspectRatioData, sizeof(float));
-
-			// Scale ������ �ҷ�����
-			const void* scaleData = sqlite3_column_blob(stmt, 1);
-			memcpy(&m_fScale, scaleData, sizeof(float));
-
-			// ProjType ������ �ҷ�����
-			const void* projTypeData = sqlite3_column_blob(stmt, 2);
-			memcpy(&m_ProjType, projTypeData, sizeof(UINT));
-
-			// LayerMask ������ �ҷ�����
-			const void* layerMaskData = sqlite3_column_blob(stmt, 3);
-			memcpy(&m_iLayerMask, layerMaskData, sizeof(UINT));
-
-			// CamIdx ������ �ҷ�����
-			const void* camIdxData = sqlite3_column_blob(stmt, 4);
-			memcpy(&m_iCamIdx, camIdxData, sizeof(int));
+			m_fAspectRatio = static_cast<float>(sqlite3_column_double(stmt, 0));
+			m_fScale = static_cast<float>(sqlite3_column_double(stmt, 1));
+			m_ProjType = (PROJ_TYPE)(static_cast<UINT>(sqlite3_column_int(stmt, 2)));
+			m_iLayerMask = static_cast<UINT>(sqlite3_column_int(stmt, 3));
+			m_iCamIdx = sqlite3_column_int(stmt, 4);
+			m_bMainCamera = static_cast<bool>(sqlite3_column_int(stmt, 5)) != 0;
 		}
 		else {
-			// ���ڵ带 ã�� ���߰ų� ������ �������� ���� ó��
 			assert(false);
 		}
-
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// ���� �غ� �������� ����� ó��
+		// 쿼리 준비에 실패했을 경우의 처리
 		assert(false);
 	}
 }

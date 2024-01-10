@@ -26,7 +26,7 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 
 	_wfopen_s(&pFile, strPath.c_str(), L"wb");
 
-	if (nullptr == pFile)	
+	if (nullptr == pFile)
 		return E_FAIL;
 
 	// ���� �̸� ����
@@ -47,7 +47,7 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 		// ������Ʈ ���� ����
 		size_t objCount = vecParent.size();
 		fwrite(&objCount, sizeof(size_t), 1, pFile);
-		
+
 		// �� ���ӿ�����Ʈ
 		for (size_t i = 0; i < objCount; ++i)
 		{
@@ -65,10 +65,10 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 {
 	// �̸�
 	SaveWString(_Object->GetName(), _File);
-	
+
 	// ������Ʈ
 	for (UINT i = 0; i <= (UINT)COMPONENT_TYPE::END; ++i)
-	{		
+	{
 		if (i == (UINT)COMPONENT_TYPE::END)
 		{
 			// ������Ʈ Ÿ�� ����
@@ -107,7 +107,7 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 
 	for (size_t i = 0; i < ChildCount; ++i)
 	{
-		SaveGameObject(vecChild[i], _File);		
+		SaveGameObject(vecChild[i], _File);
 	}
 
 	return 0;
@@ -175,8 +175,8 @@ int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object, int _
 	{
 		wstring ScriptName = CScriptMgr::GetScriptName(vecScript[i]);
 		vScriptNames.push_back(ScriptName);
-		
-		vecScript[i]->SaveToDB(gameObjectId,(COMPONENT_TYPE)i);
+
+		vecScript[i]->SaveToDB(gameObjectId, (COMPONENT_TYPE)i);
 	}
 
 	if (vScriptNames.size() > 0) {
@@ -315,7 +315,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::SKYBOX:
 			Component = new CSkyBox;
 			break;
-		case COMPONENT_TYPE::DECAL:	
+		case COMPONENT_TYPE::DECAL:
 			Component = new CDecal;
 			break;
 		}
@@ -450,6 +450,9 @@ CGameObject* CLevelSaveLoad::LoadComponentByDB(int _gameObjectID, const wstring 
 	CGameObject* pNewGameObject = new CGameObject;
 	pNewGameObject->SetName(_gameObjectName);
 
+	if (_gameObjectName == L"Sun")
+		int a = 0;
+
 	for (int i = 0; i < _comTypeArr.size(); i++) {
 
 		CComponent* Component = nullptr;
@@ -478,6 +481,9 @@ CGameObject* CLevelSaveLoad::LoadComponentByDB(int _gameObjectID, const wstring 
 			break;
 		case COMPONENT_TYPE::CAMERA:
 			Component = new CCamera;
+			break;
+		case COMPONENT_TYPE::BEHAVIORTREE:
+			Component = new CBehaviorTree;
 			break;
 		case COMPONENT_TYPE::MESHRENDER:
 			Component = new CMeshRender;

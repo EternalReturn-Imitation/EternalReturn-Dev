@@ -314,7 +314,7 @@ float Deg2Rad(float _Degree)
 	return _Degree * XM_PI / 180;
 }
 
-const wchar_t* ToWString(COMPONENT_TYPE type)
+wstring SaveResRefToDB(Ptr<CRes> _Res)
 {
 	std::wstringstream wss;
 
