@@ -3,7 +3,7 @@
 
 #include <SQLLight/sqlite3.h>
 
-//Test
+//테스트
 
     //쿼리 실행 매크로
     #define EXECQUERY(Query, ErrMsg)		\
