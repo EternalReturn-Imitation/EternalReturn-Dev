@@ -30,8 +30,8 @@ void CreateTestLevel()
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");
 	pCurLevel->GetLayer(1)->SetName(L"SkyBox");
-	pCurLevel->GetLayer(2)->SetName(L"Planet");
-	pCurLevel->GetLayer(3)->SetName(L"Line");
+	pCurLevel->GetLayer(2)->SetName(L"Player");
+	pCurLevel->GetLayer(3)->SetName(L"Particle");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 
@@ -75,7 +75,7 @@ void CreateTestLevel()
 	
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Sky02.jpg"));
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Sky01.png"));
 	
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), L"SkyBox");
 	 
@@ -86,14 +86,28 @@ void CreateTestLevel()
 	pLightObj->AddComponent(new CTransform);
 	pLightObj->AddComponent(new CLight3D);
 
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::POINT);
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
 	pLightObj->Light3D()->SetRadius(4000.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));	
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.1f, 0.1f, 0.1f));
 	
-	// SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
+	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
 	
 
+
+	CGameObject* TestObj = new CGameObject;
+	TestObj->SetName(L"TestObj");
+	TestObj->AddComponent(new CTransform);
+	
+	TestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
+
+	TestObj->AddComponent(new CParticleSystem);
+	TestObj->ParticleSystem()->SetSpawnRate(200);
+	TestObj->ParticleSystem()->SetSpawnInitialColor(Vec3(1.f, 0.f, 1.f));
+
+	SpawnGameObject(TestObj, Vec3(0.f, 0.f, 500.f), L"Player");
+
+	/*
 	float dist = 100.f;
 	float radius = 0.f;
 
@@ -324,5 +338,6 @@ void CreateTestLevel()
 	Neptune->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"NeptuneMtrl.mtrl"));
 
 	SpawnGameObject(Neptune, Vec3(radius, 0.f, 0.f), L"Planet");
+	*/
 
 }

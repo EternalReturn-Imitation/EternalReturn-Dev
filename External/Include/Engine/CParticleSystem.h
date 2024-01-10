@@ -31,9 +31,6 @@ public:
     void SetSpawnInitialColor(Vec3 _vInitialColor) { m_ModuleData.vSpawnColor = _vInitialColor; }
 
 
-
-
-
 public:
     virtual void finaltick() override;
     virtual void render() override;
