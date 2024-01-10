@@ -133,3 +133,80 @@ void CAnimator2D::LoadFromLevelFile(FILE* _File)
 
 	m_pCurAnim = FindAnim(strCurAnimName);		
 }
+
+void CAnimator2D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	size_t AnimCount = m_mapAnim.size();
+	wstring Animation2D;
+
+	for (size_t i = 0; i < AnimCount; ++i) {
+		CAnim2D* pNewAnim = new CAnim2D;
+		Animation2D += pNewAnim->SaveToDB();
+
+		m_mapAnim.insert(make_pair(pNewAnim->GetName(), pNewAnim));
+		pNewAnim->m_pOwner = this;
+	}
+
+	wstring strCurAnimName;
+	if (nullptr != m_pCurAnim)
+	{
+		strCurAnimName = m_pCurAnim->GetName();
+	}
+
+	wstring query = L"INSERT INTO ANIMATOR2D(GameObject_ID, Repeat, AnimCount, Animation2D, CurAnimName) VALUES("
+		+ std::to_wstring(_gameObjectID) + L","
+		+ std::to_wstring(m_bRepeat) + L","
+		+ std::to_wstring(AnimCount) + L","
+		+ L"'" + Animation2D + L"',"
+		+ L"'" + strCurAnimName + L"');";
+
+	CONVERTQUERY(query, Query);
+
+	char* errMsg;
+	EXECQUERY(Query, errMsg);
+}
+
+void CAnimator2D::LoadFromDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	sqlite3_stmt* stmt;
+	const char* sql = "SELECT Repeat, AnimCount, Animation2D, CurAnimName FROM ANIMATOR2D WHERE GameObject_ID = ?";
+
+	if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+		// 오류 처리
+		return;
+	}
+
+	sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+	if (sqlite3_step(stmt) == SQLITE_ROW) {
+		m_bRepeat = sqlite3_column_int(stmt, 0) != 0;
+		size_t AnimCount = sqlite3_column_int(stmt, 1);
+		std::string sAnimation2D = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+		std::string sStrCurAnimName = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+
+		std::wstring Animation2D;
+		Animation2D.assign(sAnimation2D.begin(), sAnimation2D.end());
+
+		std::wstring strCurAnimName;
+		strCurAnimName.assign(sStrCurAnimName.begin(), sStrCurAnimName.end());
+
+		// Animation2D 데이터를 파싱하여 각 애니메이션 로드
+		std::wstringstream wss(Animation2D);
+		std::wstring animData;
+		for (size_t i = 0; i < AnimCount; ++i) {
+			std::getline(wss, animData, L'\0'); // 각 애니메이션 데이터 분리
+			CAnim2D* pNewAnim = new CAnim2D;
+			pNewAnim->LoadFromDB(animData);
+
+			m_mapAnim.insert(make_pair(pNewAnim->GetName(), pNewAnim));
+			pNewAnim->m_pOwner = this;
+		}
+
+		m_pCurAnim = FindAnim(strCurAnimName);
+	}
+
+	sqlite3_finalize(stmt);
+}

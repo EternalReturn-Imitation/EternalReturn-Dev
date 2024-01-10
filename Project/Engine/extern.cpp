@@ -69,3 +69,15 @@ extern const wchar_t* COMPONENT_TYPE_WSTR[(UINT)COMPONENT_TYPE::END] =
 	L"SKYBOX",
 	L"DECAL",
 };
+
+extern const char* COLLIDER2D_TYPE_STR[(UINT)COLLIDER2D_TYPE::END] =
+{
+	"RECT",
+	"CIRCLE",
+};
+
+extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COLLIDER2D_TYPE::END] =
+{
+	L"RECT",
+	L"CIRCLE",
+};

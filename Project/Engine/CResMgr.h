@@ -11,6 +11,7 @@
 #include "CSound.h"
 
 #include "CPathMgr.h"
+#include "CSQLMgr.h"
 
 
 class CResMgr :

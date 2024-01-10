@@ -47,13 +47,14 @@ int MenuUI::render_update()
             if (ImGui::MenuItem("Save Level"))
             {
                 // Level 저장
-                CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
+                //CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
+                CLevelSaveLoad::SaveLevelToDB(CLevelMgr::GetInst()->GetCurLevel());
             }
-
             if (ImGui::MenuItem("Load Level"))
             {
                 // Level 불러오기
-                CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevel(L"Level\\TestLevel.lv");
+                //CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevel(L"Level\\TestLevel.lv");
+                CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevelByDB();
 
                 tEvent evn = {};
                 evn.Type = EVENT_TYPE::LEVEL_CHANGE;
@@ -155,7 +156,8 @@ int MenuUI::render_update()
 
             if (ImGui::MenuItem("Play", nullptr, nullptr, PlayEnable))
             {
-                CLevelSaveLoad::SaveLevel(L"Level\\Temp.lv", CurLevel);
+                //CLevelSaveLoad::SaveLevel(L"Level\\Temp.lv", CurLevel);
+                CLevelSaveLoad::SaveLevelToDB(CurLevel);
                 CurLevel->ChangeState(LEVEL_STATE::PLAY);
             }
             else if (ImGui::MenuItem("Pause", nullptr, nullptr, PauseEnable))
@@ -165,7 +167,8 @@ int MenuUI::render_update()
             else if (ImGui::MenuItem("Stop", nullptr, nullptr, StopEnable))
             {
                 CurLevel->ChangeState(LEVEL_STATE::STOP);
-                CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Level\\Temp.lv");
+                //CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Level\\Temp.lv");
+                CLevel* pNewLevel = CLevelSaveLoad::LoadLevelByDB();
 
                 tEvent evn = {};
                 evn.Type = EVENT_TYPE::LEVEL_CHANGE;

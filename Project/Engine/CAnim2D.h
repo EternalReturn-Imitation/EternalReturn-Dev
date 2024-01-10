@@ -39,6 +39,8 @@ public:
     void SaveToLevelFile(FILE* _File);
     void LoadFromLevelFile(FILE* _File);
 
+    wstring SaveToDB();
+    void LoadFromDB(const std::wstring& serializedData);
 
     CLONE(CAnim2D);
 public:

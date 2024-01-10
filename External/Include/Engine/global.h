@@ -33,7 +33,7 @@ using namespace std::experimental::filesystem;
 using namespace Microsoft::WRL;
 
 #include <d3d11.h>					// DirectX11
-#include <d3dcompiler.h>			// Shader ÄÄÆÄÀÏ
+#include <d3dcompiler.h>			// Shader ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #include <DirectXMath.h>			// DX Math
 #include <DirectXPackedVector.h>	
 
@@ -57,3 +57,7 @@ typedef Vector4 Vec4;
 #include "func.h"
 
 #include "CSingleton.h"
+
+#include "SQLLight/sqlite3.h"
+#pragma comment(lib, "SQLLite/sqlite3.lib")
+#pragma comment(lib, "SQLLite/sqlite3.dll")

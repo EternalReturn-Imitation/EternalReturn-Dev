@@ -26,6 +26,7 @@ void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 	pCurLevel->ChangeState(LEVEL_STATE::STOP);
+	pCurLevel->SetName(L"TestLevel");
 
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");

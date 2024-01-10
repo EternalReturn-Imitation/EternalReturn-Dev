@@ -10,12 +10,12 @@ void DeleteArray(T* (&Arr)[_Size])
 	}
 }
 
-// ¿ÀºêÁ§Æ® »ý¼º
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName);
 
-// ¿ÀºêÁ§Æ® »èÁ¦
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 void DestroyObject(CGameObject* _DeletObject);
 
 // DrawDebugShape
@@ -34,7 +34,7 @@ void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, 
 void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest);
 
 
-// GameObject À¯È¿¼º Ã¼Å©
+// GameObject ï¿½ï¿½È¿ï¿½ï¿½ Ã¼Å©
 bool IsValidObj(CGameObject*& _Target);
 
 
@@ -43,6 +43,14 @@ const wchar_t* ToWSTring(RES_TYPE);
 
 const char* ToString(COMPONENT_TYPE);
 const wchar_t* ToWSTring(COMPONENT_TYPE);
+
+const char* ToString(COLLIDER2D_TYPE);
+const wchar_t* ToWString(COLLIDER2D_TYPE);
+
+COLLIDER2D_TYPE ToCollider2DType(wstring _wstring);
+
+string ToString(wstring _wstring);
+wstring ToWString(string _string);
 
 
 // Save / Load
@@ -72,11 +80,44 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 	}
 }
 
+
+wstring SaveResRefToDB(Ptr<CRes> _Res);
+void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath);
+
 void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File);
 void LoadGameObjectPtr(wstring& _ObjName, FILE* _File);
 
+template<typename T>
+void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
+	int exists;
+	wss >> exists;
+	std::wstring line;
+	std::getline(wss, line); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Òºï¿½
 
+	if (exists) {
+		std::wstring strKey, strRelativePath;
 
+		std::getline(wss, strKey);
+		std::getline(wss, strRelativePath);
+
+		_Res = CResMgr::GetInst()->Load<T>(strKey, strRelativePath);
+	}
+}
+
+template<typename T>
+void LoadResRefFromDB(Ptr<T>& _Res, const wstring& _Key, const wstring& _RelativePath) {
+	if (_Key != L"0") {
+		_Res = CResMgr::GetInst()->Load<T>(_Key, _RelativePath);
+	}
+}
+
+const wchar_t* ToWString(COMPONENT_TYPE type);
+
+std::wstring Vec3ToWString(const Vec3& vec);
+Vec3 WStringToVec3(const std::wstring& wstr);
+
+std::wstring IntArrayToWString(const std::vector<int>& intArray);
+std::vector<int> WStringToIntArray(const std::wstring& str);
 
 
 
