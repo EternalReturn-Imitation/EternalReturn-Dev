@@ -36,7 +36,7 @@ void CLight3D::finaltick()
 		}
 		else if (LightType == (UINT)LIGHT_TYPE::SPOT)
 		{
-			// ÄÜ µð¹ö±×
+			// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 	}
 }
@@ -45,11 +45,11 @@ void CLight3D::render()
 {
 	Transform()->UpdateData();
 	
-	// Light ÀçÁú ¾÷µ¥ÀÌÆ®
+	// Light ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	m_Mtrl->SetScalarParam(INT_0, &m_LightIdx);
 	m_Mtrl->UpdateData();
 
-	// º¼·ý ¸Þ½Ã ·»´õ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	m_Mesh->render();
 }
 
@@ -58,7 +58,7 @@ void CLight3D::SetRadius(float _Radius)
 {
 	m_LightInfo.Radius = _Radius;
 
-	// SphereMesh ÀÇ ·ÎÄÃ ¹ÝÁö¸§ÀÌ 0.5f ÀÌ±â ¶§¹®¿¡ 2¹è·Î Àû¿ë
+	// SphereMesh ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0.5f ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
 }
 
@@ -69,7 +69,7 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 
 	if (LIGHT_TYPE::DIRECTIONAL == (LIGHT_TYPE)m_LightInfo.LightType)
 	{
-		// ±¤¿øÀ» ·»´õ¸µ ÇÒ ¶§, ±¤¿øÀÇ ¿µÇâ¹üÀ§¸¦ Çü»óÈ­ ÇÒ ¼ö ÀÖ´Â ¸Þ½¬(º¼·ý¸Þ½¬) ¸¦ ¼±ÅÃ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Þ½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½Þ½ï¿½) ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
 	}
@@ -104,8 +104,6 @@ void CLight3D::SaveToLevelFile(FILE* _File)
 	fwrite(&m_LightInfo.Angle,sizeof(float), 1, _File);
 	fwrite(&m_LightInfo.padding, sizeof(int), 1, _File);
 	fwrite(&m_LightIdx, sizeof(float), 1, _File);
-
-
 }
 
 void CLight3D::LoadFromLevelFile(FILE* _File)
@@ -119,4 +117,89 @@ void CLight3D::LoadFromLevelFile(FILE* _File)
 	fread(&m_LightInfo.Angle, sizeof(float), 1, _File);
 	fread(&m_LightInfo.padding, sizeof(int), 1, _File);
 	fread(&m_LightIdx, sizeof(float), 1, _File);
+}
+
+void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½Øºï¿½
+	const char* szQuery = "INSERT INTO LIGHT3D(GameObject_ID, LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	sqlite3_stmt* stmt;
+
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+		sqlite3_bind_blob(stmt, 2, &m_LightInfo, sizeof(m_LightInfo), SQLITE_STATIC);
+
+		wstring meshKey, meshPath, mtrlKey, mtrlPath;
+		SaveResRefToDB(m_Mesh.Get(), meshKey, meshPath);
+		SaveResRefToDB(m_Mtrl.Get(), mtrlKey, mtrlPath);
+
+		sqlite3_bind_text16(stmt, 3, meshKey.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text16(stmt, 4, meshPath.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text16(stmt, 5, mtrlKey.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text16(stmt, 6, mtrlPath.c_str(), -1, SQLITE_TRANSIENT);
+
+		sqlite3_bind_int(stmt, 7, m_LightIdx);
+
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+		if (sqlite3_step(stmt) != SQLITE_DONE) {
+			// ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½à¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+			assert(false);
+		}
+
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
+		assert(false);
+	}
+}
+
+void CLight3D::LoadFromDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	const char* szQuery = "SELECT LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx FROM LIGHT3D WHERE GameObject_ID = ?";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			const void* data = sqlite3_column_blob(stmt, 0);
+			int bytes = sqlite3_column_bytes(stmt, 0);
+
+			// tLightInfoï¿½ï¿½ ï¿½ï¿½È¯
+			if (bytes == sizeof(tLightInfo)) {
+				memcpy(&m_LightInfo, data, bytes);
+			}
+			else {
+				assert(false);
+			}
+
+			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
+			const wchar_t* meshKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
+			const wchar_t* meshPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
+			const wchar_t* mtrlKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
+			const wchar_t* mtrlPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 4));
+
+			LoadResRefFromDB(m_Mesh, meshKey, meshPath);
+			LoadResRefFromDB(m_Mtrl, mtrlKey, mtrlPath);
+
+			// Light_Idx ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
+			m_LightIdx = sqlite3_column_int(stmt, 5);
+		}
+		else {
+			// ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ß°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+			assert(false);
+		}
+
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
+		assert(false);
+	}
 }

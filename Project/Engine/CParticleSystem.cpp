@@ -178,3 +178,82 @@ void CParticleSystem::LoadFromLevelFile(FILE* _File)
 		m_UpdateCS = (CParticleUpdateShader*)CResMgr::GetInst()->FindRes<CComputeShader>(strKey).Get();
 	}
 }
+
+void CParticleSystem::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
+{
+	CRenderComponent::SaveToDB(_gameObjectID, _componentType);
+
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	// 쿼리 문자열 준비
+	const char* szQuery = "INSERT INTO PARTICLESYSTEM(GameObject_ID, ModuleData, UpdateCS_KEY, UpdateCS_Path) VALUES (?, ?, ?, ?)";
+	sqlite3_stmt* stmt;
+
+	// 쿼리 준비
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		// GameObject_ID 바인딩
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+		// m_LightInfo를 BLOB으로 바인딩
+		sqlite3_bind_blob(stmt, 2, &m_ModuleData, sizeof(m_ModuleData), SQLITE_STATIC);
+
+		wstring updateCSKey, updateCSPath;
+		SaveResRefToDB(m_UpdateCS.Get(), updateCSKey, updateCSPath);
+
+		sqlite3_bind_text16(stmt, 3, updateCSKey.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_text16(stmt, 4, updateCSPath.c_str(), -1, SQLITE_TRANSIENT);
+
+		// 쿼리 실행
+		if (sqlite3_step(stmt) != SQLITE_DONE) {
+			// 에러 처리: 쿼리 실행에 실패했을 경우
+			assert(false);
+		}
+
+		// 스테이트먼트 종료
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// 쿼리 준비에 실패했을 경우의 처리
+		assert(false);
+	}
+}
+
+void CParticleSystem::LoadFromDB(int _gameObjectID)
+{
+	CRenderComponent::LoadFromDB(_gameObjectID);
+
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	sqlite3_stmt* stmt;
+	const char* szQuery = "SELECT ModuleData, UpdateCS_KEY, UpdateCS_Path FROM PARTICLESYSTEM WHERE GameObject_ID = ?";
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			const void* data = sqlite3_column_blob(stmt, 0);
+			int bytes = sqlite3_column_bytes(stmt, 0);
+
+			// tLightInfo로 변환
+			if (bytes == sizeof(m_ModuleData)) {
+				memcpy(&m_ModuleData, data, bytes);
+			}
+			else {
+				assert(false);
+			}
+
+			const wchar_t* updateCSKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
+			const wchar_t* updateCSPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
+
+			m_UpdateCS = (CParticleUpdateShader*)CResMgr::GetInst()->FindRes<CComputeShader>(updateCSKey).Get();
+		}
+		else {
+			assert(false);
+		}
+
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// 쿼리 준비에 실패했을 경우의 처리
+		assert(false);
+	}
+}

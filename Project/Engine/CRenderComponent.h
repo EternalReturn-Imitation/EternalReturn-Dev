@@ -11,9 +11,9 @@ class CRenderComponent :
 private:
     Ptr<CMesh>              m_pMesh;
 
-    Ptr<CMaterial>          m_pSharedMtrl;  // ¿øº» ¸ÞÅ×¸®¾ó
-    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial º¹»çº»
-    Ptr<CMaterial>          m_pCurrentMtrl; // ÇöÀç »ç¿ë ÁßÀÎ ÀçÁú
+    Ptr<CMaterial>          m_pSharedMtrl;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×¸ï¿½ï¿½ï¿½
+    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial ï¿½ï¿½ï¿½çº»
+    Ptr<CMaterial>          m_pCurrentMtrl; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     bool                    m_bFrustumCheck;
 
@@ -41,8 +41,10 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
-    bool IsFrustumCheck() { return m_bFrustumCheck; }
+    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
+    virtual void LoadFromDB(int _gameObjectID) override;
 
+    bool IsFrustumCheck() { return m_bFrustumCheck; }
 
 public:
     CRenderComponent(COMPONENT_TYPE _type);

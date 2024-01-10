@@ -172,6 +172,9 @@
     <ClInclude Include="CFrustum.h">
       <Filter>Source\06. Component\3. Camera\Frustum</Filter>
     </ClInclude>
+    <ClInclude Include="CSQLMgr.h">
+      <Filter>Source\03. Manager\11. SQLMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -329,6 +332,9 @@
     </ClCompile>
     <ClCompile Include="CRenderMgr_init.cpp">
       <Filter>Source\03. Manager\06. RenderMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CSQLMgr.cpp">
+      <Filter>Source\03. Manager\11. SQLMgr</Filter>
     </ClCompile>
     <ClCompile Include="CFrustum.cpp">
       <Filter>Source\06. Component\3. Camera\Frustum</Filter>
@@ -496,6 +502,9 @@
     </Filter>
     <Filter Include="Source\06. Component\3. Camera\Frustum">
       <UniqueIdentifier>{d5e264ca-0a77-43bd-b295-0f3283f7920e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\11. SQLMgr">
+      <UniqueIdentifier>{87fcd018-8ac4-4f73-a181-d6fe920412a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

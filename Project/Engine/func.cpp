@@ -204,15 +204,52 @@ const char* ToString(RES_TYPE type)
 	return RES_TYPE_STR[(UINT)type];
 }
 
+const char* ToString(COMPONENT_TYPE _type)
+{
+	return COMPONENT_TYPE_STR[(UINT)_type];
+}
+
+const wchar_t* ToWSTring(COMPONENT_TYPE  _type)
+{
+	return COMPONENT_TYPE_WSTR[(UINT)_type];
+}
+
 const wchar_t* ToWString(RES_TYPE type)
 {
 	return RES_TYPE_WSTR[(UINT)type];
 }
 
-
-const char* ToString(COMPONENT_TYPE type)
+const char* ToString(COLLIDER2D_TYPE type)
 {
-	return COMPONENT_TYPE_STR[(UINT)type];
+	return COLLIDER2D_TYPE_STR[(UINT)type];
+}
+
+const wchar_t* ToWString(COLLIDER2D_TYPE type)
+{
+	return COLLIDER2D_TYPE_WSTR[(UINT)type];
+}
+
+COLLIDER2D_TYPE ToCollider2DType(wstring _wstring) {
+	for (int i = 0; i < (UINT)COLLIDER2D_TYPE::END; i++) {
+		if (COLLIDER2D_TYPE_WSTR[i] == _wstring)
+			return (COLLIDER2D_TYPE)i;
+	}
+}
+
+string ToString(wstring _wstring)
+{
+	string sString;
+	sString.assign(_wstring.begin(), _wstring.end());
+
+	return sString;
+}
+
+wstring ToWString(string _string)
+{
+	wstring wString;
+	wString.assign(_string.begin(), _string.end());
+
+	return wString;
 }
 
 void SaveWString(const wstring& _str, FILE* _File)
@@ -277,7 +314,98 @@ float Deg2Rad(float _Degree)
 	return _Degree * XM_PI / 180;
 }
 
-const wchar_t* ToWString(COMPONENT_TYPE type)
+wstring SaveResRefToDB(Ptr<CRes> _Res)
 {
-	return COMPONENT_TYPE_WSTR[(UINT)type];
+	std::wstringstream wss;
+
+	int i = 0;
+	if (nullptr == _Res)
+	{
+		wss << L"0\n";
+	}
+	else
+	{
+		wss << L"1\n";
+		wss << _Res->GetKey() << L"\n";
+		wss << _Res->GetRelativePath() << L"\n";
+	}
+	
+	return wss.str();
+}
+
+void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
+{
+	if (nullptr == _Res)
+	{
+		_Key = L"0";
+		_RelativePath = L"0";
+	}
+	else
+	{
+		_Key = _Res->GetKey();
+		_RelativePath = _Res->GetRelativePath();
+	}
+}
+
+//template<typename T>
+//void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
+//	int exists;
+//	wss >> exists;
+//	std::wstring line;
+//	std::getline(wss, line); // ���� ���� ���� ���ڸ� �Һ�
+//
+//	if (exists) {
+//		std::wstring strKey, strRelativePath;
+//
+//		std::getline(wss, strKey);
+//		std::getline(wss, strRelativePath);
+//
+//		_Res = CResMgr::GetInst()->Load<T>(strKey, strRelativePath);
+//	}
+//}
+//
+//template<typename T>
+//void LoadResRefFromDB2(Ptr<T>& _Res, const wstring& _Key, const wstring& _RelativePath)
+//{
+//	if (_Key != L"0") {
+//		_Res = CResMgr::GetInst()->Load<T>(_Key, _RelativePath);
+//	}
+//}
+
+std::wstring Vec3ToWString(const Vec3& vec) {
+	wstring result = std::to_wstring(vec.x) + L"," + std::to_wstring(vec.y) + L"," + std::to_wstring(vec.z);
+	return result;
+}
+
+Vec3 WStringToVec3(const std::wstring& wstr)
+{
+	Vec3 vec;
+	std::wistringstream wss(wstr);
+	wchar_t comma; // ��ǥ�� �����ϱ� ���� �ӽ� ����
+
+	wss >> vec.x >> comma >> vec.y >> comma >> vec.z;
+	return vec;
+}
+
+std::wstring IntArrayToWString(const std::vector<int>& intArray)
+{
+	std::wstringstream wss;
+	for (size_t i = 0; i < intArray.size(); ++i) {
+		if (i > 0) {
+			wss << L",";
+		}
+		wss << intArray[i];
+	}
+	return wss.str();
+}
+
+std::vector<int> WStringToIntArray(const std::wstring& str)
+{
+	std::wstringstream wss(str);
+	std::vector<int> intArray;
+	std::wstring token;
+	while (std::getline(wss, token, L',')) {
+		intArray.push_back(std::stoi(token));
+	}
+	return intArray;
 }
