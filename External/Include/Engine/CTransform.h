@@ -18,6 +18,10 @@ private:
     Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
+    float   m_fBoundingRadius;       // 최대 반경 반지름
+    Matrix  m_matWorldBoundingScale;
+    Matrix  m_matWorldBoundingBox;    // 최대 반경 행렬
+
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
     void SetRelativeScale(Vec3 _vScale) { m_vRelativeScale = _vScale; }
@@ -42,6 +46,9 @@ public:
     const Matrix& GetWorldMat() const { return m_matWorld; }
 
     void SetWorldMat(const Matrix& _mat) { m_matWorld = _mat; }
+
+    const float& GetBoundingRadius() { return m_fBoundingRadius; }
+    const Matrix& GetWorldBoundingMat() { return m_matWorldBoundingBox; }
 
 public:
     virtual void finaltick() override;    

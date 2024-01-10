@@ -10,14 +10,12 @@ void DeleteArray(T* (&Arr)[_Size])
 	}
 }
 
-
-
-// ¿ÀºêÁ§Æ® »ý¼º
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName);
 
-// ¿ÀºêÁ§Æ® »èÁ¦
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 void DestroyObject(CGameObject* _DeletObject);
 
 // DrawDebugShape
@@ -33,8 +31,10 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bo
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);
 
+void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest);
 
-// GameObject À¯È¿¼º Ã¼Å©
+
+// GameObject ï¿½ï¿½È¿ï¿½ï¿½ Ã¼Å©
 bool IsValidObj(CGameObject*& _Target);
 
 
@@ -80,15 +80,19 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 	}
 }
 
+
 wstring SaveResRefToDB(Ptr<CRes> _Res);
 void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath);
+
+void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File);
+void LoadGameObjectPtr(wstring& _ObjName, FILE* _File);
 
 template<typename T>
 void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
 	int exists;
 	wss >> exists;
 	std::wstring line;
-	std::getline(wss, line); // ¼ýÀÚ µÚÀÇ °³Çà ¹®ÀÚ¸¦ ¼Òºñ
+	std::getline(wss, line); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Òºï¿½
 
 	if (exists) {
 		std::wstring strKey, strRelativePath;
@@ -155,4 +159,6 @@ void Safe_Del_Map(map<T1, T2>& _map)
 }
 
 
-
+// math
+float Rad2Deg(float _radian); 
+float Deg2Rad(float _Degree); 

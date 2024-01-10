@@ -4,6 +4,8 @@
 #define DEVICE  CDevice::GetInst()->GetDevice()
 #define CONTEXT CDevice::GetInst()->GetDeviceContext()
 
+#define DELETE_UNVAILUBLE(key) if(key) { delete key; key = nullptr; }
+
 #define CLONE(type) public: virtual type* Clone() { return new type(*this); }
 #define CLONE_DISABLE(type) public: virtual type* Clone() { return nullptr; assert(nullptr); }
 
@@ -229,6 +231,7 @@ enum class SHAPE_TYPE
 	CIRCLE,
 	CUBE,
 	SPHERE,
+	FRUSTUM,
 	END,
 };
 

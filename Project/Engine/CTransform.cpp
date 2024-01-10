@@ -25,6 +25,17 @@ void CTransform::finaltick()
 	m_matWorldScale = XMMatrixIdentity();
 	m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
 	
+	// Bounding Box 행렬 구하기
+	float x = m_vRelativeScale.x ;
+	float y = m_vRelativeScale.y ;
+	float z = m_vRelativeScale.z ;
+
+	m_fBoundingRadius = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+
+	m_matWorldBoundingScale = XMMatrixIdentity();
+	m_matWorldBoundingScale = XMMatrixScaling(m_fBoundingRadius, m_fBoundingRadius, m_fBoundingRadius);
+	
+	
 	Matrix matRot = XMMatrixIdentity();
 	matRot = XMMatrixRotationX(m_vRelativeRot.x);
 	matRot *= XMMatrixRotationY(m_vRelativeRot.y);
@@ -34,6 +45,7 @@ void CTransform::finaltick()
 
 	
 	m_matWorld = m_matWorldScale * matRot * matTranslation;
+	m_matWorldBoundingBox = m_matWorldBoundingScale * matRot * matTranslation;
 
 	Vec3 vDefaultDir[3] = {
 		  Vec3(1.f, 0.f, 0.f)
@@ -45,6 +57,8 @@ void CTransform::finaltick()
 	{
 		m_vWorldDir[i] = m_vRelativeDir[i] = XMVector3TransformNormal(vDefaultDir[i], matRot);
 	}
+	
+	m_fBoundingRadius = m_matWorldBoundingScale._11;
 
 	// 부모 오브젝트 확인
 	CGameObject* pParent = GetOwner()->GetParent();
@@ -63,8 +77,12 @@ void CTransform::finaltick()
 		{
 			m_matWorldScale = pParent->Transform()->m_matWorldScale;
 			m_matWorld *= pParent->Transform()->m_matWorld;
+
+			m_matWorldBoundingScale = pParent->Transform()->m_matWorldBoundingScale;
+			m_matWorldBoundingBox *= pParent->Transform()->m_matWorldBoundingBox;
 		}
-		
+
+		m_fBoundingRadius = m_matWorldBoundingScale._11;
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -74,6 +92,7 @@ void CTransform::finaltick()
 	}
 
 	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
+	
 }
 
 void CTransform::UpdateData()

@@ -10,12 +10,14 @@ private:
 
     wstring         m_strKey;
     wstring         m_strRelativePath;
+    wstring         m_strDirectoryPath;
 
     bool            m_bEngine;  // 엔진이 관리하는 리소스
 
 private:
     void SetKey(const wstring& _strKey) { m_strKey = _strKey; }
     void SetRelativePath(const wstring& _strPath) { m_strRelativePath = _strPath; }
+    void SetDirectoryPath(const wstring& _strPath) { m_strDirectoryPath = _strPath; }
 
     void AddRef() { ++m_iRefCount; }
     void Release();
@@ -38,6 +40,7 @@ public:
 public:
     const wstring& GetKey() { return m_strKey; }
     const wstring& GetRelativePath() { return m_strRelativePath; }
+    const wstring& GetDirectoryPath() { return m_strDirectoryPath; }
     RES_TYPE GetType() { return m_Type; }
     bool IsEngineRes() { return m_bEngine; }
 

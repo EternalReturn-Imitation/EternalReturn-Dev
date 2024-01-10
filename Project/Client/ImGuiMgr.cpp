@@ -149,6 +149,8 @@ void ImGuiMgr::render()
 #include "ListUI.h"
 #include "MenuUI.h"
 
+#include "BehaviorTreeListUI.h"
+
 void ImGuiMgr::CreateUI()
 {
     UI* pUI = nullptr;
@@ -173,12 +175,17 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(true);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
-
     // ListUI
     pUI = new ListUI;
     pUI->SetModal(true);
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    // BehaviorTree
+    pUI = new BehaviorTreeListUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
 
 
     for (const auto& pair : m_mapUI)

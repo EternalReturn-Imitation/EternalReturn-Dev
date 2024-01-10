@@ -7,8 +7,9 @@ class ContentUI :
     public UI
 {
 private:
-    TreeUI*             m_Tree;
-    vector<wstring>     m_vecResPath;    
+    TreeUI*                 m_Tree;
+    vector<wstring>         m_vecResPath;
+    map<wstring, wstring>   m_mapFolderPath;
 
 public:
     virtual void init() override;
@@ -23,7 +24,7 @@ public:
 
 private:
     void FindFileName(const wstring& _FolderPath);
-    RES_TYPE GetResTypeByExt(const wstring& _relativepath);
+    RES_TYPE GetResTypeByExt(const wstring& _relativepath, wstring& _FileKey, wstring& _Dir);
 
 public:
     ContentUI();

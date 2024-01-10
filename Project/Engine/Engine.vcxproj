@@ -172,6 +172,8 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClInclude Include="CAnim2D.h" />
     <ClInclude Include="CAnimator2D.h" />
+    <ClInclude Include="CBehaviorTree.h" />
+    <ClInclude Include="CBehaviorTreeMgr.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider2D.h" />
     <ClInclude Include="CCollisionMgr.h" />
@@ -184,6 +186,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEventMgr.h" />
     <ClInclude Include="CFontMgr.h" />
+    <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicsShader.h" />
     <ClInclude Include="CKeyMgr.h" />
@@ -229,6 +232,8 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClCompile Include="CAnim2D.cpp" />
     <ClCompile Include="CAnimator2D.cpp" />
+    <ClCompile Include="CBehaviorTree.cpp" />
+    <ClCompile Include="CBehaviorTreeMgr.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider2D.cpp" />
     <ClCompile Include="CCollisionMgr.cpp" />
@@ -244,6 +249,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEventMgr.cpp" />
     <ClCompile Include="CFontMgr.cpp" />
+    <ClCompile Include="CFrustum.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicsShader.cpp" />
     <ClCompile Include="CKeyMgr.cpp" />

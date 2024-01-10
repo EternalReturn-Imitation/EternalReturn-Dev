@@ -15,6 +15,7 @@
 #include "ImGuiMgr.h"
 #include "OutlinerUI.h"
 #include "InspectorUI.h"
+#include "BehaviorTreeListUI.h"
 #include "CLevelSaveLoad.h"
 
 
@@ -106,6 +107,21 @@ int MenuUI::render_update()
                 }
 
                 ImGui::EndMenu();
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("AiTree Window"))
+            {
+                BehaviorTreeListUI* pNodeUI = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
+                pNodeUI->SetActive(true);
+                pNodeUI->ResetNodeLinker();
+            }
+
+            if (ImGui::MenuItem("BlackBoardList Window"))
+            {
+                BehaviorTreeListUI* pNodeUI = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
+                pNodeUI->OpenBlackBoardListUI();
             }
 
             ImGui::EndMenu();
@@ -201,8 +217,8 @@ void MenuUI::CreateEmptyObject()
 void MenuUI::CreateEmptyMaterial()
 {
     Ptr<CMaterial> pNewMtrl = new CMaterial;
-    CResMgr::GetInst()->AddRes<CMaterial>(L"material\\EmptyMtrl.mtrl", pNewMtrl);
-    pNewMtrl->Save(pNewMtrl->GetKey());
+    CResMgr::GetInst()->AddRes<CMaterial>(L"EmptyMtrl", L"material\\Custom\\", L".mtrl", pNewMtrl);
+    pNewMtrl->Save(pNewMtrl->GetRelativePath());
 }
 
 void MenuUI::AddComponent(COMPONENT_TYPE _type)
@@ -238,10 +254,13 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         pSelectedObject->AddComponent(new CLight2D);
         break;
     case COMPONENT_TYPE::LIGHT3D:
-        //pSelectedObject->AddComponent(new CLight3D);
+        pSelectedObject->AddComponent(new CLight3D);
         break;
     case COMPONENT_TYPE::CAMERA:
         pSelectedObject->AddComponent(new CCamera);
+        break;
+    case COMPONENT_TYPE::BEHAVIORTREE:
+        pSelectedObject->AddComponent(new CBehaviorTree);
         break;
     case COMPONENT_TYPE::MESHRENDER:
         pSelectedObject->AddComponent(new CMeshRender);
@@ -253,10 +272,10 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         pSelectedObject->AddComponent(new CTileMap);
         break;
     case COMPONENT_TYPE::LANDSCAPE:
-        //pSelectedObject->AddComponent(new CLandScape);
+        // pSelectedObject->AddComponent(new CLandScape);
         break;
     case COMPONENT_TYPE::DECAL:
-        //pSelectedObject->AddComponent(new CDecal);
+        pSelectedObject->AddComponent(new CDecal);
         break;
     }
 

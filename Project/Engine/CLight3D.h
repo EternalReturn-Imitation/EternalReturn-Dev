@@ -15,6 +15,8 @@ private:
 
     UINT            m_LightIdx;
 
+    bool            m_bDebug;
+
 public:
     virtual void finaltick() override;
     void render();
@@ -32,12 +34,14 @@ public:
     void SetLightType(LIGHT_TYPE _type);
     void SetRadius(float _fRadius);
     void SetAngle(float _Angle) { m_LightInfo.Angle = _Angle; }
+    void SetDebug(bool _Debug) { m_bDebug = _Debug; }
     
     Vec3 GetLightColor() { return m_LightInfo.Color.vDiffuse; }
     Vec3 GetLightAmbient() { return m_LightInfo.Color.vAmbient; }
     LIGHT_TYPE GetLightType() { return (LIGHT_TYPE)m_LightInfo.LightType; }
     float GetRadius() { return m_LightInfo.Radius; }
     float GetAngle() { return m_LightInfo.Angle; }
+    bool IsDebug() { return m_bDebug; }
 
     CLONE(CLight3D);
 public:

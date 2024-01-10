@@ -3,6 +3,9 @@
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 	: CComponent(_type)
+	, m_bFrustumCheck(false)
+	, m_fBoundingBoxScale(0.f)
+	, m_fBoundingBoxOffsetScale(0.f)
 {
 }
 

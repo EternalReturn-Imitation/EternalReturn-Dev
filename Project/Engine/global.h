@@ -14,10 +14,12 @@ using std::map;
 using std::make_pair;
 using std::wstring;
 using std::string;
+using std::unordered_map;
 
 #include <typeinfo>
 #include <assert.h>
 
+using std::type_info;
 
 // FileSystem
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING

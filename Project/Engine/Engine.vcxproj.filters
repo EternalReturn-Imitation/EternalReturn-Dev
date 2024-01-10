@@ -151,17 +151,26 @@
     <ClInclude Include="CFontMgr.h">
       <Filter>Source\03. Manager\10. FontMgr</Filter>
     </ClInclude>
+    <ClInclude Include="CBehaviorTree.h">
+      <Filter>Source\06. Component\8. BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="CBehaviorTreeMgr.h">
+      <Filter>Source\06. Component\8. BehaviorTree\BehaviorTreeMgr</Filter>
+    </ClInclude>
     <ClInclude Include="CLight3D.h">
       <Filter>Source\06. Component\5. Light3D</Filter>
-    </ClInclude>
-    <ClInclude Include="CSkyBox.h">
-      <Filter>Source\06. Component\RenderComponent\6. SkyBox</Filter>
     </ClInclude>
     <ClInclude Include="CDecal.h">
       <Filter>Source\06. Component\RenderComponent\4. Decal</Filter>
     </ClInclude>
+    <ClInclude Include="CSkyBox.h">
+      <Filter>Source\06. Component\RenderComponent\6.SkyBox</Filter>
+    </ClInclude>
     <ClInclude Include="CMRT.h">
-      <Filter>Source\03. Manager\06. RenderMgr\MRT</Filter>
+      <Filter>Source\02. Device\MRT</Filter>
+    </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Source\06. Component\3. Camera\Frustum</Filter>
     </ClInclude>
     <ClInclude Include="CSQLMgr.h">
       <Filter>Source\03. Manager\11. SQLMgr</Filter>
@@ -303,23 +312,32 @@
     <ClCompile Include="CResMgr_Init.cpp">
       <Filter>Source\03. Manager\05. ResMgr</Filter>
     </ClCompile>
+    <ClCompile Include="CBehaviorTree.cpp">
+      <Filter>Source\06. Component\8. BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="CBehaviorTreeMgr.cpp">
+      <Filter>Source\06. Component\8. BehaviorTree\BehaviorTreeMgr</Filter>
+    </ClCompile>
     <ClCompile Include="CLight3D.cpp">
       <Filter>Source\06. Component\5. Light3D</Filter>
-    </ClCompile>
-    <ClCompile Include="CSkyBox.cpp">
-      <Filter>Source\06. Component\RenderComponent\6. SkyBox</Filter>
     </ClCompile>
     <ClCompile Include="CDecal.cpp">
       <Filter>Source\06. Component\RenderComponent\4. Decal</Filter>
     </ClCompile>
+    <ClCompile Include="CSkyBox.cpp">
+      <Filter>Source\06. Component\RenderComponent\6.SkyBox</Filter>
+    </ClCompile>
     <ClCompile Include="CMRT.cpp">
-      <Filter>Source\03. Manager\06. RenderMgr\MRT</Filter>
+      <Filter>Source\02. Device\MRT</Filter>
     </ClCompile>
     <ClCompile Include="CRenderMgr_init.cpp">
       <Filter>Source\03. Manager\06. RenderMgr</Filter>
     </ClCompile>
     <ClCompile Include="CSQLMgr.cpp">
       <Filter>Source\03. Manager\11. SQLMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CFrustum.cpp">
+      <Filter>Source\06. Component\3. Camera\Frustum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -462,25 +480,28 @@
       <UniqueIdentifier>{b1a42f85-f96c-490d-a570-365243b1a620}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\06. Component\5. Light3D">
-      <UniqueIdentifier>{f77d9737-0c18-4b57-bc1f-0e4a650b0a9f}</UniqueIdentifier>
+      <UniqueIdentifier>{a18393c7-26e2-42d2-82b6-7eacb63487db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\8. BehaviorTree">
+      <UniqueIdentifier>{cfbc5080-d40e-4c6f-bbe4-ce108bb031b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\8. BehaviorTree\BehaviorTreeMgr">
+      <UniqueIdentifier>{0c382bc1-e8e5-4d0d-860a-16f4f827ef87}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\06. Component\6. Animator2D">
       <UniqueIdentifier>{7d787944-7b75-432b-91a9-8452604ba075}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\RenderComponent\6. SkyBox">
-      <UniqueIdentifier>{cdaf2dfe-96ef-4fd7-a1c9-a117acce104d}</UniqueIdentifier>
+    <Filter Include="Source\06. Component\7. Animator3D">
+      <UniqueIdentifier>{306ed43e-28a0-4961-aed9-5562fcaecb07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\Render">
-      <UniqueIdentifier>{31f4c0ab-b897-4a96-a254-ee69d6140c88}</UniqueIdentifier>
+    <Filter Include="Source\06. Component\RenderComponent\6.SkyBox">
+      <UniqueIdentifier>{857f4b1c-9fc1-4349-9a03-88ba124fc1e2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\Util">
-      <UniqueIdentifier>{899e7034-3aea-46b6-8c68-0607a36193f7}</UniqueIdentifier>
+    <Filter Include="Source\02. Device\MRT">
+      <UniqueIdentifier>{16d7cd40-5202-4830-9771-8a2bf70982af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\PostProcess">
-      <UniqueIdentifier>{57bf77ab-10fb-4e5d-99c9-5e7586f16619}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\03. Manager\06. RenderMgr\MRT">
-      <UniqueIdentifier>{fb1e3652-0419-433e-a994-f0c90d9dc1e6}</UniqueIdentifier>
+    <Filter Include="Source\06. Component\3. Camera\Frustum">
+      <UniqueIdentifier>{d5e264ca-0a77-43bd-b295-0f3283f7920e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\11. SQLMgr">
       <UniqueIdentifier>{87fcd018-8ac4-4f73-a181-d6fe920412a2}</UniqueIdentifier>
@@ -493,53 +514,53 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="value.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="std2d.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="debugshape.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="struct.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="tilemap.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
     <FxCompile Include="setcolor.fx">
       <Filter>Source\08. ShaderCode\Compute\SetColor</Filter>
     </FxCompile>
     <FxCompile Include="particle_update.fx">
       <Filter>Source\08. ShaderCode\Compute\ParticleUpdate</Filter>
     </FxCompile>
+    <FxCompile Include="particle_render.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="postprocess.fx">
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
     <FxCompile Include="test.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="std3d.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="std2d.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="func.fx">
-      <Filter>Source\08. ShaderCode\Util</Filter>
-    </FxCompile>
-    <FxCompile Include="value.fx">
-      <Filter>Source\08. ShaderCode\Util</Filter>
-    </FxCompile>
-    <FxCompile Include="particle_render.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="debugshape.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="postprocess.fx">
-      <Filter>Source\08. ShaderCode\PostProcess</Filter>
-    </FxCompile>
-    <FxCompile Include="struct.fx">
-      <Filter>Source\08. ShaderCode\Util</Filter>
-    </FxCompile>
-    <FxCompile Include="tilemap.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="skybox.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="decal.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
+      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="std3d_deferred.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="decal.fx">
+      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="light.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
+      <Filter>Source\08. ShaderCode</Filter>
+    </FxCompile>
+    <FxCompile Include="skybox.fx">
+      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

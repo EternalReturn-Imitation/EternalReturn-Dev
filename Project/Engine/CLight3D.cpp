@@ -8,8 +8,11 @@
 
 CLight3D::CLight3D()
 	: CComponent(COMPONENT_TYPE::LIGHT3D)
+	, m_bDebug(false)
 {	
 	SetLightType(LIGHT_TYPE::DIRECTIONAL);
+	SetLightColor(Vec3(1.f, 1.f, 1.f));
+	SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 }
 
 CLight3D::~CLight3D()
@@ -24,18 +27,29 @@ void CLight3D::finaltick()
 	
 	m_LightIdx = (UINT)CRenderMgr::GetInst()->RegisterLight3D(this, m_LightInfo);
 
-	DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 1.f), 0.f, true);
+	UINT LightType = m_LightInfo.LightType;
+	if (m_bDebug)
+	{
+		if (LightType == (UINT)LIGHT_TYPE::POINT)
+		{
+			DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 0.5f), 0.f, true);
+		}
+		else if (LightType == (UINT)LIGHT_TYPE::SPOT)
+		{
+			// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+		}
+	}
 }
 
 void CLight3D::render()
 {
 	Transform()->UpdateData();
 	
-	// Light ÀçÁú ¾÷µ¥ÀÌÆ®
+	// Light ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
 	m_Mtrl->SetScalarParam(INT_0, &m_LightIdx);
 	m_Mtrl->UpdateData();
 
-	// º¼·ý ¸Þ½Ã ·»´õ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Þ½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	m_Mesh->render();
 }
 
@@ -44,7 +58,7 @@ void CLight3D::SetRadius(float _Radius)
 {
 	m_LightInfo.Radius = _Radius;
 
-	// SphereMesh ÀÇ ·ÎÄÃ ¹ÝÁö¸§ÀÌ 0.5f ÀÌ±â ¶§¹®¿¡ 2¹è·Î Àû¿ë
+	// SphereMesh ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0.5f ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
 }
 
@@ -55,7 +69,7 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 
 	if (LIGHT_TYPE::DIRECTIONAL == (LIGHT_TYPE)m_LightInfo.LightType)
 	{
-		// ±¤¿øÀ» ·»´õ¸µ ÇÒ ¶§, ±¤¿øÀÇ ¿µÇâ¹üÀ§¸¦ Çü»óÈ­ ÇÒ ¼ö ÀÖ´Â ¸Þ½¬(º¼·ý¸Þ½¬) ¸¦ ¼±ÅÃ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Þ½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½Þ½ï¿½) ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
 	}
@@ -81,23 +95,39 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 
 void CLight3D::SaveToLevelFile(FILE* _File)
 {
-
+	fwrite(&m_LightInfo.Color.vAmbient, sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.Color.vDiffuse, sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.vWorldPos,sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.vWorldDir,sizeof(Vec4), 1, _File);
+	fwrite(&m_LightInfo.LightType,sizeof(UINT), 1, _File);
+	fwrite(&m_LightInfo.Radius,sizeof(float), 1, _File);
+	fwrite(&m_LightInfo.Angle,sizeof(float), 1, _File);
+	fwrite(&m_LightInfo.padding, sizeof(int), 1, _File);
+	fwrite(&m_LightIdx, sizeof(float), 1, _File);
 }
 
 void CLight3D::LoadFromLevelFile(FILE* _File)
 {
-
+	fread(&m_LightInfo.Color.vAmbient, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.Color.vDiffuse, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.vWorldPos, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.vWorldDir, sizeof(Vec4), 1, _File);
+	fread(&m_LightInfo.LightType, sizeof(UINT), 1, _File);
+	fread(&m_LightInfo.Radius, sizeof(float), 1, _File);
+	fread(&m_LightInfo.Angle, sizeof(float), 1, _File);
+	fread(&m_LightInfo.padding, sizeof(int), 1, _File);
+	fread(&m_LightIdx, sizeof(float), 1, _File);
 }
 
 void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
-	// Äõ¸® ¹®ÀÚ¿­ ÁØºñ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¿ï¿½ ï¿½Øºï¿½
 	const char* szQuery = "INSERT INTO LIGHT3D(GameObject_ID, LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	sqlite3_stmt* stmt;
 
-	// Äõ¸® ÁØºñ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½
 	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, _gameObjectID);
 		sqlite3_bind_blob(stmt, 2, &m_LightInfo, sizeof(m_LightInfo), SQLITE_STATIC);
@@ -113,17 +143,17 @@ void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 
 		sqlite3_bind_int(stmt, 7, m_LightIdx);
 
-		// Äõ¸® ½ÇÇà
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			// ¿¡·¯ Ã³¸®: Äõ¸® ½ÇÇà¿¡ ½ÇÆÐÇßÀ» °æ¿ì
+			// ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½à¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 			assert(false);
 		}
 
-		// ½ºÅ×ÀÌÆ®¸ÕÆ® Á¾·á
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// Äõ¸® ÁØºñ¿¡ ½ÇÆÐÇßÀ» °æ¿ìÀÇ Ã³¸®
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 		assert(false);
 	}
 }
@@ -141,7 +171,7 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 			const void* data = sqlite3_column_blob(stmt, 0);
 			int bytes = sqlite3_column_bytes(stmt, 0);
 
-			// tLightInfo·Î º¯È¯
+			// tLightInfoï¿½ï¿½ ï¿½ï¿½È¯
 			if (bytes == sizeof(tLightInfo)) {
 				memcpy(&m_LightInfo, data, bytes);
 			}
@@ -149,7 +179,7 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 				assert(false);
 			}
 
-			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path µ¥ÀÌÅÍ ºÒ·¯¿À±â
+			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
 			const wchar_t* meshKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
 			const wchar_t* meshPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
 			const wchar_t* mtrlKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
@@ -158,19 +188,18 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 			LoadResRefFromDB(m_Mesh, meshKey, meshPath);
 			LoadResRefFromDB(m_Mtrl, mtrlKey, mtrlPath);
 
-			// Light_Idx µ¥ÀÌÅÍ ºÒ·¯¿À±â
+			// Light_Idx ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
 			m_LightIdx = sqlite3_column_int(stmt, 5);
 		}
 		else {
-			// ¿¡·¯ Ã³¸®: µ¥ÀÌÅÍ¸¦ Ã£Áö ¸øÇß°Å³ª Äõ¸®¿¡ ½ÇÆÐÇßÀ» °æ¿ì
+			// ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ß°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 			assert(false);
 		}
 
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// Äõ¸® ÁØºñ¿¡ ½ÇÆÐÇßÀ» °æ¿ìÀÇ Ã³¸®
+		// ï¿½ï¿½ï¿½ï¿½ ï¿½Øºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
 		assert(false);
 	}
 }
-

@@ -141,6 +141,19 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool Dep
 	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
 }
 
+void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest)
+{
+	tDebugShapeInfo info = {};
+
+	info.matWorld = _matWorld;
+	info.eShape = SHAPE_TYPE::FRUSTUM;
+	info.fMaxTime = 0.0f;
+	info.vColor = Vec4(1.f, 1.f, 1.f, 0.3f);
+	info.bDepthTest = DepthTest;
+
+	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
+}
+
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	, Vec3 _vRotation, float _fTime, bool DepthTest)
 {
@@ -150,7 +163,7 @@ void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	info.eShape = SHAPE_TYPE::SPHERE;
 	info.fMaxTime = _fTime;
 	info.vWorldPos = _vWorldPos;
-	info.vWorldScale = Vec3(_fRadius, _fRadius, 1.f);
+	info.vWorldScale = Vec3(_fRadius, _fRadius, _fRadius);
 	info.vWorldRotation = _vRotation;
 	info.vColor = _vColor;
 	info.bDepthTest = DepthTest;
@@ -273,7 +286,35 @@ void SaveResRef(Ptr<CRes> _Res, FILE* _File)
 	}
 }
 
-wstring SaveResRefToDB(Ptr<CRes> _Res)
+void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File)
+{
+	int i = 0;
+	if (nullptr == _Obj)
+	{
+		fwrite(&i, sizeof(i), 1, _File);
+	}
+	else
+	{
+		i = 1;
+		fwrite(&i, sizeof(i), 1, _File);
+	}
+}
+
+void LoadGameObjectPtr(wstring& _ObjName, FILE* _File)
+{
+}
+
+float Rad2Deg(float _radian)
+{
+	return _radian * 180 / XM_PI;
+}
+
+float Deg2Rad(float _Degree)
+{
+	return _Degree * XM_PI / 180;
+}
+
+const wchar_t* ToWString(COMPONENT_TYPE type)
 {
 	std::wstringstream wss;
 
@@ -311,7 +352,7 @@ void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
 //	int exists;
 //	wss >> exists;
 //	std::wstring line;
-//	std::getline(wss, line); // ¼ýÀÚ µÚÀÇ °³Çà ¹®ÀÚ¸¦ ¼Òºñ
+//	std::getline(wss, line); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Òºï¿½
 //
 //	if (exists) {
 //		std::wstring strKey, strRelativePath;
@@ -340,7 +381,7 @@ Vec3 WStringToVec3(const std::wstring& wstr)
 {
 	Vec3 vec;
 	std::wistringstream wss(wstr);
-	wchar_t comma; // ½°Ç¥¸¦ ÀúÀåÇÏ±â À§ÇÑ ÀÓ½Ã º¯¼ö
+	wchar_t comma; // ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 	wss >> vec.x >> comma >> vec.y >> comma >> vec.z;
 	return vec;

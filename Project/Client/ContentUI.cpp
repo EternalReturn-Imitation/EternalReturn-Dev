@@ -29,7 +29,6 @@ ContentUI::ContentUI()
 
 ContentUI::~ContentUI()
 {
-
 }
 
 void ContentUI::init()
@@ -59,10 +58,17 @@ void ContentUI::Reload()
 	wstring strContentPath = CPathMgr::GetInst()->GetContentPath();
 	FindFileName(strContentPath);
 
+	wstring strFileKey;
+	wstring stdDirPath;
+	wstring strExt;
+	// 파일명만 분리해서 key 값으로 사용하기.
+
+	// 가능하면 같은 폴더 확인
+
 	// 파일명으로 리소스 로딩
 	for (size_t i = 0; i < m_vecResPath.size(); ++i)
 	{
-		RES_TYPE type = GetResTypeByExt(m_vecResPath[i]);
+		RES_TYPE type = GetResTypeByExt(m_vecResPath[i], strFileKey, stdDirPath);
 
 		if (type == RES_TYPE::END)
 			continue;
@@ -73,7 +79,7 @@ void ContentUI::Reload()
 
 			break;
 		case RES_TYPE::MATERIAL:
-			CResMgr::GetInst()->Load<CMaterial>(m_vecResPath[i], m_vecResPath[i]);
+			CResMgr::GetInst()->Load<CMaterial>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
 		case RES_TYPE::PREFAB:
 
@@ -82,10 +88,10 @@ void ContentUI::Reload()
 
 			break;
 		case RES_TYPE::TEXTURE:
-			CResMgr::GetInst()->Load<CTexture>(m_vecResPath[i], m_vecResPath[i]);
+			CResMgr::GetInst()->Load<CTexture>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
 		case RES_TYPE::SOUND:
-			CResMgr::GetInst()->Load<CSound>(m_vecResPath[i], m_vecResPath[i]);
+			CResMgr::GetInst()->Load<CSound>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;		
 		}
 	}
@@ -101,7 +107,7 @@ void ContentUI::Reload()
 			if (pair.second->IsEngineRes())
 				continue;
 
-			wstring strFilePath = strContentPath + pair.first;
+			wstring strFilePath = strContentPath + pair.second->GetDirectoryPath() + pair.first;
 			if (!filesystem::exists(strFilePath))
 			{
 				tEvent evn = {};
@@ -185,11 +191,17 @@ void ContentUI::FindFileName(const wstring& _FolderPath)
 	FindClose(hFindHandle);
 }
 
-RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath)
+RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath, wstring& _FileKey, wstring& _Dir)
 {
 	wchar_t szExt[50] = {};
-	_wsplitpath_s(_relativepath.c_str(), 0, 0, 0, 0, 0, 0, szExt, 50);	
+	wchar_t szFileName[50] = {};
+	wchar_t szdrive[50] = {};
+	wchar_t szdir[50] = {};
+	_wsplitpath_s(_relativepath.c_str(), szdrive, 50, szdir, 50, szFileName, 50, szExt, 50);
 	wstring strExt = szExt;
+
+	_FileKey = szFileName + strExt;
+	_Dir = szdir;
 		
 	if (L".mdat" == strExt)
 		return RES_TYPE::MESHDATA;

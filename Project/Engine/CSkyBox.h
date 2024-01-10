@@ -20,6 +20,8 @@ public:
     void SetSkyBoxType(SKYBOX_TYPE _Type);
     void SetSkyBoxTexture(Ptr<CTexture> _Tex);
 
+    virtual void SaveToLevelFile(FILE* _File) override;
+    virtual void LoadFromLevelFile(FILE* _File) override;
 
 public:
     virtual void finaltick() override;
