@@ -352,7 +352,7 @@ void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
 //	int exists;
 //	wss >> exists;
 //	std::wstring line;
-//	std::getline(wss, line); // ���� ���� ���� ���ڸ� �Һ�
+//	std::getline(wss, line); // 숫자 뒤의 개행 문자를 소비
 //
 //	if (exists) {
 //		std::wstring strKey, strRelativePath;
@@ -381,7 +381,7 @@ Vec3 WStringToVec3(const std::wstring& wstr)
 {
 	Vec3 vec;
 	std::wistringstream wss(wstr);
-	wchar_t comma; // ��ǥ�� �����ϱ� ���� �ӽ� ����
+	wchar_t comma;  // 쉼표를 저장하기 위한 임시 변수
 
 	wss >> vec.x >> comma >> vec.y >> comma >> vec.z;
 	return vec;

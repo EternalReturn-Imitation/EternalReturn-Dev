@@ -93,15 +93,15 @@ void CCamera::finaltick()
 void CCamera::CalcViewMat()
 {
 	// ==============
-	// View ��� ���
+	// View 행렬 계산
 	// ==============
 	m_matView = XMMatrixIdentity();
 
-	// ī�޶� ��ǥ�� �������� �̵�
+	// 카메라 좌표를 원점으로 이동
 	Vec3 vCamPos = Transform()->GetRelativePos();
 	Matrix matViewTrans = XMMatrixTranslation(-vCamPos.x, -vCamPos.y, -vCamPos.z);
 
-	// ī�޶� �ٶ󺸴� ������ Z ��� �����ϰ� ����� ȸ�� ����� ����
+	// 카메라가 바라보는 방향을 Z 축과 평행하게 만드는 회전 행렬을 적용
 	Matrix matViewRot = XMMatrixIdentity();
 
 	Vec3 vR = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -115,30 +115,30 @@ void CCamera::CalcViewMat()
 	m_matView = matViewTrans * matViewRot;
 
 
-	// View ����� ���ϱ�
+	// View 역행렬 구하기
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 }
 
 void CCamera::CalcProjMat()
 {
 	// =============
-	// ���� ��� ���
+	// 투영 행렬 계산
 	// =============
 	m_matProj = XMMatrixIdentity();
 	
 	if (PROJ_TYPE::ORTHOGRAPHIC == m_ProjType)
 	{
-		// ���� ����
+		// 직교 투영
 		Vec2 vResolution = CDevice::GetInst()->GetRenderResolution();
 		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), m_Near, m_Far);
 	}
 	else
 	{
-		// ���� ����
+		// 원근 투영
 		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, m_Near, m_Far);
 	}
 
-	// ������� ����� ���ϱ�
+	// 투영행렬 역행렬 구하기
 	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
 }
 
@@ -197,15 +197,15 @@ void CCamera::SetCameraIndex(int _idx)
 
 void CCamera::SortObject()
 {
-	// ���� ������ �з����� ����
+	// 이전 프레임 분류정보 제거
 	clear();
 
-	// ���� ���� �����ͼ� �з�
+	// 현재 레벨 가져와서 분류
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
-		// ���̾� ����ũ Ȯ��
+		// 레이어 마스크 확인
 		if (m_iLayerMask & (1 << i))
 		{
 			CLayer* pLayer = pCurLevel->GetLayer(i);
@@ -215,14 +215,14 @@ void CCamera::SortObject()
 			{
 				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
 
-				// ������ ����� ���� ������Ʈ�� ����
-				if (   nullptr == pRenderCom 
+				// 렌더링 기능이 없는 오브젝트는 제외
+				if (   nullptr == pRenderCom
 					|| nullptr == pRenderCom->GetMaterial()
 					|| nullptr == pRenderCom->GetMaterial()->GetShader())
 					continue;
 
 				// Frustum Check
-				if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ����ü���� ���� �Ǵ�, �Ҽ� ���̾� Ȥ�� ���� ��ü ����ü���� üũ�� �Ǿ��ִ� ���
+				if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// 절두체렌더 여부 판단, 소속 레이어 혹은 본인 자체 절두체렌더 체크가 되어있는 경우
 				{
 					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
 					if (IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
@@ -232,7 +232,7 @@ void CCamera::SortObject()
 						continue;
 				}
 
-				// ���̴� �����ο� ���� �з�
+				// 쉐이더 도메인에 따른 분류
 				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
 				switch (eDomain)
 				{
@@ -270,15 +270,15 @@ void CCamera::SortObject()
 
 void CCamera::SortObject(CCamera* _MainCamera)
 {
-	// ���� ������ �з����� ����
+	// 이전 프레임 분류정보 제거
 	clear();
 
-	// ���� ���� �����ͼ� �з�
+	// 현재 레벨 가져와서 분류
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
-		// ���̾� ����ũ Ȯ��
+		// 레이어 마스크 확인
 		if (_MainCamera->m_iLayerMask & (1 << i))
 		{
 			CLayer* pLayer = pCurLevel->GetLayer(i);
@@ -288,14 +288,14 @@ void CCamera::SortObject(CCamera* _MainCamera)
 			{
 				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
 
-				// ������ ����� ���� ������Ʈ�� ����
+				// 렌더링 기능이 없는 오브젝트는 제외
 				if (nullptr == pRenderCom
 					|| nullptr == pRenderCom->GetMaterial()
 					|| nullptr == pRenderCom->GetMaterial()->GetShader())
 					continue;
 
 				// Frustum Check
-				if (_MainCamera->m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ����ü���� ���� �Ǵ�, �Ҽ� ���̾� Ȥ�� ���� ��ü ����ü���� üũ�� �Ǿ��ִ� ���
+				if (_MainCamera->m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// 절두체렌더 여부 판단, 소속 레이어 혹은 본인 자체 절두체렌더 체크가 되어있는 경우
 				{
 					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
 
@@ -306,7 +306,7 @@ void CCamera::SortObject(CCamera* _MainCamera)
 						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
 				}
 
-				// ���̴� �����ο� ���� �з�
+				// 쉐이더 도메인에 따른 분류
 				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
 				switch (eDomain)
 				{
@@ -344,7 +344,7 @@ void CCamera::SortObject(CCamera* _MainCamera)
 
 void CCamera::render()
 {
-	// ��� ������Ʈ
+	// 행렬 업데이트
 	g_transform.matView = m_matView;
 	g_transform.matViewInv = m_matViewInv;
 
@@ -353,15 +353,15 @@ void CCamera::render()
 
 	if (m_bMainCamera)
 	{
-		// ���̴� �����ο� ���� ���������� �׸���
-		// Deferred MRT �� ����
-		// Deferred ��ü���� Deferred MRT �� �׸���
+		// 쉐이더 도메인에 따라서 순차적으로 그리기
+		// Deferred MRT 로 변경
+		// Deferred 물체들을 Deferred MRT 에 그리기
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 		render_deferred();
 
-		// Light MRT �� ����
-		// ��ü�鿡 ����� ������ �׸���
-		// Deferred ��ü�� ���� �����Ű��
+		// Light MRT 로 변경
+		// 물체들에 적용될 광원을 그리기
+		// Deferred 물체에 광원 적용시키기
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
 
 		const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
@@ -370,9 +370,9 @@ void CCamera::render()
 			vecLight3D[i]->render();
 		}
 
-		// Deferred MRT �� �׸� ��ü�� Light MRT ����� ������ ���ļ�
-		// �ٽ� SwapChain Ÿ������ ���� �׸���
-		// SwapChain MRT �� ����
+		// Deferred MRT 에 그린 물체에 Light MRT 출력한 광원과 합쳐서
+		// 다시 SwapChain 타겟으로 으로 그리기
+		// SwapChain MRT 로 변경
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 		static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
@@ -397,7 +397,7 @@ void CCamera::render()
 	render_decal();
 	render_transparent();
 
-	// PostProcess - ��ó��
+	// PostProcess - 후처리
 	render_postprocess();
 
 	// UI
@@ -506,11 +506,11 @@ void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
-	// ���� ���ڿ� �غ�
+	// 쿼리 문자열 준비
 	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	sqlite3_stmt* stmt;
 
-	// ���� �غ�
+	// 쿼리 준비
 	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, _gameObjectID);
 		sqlite3_bind_double(stmt, 2, static_cast<double>(m_fAspectRatio));
@@ -520,17 +520,17 @@ void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 		sqlite3_bind_int(stmt, 6, m_iCamIdx);
 		sqlite3_bind_int(stmt, 7, static_cast<int>(m_bMainCamera));
 
-		// ���� ����
+		// 쿼리 실행
 		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			// ���� ó��: ���� ���࿡ �������� ���
+			// 에러 처리: 쿼리 실행에 실패했을 경우
 			assert(false);
 		}
 
-		// ������Ʈ��Ʈ ����
+		// 스테이트먼트 종료
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// ���� �غ� �������� ����� ó��
+		// 쿼리 준비에 실패했을 경우의 처리
 		assert(false);
 	}
 }

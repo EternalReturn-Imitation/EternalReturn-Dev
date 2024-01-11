@@ -10,12 +10,12 @@ void DeleteArray(T* (&Arr)[_Size])
 	}
 }
 
-// ������Ʈ ����
+// 오브젝트 생성
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName);
 
-// ������Ʈ ����
+// 오브젝트 삭제
 void DestroyObject(CGameObject* _DeletObject);
 
 // DrawDebugShape
@@ -34,7 +34,7 @@ void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, 
 void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest);
 
 
-// GameObject ��ȿ�� üũ
+// GameObject 유효성 체크
 bool IsValidObj(CGameObject*& _Target);
 
 
@@ -92,7 +92,7 @@ void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
 	int exists;
 	wss >> exists;
 	std::wstring line;
-	std::getline(wss, line); // ���� ���� ���� ���ڸ� �Һ�
+	std::getline(wss, line); // 숫자 뒤의 개행 문자를 소비
 
 	if (exists) {
 		std::wstring strKey, strRelativePath;
