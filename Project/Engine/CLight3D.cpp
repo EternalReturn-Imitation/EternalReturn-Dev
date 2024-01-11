@@ -36,7 +36,7 @@ void CLight3D::finaltick()
 		}
 		else if (LightType == (UINT)LIGHT_TYPE::SPOT)
 		{
-			// �� �����
+			// 콘 디버그
 		}
 	}
 }
@@ -45,11 +45,11 @@ void CLight3D::render()
 {
 	Transform()->UpdateData();
 	
-	// Light ���� ������Ʈ
+	// Light 재질 업데이트
 	m_Mtrl->SetScalarParam(INT_0, &m_LightIdx);
 	m_Mtrl->UpdateData();
 
-	// ���� �޽� ����
+	// 볼륨 메시 렌더
 	m_Mesh->render();
 }
 
@@ -58,7 +58,7 @@ void CLight3D::SetRadius(float _Radius)
 {
 	m_LightInfo.Radius = _Radius;
 
-	// SphereMesh �� ���� �������� 0.5f �̱� ������ 2��� ����
+	// SphereMesh 의 로컬 반지름이 0.5f 이기 때문에 2배로 적용
 	Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
 }
 
@@ -69,7 +69,7 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 
 	if (LIGHT_TYPE::DIRECTIONAL == (LIGHT_TYPE)m_LightInfo.LightType)
 	{
-		// ������ ������ �� ��, ������ ��������� ����ȭ �� �� �ִ� �޽�(�����޽�) �� ����
+		// 광원을 렌더링 할 때, 광원의 영향범위를 형상화 할 수 있는 메쉬(볼륨메쉬) 를 선택
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
 	}
@@ -123,11 +123,9 @@ void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
-	// ���� ���ڿ� �غ�
 	const char* szQuery = "INSERT INTO LIGHT3D(GameObject_ID, LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	sqlite3_stmt* stmt;
 
-	// ���� �غ�
 	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, _gameObjectID);
 		sqlite3_bind_blob(stmt, 2, &m_LightInfo, sizeof(m_LightInfo), SQLITE_STATIC);
@@ -143,17 +141,13 @@ void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 
 		sqlite3_bind_int(stmt, 7, m_LightIdx);
 
-		// ���� ����
 		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			// ���� ó��: ���� ���࿡ �������� ���
 			assert(false);
 		}
 
-		// ������Ʈ��Ʈ ����
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// ���� �غ� �������� ����� ó��
 		assert(false);
 	}
 }
@@ -171,7 +165,7 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 			const void* data = sqlite3_column_blob(stmt, 0);
 			int bytes = sqlite3_column_bytes(stmt, 0);
 
-			// tLightInfo�� ��ȯ
+			// tLightInfo로 변환
 			if (bytes == sizeof(tLightInfo)) {
 				memcpy(&m_LightInfo, data, bytes);
 			}
@@ -179,7 +173,7 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 				assert(false);
 			}
 
-			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path ������ �ҷ�����
+			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path 데이터 불러오기
 			const wchar_t* meshKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
 			const wchar_t* meshPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
 			const wchar_t* mtrlKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
@@ -188,18 +182,15 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 			LoadResRefFromDB(m_Mesh, meshKey, meshPath);
 			LoadResRefFromDB(m_Mtrl, mtrlKey, mtrlPath);
 
-			// Light_Idx ������ �ҷ�����
+			// Light_Idx 데이터 불러오기
 			m_LightIdx = sqlite3_column_int(stmt, 5);
 		}
 		else {
-			// ���� ó��: �����͸� ã�� ���߰ų� ������ �������� ���
 			assert(false);
 		}
-
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// ���� �غ� �������� ����� ó��
 		assert(false);
 	}
 }

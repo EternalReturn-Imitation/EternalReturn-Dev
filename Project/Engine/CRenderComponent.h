@@ -11,9 +11,9 @@ class CRenderComponent :
 private:
     Ptr<CMesh>              m_pMesh;
 
-    Ptr<CMaterial>          m_pSharedMtrl;  // ���� ���׸���
-    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial ���纻
-    Ptr<CMaterial>          m_pCurrentMtrl; // ���� ��� ���� ����
+    Ptr<CMaterial>          m_pSharedMtrl;  // 원본 메테리얼
+    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial 복사본
+    Ptr<CMaterial>          m_pCurrentMtrl;  // 현재 사용 중인 재질
 
     bool                    m_bFrustumCheck;
 
