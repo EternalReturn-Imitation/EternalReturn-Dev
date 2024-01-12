@@ -19,3 +19,13 @@ x64/
 
 #유니티 파일 제외
 unity_*.cpp
+
+#Engine, Script 빌드 파일 제외
+External/Library/Engine/Engine_d.idb
+External/Library/Engine/Engine_d.lib
+External/Library/Script/Script_d.idb
+External/Library/Script/Script_d.lib
+
+#DB관련 파일 제외
+/EldenRing-ER.drawio - draw.io_files/*
+/EldenRing-ER.drawio - draw.io.html
