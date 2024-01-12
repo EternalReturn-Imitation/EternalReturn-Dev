@@ -10,7 +10,6 @@ private:
     bool            m_bDeferred;
     bool            m_bEmissive;
 
-
 public:
     // Decal 렌더링에 광원이 적용 될 것인지 아닌지
     void SetDeferredDecal(bool _bDeferred);

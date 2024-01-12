@@ -18,6 +18,7 @@ private:
     Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
+
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
     void SetRelativeScale(Vec3 _vScale) { m_vRelativeScale = _vScale; }
@@ -46,6 +47,24 @@ public:
 public:
     virtual void finaltick() override;    
     void UpdateData();
+
+    void operator = (const CTransform& _OtherTransform)
+    {
+        m_vRelativePos = _OtherTransform.m_vRelativePos;
+        m_vRelativeScale = _OtherTransform.m_vRelativeScale;
+        m_vRelativeRot = _OtherTransform.m_vRelativeRot;
+        m_bAbsolute = _OtherTransform.m_bAbsolute;
+        m_matWorldScale = _OtherTransform.m_matWorldScale;
+        m_matWorld = _OtherTransform.m_matWorld;
+        m_matWorldInv = _OtherTransform.m_matWorldInv;
+
+
+        for (int i = 0; i < 3; ++i)
+        {
+            m_vRelativeDir[i] = _OtherTransform.m_vRelativeDir[i];
+            m_vWorldDir[i] = _OtherTransform.m_vWorldDir[i];
+        }
+    }
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

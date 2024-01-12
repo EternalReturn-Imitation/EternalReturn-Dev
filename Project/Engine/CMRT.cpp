@@ -25,6 +25,15 @@ void CMRT::Create(Ptr<CTexture>* _arrRTTex, UINT _RTCount, Ptr<CTexture> _DSTex)
 	m_RTCount = _RTCount;
 
 	m_DSTex = _DSTex;
+
+	m_Viewport.TopLeftX = 0;
+	m_Viewport.TopLeftY = 0;
+
+	m_Viewport.Width = _arrRTTex[0]->Width();
+	m_Viewport.Height = _arrRTTex[0]->Height();
+
+	m_Viewport.MinDepth = 0;
+	m_Viewport.MaxDepth = 1;
 }
 
 void CMRT::ClearTarget()
@@ -37,7 +46,7 @@ void CMRT::ClearTarget()
 	if (nullptr != m_DSTex)
 	{
 		CONTEXT->ClearDepthStencilView(m_DSTex->GetDSV().Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0.f);
-	}	
+	}
 }
 
 void CMRT::OMSet(bool _bStay)
@@ -46,7 +55,7 @@ void CMRT::OMSet(bool _bStay)
 	for (UINT i = 0; i < m_RTCount; ++i)
 	{
 		arrRTV[i] = m_arrRT[i]->GetRTV().Get();
-	}	
+	}
 
 	if (nullptr != m_DSTex)
 	{
@@ -57,10 +66,12 @@ void CMRT::OMSet(bool _bStay)
 		ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
 
 		if (_bStay)
-		{			
-			CONTEXT->OMGetRenderTargets(0, nullptr, pDSV.GetAddressOf());									
+		{
+			CONTEXT->OMGetRenderTargets(0, nullptr, pDSV.GetAddressOf());
 		}
 
 		CONTEXT->OMSetRenderTargets(m_RTCount, arrRTV, pDSV.Get());
 	}
+
+	CONTEXT->RSSetViewports(1, &m_Viewport);
 }

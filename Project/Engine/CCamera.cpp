@@ -24,9 +24,13 @@
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
+	, m_Frustum(this)
 	, m_fAspectRatio(1.f)
 	, m_fScale(1.f)
 	, m_Far(10000.f)
+	, m_FOV(XM_PI / 2.f)
+	, m_OrthoWidth(0.f)
+	, m_OrthoHeight(0.f)
 	, m_ProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_iLayerMask(0)
 	, m_iCamIdx(-1)
@@ -35,12 +39,19 @@ CCamera::CCamera()
 
 	Vec2 vRenderResol = CDevice::GetInst()->GetRenderResolution();
 	m_fAspectRatio = vRenderResol.x / vRenderResol.y;
+
+	m_OrthoWidth = vRenderResol.x;
+	m_OrthoHeight = vRenderResol.y;
 }
 
 CCamera::CCamera(const CCamera& _Other)
 	: CComponent(_Other)
+	, m_Frustum(this)
 	, m_fAspectRatio(_Other.m_fAspectRatio)
 	, m_fScale(_Other.m_fScale)
+	, m_FOV(_Other.m_FOV)
+	, m_OrthoWidth(_Other.m_OrthoWidth)
+	, m_OrthoHeight(_Other.m_OrthoHeight)
 	, m_ProjType(_Other.m_ProjType)
 	, m_iLayerMask(_Other.m_iLayerMask)
 	, m_iCamIdx(-1)
@@ -48,7 +59,7 @@ CCamera::CCamera(const CCamera& _Other)
 }
 
 CCamera::~CCamera()
-{	
+{
 }
 
 void CCamera::begin()
@@ -63,7 +74,9 @@ void CCamera::finaltick()
 {
 	CalcViewMat();
 
-	CalcProjMat();	
+	CalcProjMat();
+
+	m_Frustum.finaltick();
 }
 
 void CCamera::CalcViewMat()
@@ -101,17 +114,17 @@ void CCamera::CalcProjMat()
 	// 투영 행렬 계산
 	// =============
 	m_matProj = XMMatrixIdentity();
-	
+
 	if (PROJ_TYPE::ORTHOGRAPHIC == m_ProjType)
 	{
 		// 직교 투영
 		Vec2 vResolution = CDevice::GetInst()->GetRenderResolution();
-		m_matProj =  XMMatrixOrthographicLH(vResolution.x * (1.f / m_fScale), vResolution.y * (1.f / m_fScale), 1.f, 10000.f);
+		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), 1.f, 10000.f);
 	}
 	else
-	{	
+	{
 		// 원근 투영
-		m_matProj = XMMatrixPerspectiveFovLH(XM_PI / 2.f, m_fAspectRatio, 1.f, m_Far);
+		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, 1.f, m_Far);
 	}
 
 	// 투영행렬 역행렬 구하기
@@ -167,13 +180,19 @@ void CCamera::SortObject()
 				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
 
 				// 렌더링 기능이 없는 오브젝트는 제외
-				if (   nullptr == pRenderCom 
-					|| nullptr == pRenderCom->GetMaterial()
-					|| nullptr == pRenderCom->GetMaterial()->GetShader())
+				if (nullptr == pRenderCom
+					|| nullptr == pRenderCom->GetMaterial(0)
+					|| nullptr == pRenderCom->GetMaterial(0)->GetShader())
 					continue;
 
-				// 쉐이더 도메인에 따른 분류
-				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
+				// Frustum Check
+				/*if ( pRenderCom->IsFrustumCheck()
+					&& false == m_Frustum.FrustumCheckBound(vecObject[j]->Transform()->GetWorldPos()
+						, vecObject[j]->Transform()->GetRelativeScale().x / 5.f))
+					continue;*/
+
+					// 쉐이더 도메인에 따른 분류
+				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(0)->GetShader()->GetDomain();
 				switch (eDomain)
 				{
 				case SHADER_DOMAIN::DOMAIN_DEFERRED:
@@ -183,7 +202,6 @@ void CCamera::SortObject()
 				case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
 					m_vecDeferredDecal.push_back(vecObject[j]);
 					break;
-
 				case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					m_vecOpaque.push_back(vecObject[j]);
 					break;
@@ -201,8 +219,42 @@ void CCamera::SortObject()
 					break;
 				case SHADER_DOMAIN::DOMAIN_UI:
 					m_vecUI.push_back(vecObject[j]);
-					break;				
+					break;
 				}
+			}
+		}
+	}
+}
+
+void CCamera::SortObject_Shadow()
+{
+	// 이전 프레임 분류정보 제거
+	clear_shadow();
+
+	// 현재 레벨 가져와서 분류
+	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		// 레이어 마스크 확인
+		if (m_iLayerMask & (1 << i))
+		{
+			CLayer* pLayer = pCurLevel->GetLayer(i);
+			const vector<CGameObject*>& vecObject = pLayer->GetObjects();
+
+			for (size_t j = 0; j < vecObject.size(); ++j)
+			{
+				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
+
+				// 렌더링 기능이 없는 오브젝트는 제외
+				if (nullptr == pRenderCom
+					|| nullptr == pRenderCom->GetMaterial(0)
+					|| nullptr == pRenderCom->GetMaterial(0)->GetShader())
+				{
+					continue;
+				}
+
+				m_vecShadow.push_back(vecObject[j]);
 			}
 		}
 	}
@@ -222,7 +274,7 @@ void CCamera::render()
 	// Deferred 물체들을 Deferred MRT 에 그리기
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 	render_deferred();
-	
+
 	// Light MRT 로 변경
 	// 물체들에 적용될 광원을 그리기
 	// Deferred 물체에 광원 적용시키기
@@ -233,7 +285,7 @@ void CCamera::render()
 	{
 		vecLight3D[i]->render();
 	}
-	
+
 	// Deferred MRT 에 그린 물체에 Light MRT 출력한 광원과 합쳐서
 	// 다시 SwapChain 타겟으로 으로 그리기
 	// SwapChain MRT 로 변경
@@ -249,11 +301,12 @@ void CCamera::render()
 		pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
 		pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
 		pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
+		pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
 	}
 
 	pMtrl->UpdateData();
-	pRectMesh->render();
-	
+	pRectMesh->render(0);
+
 	// Forward Rendering
 	render_opaque();
 	render_mask();
@@ -265,6 +318,17 @@ void CCamera::render()
 
 	// UI
 	render_ui();
+}
+
+void CCamera::render_shadowmap()
+{
+	g_transform.matView = m_matView;
+	g_transform.matProj = m_matProj;
+
+	for (size_t i = 0; i < m_vecShadow.size(); ++i)
+	{
+		m_vecShadow[i]->render_shadowmap();
+	}
 }
 
 
@@ -279,6 +343,11 @@ void CCamera::clear()
 	m_vecTransparent.clear();
 	m_vecPost.clear();
 	m_vecUI.clear();
+}
+
+void CCamera::clear_shadow()
+{
+	m_vecShadow.clear();
 }
 
 void CCamera::render_deferred()

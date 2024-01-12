@@ -74,7 +74,7 @@ void DrawDebugRect(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool Dep
 
 	info.matWorld = _matWorld;
 	info.eShape = SHAPE_TYPE::RECT;
-	info.fMaxTime = _fTime;	
+	info.fMaxTime = _fTime;
 	info.vColor = _vColor;
 	info.bDepthTest = DepthTest;
 
@@ -82,7 +82,7 @@ void DrawDebugRect(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool Dep
 }
 
 void DrawDebugCircle(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation
-					, float _fTime, bool DepthTest)
+	, float _fTime, bool DepthTest)
 {
 	tDebugShapeInfo info = {};
 
@@ -104,7 +104,7 @@ void DrawDebugCircle(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool D
 
 	info.matWorld = _matWorld;
 	info.eShape = SHAPE_TYPE::CIRCLE;
-	info.fMaxTime = _fTime;	
+	info.fMaxTime = _fTime;
 	info.vColor = _vColor;
 	info.bDepthTest = DepthTest;
 
@@ -112,7 +112,7 @@ void DrawDebugCircle(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool D
 }
 
 void DrawDebugCube(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
-					, Vec3 _vRotation, float _fTime, bool DepthTest)
+	, Vec3 _vRotation, float _fTime, bool DepthTest)
 {
 	tDebugShapeInfo info = {};
 
@@ -202,6 +202,20 @@ const char* ToString(COMPONENT_TYPE type)
 	return COMPONENT_TYPE_STR[(UINT)type];
 }
 
+wstring GetRelativePath(const wstring& _strBase, const wstring& _strPath)
+{
+	wstring strRelativePath;
+	if (-1 == _strPath.find(_strBase))
+	{
+		return strRelativePath;
+	}
+
+	strRelativePath = _strPath.substr(_strBase.length(), _strPath.length());
+	return strRelativePath;
+
+	return wstring();
+}
+
 void SaveWString(const wstring& _str, FILE* _File)
 {	
 	UINT iLen = (UINT)_str.length();
@@ -218,6 +232,19 @@ void LoadWString(wstring& _str, FILE* _File)
 	fread(szBuffer, sizeof(wchar_t), iLen, _File);	
 
 	_str = szBuffer;
+}
+
+Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat)
+{
+	Matrix mat;
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			mat.m[i][j] = (float)_mat.Get(i, j);
+		}
+	}
+	return mat;
 }
 
 void SaveResRef(Ptr<CRes> _Res, FILE* _File)

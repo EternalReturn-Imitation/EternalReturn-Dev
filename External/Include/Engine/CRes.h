@@ -13,16 +13,17 @@ private:
 
     bool            m_bEngine;  // 엔진이 관리하는 리소스
 
-private:
+protected:
     void SetKey(const wstring& _strKey) { m_strKey = _strKey; }
     void SetRelativePath(const wstring& _strPath) { m_strRelativePath = _strPath; }
 
+private:
     void AddRef() { ++m_iRefCount; }
     void Release();
 
 
     // 리소스 바인딩
-    virtual void UpdateData() = 0;
+    virtual void UpdateData() {};
 
 private:
     // 파일로부터 로딩
@@ -47,6 +48,7 @@ public:
     virtual ~CRes();
 
     friend class CResMgr;
+    friend class CFBXLoader;
 
     template<typename T>
     friend class Ptr;

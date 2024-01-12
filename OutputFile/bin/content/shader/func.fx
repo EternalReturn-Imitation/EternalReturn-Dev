@@ -60,6 +60,7 @@ void CalcLight2D(float3 _vWorldPos, float3 _vWorldDir, inout tLightColor _Light)
     }
 }
 
+//이 빛을 받는 픽셀의 위치, 픽셀의 노말벡터, 픽셀이 받는 광원이 어떤것인지 인덱스 번호, 최종 연산 결과, 반사광의 세기
 void CalcLight3D(float3 _vViewPos, float3 _vViewNormal, int _LightIdx, inout tLightColor _Light, inout float _SpecPow)
 {
     tLightInfo LightInfo = g_Light3DBuffer[_LightIdx];
@@ -101,7 +102,8 @@ void CalcLight3D(float3 _vViewPos, float3 _vViewNormal, int _LightIdx, inout tLi
         // 포인트 라이트로부터 거리체크
         float fDist = distance(_vViewPos, vLightViewPos);            
         fDistPow = saturate(cos((fDist / LightInfo.Radius) * (PI / 2.f)));
-                               
+               
+        
         // ViewSpace 에서의 노말벡터와 광원의 방향을 내적 (램버트 코사인 법칙)    
         fLightPow = saturate(dot(_vViewNormal, -vViewLightDir)) * fDistPow;
         
@@ -112,16 +114,52 @@ void CalcLight3D(float3 _vViewPos, float3 _vViewNormal, int _LightIdx, inout tLi
         // 반사광의 세기 구하기
         fSpecPow = saturate(dot(vViewReflect, -vEye));
         fSpecPow = pow(fSpecPow, 20) * fDistPow;
-    }
-    
+    }    
     // Spot Light 인 경우
-    else
+    else if (2 == LightInfo.LightType)
     {
         // LightDir 과 Angle 값을 활용해서 SpotLight 구현해보기
         
-        // 포인트 라이트랑 동일
-    }
-      
+        // ViewSpace 에서의 광원의 위치
+        float3 vLightViewPos = mul(float4(LightInfo.vWorldPos.xyz, 1.f), g_matView).xyz;
+        
+        // ViewSpace 에서의 광원의 방향
+        vViewLightDir = normalize(mul(float4(normalize(LightInfo.vWorldDir.xyz), 0.f), g_matView)).xyz;
+        
+        //광원에서 픽셀로 가는 벡터
+        float3 vLightToPixel = normalize(_vViewPos - vLightViewPos);
+        
+        //스포트라이트의 제한 각 계산
+        float angleInRadians = LightInfo.Angle * 3.14159265358979323846 / 180.0;        
+        float cosInAngle = cos(angleInRadians);
+        
+        //스포트라이트의 방향과 제한 각을 내적한 결과
+        float spotAngle = dot(vViewLightDir, vLightToPixel);
+        
+        if (cosInAngle > 0 && cosInAngle < spotAngle)
+        {
+            //스포트 라이트부터 거리 체크
+            float fDist = distance(_vViewPos, vLightViewPos);
+            float fDistPow = saturate(1.f - (fDist / LightInfo.Radius))*0.9f;
+            
+            // ViewSpace 에서의 노말벡터와 광원의 방향을 내적 (램버트 코사인 법칙)    
+            fLightPow = saturate(dot(_vViewNormal, -vViewLightDir)) * fDistPow;
+            
+            // 반사광
+            float3 vViewReflect = normalize(vViewLightDir + 2.f * (dot(-vViewLightDir, _vViewNormal)) * _vViewNormal);
+            float3 vEye = normalize(_vViewPos);
+        
+            // 반사광의 세기 구하기
+            fSpecPow = saturate(dot(vViewReflect, -vEye));
+            fSpecPow = pow(fSpecPow, 20) * fDistPow;
+        }
+        else
+        {
+            fLightPow = 0.f;
+        }
+
+    }  
+    
     // 결과 전달하기
     _Light.vDiffuse += LightInfo.Color.vDiffuse * fLightPow; 
     _Light.vAmbient += LightInfo.Color.vAmbient;
@@ -172,6 +210,39 @@ void GaussianSample(in Texture2D _NoiseTex, float2 _vResolution, float _Nomalize
     }        
     
     _vOut = vOut;    
+}
+
+matrix GetBoneMat(int _iBoneIdx, int _iRowIdx)
+{
+    return g_arrBoneMat[(g_iBoneCount * _iRowIdx) + _iBoneIdx];
+}
+
+void Skinning(inout float3 _vPos, inout float3 _vTangent, inout float3 _vBinormal, inout float3 _vNormal
+    , inout float4 _vWeight, inout float4 _vIndices
+    , int _iRowIdx)
+{
+    tSkinningInfo info = (tSkinningInfo) 0.f;
+
+    if (_iRowIdx == -1)
+        return;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (0.f == _vWeight[i])
+            continue;
+
+        matrix matBone = GetBoneMat((int) _vIndices[i], _iRowIdx);
+
+        info.vPos += (mul(float4(_vPos, 1.f), matBone) * _vWeight[i]).xyz;
+        info.vTangent += (mul(float4(_vTangent, 0.f), matBone) * _vWeight[i]).xyz;
+        info.vBinormal += (mul(float4(_vBinormal, 0.f), matBone) * _vWeight[i]).xyz;
+        info.vNormal += (mul(float4(_vNormal, 0.f), matBone) * _vWeight[i]).xyz;
+    }
+
+    _vPos = info.vPos;
+    _vTangent = normalize(info.vTangent);
+    _vBinormal = normalize(info.vBinormal);
+    _vNormal = normalize(info.vNormal);
 }
 
 #endif

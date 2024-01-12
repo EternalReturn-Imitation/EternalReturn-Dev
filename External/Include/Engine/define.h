@@ -34,7 +34,6 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2차원 광원
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
-	BEHAVIORTREE,	// 행동트리
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링
@@ -43,8 +42,7 @@ enum class COMPONENT_TYPE
 	LANDSCAPE,		// 3차원 지형
 	SKYBOX,			// SkyBox
 	DECAL,			// 내부 렌더링
-	
-
+		
 	END,
 
 	// custom
@@ -209,7 +207,6 @@ enum class SHADER_DOMAIN
 	DOMAIN_LIGHT,			// 광원 타입 
 	DOMAIN_UNDEFINED,		// 미정
 };
-
 
 enum class EVENT_TYPE
 {

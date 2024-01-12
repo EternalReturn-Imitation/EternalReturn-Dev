@@ -11,6 +11,10 @@ struct tVertex
 	Vec3 vNormal;
 	Vec3 vTangent;
 	Vec3 vBinormal;
+
+	// Animation 가중치 및 인덱스
+	Vec4 vWeights;
+	Vec4 vIndices;
 };
 
 typedef tVertex Vtx;
@@ -162,7 +166,50 @@ struct tParticleModule
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
 };
 
+// ============
+// Animation 3D
+// ============
+struct tFrameTrans
+{
+	Vec4	vTranslate;
+	Vec4	vScale;
+	Vec4	qRot;
+};
 
+struct tMTKeyFrame
+{
+	double	dTime;
+	int		iFrame;
+	Vec3	vTranslate;
+	Vec3	vScale;
+	Vec4	qRot;
+};
+
+
+struct tMTBone
+{
+	wstring				strBoneName;
+	int					iDepth;
+	int					iParentIndx;
+	Matrix				matOffset;	// Offset 행렬(뼈 -> 루트 까지의 행렬)
+	Matrix				matBone;   // 이거 안씀
+	vector<tMTKeyFrame>	vecKeyFrame;
+};
+
+struct tMTAnimClip
+{
+	wstring			strAnimName;
+	int				iStartFrame;
+	int				iEndFrame;
+	int				iFrameLength;
+
+	double			dStartTime;
+	double			dEndTime;
+	double			dTimeLength;
+	float			fUpdateTime; // 이거 안씀
+
+	FbxTime::EMode	eMode;
+};
 
 // ===================
 // 상수버퍼 대응 구조체
@@ -180,12 +227,22 @@ struct tTransform
 	Matrix matWVP;
 };
 
+
 extern tTransform g_transform;
 
 
+// Material 계수
+struct tMtrlData
+{
+	Vec4 vDiff;
+	Vec4 vSpec;
+	Vec4 vAmb;
+	Vec4 vEmv;
+};
 
 struct tMtrlConst
 {
+	tMtrlData mtrl;
 	int arrInt[4];
 	float arrFloat[4];
 	Vec2 arrV2[4];
@@ -194,6 +251,9 @@ struct tMtrlConst
 
 	// 텍스쳐 세팅 true / false 용도
 	int arrTex[(UINT)TEX_PARAM::TEX_END];
+
+	// 3D Animation 정보
+	int	arrAnimData[4];
 };
 
 

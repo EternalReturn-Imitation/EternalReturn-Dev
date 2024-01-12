@@ -10,8 +10,6 @@ void DeleteArray(T* (&Arr)[_Size])
 	}
 }
 
-
-
 // 오브젝트 생성
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
@@ -33,7 +31,6 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bo
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);
 
-
 // GameObject 유효성 체크
 bool IsValidObj(CGameObject*& _Target);
 
@@ -44,10 +41,14 @@ const wchar_t* ToWSTring(RES_TYPE);
 const char* ToString(COMPONENT_TYPE);
 const wchar_t* ToWSTring(COMPONENT_TYPE);
 
+// Relative Path 가져오기
+wstring GetRelativePath(const wstring& _strBase, const wstring& _strPath);
 
 // Save / Load
 void SaveWString(const wstring& _str, FILE* _File);
 void LoadWString(wstring& _str, FILE* _File);
+
+Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat);
 
 class CRes;
 template<typename T>

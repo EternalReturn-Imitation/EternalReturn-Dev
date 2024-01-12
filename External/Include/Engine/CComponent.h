@@ -13,12 +13,12 @@ class CComponent :
     public CEntity
 {
 private:
-    CGameObject*         m_pOwner;
+    CGameObject* m_pOwner;
     const COMPONENT_TYPE m_Type;
 
 public:
     COMPONENT_TYPE GetType() { return m_Type; }
-    CGameObject* GetOwner() { return m_pOwner ; }
+    CGameObject* GetOwner() { return m_pOwner; }
 
 public:
     virtual void begin() {}
@@ -30,7 +30,7 @@ public:
     virtual void SaveToLevelFile(FILE* _File) = 0;
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
 
-public:  
+public:
     GET_OTHER_COMPONENT(Transform);
     GET_OTHER_COMPONENT(MeshRender);
     GET_OTHER_COMPONENT(Camera);
@@ -38,6 +38,7 @@ public:
     GET_OTHER_COMPONENT(Light2D);
     GET_OTHER_COMPONENT(TileMap);
     GET_OTHER_COMPONENT(Animator2D);
+    GET_OTHER_COMPONENT(Animator3D);
 
 public:
     CComponent(COMPONENT_TYPE _Type);
