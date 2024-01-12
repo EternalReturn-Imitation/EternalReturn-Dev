@@ -12,7 +12,7 @@
 
 
 MeshRenderUI::MeshRenderUI()
-	: ComponentUI("##MeshRender", COMPONENT_TYPE::MESHRENDER)	
+	: ComponentUI("##MeshRender", COMPONENT_TYPE::MESHRENDER)
 {
 	SetName("MeshRender");
 }
@@ -30,10 +30,10 @@ int MeshRenderUI::render_update()
 	char szBuff[50] = {};
 
 	Ptr<CMesh> pMesh = GetTarget()->MeshRender()->GetMesh();
-	Ptr<CMaterial> pMtrl = GetTarget()->MeshRender()->GetMaterial();
-		
+	Ptr<CMaterial> pMtrl = GetTarget()->MeshRender()->GetMaterial(0);
+
 	ImGui::Text("Mesh    ");
-	ImGui::SameLine();	
+	ImGui::SameLine();
 	GetResKey(pMesh.Get(), szBuff, 50);
 	ImGui::InputText("##MeshName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
 
@@ -57,7 +57,7 @@ int MeshRenderUI::render_update()
 
 
 	ImGui::SameLine();
-	
+
 
 	if (ImGui::Button("##MeshSelectBtn", ImVec2(18, 18)))
 	{
@@ -73,7 +73,7 @@ int MeshRenderUI::render_update()
 		// 항목 선택시 호출받을 델리게이트 등록
 		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&MeshRenderUI::SelectMesh);
 	}
-		
+
 	ImGui::Text("Material");
 	ImGui::SameLine();
 	GetResKey(pMtrl.Get(), szBuff, 50);
@@ -89,7 +89,7 @@ int MeshRenderUI::render_update()
 			CRes* pRes = (CRes*)pNode->GetData();
 			if (RES_TYPE::MATERIAL == pRes->GetType())
 			{
-				GetTarget()->MeshRender()->SetMaterial((CMaterial*)pRes);
+				GetTarget()->MeshRender()->SetMaterial((CMaterial*)pRes, 0);
 			}
 		}
 
@@ -128,5 +128,5 @@ void MeshRenderUI::SelectMaterial(DWORD_PTR _Key)
 {
 	string strKey = (char*)_Key;
 	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(wstring(strKey.begin(), strKey.end()));
-	GetTarget()->MeshRender()->SetMaterial(pMtrl);
+	GetTarget()->MeshRender()->SetMaterial(pMtrl, 0);
 }

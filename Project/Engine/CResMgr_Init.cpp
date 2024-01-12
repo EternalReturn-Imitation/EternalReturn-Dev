@@ -4,6 +4,7 @@
 
 #include "CSetColorShader.h"
 #include "CParticleUpdateShader.h"
+#include "CAnimation3DShader.h"
 
 void CResMgr::CreateDefaultMesh()
 {
@@ -153,8 +154,8 @@ void CResMgr::CreateDefaultMesh()
 	// ========
 	// CubeMesh
 	// ========
-	Vtx arrCube[24] = {};
 
+	Vtx arrCube[24] = {};
 	// À­¸é
 	arrCube[0].vPos = Vec3(-0.5f, 0.5f, 0.5f);
 	arrCube[0].vColor = Vec4(1.f, 1.f, 1.f, 1.f);
@@ -299,7 +300,6 @@ void CResMgr::CreateDefaultMesh()
 	AddRes<CMesh>(L"CubeMesh", pMesh);
 	vecIdx.clear();
 
-
 	pMesh = new CMesh(true);
 	vecIdx.push_back(0); vecIdx.push_back(1); vecIdx.push_back(2); vecIdx.push_back(3); vecIdx.push_back(0);
 	vecIdx.push_back(7); vecIdx.push_back(6); vecIdx.push_back(1); vecIdx.push_back(2); vecIdx.push_back(5);
@@ -309,10 +309,6 @@ void CResMgr::CreateDefaultMesh()
 	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"CubeMesh_Debug", pMesh);
 	vecIdx.clear();
-
-
-
-
 
 	// ===========
 	// Sphere Mesh
@@ -511,6 +507,28 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	AddRes(pShader->GetKey(), pShader);
 
+	// =================
+	// DebugShape_Sphere Shader
+	// Topology : LineStrip
+	// RS_TYPE  : CULL_NONE
+	// DS_TYPE  : NO_TEST_NO_WRITE
+	// BS_TYPE  : AlphaBlend
+	// g_vec4_0 : OutColor
+	// ==================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"DebugShape_SphereShader");
+	pShader->CreateVertexShader(L"shader\\debugshape.fx", "VS_DebugShape");
+	pShader->CreatePixelShader(L"shader\\debugshape.fx", "PS_DebugShape_Sphere");
+
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+
+	AddRes(pShader->GetKey(), pShader);
+
 	// ============================
 	// TileMap Shader
 	// 
@@ -637,6 +655,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreateVertexShader(L"shader\\std3d.fx", "VS_Std3D");
 	pShader->CreatePixelShader(L"shader\\std3d.fx", "PS_Std3D");
 
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
 	pShader->SetRSType(RS_TYPE::CULL_FRONT);
 	pShader->SetDSType(DS_TYPE::LESS);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
@@ -661,7 +680,8 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreateVertexShader(L"shader\\skybox.fx", "VS_SkyBoxShader");
 	pShader->CreatePixelShader(L"shader\\skybox.fx", "PS_SkyBoxShader");
 
-	pShader->SetRSType(RS_TYPE::CULL_FRONT);	
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	//pShader->SetRSType(RS_TYPE::WIRE_FRAME);
 	pShader->SetDSType(DS_TYPE::LESS_EQUAL);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
 
@@ -683,7 +703,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreateVertexShader(L"shader\\decal.fx", "VS_Decal");
 	pShader->CreatePixelShader(L"shader\\decal.fx", "PS_Decal");
 
-	pShader->SetRSType(RS_TYPE::CULL_FRONT);	
+	pShader->SetRSType(RS_TYPE::CULL_FRONT);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DECAL);
@@ -729,14 +749,12 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreateVertexShader(L"shader\\std3d_deferred.fx", "VS_Std3D_Deferred");
 	pShader->CreatePixelShader(L"shader\\std3d_deferred.fx", "PS_Std3D_Deferred");
 
-	pShader->SetRSType(RS_TYPE::CULL_BACK);	
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
 	pShader->SetDSType(DS_TYPE::LESS_EQUAL);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);
 
 	// Parameter	
 	pShader->AddTexParam(TEX_0, "Output Texture");
-	pShader->AddScalarParam(FLOAT_0, "Spec Coeffient");
-
 
 	AddRes(pShader->GetKey(), pShader);
 
@@ -756,7 +774,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_LIGHT);
 	pShader->SetRSType(RS_TYPE::CULL_BACK);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
-	pShader->SetBSType(BS_TYPE::ONE_ONE);	
+	pShader->SetBSType(BS_TYPE::ONE_ONE);
 
 	AddRes(pShader->GetKey(), pShader);
 
@@ -780,8 +798,6 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	AddRes(pShader->GetKey(), pShader);
 
-
-	
 	// =====================================
 	// MergeShader
 	// MRT              : SwapChain
@@ -802,6 +818,51 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_LIGHT);
 
 	AddRes(pShader->GetKey(), pShader);
+
+	// =====================================
+	// ShadowMap Shader
+	// MRT              : SHADOWMAP
+	// Domain           : DOMAIN_LIGHT	
+	// Rasterizer       : CULL_BACK
+	// DepthStencil     : LESS
+	// Blend            : Default
+	// =====================================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"ShadowMapShader");
+
+	pShader->CreateVertexShader(L"shader\\light.fx", "VS_ShadowMap");
+	pShader->CreatePixelShader(L"shader\\light.fx", "PS_ShadowMap");
+
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_LIGHT);
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// =====================================
+	// Tess Shader
+	// MRT              : SwapChain
+	// Domain           : DOMAIN_OPAQUE	
+	// Rasterizer       : CULL_NONE
+	// DepthStencil     : LESS
+	// Blend            : Default
+	// =====================================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"TessShader");
+
+	pShader->CreateVertexShader(L"shader\\tess.fx", "VS_Tess");
+	pShader->CreateHullShader(L"shader\\tess.fx", "HS_Tess");
+	pShader->CreateDomainShader(L"shader\\tess.fx", "DS_Tess");
+	pShader->CreatePixelShader(L"shader\\tess.fx", "PS_Tess");
+
+	//pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_OPAQUE);
+
+	pShader->SetTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+
+	AddRes(pShader->GetKey(), pShader);
 }
 
 void CResMgr::CreateDefaultComputeShader()
@@ -818,6 +879,12 @@ void CResMgr::CreateDefaultComputeShader()
 	pCS = new CParticleUpdateShader(128, 1, 1);
 	pCS->SetKey(L"ParticleUpdateCS");
 	pCS->CreateComputeShader(L"shader\\particle_update.fx", "CS_ParticleUpdate");
+	AddRes(pCS->GetKey(), pCS);
+
+	// Animation Matrix Update ½¦ÀÌ´õ
+	pCS = new CAnimation3DShader(256, 1, 1);
+	pCS->SetKey(L"Animation3DUpdateCS");
+	pCS->CreateComputeShader(L"shader\\animation3d.fx", "CS_Animation3D");
 	AddRes(pCS->GetKey(), pCS);
 }
 
@@ -854,6 +921,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShapeShader"));
 	AddRes(L"DebugShapeMtrl", pMtrl);
+
+	// DebugShape_Sphere Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_SphereShader"));
+	AddRes(L"DebugShapeSphereMtrl", pMtrl);
 
 	// TileMap Material
 	pMtrl = new CMaterial(true);
@@ -895,12 +967,10 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DecalShader"));
 	AddRes(L"DecalMtrl", pMtrl);
 
+	// DeferredDecal
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DeferredDecalShader"));
 	AddRes(L"DeferredDecalMtrl", pMtrl);
-
-	
-
 
 	// Std3D_DeferredShader
 	pMtrl = new CMaterial(true);
@@ -910,7 +980,7 @@ void CResMgr::CreateDefaultMaterial()
 	// DirLightMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DirLightShader"));
-	AddRes(L"DirLightMtrl", pMtrl);	
+	AddRes(L"DirLightMtrl", pMtrl);
 
 	// PointLightMtrl
 	pMtrl = new CMaterial(true);
@@ -920,7 +990,15 @@ void CResMgr::CreateDefaultMaterial()
 	// MergeMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"MergeShader"));
-	AddRes(L"MergeMtrl", pMtrl);	
+	AddRes(L"MergeMtrl", pMtrl);
 
+	// ShadowMapMtrl
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ShadowMapShader"));
+	AddRes(L"ShadowMapMtrl", pMtrl);
 
+	// TessMtrl
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TessShader"));
+	AddRes(L"TessMtrl", pMtrl);
 }

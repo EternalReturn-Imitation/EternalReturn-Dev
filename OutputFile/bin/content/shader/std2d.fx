@@ -154,7 +154,7 @@ float4 PS_Std2DLight(VS_Light_OUT _in) : SV_Target
     }
         
     float3 vNormal = (float3)0.f;
-    if(g_btex_1)
+    if (g_btex_1)
     {
         // Normal °ª ÃßÃâ
         vNormal = g_tex_1.Sample(g_sam_0, _in.vUV).xyz;

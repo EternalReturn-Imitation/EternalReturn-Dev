@@ -50,33 +50,33 @@ void CRenderMgr::CreateMRT()
 
         Ptr<CTexture> arrRTTex[8] = {};
         arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"ColorTargetTex", vResol.x, vResol.y
-                                        , DXGI_FORMAT_R8G8B8A8_UNORM
-                                        , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            , DXGI_FORMAT_R8G8B8A8_UNORM
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
         arrRTTex[1] = CResMgr::GetInst()->CreateTexture(L"NormalTargetTex", vResol.x, vResol.y
-                                        , DXGI_FORMAT_R32G32B32A32_FLOAT
-                                        , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            , DXGI_FORMAT_R32G32B32A32_FLOAT
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
         arrRTTex[2] = CResMgr::GetInst()->CreateTexture(L"PositionTargetTex", vResol.x, vResol.y
-                                        , DXGI_FORMAT_R32G32B32A32_FLOAT
-                                        , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            , DXGI_FORMAT_R32G32B32A32_FLOAT
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
         arrRTTex[3] = CResMgr::GetInst()->CreateTexture(L"EmissiveTargetTex", vResol.x, vResol.y
-                                        , DXGI_FORMAT_R8G8B8A8_UNORM
-                                        , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            , DXGI_FORMAT_R8G8B8A8_UNORM
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
         arrRTTex[4] = CResMgr::GetInst()->CreateTexture(L"DataTargetTex", vResol.x, vResol.y
-                                        , DXGI_FORMAT_R32G32B32A32_FLOAT
-                                        , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            , DXGI_FORMAT_R32G32B32A32_FLOAT
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
         m_MRT[(UINT)MRT_TYPE::DEFERRED]->Create(arrRTTex, 5, nullptr);
     }
 
     // ====================
-    // Light MRT 만들기
+    // Deferred Decal 만들기
     // ====================
     {
-        m_MRT[(UINT)MRT_TYPE::DEFERRED_DECAL] = new CMRT;       
+        m_MRT[(UINT)MRT_TYPE::DEFERRED_DECAL] = new CMRT;
 
         Ptr<CTexture> arrRTTex[8] = {};
         arrRTTex[0] = CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex");
@@ -97,14 +97,38 @@ void CRenderMgr::CreateMRT()
 
         Ptr<CTexture> arrRTTex[8] = {};
         arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DiffuseTargetTex", vResol.x, vResol.y
-                                , DXGI_FORMAT_R8G8B8A8_UNORM
-                                , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            , DXGI_FORMAT_R8G8B8A8_UNORM
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
         arrRTTex[1] = CResMgr::GetInst()->CreateTexture(L"SpecularTargetTex", vResol.x, vResol.y
-                                , DXGI_FORMAT_R8G8B8A8_UNORM
-                                , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+            , DXGI_FORMAT_R8G8B8A8_UNORM
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
-        m_MRT[(UINT)MRT_TYPE::LIGHT]->Create(arrRTTex, 2, nullptr);
+        arrRTTex[2] = CResMgr::GetInst()->CreateTexture(L"ShadowTargetTex", vResol.x, vResol.y
+            , DXGI_FORMAT_R32_FLOAT
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+
+        m_MRT[(UINT)MRT_TYPE::LIGHT]->Create(arrRTTex, 3, nullptr);
+    }
+
+    // ====================
+    // ShadowMap MRT 만들기
+    // ====================
+    {
+        m_MRT[(UINT)MRT_TYPE::SHADOWMAP] = new CMRT;
+
+        Vec2 vResol = Vec2(8192, 8192);
+
+        Ptr<CTexture> arrRTTex[8] = {};
+        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapTex", vResol.x, vResol.y
+            , DXGI_FORMAT_R32_FLOAT
+            , D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
+
+        Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapDepthTex", vResol.x, vResol.y
+            , DXGI_FORMAT_D32_FLOAT
+            , D3D11_BIND_DEPTH_STENCIL);
+
+        m_MRT[(UINT)MRT_TYPE::SHADOWMAP]->Create(arrRTTex, 1, pDSTex);
     }
 }
 
@@ -115,6 +139,6 @@ void CRenderMgr::ClearMRT()
         if (nullptr != m_MRT[i])
         {
             m_MRT[i]->ClearTarget();
-        }         
+        }
     }
 }

@@ -201,6 +201,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			Component = new CLight2D;
 			break;
 		case COMPONENT_TYPE::LIGHT3D:
+			Component = new CLight3D;
 			break;
 		case COMPONENT_TYPE::CAMERA:
 			Component = new CCamera;
@@ -215,8 +216,13 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			Component = new CTileMap;
 			break;
 		case COMPONENT_TYPE::LANDSCAPE:			
+			Component = nullptr;
+			break;
+		case COMPONENT_TYPE::SKYBOX:
+			Component = new CSkyBox;
 			break;
 		case COMPONENT_TYPE::DECAL:			
+			Component = new CDecal;
 			break;
 		}
 

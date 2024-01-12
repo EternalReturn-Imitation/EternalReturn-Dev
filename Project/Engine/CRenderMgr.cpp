@@ -7,6 +7,7 @@
 
 #include "CCamera.h"
 #include "CLight2D.h"
+#include "CLight3D.h"
 
 #include "CResMgr.h"
 #include "CMRT.h"
@@ -19,9 +20,9 @@ CRenderMgr::CRenderMgr()
 {
     Vec2 vResolution = CDevice::GetInst()->GetRenderResolution();
     m_RTCopyTex = CResMgr::GetInst()->CreateTexture(L"RTCopyTex"
-                                                    , (UINT)vResolution.x, (UINT)vResolution.y
-                                                    , DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_BIND_SHADER_RESOURCE
-                                                    , D3D11_USAGE_DEFAULT);
+        , (UINT)vResolution.x, (UINT)vResolution.y
+        , DXGI_FORMAT_R8G8B8A8_UNORM, D3D11_BIND_SHADER_RESOURCE
+        , D3D11_USAGE_DEFAULT);
 
     CResMgr::GetInst()->FindRes<CMaterial>(L"GrayMtrl")->SetTexParam(TEX_0, m_RTCopyTex);
 
@@ -40,14 +41,22 @@ CRenderMgr::~CRenderMgr()
     DeleteArray(m_MRT);
 }
 
+
+
 void CRenderMgr::render()
 {
     // 광원 및 전역 데이터 업데이트 및 바인딩
     UpdateData();
 
+    // MRT Clear    
+    ClearMRT();
+
+    // Dynamic ShadowMap
+    render_shadowmap();
+
     // 렌더 함수 호출
     (this->*RENDER_FUNC)();
-    
+
     // 광원 해제
     Clear();
 }
@@ -55,34 +64,40 @@ void CRenderMgr::render()
 
 void CRenderMgr::render_play()
 {
-    // 카메라 기준 렌더링
-    for (size_t i = 0; i < m_vecCam.size(); ++i)
-    {
-        if (nullptr == m_vecCam[i])
-            continue;
+    //// 카메라 기준 렌더링
+    //for (size_t i = 0; i < m_vecCam.size(); ++i)
+    //{
+    //    if (nullptr == m_vecCam[i])
+    //        continue;
+    //    
+    //    // 물체 분류작업
+    //    // - 해당 카메라가 볼 수 있는 물체(레이어 분류)
+    //    // - 재질에 따른 분류 (재질->쉐이더) 쉐이더 도메인
+    //    //   쉐이더 도메인에 따라서 렌더링 순서분류
+    //    m_vecCam[i]->SortObject();
+    //    
+    //    m_vecCam[i]->render();
+    //}
 
-        // 물체 분류작업
-        // - 해당 카메라가 볼 수 있는 물체(레이어 분류)
-        // - 재질에 따른 분류 (재질->쉐이더) 쉐이더 도메인
-        //   쉐이더 도메인에 따라서 렌더링 순서분류
-        m_vecCam[i]->SortObject();
+    // MRT Clear    
+    ClearMRT();
 
+    // 물체 분류
+    m_vecCam[0]->SortObject();
 
-        m_vecCam[i]->render();
-    }
+    // 출력 타겟 지정    
+    m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
+    m_vecCam[0]->render();
 }
 
 void CRenderMgr::render_editor()
 {
-    // MRT Clear    
-    ClearMRT();
-
     // 물체 분류
     m_pEditorCam->SortObject();
 
     // 출력 타겟 지정    
     m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
-    m_pEditorCam->render();    
+    m_pEditorCam->render();
 }
 
 
@@ -93,13 +108,13 @@ int CRenderMgr::RegisterCamera(CCamera* _Cam, int _idx)
         m_vecCam.resize(_idx + 1);
     }
 
-    m_vecCam[_idx] = _Cam;    
+    m_vecCam[_idx] = _Cam;
     return _idx;
 }
 
 void CRenderMgr::SetRenderFunc(bool _IsPlay)
 {
-    if(_IsPlay)
+    if (_IsPlay)
         RENDER_FUNC = &CRenderMgr::render_play;
     else
         RENDER_FUNC = &CRenderMgr::render_editor;
@@ -142,6 +157,17 @@ void CRenderMgr::UpdateData()
     pGlobalBuffer->SetData(&GlobalData, sizeof(tGlobal));
     pGlobalBuffer->UpdateData();
     pGlobalBuffer->UpdateData_CS();
+}
+
+void CRenderMgr::render_shadowmap()
+{
+    // ShadowMap MRT 로 교체
+    GetMRT(MRT_TYPE::SHADOWMAP)->OMSet();
+
+    for (size_t i = 0; i < m_vecLight3D.size(); ++i)
+    {
+        m_vecLight3D[i]->render_shadowmap();
+    }
 }
 
 

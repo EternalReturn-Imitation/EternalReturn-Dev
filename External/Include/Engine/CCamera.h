@@ -1,13 +1,21 @@
 #pragma once
 #include "CComponent.h"
 
+#include "CFrustum.h"
+
 class CCamera :
     public CComponent
 {
 private:
+    CFrustum    m_Frustum;
+
     float       m_fAspectRatio;
     float       m_fScale;           // Orthograpic 에서 사용하는 카메라 배율
     float       m_Far;
+    float       m_FOV;
+
+    float       m_OrthoWidth;       // Orthgraphic 에서의 가로 투영 범위
+    float       m_OrthoHeight;      // OrthGraphic 에서의 세로 투영 범위
 
     PROJ_TYPE   m_ProjType;
 
@@ -21,7 +29,6 @@ private:
 
     int         m_iCamIdx;          // 카메라 우선순위
 
-
     vector<CGameObject*>    m_vecDeferred;
     vector<CGameObject*>    m_vecDeferredDecal;
 
@@ -32,7 +39,7 @@ private:
     vector<CGameObject*>    m_vecUI;
     vector<CGameObject*>    m_vecPost;
 
-
+    vector<CGameObject*>    m_vecShadow;
 
 public:
     void SetProjType(PROJ_TYPE _Type) { m_ProjType = _Type; }
@@ -47,14 +54,28 @@ public:
     void SetLayerMask(int _iLayer, bool _Visible);
     void SetLayerMaskAll(bool _Visible);
 
+    void SetFOV(float _Radian) { m_FOV = _Radian; }
+    float GetFOV() { return m_FOV; }
+
+    void SetOrthoWidth(float _width) { m_OrthoWidth = _width; }
+    void SetOrthoHeight(float _height) { m_OrthoHeight = _height; }
+
+    float GetorthoWidth() { return m_OrthoWidth; }
+    float GetOrthoHeight() { return m_OrthoHeight; }
+
     void SetCameraIndex(int _idx);
 
     const Matrix& GetViewMat() { return m_matView; }
     const Matrix& GetProjMat() { return m_matProj; }
 
+    const Matrix& GetViewInvMat() { return m_matViewInv; }
+    const Matrix& GetProjInvMat() { return m_matProjInv; }
+
 public:
     void SortObject();
+    void SortObject_Shadow();
     void render();
+    void render_shadowmap();
 
 public:
     virtual void begin() override;
@@ -63,6 +84,7 @@ public:
 
 private:
     void clear();
+    void clear_shadow();
 
     void render_deferred();
     void render_opaque();

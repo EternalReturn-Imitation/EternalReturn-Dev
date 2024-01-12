@@ -163,6 +163,21 @@
     <ClInclude Include="CMRT.h">
       <Filter>Source\03. Manager\06. RenderMgr\MRT</Filter>
     </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Source\06. Component\3. Camera\Frustum</Filter>
+    </ClInclude>
+    <ClInclude Include="CFBXLoader.h">
+      <Filter>Source\09. Module\FBXLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="CMeshData.h">
+      <Filter>Source\07. Resource\7. MeshData</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimator3D.h">
+      <Filter>Source\06. Component\7. Animator3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimation3DShader.h">
+      <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -315,6 +330,21 @@
     <ClCompile Include="CRenderMgr_init.cpp">
       <Filter>Source\03. Manager\06. RenderMgr</Filter>
     </ClCompile>
+    <ClCompile Include="CFrustum.cpp">
+      <Filter>Source\06. Component\3. Camera\Frustum</Filter>
+    </ClCompile>
+    <ClCompile Include="CFBXLoader.cpp">
+      <Filter>Source\09. Module\FBXLoader</Filter>
+    </ClCompile>
+    <ClCompile Include="CMeshData.cpp">
+      <Filter>Source\07. Resource\7. MeshData</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimator3D.cpp">
+      <Filter>Source\06. Component\7. Animator3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimation3DShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -455,26 +485,41 @@
     <Filter Include="Source\03. Manager\10. FontMgr">
       <UniqueIdentifier>{b1a42f85-f96c-490d-a570-365243b1a620}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\5. Light3D">
-      <UniqueIdentifier>{f77d9737-0c18-4b57-bc1f-0e4a650b0a9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\06. Component\6. Animator2D">
       <UniqueIdentifier>{7d787944-7b75-432b-91a9-8452604ba075}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\06. Component\5. Light3D">
+      <UniqueIdentifier>{0b20433a-9675-49a3-bdab-b1cdc70e5e73}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\06. Component\RenderComponent\6. SkyBox">
-      <UniqueIdentifier>{cdaf2dfe-96ef-4fd7-a1c9-a117acce104d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\08. ShaderCode\Render">
-      <UniqueIdentifier>{31f4c0ab-b897-4a96-a254-ee69d6140c88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\08. ShaderCode\Util">
-      <UniqueIdentifier>{899e7034-3aea-46b6-8c68-0607a36193f7}</UniqueIdentifier>
+      <UniqueIdentifier>{13da6f08-efd4-4ba4-bb0f-9417425f9092}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\08. ShaderCode\PostProcess">
-      <UniqueIdentifier>{57bf77ab-10fb-4e5d-99c9-5e7586f16619}</UniqueIdentifier>
+      <UniqueIdentifier>{95f422ad-ac5e-455b-afa5-67297eeb5a9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Render">
+      <UniqueIdentifier>{6aa456f4-2149-40c9-a5aa-b93c1764f400}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Util">
+      <UniqueIdentifier>{34fd68d8-e577-4413-8c6c-76de7f1b804a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\06. RenderMgr\MRT">
-      <UniqueIdentifier>{fb1e3652-0419-433e-a994-f0c90d9dc1e6}</UniqueIdentifier>
+      <UniqueIdentifier>{cd84714e-7507-400d-b225-8552722f4069}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\3. Camera\Frustum">
+      <UniqueIdentifier>{8038f071-ad51-4a15-a8c3-427a126e917b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\09. Module\FBXLoader">
+      <UniqueIdentifier>{5e0d6f76-4f1d-4782-a05e-bc1c743ce2b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\07. Resource\7. MeshData">
+      <UniqueIdentifier>{fe6384b9-102a-4745-9f64-34b8309bc0af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\AnimationUpdate">
+      <UniqueIdentifier>{bea52b17-6168-4819-ab64-a9f94a349421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\7. Animator3D">
+      <UniqueIdentifier>{c3816095-a001-424c-8dd8-a2c41e9ef186}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -493,32 +538,32 @@
     <FxCompile Include="test.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
-    <FxCompile Include="std3d.fx">
+    <FxCompile Include="postprocess.fx">
+      <Filter>Source\08. ShaderCode\PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="debugshape.fx">
+      <Filter>Source\08. ShaderCode\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="particle_render.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
     <FxCompile Include="std2d.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
+    <FxCompile Include="std3d.fx">
+      <Filter>Source\08. ShaderCode\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="tilemap.fx">
+      <Filter>Source\08. ShaderCode\Render</Filter>
+    </FxCompile>
     <FxCompile Include="func.fx">
       <Filter>Source\08. ShaderCode\Util</Filter>
-    </FxCompile>
-    <FxCompile Include="value.fx">
-      <Filter>Source\08. ShaderCode\Util</Filter>
-    </FxCompile>
-    <FxCompile Include="particle_render.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="debugshape.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="postprocess.fx">
-      <Filter>Source\08. ShaderCode\PostProcess</Filter>
     </FxCompile>
     <FxCompile Include="struct.fx">
       <Filter>Source\08. ShaderCode\Util</Filter>
     </FxCompile>
-    <FxCompile Include="tilemap.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
+    <FxCompile Include="value.fx">
+      <Filter>Source\08. ShaderCode\Util</Filter>
     </FxCompile>
     <FxCompile Include="skybox.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
@@ -531,6 +576,12 @@
     </FxCompile>
     <FxCompile Include="light.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="tess.fx">
+      <Filter>Source\08. ShaderCode\Render</Filter>
+    </FxCompile>
+    <FxCompile Include="animation3d.fx">
+      <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

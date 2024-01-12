@@ -18,7 +18,7 @@ struct VS_OUT
 {
     float4 vPosition : SV_Position;
     float2 vUV : TEXCOORD;   
-        
+    
     float3 vViewPos : POSITION;
     
     float3 vViewNormal : NORMAL;
@@ -41,7 +41,7 @@ VS_OUT VS_Std3D(VS_IN _in)
     VS_OUT output = (VS_OUT) 0.f;
         
     // 로컬에서의 Normal 방향을 월드로 이동      
-    output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);    
+    output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
     
     output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV)).xyz;
     output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV)).xyz;
@@ -94,8 +94,8 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
                     + vOutColor.xyz * lightcolor.vAmbient.xyz
                     + saturate(g_Light3DBuffer[0].Color.vDiffuse.xyz) * 0.3f * fSpecPow * SPEC_COEFF;
     
-    if(IS_SKYBOX_ENV)
-    {        
+    if (IS_SKYBOX_ENV)
+    {
         float3 vEye = normalize(_in.vViewPos);
         float3 vEyeReflect = normalize(reflect(vEye, vViewNormal));
         

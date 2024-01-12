@@ -161,8 +161,7 @@ int CDevice::CreateView()
     // DepthStencil 용도 텍스쳐 생성
     CResMgr::GetInst()->CreateTexture(L"DepthStencilTex"
         , (UINT)m_vRenderResolution.x, (UINT)m_vRenderResolution.y
-        , DXGI_FORMAT_D24_UNORM_S8_UINT, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT);        
-
+        , DXGI_FORMAT_D24_UNORM_S8_UINT, D3D11_BIND_DEPTH_STENCIL, D3D11_USAGE_DEFAULT);
 
     return S_OK;
 }
@@ -227,6 +226,62 @@ int CDevice::CreateDepthStencilState()
     Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
     DEVICE->CreateDepthStencilState(&Desc, m_DSState[(UINT)DS_TYPE::NO_TEST_NO_WRITE].GetAddressOf());
 
+    // 볼륨 메쉬의 BackFace 보다 앞에 있는 영역에 stencil 값 증가
+    Desc.DepthEnable = true;
+    Desc.DepthFunc = D3D11_COMPARISON_GREATER;          // 렌더링되는 볼륨메쉬의 뒷면이 더 멀어야 통과
+    Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;  // 볼륨메쉬는 깊이를 남기지 않음
+
+    Desc.StencilEnable = true;                          // 스텐실 On
+
+    Desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;  // 스텐실 테스트는 항상 통과
+    Desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;    // 스텐실 값 1 증가
+    Desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;    // 유지
+    Desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;    // 유지 
+
+
+    // 볼륨 메쉬의 FrontFace 보다 뒤에 있는 영역에 stencil 값 유지
+    Desc.DepthEnable = true;
+    Desc.DepthFunc = D3D11_COMPARISON_LESS;             // 렌더링되는 볼륨메쉬의 앞면이 더 가까워야 통과
+    Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;  // 볼륨메쉬는 깊이를 남기지 않음
+
+    Desc.StencilEnable = true;                          // 스텐실 On
+
+    Desc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+    Desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;   // 유지
+    Desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;   // 유지
+    Desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;   // 깊이 테스트 실패 -> 스텐실 값 감소
+
+
+    // 볼륨 메쉬내부 판정, 스텐실값 변경 (CULL_NONE)
+    Desc.DepthEnable = true;
+    Desc.DepthFunc = D3D11_COMPARISON_GREATER;             // 렌더링되는 볼륨메쉬의 앞면이 더 가까워야 통과
+    Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;  // 볼륨메쉬는 깊이를 남기지 않음
+
+    Desc.StencilEnable = true;                          // 스텐실 On
+
+    Desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    Desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_INCR;   // 
+    Desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;   // 유지
+    Desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;   // 깊이 테스트 실패 -> 스텐실 값 감소
+
+    Desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    Desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_DECR;   // 유지
+    Desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;   // 유지
+    Desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;   // 깊이 테스트 실패 -> 스텐실 값 감소
+
+    // 스텐실 값이 1을 유지하고 있는 영역에 대해서 통과
+    Desc.DepthEnable = false;
+    Desc.DepthFunc = D3D11_COMPARISON_GREATER;           // 렌더링되는 볼륨메쉬의 뒷면이 더 멀어야 통과
+    Desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;   // 볼륨메쉬는 깊이를 남기지 않음
+
+    Desc.StencilEnable = true;                           // 스텐실 On
+
+    Desc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;  // 스텐실 테스트는 항상 통과
+    Desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_ZERO;        // 스텐실 값 0
+    Desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_ZERO;        // 스텐실 값 0
+    Desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_ZERO;   // 스텐실 값 0
+
+
 
     return S_OK;
 }
@@ -290,7 +345,6 @@ int CDevice::CreateBlendState()
     Desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     DEVICE->CreateBlendState(&Desc, m_BSState[(UINT)BS_TYPE::ONE_ONE].GetAddressOf());
 
-
     // DEFEREED_DECAL_BLEND
     Desc.AlphaToCoverageEnable = false;
     Desc.IndependentBlendEnable = true;
@@ -345,8 +399,6 @@ int CDevice::CreateSampler()
     tSamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
     DEVICE->CreateSamplerState(&tSamDesc, m_Sampler[1].GetAddressOf());
 
-
-
     CONTEXT->VSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
     CONTEXT->HSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
     CONTEXT->DSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
@@ -358,7 +410,6 @@ int CDevice::CreateSampler()
     CONTEXT->DSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
     CONTEXT->GSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
     CONTEXT->PSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
-
 
     return S_OK;
 }
