@@ -10,12 +10,12 @@ void DeleteArray(T* (&Arr)[_Size])
 	}
 }
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+// ¿ÀºêÁ§Æ® »ı¼º
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName);
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+// ?¤ë¸Œ?íŠ¸ ?? œ
 void DestroyObject(CGameObject* _DeletObject);
 
 // DrawDebugShape
@@ -31,10 +31,10 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bo
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);
 
+
 void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest);
 
-
-// GameObject ï¿½ï¿½È¿ï¿½ï¿½ Ã¼Å©
+// GameObject À¯È¿¼º Ã¼Å©
 bool IsValidObj(CGameObject*& _Target);
 
 
@@ -44,6 +44,8 @@ const wchar_t* ToWSTring(RES_TYPE);
 const char* ToString(COMPONENT_TYPE);
 const wchar_t* ToWSTring(COMPONENT_TYPE);
 
+// Relative Path °¡Á®¿À±â
+wstring GetRelativePath(const wstring& _strBase, const wstring& _strPath);
 const char* ToString(COLLIDER2D_TYPE);
 const wchar_t* ToWString(COLLIDER2D_TYPE);
 
@@ -52,10 +54,11 @@ COLLIDER2D_TYPE ToCollider2DType(wstring _wstring);
 string ToString(wstring _wstring);
 wstring ToWString(string _string);
 
-
 // Save / Load
 void SaveWString(const wstring& _str, FILE* _File);
 void LoadWString(wstring& _str, FILE* _File);
+
+Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat);
 
 class CRes;
 template<typename T>
@@ -92,7 +95,7 @@ void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
 	int exists;
 	wss >> exists;
 	std::wstring line;
-	std::getline(wss, line); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ ï¿½Òºï¿½
+	std::getline(wss, line); // ?«ì ?¤ì˜ ê°œí–‰ ë¬¸ìë¥??Œë¹„
 
 	if (exists) {
 		std::wstring strKey, strRelativePath;

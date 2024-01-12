@@ -37,6 +37,8 @@ enum class COMPONENT_TYPE
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
 
+	BEHAVIORTREE,
+
 	// render
 	MESHRENDER,		// 기본적인 렌더링
 	PARTICLESYSTEM, // 입자 렌더링

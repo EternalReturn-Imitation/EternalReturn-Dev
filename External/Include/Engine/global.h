@@ -33,7 +33,7 @@ using namespace std::experimental::filesystem;
 using namespace Microsoft::WRL;
 
 #include <d3d11.h>					// DirectX11
-#include <d3dcompiler.h>			// Shader ������
+#include <d3dcompiler.h>			// Shader관련 헤더
 #include <DirectXMath.h>			// DX Math
 #include <DirectXPackedVector.h>	
 

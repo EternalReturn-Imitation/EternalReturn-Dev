@@ -49,7 +49,7 @@ private:
     vector<CGameObject*>    m_vecUI;
     vector<CGameObject*>    m_vecPost;
 
-
+    vector<CGameObject*>    m_vecShadow;
 
 public:
     void SetProjType(PROJ_TYPE _Type) { m_ProjType = _Type; }
@@ -107,7 +107,10 @@ public:
 public:
     void SortObject();
     void SortObject(CCamera* _MainCamera);
+    void SortObject_Shadow();
+
     void render();
+    void render_shadowmap();
 
 public:
     virtual void begin() override;
@@ -116,6 +119,7 @@ public:
 
 private:
     void clear();
+    void clear_shadow();
 
     void render_deferred();
     void render_opaque();

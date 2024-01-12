@@ -157,3 +157,11 @@ void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 {
 }
+
+void CAnimator3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
+{
+}
+
+void CAnimator3D::LoadFromDB(int _gameObjectID)
+{
+}

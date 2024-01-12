@@ -5,37 +5,57 @@
 #include "CMaterial.h"
 #include "ptr.h"
 
+
+struct tMtrlSet
+{
+    Ptr<CMaterial>  pSharedMtrl;    // °øÀ¯ ¸ÞÅ×¸®¾ó
+    Ptr<CMaterial>  pDynamicMtrl;   // °øÀ¯ ¸ÞÅ×¸®¾óÀÇ º¹»çº»    
+    Ptr<CMaterial>  pCurMtrl;       // ÇöÀç »ç¿ë ÇÒ ¸ÞÅ×¸®¾ó
+};
+
 class CRenderComponent :
     public CComponent
 {
 private:
     Ptr<CMesh>              m_pMesh;
+    vector<tMtrlSet>        m_vecMtrls;     // ÀçÁú    
 
-    Ptr<CMaterial>          m_pSharedMtrl;  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×¸ï¿½ï¿½ï¿½
-    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial ï¿½ï¿½ï¿½çº»
-    Ptr<CMaterial>          m_pCurrentMtrl; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    float                   m_fBounding;        // FrustumCheck ¿ëµµ °æ°è¹üÀ§
+    bool                    m_bDynamicShadow;
 
-    bool                    m_bFrustumCheck;
+    Ptr<CMaterial>          m_pSharedMtrl;  // ¿øº» ¸ÞÅ×¸®¾ó
+    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial º¹»çº»
+    Ptr<CMaterial>          m_pCurrentMtrl;  // ÇöÀç »ç¿ë ÁßÀÎ ÀçÁú
+
+    bool                    m_bFrustumCheck; // ÀýµÎÃ¼ ÄÃ¸µ Ã¼Å© À¯¹«
 
     float                   m_fBoundingBoxScale;
     float                   m_fBoundingBoxOffsetScale;
 
 public:
     virtual void render() = 0;
+    virtual void render_shadowmap();
 
 public:
+    void SetMesh(Ptr<CMesh> _Mesh);
+    void SetMaterial(Ptr<CMaterial> _Mtrl, UINT _idx);
     void SetFrustumCheck(bool _Check) { m_bFrustumCheck = _Check; }
-
-    void SetMesh(Ptr<CMesh> _Mesh) { m_pMesh = _Mesh; }
-    void SetMaterial(Ptr<CMaterial> _Mtrl);
     void SetBoundingBoxScale(float _Radius) { m_fBoundingBoxOffsetScale = _Radius; }
     void SetBoundingBoxOffsetScale(float _Offset) { m_fBoundingBoxOffsetScale = _Offset; }
 
     Ptr<CMesh> GetMesh() { return m_pMesh; }
-    Ptr<CMaterial> GetMaterial() { return m_pCurrentMtrl; }
-    Ptr<CMaterial> GetSharedMaterial();
-    Ptr<CMaterial> GetDynamicMaterial();
 
+    Ptr<CMaterial> GetMaterial(UINT _idx);
+    Ptr<CMaterial> GetSharedMaterial(UINT _idx);
+    Ptr<CMaterial> GetDynamicMaterial(UINT _idx);
+
+    UINT GetMtrlCount() { return (UINT)m_vecMtrls.size(); }
+
+    bool IsUseFrustumCheck() { return m_bFrustumCheck; }
+    void SetBounding(float _fBounding) { m_fBounding = _fBounding; }
+    float GetBounding() { return m_fBounding; }
+    void SetDynamicShadow(bool _bSet) { m_bDynamicShadow = _bSet; }
+    bool IsDynamicShadow() { return m_bDynamicShadow; }
     float GetBoundingBoxScale() { return m_fBoundingBoxScale + m_fBoundingBoxOffsetScale; }
 
     virtual void SaveToLevelFile(FILE* _File) override;

@@ -188,7 +188,7 @@ void CRenderComponent::LoadFromDB(int _gameObjectID)
 			LoadResRefFromDB(m_pMesh, meshKey, meshPath);
 			LoadResRefFromDB(m_pSharedMtrl, mtrlKey, mtrlPath);
 
-			SetMaterial(m_pSharedMtrl);
+			SetMaterial(m_pSharedMtrl, 0);
 		}
 		else {
 			// 에러 처리: 데이터를 찾지 못했거나 쿼리에 실패했을 경우

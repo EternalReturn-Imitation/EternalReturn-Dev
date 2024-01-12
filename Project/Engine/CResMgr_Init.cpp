@@ -1198,26 +1198,6 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DLightShader"));
 	AddRes(L"Std2DAnimLightMtrl", pMtrl);
 
-	// DebugShape Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShapeShader"));
-	AddRes(L"DebugShapeMtrl", pMtrl);
-
-	// DebugShape_Sphere Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_SphereShader"));
-	AddRes(L"DebugShapeSphereMtrl", pMtrl);
-
-	// TileMap Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TileMapShader"));
-	AddRes(L"TileMapMtrl", pMtrl);
-
-	// Particle Render Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ParticleRenderShader"));
-	AddRes(L"ParticleRenderMtrl", pMtrl);
-
 	// ===========
 	// ==  3 D  ==
 	// ===========

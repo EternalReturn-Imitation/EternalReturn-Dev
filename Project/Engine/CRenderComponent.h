@@ -51,7 +51,6 @@ public:
 
     UINT GetMtrlCount() { return (UINT)m_vecMtrls.size(); }
 
-    void SetFrustumCheck(bool _bUse) { m_bFrustumCheck = _bUse; }
     bool IsUseFrustumCheck() { return m_bFrustumCheck; }
     void SetBounding(float _fBounding) { m_fBounding = _fBounding; }
     float GetBounding() { return m_fBounding; }
