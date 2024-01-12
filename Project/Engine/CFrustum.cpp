@@ -3,6 +3,15 @@
 
 #include "CCamera.h"
 
+#include "CResMgr.h"
+#include "CMesh.h"
+#include "CMaterial.h"
+
+#include "CTransform.h"
+
+#include "CLevel.h"
+#include "CLevelMgr.h"
+
 CFrustum::CFrustum(CCamera* _Cam)
     : m_pCam(_Cam)
     , m_arrProj{}
@@ -56,6 +65,9 @@ void CFrustum::finaltick()
     m_arrFace[FT_DOWN] = XMPlaneFromPoints(arrWorld[3], arrWorld[2], arrWorld[6]);
     m_arrFace[FT_LEFT] = XMPlaneFromPoints(arrWorld[7], arrWorld[4], arrWorld[0]);
     m_arrFace[FT_RIGHT] = XMPlaneFromPoints(arrWorld[1], arrWorld[5], arrWorld[6]);
+
+    if (m_pCam->IsDebugView() && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
+        DrawDebugFrustumCube(matPVInv, true);
 }
 
 bool CFrustum::FrustumCheck(Vec3 _vPos)

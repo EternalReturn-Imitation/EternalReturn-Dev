@@ -27,13 +27,18 @@ CCamera::CCamera()
 	, m_Frustum(this)
 	, m_fAspectRatio(1.f)
 	, m_fScale(1.f)
+	, m_Near(1.f)
 	, m_Far(10000.f)
 	, m_FOV(XM_PI / 2.f)
 	, m_OrthoWidth(0.f)
 	, m_OrthoHeight(0.f)
 	, m_ProjType(PROJ_TYPE::ORTHOGRAPHIC)
 	, m_iLayerMask(0)
+	, m_iLayerFrustum(0)
 	, m_iCamIdx(-1)
+	, m_bMainCamera(false)
+	, m_bDebugView(true)
+	, m_bDebugFrustumView(true)
 {
 	SetName(L"Camera");
 
@@ -49,12 +54,18 @@ CCamera::CCamera(const CCamera& _Other)
 	, m_Frustum(this)
 	, m_fAspectRatio(_Other.m_fAspectRatio)
 	, m_fScale(_Other.m_fScale)
+	, m_Near(_Other.m_Near)
+	, m_Far(_Other.m_Far)
 	, m_FOV(_Other.m_FOV)
 	, m_OrthoWidth(_Other.m_OrthoWidth)
 	, m_OrthoHeight(_Other.m_OrthoHeight)
 	, m_ProjType(_Other.m_ProjType)
 	, m_iLayerMask(_Other.m_iLayerMask)
+	, m_iLayerFrustum(_Other.m_iLayerFrustum)
 	, m_iCamIdx(-1)
+	, m_bMainCamera(false)
+	, m_bDebugView(_Other.m_bDebugView)
+	, m_bDebugFrustumView(_Other.m_bDebugFrustumView)
 {
 }
 
@@ -82,15 +93,15 @@ void CCamera::finaltick()
 void CCamera::CalcViewMat()
 {
 	// ==============
-	// View Çà·Ä °è»ê
+	// View ?‰ë ¬ ê³„ì‚°
 	// ==============
 	m_matView = XMMatrixIdentity();
 
-	// Ä«¸Þ¶ó ÁÂÇ¥¸¦ ¿øÁ¡À¸·Î ÀÌµ¿
+	// ì¹´ë©”??ì¢Œí‘œë¥??ì ?¼ë¡œ ?´ë™
 	Vec3 vCamPos = Transform()->GetRelativePos();
 	Matrix matViewTrans = XMMatrixTranslation(-vCamPos.x, -vCamPos.y, -vCamPos.z);
 
-	// Ä«¸Þ¶ó°¡ ¹Ù¶óº¸´Â ¹æÇâÀ» Z Ãà°ú ÆòÇàÇÏ°Ô ¸¸µå´Â È¸Àü Çà·ÄÀ» Àû¿ë
+	// ì¹´ë©”?¼ê? ë°”ë¼ë³´ëŠ” ë°©í–¥??Z ì¶•ê³¼ ?‰í–‰?˜ê²Œ ë§Œë“œ???Œì „ ?‰ë ¬???ìš©
 	Matrix matViewRot = XMMatrixIdentity();
 
 	Vec3 vR = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -104,14 +115,14 @@ void CCamera::CalcViewMat()
 	m_matView = matViewTrans * matViewRot;
 
 
-	// View ¿ªÇà·Ä ±¸ÇÏ±â
+	// View ??–‰??êµ¬í•˜ê¸?
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 }
 
 void CCamera::CalcProjMat()
 {
 	// =============
-	// Åõ¿µ Çà·Ä °è»ê
+	// ?¬ì˜ ?‰ë ¬ ê³„ì‚°
 	// =============
 	m_matProj = XMMatrixIdentity();
 
@@ -119,12 +130,12 @@ void CCamera::CalcProjMat()
 	{
 		// Á÷±³ Åõ¿µ
 		Vec2 vResolution = CDevice::GetInst()->GetRenderResolution();
-		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), 1.f, 10000.f);
+		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), m_Near, m_Far);
 	}
 	else
 	{
 		// ¿ø±Ù Åõ¿µ
-		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, 1.f, m_Far);
+		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, m_Near, m_Far);
 	}
 
 	// Åõ¿µÇà·Ä ¿ªÇà·Ä ±¸ÇÏ±â
@@ -153,8 +164,33 @@ void CCamera::SetLayerMaskAll(bool _Visible)
 		m_iLayerMask = 0;
 }
 
+void CCamera::SetLayerFrustum(int _iLayer, bool _Visible)
+{
+	if (_Visible)
+	{
+		m_iLayerFrustum |= 1 << _iLayer;
+	}
+	else
+	{
+		m_iLayerFrustum &= ~(1 << _iLayer);
+	}
+}
+
+void CCamera::SetLayerFrustumAll(bool _Visible)
+{
+	if (_Visible)
+		m_iLayerFrustum = 0xffffffff;
+	else
+		m_iLayerFrustum = 0;
+}
+
 void CCamera::SetCameraIndex(int _idx)
 {
+	if (_idx == 0)
+		m_bMainCamera = true;
+	else
+		m_bMainCamera = false;
+
 	m_iCamIdx = _idx;
 	CRenderMgr::GetInst()->RegisterCamera(this, m_iCamIdx);
 }
@@ -169,7 +205,7 @@ void CCamera::SortObject()
 
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
-		// ·¹ÀÌ¾î ¸¶½ºÅ© È®ÀÎ
+		// ?ˆì´??ë§ˆìŠ¤???•ì¸
 		if (m_iLayerMask & (1 << i))
 		{
 			CLayer* pLayer = pCurLevel->GetLayer(i);
@@ -186,12 +222,91 @@ void CCamera::SortObject()
 					continue;
 
 				// Frustum Check
-				/*if ( pRenderCom->IsFrustumCheck()
-					&& false == m_Frustum.FrustumCheckBound(vecObject[j]->Transform()->GetWorldPos()
-						, vecObject[j]->Transform()->GetRelativeScale().x / 5.f))
-					continue;*/
+				if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ?ˆë‘ì²´ë Œ???¬ë? ?ë‹¨, ?Œì† ?ˆì´???¹ì? ë³¸ì¸ ?ì²´ ?ˆë‘ì²´ë Œ??ì²´í¬ê°€ ?˜ì–´?ˆëŠ” ê²½ìš°
+				{
+					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
+					if (IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
+						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
+				
+					if (false == m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius()))
+						continue;
+				}
 
 					// ½¦ÀÌ´õ µµ¸ÞÀÎ¿¡ µû¸¥ ºÐ·ù
+				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(0)->GetShader()->GetDomain();
+
+				switch (eDomain)
+				{
+				case SHADER_DOMAIN::DOMAIN_DEFERRED:
+					m_vecDeferred.push_back(vecObject[j]);
+					break;
+
+				case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
+					m_vecDeferredDecal.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_OPAQUE:
+					m_vecOpaque.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_MASK:
+					m_vecMask.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_DECAL:
+					m_vecDecal.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_TRANSPARENT:
+					m_vecTransparent.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_POSTPROCESS:
+					m_vecPost.push_back(vecObject[j]);
+					break;
+				case SHADER_DOMAIN::DOMAIN_UI:
+					m_vecUI.push_back(vecObject[j]);
+					break;
+				}
+			}
+		}
+	}
+}
+
+void CCamera::SortObject(CCamera* _MainCamera)
+{
+	// ÀÌÀü ÇÁ·¹ÀÓ ºÐ·ùÁ¤º¸ Á¦°Å
+	clear();
+
+	// ÇöÀç ·¹º§ °¡Á®¿Í¼­ ºÐ·ù
+	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		// ·¹ÀÌ¾î ¸¶½ºÅ© È®ÀÎ
+		if (_MainCamera->m_iLayerMask & (1 << i))
+		{
+			CLayer* pLayer = pCurLevel->GetLayer(i);
+			const vector<CGameObject*>& vecObject = pLayer->GetObjects();
+
+			for (size_t j = 0; j < vecObject.size(); ++j)
+			{
+				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
+
+				// ·»´õ¸µ ±â´ÉÀÌ ¾ø´Â ¿ÀºêÁ§Æ®´Â Á¦¿Ü
+				if (nullptr == pRenderCom
+					|| nullptr == pRenderCom->GetMaterial(0)
+					|| nullptr == pRenderCom->GetMaterial(0)->GetShader())
+					continue;
+
+				// Frustum Check
+				if (_MainCamera->m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ÀýµÎÃ¼·»´õ ¿©ºÎ ÆÇ´Ü, ¼Ò¼Ó ·¹ÀÌ¾î È¤Àº º»ÀÎ ÀÚÃ¼ ÀýµÎÃ¼·»´õ Ã¼Å©°¡ µÇ¾îÀÖ´Â °æ¿ì
+				{
+					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
+
+					if (false == _MainCamera->m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius() / 2.f))
+						continue;
+
+					if (vecObject[j]->GetParent() == nullptr && IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
+						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
+				}
+
+				// ½¦ÀÌ´õ µµ¸ÞÀÎ¿¡ µû¸¥ ºÐ·ù
 				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(0)->GetShader()->GetDomain();
 				switch (eDomain)
 				{
@@ -202,6 +317,7 @@ void CCamera::SortObject()
 				case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
 					m_vecDeferredDecal.push_back(vecObject[j]);
 					break;
+
 				case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					m_vecOpaque.push_back(vecObject[j]);
 					break;
@@ -262,50 +378,53 @@ void CCamera::SortObject_Shadow()
 
 void CCamera::render()
 {
-	// Çà·Ä ¾÷µ¥ÀÌÆ®
+	// ?‰ë ¬ ?…ë°?´íŠ¸
 	g_transform.matView = m_matView;
 	g_transform.matViewInv = m_matViewInv;
 
 	g_transform.matProj = m_matProj;
 	g_transform.matProjInv = m_matProjInv;
 
-	// ½¦ÀÌ´õ µµ¸ÞÀÎ¿¡ µû¶ó¼­ ¼øÂ÷ÀûÀ¸·Î ±×¸®±â
+	if (m_bMainCamera)
+	{
+		// ½¦ÀÌ´õ µµ¸ÞÀÎ¿¡ µû¶ó¼­ ¼øÂ÷ÀûÀ¸·Î ±×¸®±â
 	// Deferred MRT ·Î º¯°æ
 	// Deferred ¹°Ã¼µéÀ» Deferred MRT ¿¡ ±×¸®±â
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
-	render_deferred();
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
+		render_deferred();
 
-	// Light MRT ·Î º¯°æ
-	// ¹°Ã¼µé¿¡ Àû¿ëµÉ ±¤¿øÀ» ±×¸®±â
-	// Deferred ¹°Ã¼¿¡ ±¤¿ø Àû¿ë½ÃÅ°±â
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
+		// Light MRT ·Î º¯°æ
+		// ¹°Ã¼µé¿¡ Àû¿ëµÉ ±¤¿øÀ» ±×¸®±â
+		// Deferred ¹°Ã¼¿¡ ±¤¿ø Àû¿ë½ÃÅ°±â
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
 
-	const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
-	for (size_t i = 0; i < vecLight3D.size(); ++i)
-	{
-		vecLight3D[i]->render();
+		const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
+		for (size_t i = 0; i < vecLight3D.size(); ++i)
+		{
+			vecLight3D[i]->render();
+		}
+
+		// Deferred MRT ¿¡ ±×¸° ¹°Ã¼¿¡ Light MRT Ãâ·ÂÇÑ ±¤¿ø°ú ÇÕÃÄ¼­
+		// ´Ù½Ã SwapChain Å¸°ÙÀ¸·Î À¸·Î ±×¸®±â
+		// SwapChain MRT ·Î º¯°æ
+		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
+		static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
+		static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
+
+		static bool bSet = false;
+		if (!bSet)
+		{
+			bSet = true;
+			pMtrl->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex"));
+			pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
+			pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
+			pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
+			pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
+		}
+
+		pMtrl->UpdateData();
+		pRectMesh->render(0);
 	}
-
-	// Deferred MRT ¿¡ ±×¸° ¹°Ã¼¿¡ Light MRT Ãâ·ÂÇÑ ±¤¿ø°ú ÇÕÃÄ¼­
-	// ´Ù½Ã SwapChain Å¸°ÙÀ¸·Î À¸·Î ±×¸®±â
-	// SwapChain MRT ·Î º¯°æ
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
-	static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
-	static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
-
-	static bool bSet = false;
-	if (!bSet)
-	{
-		bSet = true;
-		pMtrl->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex"));
-		pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
-		pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
-		pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
-		pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
-	}
-
-	pMtrl->UpdateData();
-	pRectMesh->render(0);
 
 	// Forward Rendering
 	render_opaque();
@@ -313,7 +432,7 @@ void CCamera::render()
 	render_decal();
 	render_transparent();
 
-	// PostProcess - ÈÄÃ³¸®
+	// PostProcess - ?„ì²˜ë¦?
 	render_postprocess();
 
 	// UI
@@ -421,6 +540,7 @@ void CCamera::SaveToLevelFile(FILE* _File)
 	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
 	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
+	fwrite(&m_bMainCamera, sizeof(bool), 1, _File);
 }
 
 void CCamera::LoadFromLevelFile(FILE* _File)
@@ -430,4 +550,64 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 	fread(&m_ProjType, sizeof(UINT), 1, _File);
 	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
+	fread(&m_bMainCamera, sizeof(bool), 1, _File);
+}
+
+void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera) VALUES (?, ?, ?, ?, ?, ?, ?)";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+		sqlite3_bind_double(stmt, 2, static_cast<double>(m_fAspectRatio));
+		sqlite3_bind_double(stmt, 3, static_cast<double>(m_fScale));
+		sqlite3_bind_int(stmt, 4, static_cast<int>(m_ProjType));
+		sqlite3_bind_int(stmt, 5, static_cast<int>(m_iLayerMask));
+		sqlite3_bind_int(stmt, 6, m_iCamIdx);
+		sqlite3_bind_int(stmt, 7, static_cast<int>(m_bMainCamera));
+
+		if (sqlite3_step(stmt) != SQLITE_DONE) {
+			assert(false);
+		}
+
+		sqlite3_finalize(stmt);
+	}
+	else {
+		assert(false);
+	}
+}
+
+void CCamera::LoadFromDB(int _gameObjectID)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	const char* szQuery = "SELECT AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera FROM CAMERA WHERE GameObject_ID = ?";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, _gameObjectID);
+
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
+			m_fAspectRatio = static_cast<float>(sqlite3_column_double(stmt, 0));
+			m_fScale = static_cast<float>(sqlite3_column_double(stmt, 1));
+			m_ProjType = (PROJ_TYPE)(static_cast<UINT>(sqlite3_column_int(stmt, 2)));
+			m_iLayerMask = static_cast<UINT>(sqlite3_column_int(stmt, 3));
+			m_iCamIdx = sqlite3_column_int(stmt, 4);
+			m_bMainCamera = static_cast<bool>(sqlite3_column_int(stmt, 5)) != 0;
+		}
+		else {
+			assert(false);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else {
+		assert(false);
+	}
+}
+
+bool CCamera::IsDebugFrustumView()
+{
+	return m_bDebugFrustumView;
 }

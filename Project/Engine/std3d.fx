@@ -17,7 +17,8 @@ struct VS_IN
 struct VS_OUT
 {
     float4 vPosition : SV_Position;
-    float2 vUV : TEXCOORD;   
+    float2 vUV : TEXCOORD;
+    float4 vColor : COLOR;
     
     float3 vViewPos : POSITION;
     
@@ -56,7 +57,7 @@ VS_OUT VS_Std3D(VS_IN _in)
 
 float4 PS_Std3D(VS_OUT _in) : SV_Target
 {
-    float4 vOutColor = float4(0.5f, 0.5f, 0.5f, 1.f);
+    float4 vOutColor = _in.vColor;
         
     float3 vViewNormal = _in.vViewNormal;
     
@@ -106,7 +107,5 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
     
     return vOutColor;
 }
-
-
 
 #endif

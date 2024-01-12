@@ -5,7 +5,6 @@
 #include "ImGui\imgui_impl_dx11.h"
 #include "ImGui\imgui_impl_win32.h"
 
-
 // ========
 // Delegate
 // ========
@@ -42,5 +41,8 @@ private:
     void tick();
     void finaltick();
     void render();
+
+public:
+    void InitInspector();
 };
 

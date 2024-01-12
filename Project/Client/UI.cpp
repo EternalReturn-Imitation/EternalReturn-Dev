@@ -7,6 +7,7 @@ UI::UI(const string& _ID)
 	, m_ParentUI(nullptr)
 	, m_Modal(false)
 	, m_Active(false)
+	, m_WinFlags(0)
 {
 	
 }
@@ -29,7 +30,7 @@ void UI::finaltick()
 		// 모달리스
 		if (!m_Modal)
 		{
-			ImGui::Begin(strFullName.c_str(), &m_Active);
+			ImGui::Begin(strFullName.c_str(), &m_Active, m_WinFlags);
 
 			render_update();
 

@@ -152,6 +152,92 @@ void CResMgr::CreateDefaultMesh()
 
 
 	// ========
+	// RingMesh
+	// ========
+
+	fRadius = 0.7f;
+	UINT iRingSliceCount = 40; // ¼¼·Î ºÐÇÒ °³¼ö
+	float fRingSliceAngle = XM_2PI / iRingSliceCount;
+	float fRingUVXStep = 1.f / (float)iRingSliceCount;
+
+	// out
+	for (UINT j = 0; j <= iRingSliceCount; ++j)
+	{
+		float theta = j * fRingSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fRingSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fRingSliceAngle));
+
+		v.vUV = Vec2(fRingUVXStep * j, 1.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+	
+	fRadius = 0.3f;
+	// in
+	for (UINT j = 0; j <= iRingSliceCount; ++j)
+	{
+		float theta = j * fRingSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fRingSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fRingSliceAngle));
+
+		v.vUV = Vec2(fRingUVXStep * j, 0.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.y = -1.f;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+
+	for (UINT i = 0; i < iRingSliceCount; ++i)
+	{
+		vecIdx.push_back(i);
+		vecIdx.push_back(i + (iRingSliceCount + 1));
+		vecIdx.push_back(i + 1);
+		vecIdx.push_back(i + (iRingSliceCount + 1));
+		vecIdx.push_back(i + (iRingSliceCount + 2));
+		vecIdx.push_back(i + 1);
+	}
+
+	vecIdx.push_back(iRingSliceCount);
+	vecIdx.push_back(iRingSliceCount * 2 + 1);
+	vecIdx.push_back(0);
+	vecIdx.push_back(iRingSliceCount * 2 + 1);
+	vecIdx.push_back(iRingSliceCount + 1);
+	vecIdx.push_back(0);
+
+
+	pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	AddRes(L"RingMesh", pMesh);
+
+	vecVtx.clear();
+	vecIdx.clear();
+
+	// ========
 	// CubeMesh
 	// ========
 
@@ -308,6 +394,48 @@ void CResMgr::CreateDefaultMesh()
 
 	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"CubeMesh_Debug", pMesh);
+	
+
+	// À­¸é
+	arrCube[0].vPos = Vec3(-1.f, 1.f, 1.f);
+	arrCube[1].vPos = Vec3(1.f, 1.f, 1.f);
+	arrCube[2].vPos = Vec3(1.f, 1.f, -1.f);
+	arrCube[3].vPos = Vec3(-1.f, 1.f, -1.f);
+
+	// ¾Æ·§ ¸é	
+	arrCube[4].vPos = Vec3(-1.f, -1.f, -1.f);
+	arrCube[5].vPos = Vec3(1.f, -1.f, -1.f);
+	arrCube[6].vPos = Vec3(1.f, -1.f, 1.f);
+	arrCube[7].vPos = Vec3(-1.f, -1.f, 1.f);
+	
+	// ¿ÞÂÊ ¸é
+	arrCube[8].vPos = Vec3(-1.f, 1.f, 1.f);
+	arrCube[9].vPos = Vec3(-1.f, 1.f, -1.f);
+	arrCube[10].vPos = Vec3(-1.f, -1.f, -1.f);
+	arrCube[11].vPos = Vec3(-1.f, -1.f, 1.f);
+
+	// ¿À¸¥ÂÊ ¸é
+	arrCube[12].vPos = Vec3(1.f, 1.f, -1.f);
+	arrCube[13].vPos = Vec3(1.f, 1.f, 1.f);
+	arrCube[14].vPos = Vec3(1.f, -1.f, 1.f);
+	arrCube[15].vPos = Vec3(1.f, -1.f, -1.f);
+	
+	// µÞ ¸é
+	arrCube[16].vPos = Vec3(1.f, 1.f, 1.f);
+	arrCube[17].vPos = Vec3(-1.f, 1.f, 1.f);
+	arrCube[18].vPos = Vec3(-1.f, -1.f, 1.f);
+	arrCube[19].vPos = Vec3(1.f, -1.f, 1.f);
+
+	// ¾Õ ¸é
+	arrCube[20].vPos = Vec3(-1.f, 1.f, -1.f);;
+	arrCube[21].vPos = Vec3(1.f, 1.f, -1.f);
+	arrCube[22].vPos = Vec3(1.f, -1.f, -1.f);
+	arrCube[23].vPos = Vec3(-1.f, -1.f, -1.f);
+
+	pMesh = new CMesh(true);
+	pMesh->Create(arrCube, 24, vecIdx.data(), (UINT)vecIdx.size());
+	AddRes<CMesh>(L"FrustumMesh_Debug", pMesh);
+	vecVtx.clear();
 	vecIdx.clear();
 
 	// ===========
@@ -417,8 +545,116 @@ void CResMgr::CreateDefaultMesh()
 	pMesh = new CMesh(true);
 	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
 	AddRes<CMesh>(L"SphereMesh", pMesh);
+
 	vecVtx.clear();
 	vecIdx.clear();
+
+	// ===========
+	// Cone Mesh
+	// ===========
+	
+	// ºÏ±ØÁ¡
+	v.vPos = Vec3(0.f, 0.5, 0.f);
+	v.vUV = Vec2(0.5f, 0.5f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = v.vPos;
+	v.vNormal.Normalize();
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, 0.f, -1.f);
+	vecVtx.push_back(v);
+
+	// Body
+	iSliceCount = 40; // ¼¼·Î ºÐÇÒ °³¼ö
+
+	fSliceAngle = XM_2PI / iSliceCount;
+
+	fUVXStep = 1.f / (float)iSliceCount;
+
+	for (UINT j = 0; j <= iSliceCount; ++j)
+	{
+		float theta = j * fSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fSliceAngle));
+
+		v.vUV = Vec2(fUVXStep * j, 0.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+
+	// bottom
+	for (UINT j = 0; j <= iSliceCount; ++j)
+	{
+		float theta = j * fSliceAngle;
+
+		v.vPos = Vec3(fRadius * cosf(j * fSliceAngle)
+			, 0.f
+			, fRadius * sinf(j * fSliceAngle));
+
+		v.vUV = Vec2(fUVXStep * j, 0.f);
+		v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+		v.vNormal = v.vPos;
+		v.vNormal.y = -1.f;
+		v.vNormal.Normalize();
+
+		v.vTangent.x = -fRadius * sinf(theta);
+		v.vTangent.y = 0.f;
+		v.vTangent.z = fRadius * cosf(theta);
+		v.vTangent.Normalize();
+
+		v.vNormal.Cross(v.vTangent, v.vBinormal);
+		v.vBinormal.Normalize();
+
+		vecVtx.push_back(v);
+	}
+
+	// ³²±ØÁ¡
+	v.vPos = Vec3(0.f, 0.f, 0.f);
+	v.vUV = Vec2(0.5f, 0.5f);
+	v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	v.vNormal = Vec3(0.f, -1.f, 0.f);
+	v.vNormal.Normalize();
+
+	v.vTangent = Vec3(1.f, 0.f, 0.f);
+	v.vBinormal = Vec3(0.f, -1.f, 0.f);
+	vecVtx.push_back(v);
+
+	// ÀÎµ¦½º
+	// ºÏ±ØÁ¡
+	for (UINT i = 0; i < iSliceCount; ++i)
+	{
+		vecIdx.push_back(0);
+		vecIdx.push_back(i + 2);
+		vecIdx.push_back(i + 1);
+	}
+
+	// ³²±ØÁ¡
+	iBottomIdx = (UINT)vecVtx.size() - 1;
+	
+	for (UINT i = 0; i <= iSliceCount; ++i)
+	{
+		vecIdx.push_back(iBottomIdx);
+		vecIdx.push_back(iBottomIdx - (iSliceCount + i + 2));
+		vecIdx.push_back(iBottomIdx - (iSliceCount + i + 1));
+	}
+
+	pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	AddRes<CMesh>(L"ConeMesh", pMesh);
+
+	
 }
 
 void CResMgr::CreateDefaultGraphicsShader()
@@ -508,7 +744,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	AddRes(pShader->GetKey(), pShader);
 
 	// =================
-	// DebugShape_Sphere Shader
+	// DebugShape Shader OutLiner
 	// Topology : LineStrip
 	// RS_TYPE  : CULL_NONE
 	// DS_TYPE  : NO_TEST_NO_WRITE
@@ -516,12 +752,34 @@ void CResMgr::CreateDefaultGraphicsShader()
 	// g_vec4_0 : OutColor
 	// ==================
 	pShader = new CGraphicsShader;
-	pShader->SetKey(L"DebugShape_SphereShader");
+	pShader->SetKey(L"DebugShape_OutLineShader");
 	pShader->CreateVertexShader(L"shader\\debugshape.fx", "VS_DebugShape");
-	pShader->CreatePixelShader(L"shader\\debugshape.fx", "PS_DebugShape_Sphere");
+	pShader->CreatePixelShader(L"shader\\debugshape.fx", "PS_DebugShape_OutLine");
 
-	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pShader->SetRSType(RS_TYPE::CULL_FRONT);
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// =================
+	// DebugShape Shader Frustum
+	// Topology : LineStrip
+	// RS_TYPE  : CULL_NONE
+	// DS_TYPE  : NO_TEST_NO_WRITE
+	// BS_TYPE  : AlphaBlend
+	// g_vec4_0 : OutColor
+	// ==================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"DebugShape_FrustumShader");
+	pShader->CreateVertexShader(L"shader\\debugshape.fx", "VS_DebugShape");
+	pShader->CreatePixelShader(L"shader\\debugshape.fx", "PS_DebugShape_Frustum");
+
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
 	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
 
@@ -656,9 +914,9 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreatePixelShader(L"shader\\std3d.fx", "PS_Std3D");
 
 	pShader->SetRSType(RS_TYPE::CULL_BACK);
-	pShader->SetRSType(RS_TYPE::CULL_FRONT);
 	pShader->SetDSType(DS_TYPE::LESS);
-	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_TRANSPARENT);
 
 	// Parameter	
 	pShader->AddScalarParam(FLOAT_0, "Spec Coeff");
@@ -666,6 +924,30 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->AddTexParam(TEX_1, "Normal Texture");
 
 	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// StdRingShader
+	// RS_TYPE : CULL_BACK
+	// DS_TYPE : LESS
+	// BS_TYPE : DEFAULT
+	// Domain : MASK
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"StdRingShader");
+
+	pShader->CreateVertexShader(L"shader\\std3d.fx", "VS_Std3D");
+	pShader->CreatePixelShader(L"shader\\std3d.fx", "PS_Std3D");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_TRANSPARENT);
+
+	// Parameter	
+	pShader->AddTexParam(TEX_0, "Output Texture");
+
+	AddRes(pShader->GetKey(), pShader);
+
 
 	// ============================
 	// SkyBoxShader
@@ -892,11 +1174,10 @@ void CResMgr::CreateDefaultMaterial()
 {
 	Ptr<CMaterial> pMtrl = nullptr;
 
-	// Test Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
-	AddRes(L"TestMtrl", pMtrl);
-
+	// ===========
+	// ==  2 D  ==
+	// ===========
+	 
 	// Std2D Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
@@ -937,20 +1218,9 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ParticleRenderShader"));
 	AddRes(L"ParticleRenderMtrl", pMtrl);
 
-	// GrayShader(PostProcess)
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"GrayShader"));
-	AddRes(L"GrayMtrl", pMtrl);
-
-	// DistortionShader(PostProcess)
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DistortionShader"));
-	AddRes(L"DistortionMtrl", pMtrl);
-
-	// TestShader
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
-	AddRes(L"TestShaderMtrl", pMtrl);
+	// ===========
+	// ==  3 D  ==
+	// ===========
 
 	// Std3DMtrl	
 	pMtrl = new CMaterial(true);
@@ -962,20 +1232,30 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"SkyBoxShader"));
 	AddRes(L"SkyBoxMtrl", pMtrl);
 
+	// Std3D_DeferredShader
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
+	AddRes(L"Std3D_DeferredMtrl", pMtrl);
+
+
+	// ===========
+	// == Decal ==
+	// ===========
+
 	// DecalMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DecalShader"));
 	AddRes(L"DecalMtrl", pMtrl);
-
+	
 	// DeferredDecal
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DeferredDecalShader"));
 	AddRes(L"DeferredDecalMtrl", pMtrl);
 
-	// Std3D_DeferredShader
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
-	AddRes(L"Std3D_DeferredMtrl", pMtrl);
+
+	// ===========
+	// == Light ==
+	// ===========
 
 	// DirLightMtrl
 	pMtrl = new CMaterial(true);
@@ -987,6 +1267,39 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"PointLightShader"));
 	AddRes(L"PointLightMtrl", pMtrl);
 
+	// ===========
+	// == Debug ==
+	// ===========
+	
+	// DebugShape Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShapeShader"));
+	AddRes(L"DebugShapeMtrl", pMtrl);
+
+	// DebugShape Sphere Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_OutLineShader"));
+	AddRes(L"DebugShapeSphereMtrl", pMtrl);
+
+	// DebugShape Frustum Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DebugShape_FrustumShader"));
+	AddRes(L"DebugShapeFrustumMtrl", pMtrl);
+
+	// =============
+	// == Graphic ==
+	// =============
+
+	// TileMap Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TileMapShader"));
+	AddRes(L"TileMapMtrl", pMtrl);
+
+	// Particle Render Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ParticleRenderShader"));
+	AddRes(L"ParticleRenderMtrl", pMtrl);
+
 	// MergeMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"MergeShader"));
@@ -996,6 +1309,20 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ShadowMapShader"));
 	AddRes(L"ShadowMapMtrl", pMtrl);
+
+	// =================
+	// == PostProcess ==
+	// =================
+
+	// GrayShader(PostProcess)
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"GrayShader"));
+	AddRes(L"GrayMtrl", pMtrl);
+
+	// DistortionShader(PostProcess)
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DistortionShader"));
+	AddRes(L"DistortionMtrl", pMtrl);
 
 	// TessMtrl
 	pMtrl = new CMaterial(true);

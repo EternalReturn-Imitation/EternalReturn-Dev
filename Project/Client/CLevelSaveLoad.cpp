@@ -10,8 +10,9 @@
 #include <Engine\CScript.h>
 
 #include <Script\CScriptMgr.h>
+#include <Engine\CSQLMgr.h>
 
-
+vector<int> CLevelSaveLoad::m_vLevelID;
 
 int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 {
@@ -25,29 +26,29 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 
 	_wfopen_s(&pFile, strPath.c_str(), L"wb");
 
-	if (nullptr == pFile)	
+	if (nullptr == pFile)
 		return E_FAIL;
 
-	// ·¹º§ ÀÌ¸§ ÀúÀå
+	// ë ˆë²¨ ì´ë¦„ ì €ì¥
 	SaveWString(_Level->GetName(), pFile);
 
 
-	// ·¹º§ÀÇ ·¹ÀÌ¾îµéÀ» ÀúÀå
+	// ë ˆë²¨ì˜ ë ˆì´ì–´ë“¤ì„ ì €ì¥
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
 		CLayer* pLayer = _Level->GetLayer(i);
 
-		// ·¹ÀÌ¾î ÀÌ¸§ ÀúÀå
+		// ë ˆì´ì–´ ì´ë¦„ ì €ì¥
 		SaveWString(pLayer->GetName(), pFile);
 
-		// ·¹ÀÌ¾îÀÇ °ÔÀÓ¿ÀºêÁ§Æ®µé ÀúÀå
+		// ë ˆì´ì–´ì˜ ê²Œì„ì˜¤ë¸Œì íŠ¸ë“¤ ì €ì¥
 		const vector<CGameObject*>& vecParent = pLayer->GetParentObject();
 
-		// ¿ÀºêÁ§Æ® °³¼ö ÀúÀå
+		// ì˜¤ë¸Œì íŠ¸ ê°œìˆ˜ ì €ì¥
 		size_t objCount = vecParent.size();
 		fwrite(&objCount, sizeof(size_t), 1, pFile);
-		
-		// °¢ °ÔÀÓ¿ÀºêÁ§Æ®
+
+		// ê° ê²Œì„ì˜¤ë¸Œì íŠ¸
 		for (size_t i = 0; i < objCount; ++i)
 		{
 			SaveGameObject(vecParent[i], pFile);
@@ -62,15 +63,15 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 
 int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 {
-	// ÀÌ¸§
+	// ì´ë¦„
 	SaveWString(_Object->GetName(), _File);
-	
-	// ÄÄÆ÷³ÍÆ®
+
+	// ì»´í¬ë„ŒíŠ¸
 	for (UINT i = 0; i <= (UINT)COMPONENT_TYPE::END; ++i)
-	{		
+	{
 		if (i == (UINT)COMPONENT_TYPE::END)
 		{
-			// ÄÄÆ÷³ÍÆ® Å¸ÀÔ ÀúÀå
+			// ì»´í¬ë„ŒíŠ¸ íƒ€ì… ì €ì¥
 			fwrite(&i, sizeof(UINT), 1, _File);
 			break;
 		}
@@ -79,14 +80,14 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 		if (nullptr == Com)
 			continue;
 
-		// ÄÄÆ÷³ÍÆ® Å¸ÀÔ ÀúÀå
+		// ì»´í¬ë„ŒíŠ¸ íƒ€ì… ì €ì¥
 		fwrite(&i, sizeof(UINT), 1, _File);
 
-		// ÄÄÆ÷³ÍÆ® Á¤º¸ ÀúÀå
+		// ì»´í¬ë„ŒíŠ¸ ì •ë³´ ì €ì¥
 		Com->SaveToLevelFile(_File);
 	}
 
-	// ½ºÅ©¸³Æ®	
+	// ìŠ¤í¬ë¦½íŠ¸	
 	const vector<CScript*>& vecScript = _Object->GetScripts();
 	size_t ScriptCount = vecScript.size();
 	fwrite(&ScriptCount, sizeof(size_t), 1, _File);
@@ -99,16 +100,106 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 	}
 
 
-	// ÀÚ½Ä ¿ÀºêÁ§Æ®
+	// ìì‹ ì˜¤ë¸Œì íŠ¸
 	const vector<CGameObject*>& vecChild = _Object->GetChild();
 	size_t ChildCount = vecChild.size();
 	fwrite(&ChildCount, sizeof(size_t), 1, _File);
 
 	for (size_t i = 0; i < ChildCount; ++i)
 	{
-		SaveGameObject(vecChild[i], _File);		
+		SaveGameObject(vecChild[i], _File);
 	}
 
+	return 0;
+}
+
+int CLevelSaveLoad::SaveLevelToDB(CLevel* _Level)
+{
+	if (_Level->GetState() != LEVEL_STATE::STOP)
+		return E_FAIL;
+
+	//ê¸°ì¡´ ë°ì´í„° ì‚­ì œ
+	CSQLMgr::GetInst()->DeleteAllRecordToAllTable();
+
+	//ë ˆë²¨ ì €ì¥
+	int levelId = CSQLMgr::GetInst()->InsertToLevel(_Level->GetName());
+
+	// ë ˆë²¨ì˜ ë ˆì´ì–´ ì €ì¥
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		CLayer* pLayer = _Level->GetLayer(i);
+
+		// ë ˆì´ì–´ ì €ì¥
+		int layerId = CSQLMgr::GetInst()->InsertToLayer(levelId, pLayer->GetName(), i);
+
+		// ë ˆì´ì–´ì˜ ê²Œì„ì˜¤ë¸Œì íŠ¸ë“¤ ì €ì¥
+		const vector<CGameObject*>& vecParent = pLayer->GetParentObject();
+
+		// ê° ê²Œì„ì˜¤ë¸Œì íŠ¸
+		for (size_t i = 0; i < vecParent.size(); ++i)
+		{
+			SaveGameObjectToDB(layerId, vecParent[i], -1);
+		}
+	}
+
+	return 0;
+}
+
+int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object, int _parentID)
+{
+	//ê²Œì„ì˜¤ë¸Œì íŠ¸ ì €ì¥
+	int gameObjectId = CSQLMgr::GetInst()->InsertToGameObject(_layerID, _Object->GetName(), _parentID);
+
+	vector<int> comType;
+	// ì»´í¬ë„ŒíŠ¸
+	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		CComponent* Com = _Object->GetComponent((COMPONENT_TYPE)i);
+		if (nullptr == Com)
+			continue;
+
+		// ì»´í¬ë„ŒíŠ¸ ì •ë³´ ì €ì¥
+		Com->SaveToDB(gameObjectId, (COMPONENT_TYPE)i);
+
+		comType.push_back(i);
+	}
+	wstring wComType = IntArrayToWString(comType);
+	CSQLMgr::GetInst()->UpdateToGameObject(gameObjectId, wComType);
+
+	// ìŠ¤í¬ë¦½íŠ¸	
+	const vector<CScript*>& vecScript = _Object->GetScripts();
+	size_t ScriptCount = vecScript.size();
+
+	vector<wstring> vScriptNames;
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		wstring ScriptName = CScriptMgr::GetScriptName(vecScript[i]);
+		vScriptNames.push_back(ScriptName);
+
+		vecScript[i]->SaveToDB(gameObjectId, (COMPONENT_TYPE)i);
+	}
+
+	if (vScriptNames.size() > 0) {
+		string scriptSaveQuery = CSQLMgr::GetInst()->CreateInsertQuery(vScriptNames, gameObjectId);
+
+		//ìŠ¤í¬ë¦½íŠ¸ ì¿¼ë¦¬ ì‹œì‘
+		sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+		char* errMsg = nullptr;
+		if (sqlite3_exec(db, scriptSaveQuery.c_str(), nullptr, nullptr, &errMsg) != SQLITE_OK) {
+			sqlite3_free(errMsg);
+			assert(false);
+		}
+	}
+
+	// ìì‹ ì˜¤ë¸Œì íŠ¸
+	const vector<CGameObject*>& vecChild = _Object->GetChild();
+	size_t ChildCount = vecChild.size();
+
+	for (size_t i = 0; i < ChildCount; ++i)
+	{
+		SaveGameObjectToDB(-1, vecChild[i], gameObjectId);
+	}
 	return 0;
 }
 
@@ -126,7 +217,7 @@ CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 
 	CLevel* NewLevel = new CLevel;
 
-	// ·¹º§ ÀÌ¸§
+	// ë ˆë²¨ ì´ë¦„
 	wstring strLevelName;
 	LoadWString(strLevelName, pFile);
 	NewLevel->SetName(strLevelName);
@@ -136,16 +227,16 @@ CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 	{
 		CLayer* pLayer = NewLevel->GetLayer(i);
 
-		// ·¹ÀÌ¾î ÀÌ¸§
+		// ë ˆì´ì–´ ì´ë¦„
 		wstring LayerName;
 		LoadWString(LayerName, pFile);
 		pLayer->SetName(LayerName);
 
-		// °ÔÀÓ ¿ÀºêÁ§Æ® °³¼ö
+		// ê²Œì„ ì˜¤ë¸Œì íŠ¸ ê°œìˆ˜
 		size_t objCount = 0;
 		fread(&objCount, sizeof(size_t), 1, pFile);
 
-		// °¢ °ÔÀÓ¿ÀºêÁ§Æ®
+		// ê° ê²Œì„ì˜¤ë¸Œì íŠ¸
 		for (size_t j = 0; j < objCount; ++j)
 		{
 			CGameObject* pNewObj = LoadGameObject(pFile);
@@ -164,18 +255,18 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 {
 	CGameObject* pObject = new CGameObject;
 
-	// ÀÌ¸§
+	// ì´ë¦„
 	wstring Name;
 	LoadWString(Name, _File);
 	pObject->SetName(Name);
 
-	// ÄÄÆ÷³ÍÆ®
+	// ì»´í¬ë„ŒíŠ¸
 	while (true)
 	{
 		UINT ComponentType = 0;
 		fread(&ComponentType, sizeof(UINT), 1, _File);
 
-		// ÄÄÆ÷³ÍÆ® Á¤º¸ÀÇ ³¡À» È®ÀÎ
+		// ì»´í¬ë„ŒíŠ¸ ì •ë³´ì˜ ëì„ í™•ì¸
 		if ((UINT)COMPONENT_TYPE::END == ComponentType)
 			break;
 
@@ -206,6 +297,9 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::CAMERA:
 			Component = new CCamera;
 			break;
+		case COMPONENT_TYPE::BEHAVIORTREE:
+			Component = new CBehaviorTree;
+			break;
 		case COMPONENT_TYPE::MESHRENDER:
 			Component = new CMeshRender;
 			break;
@@ -221,7 +315,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::SKYBOX:
 			Component = new CSkyBox;
 			break;
-		case COMPONENT_TYPE::DECAL:			
+		case COMPONENT_TYPE::DECAL:
 			Component = new CDecal;
 			break;
 		}
@@ -231,7 +325,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 	}
 
 
-	// ½ºÅ©¸³Æ®	
+	// ìŠ¤í¬ë¦½íŠ¸	
 	size_t ScriptCount = 0;
 	fread(&ScriptCount, sizeof(size_t), 1, _File);
 
@@ -244,7 +338,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		pScript->LoadFromLevelFile(_File);
 	}
 
-	// ÀÚ½Ä ¿ÀºêÁ§Æ®		
+	// ìì‹ ì˜¤ë¸Œì íŠ¸		
 	size_t ChildCount = 0;
 	fread(&ChildCount, sizeof(size_t), 1, _File);
 
@@ -255,4 +349,226 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 	}
 
 	return pObject;
+}
+
+CLevel* CLevelSaveLoad::LoadLevelByDB()
+{
+	m_vLevelID.clear();
+	m_vLevelID.shrink_to_fit();
+
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	const char* szQuery = "SELECT ID FROM LEVEL";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+			int id = sqlite3_column_int(stmt, 0);
+			m_vLevelID.push_back(id);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else {
+		assert(false);
+	}
+
+	CLevel* NewLevel = new CLevel;
+
+	CSQLMgr::GetInst()->SelectFromLevel(m_vLevelID[0], NewLevel);
+
+	LoadLayerByDB(m_vLevelID[0], NewLevel);
+
+	NewLevel->ChangeState(LEVEL_STATE::STOP);
+
+	return NewLevel;
+}
+
+void CLevelSaveLoad::LoadLayerByDB(int _levelID, CLevel*& _level)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	int levelID = _levelID;
+
+	const char* szQuery = "SELECT ID, Layer_Name, Layer_Idx FROM Layer WHERE Level_ID = ?";
+	sqlite3_stmt* stmt;
+
+	// ì¿¼ë¦¬ ì¤€ë¹„
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, levelID);
+
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+			int layer_ID = (sqlite3_column_int(stmt, 0));
+			const wchar_t* layerName = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
+			int layer_Idx = (sqlite3_column_int(stmt, 2));
+
+			CLayer* pLayer = _level->GetLayer(layer_Idx);
+			pLayer->SetName(layerName);
+
+			//ì—¬ê¸°ì„œ ê²Œì„ì˜¤ë¸Œì íŠ¸ë¥¼ ìƒì„±í•˜ê³  ë ˆì´ì–´ì— ë„£ì–´ì¤Œ
+			LoadGameObjectByDB(layer_ID, layer_Idx, _level);
+		}
+
+		sqlite3_finalize(stmt);
+	}
+	else {
+		assert(false);
+	}
+}
+
+void CLevelSaveLoad::LoadGameObjectByDB(int _layerID, int layer_Idx, CLevel*& _level)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+	int layerID = _layerID;
+
+	const char* szQuery = "SELECT ID, GameObject_Name, Parent_ID, Component_Type_Array FROM GAMEOBJECT WHERE Layer_ID = ?";
+	sqlite3_stmt* stmt;
+
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		sqlite3_bind_int(stmt, 1, layerID);
+
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+			int gameObject_ID = (sqlite3_column_int(stmt, 0));
+			const wchar_t* gameObjectName = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
+			int parentID = (sqlite3_column_int(stmt, 2));
+			const wchar_t* comTypeArr = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
+
+			vector<int> vComTypeArr = WStringToIntArray(comTypeArr);
+
+			CGameObject* pNewObject = LoadComponentByDB(gameObject_ID, gameObjectName, parentID, vComTypeArr);
+			_level->AddGameObject(pNewObject, _layerID, false);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else {
+		assert(false);
+	}
+}
+
+CGameObject* CLevelSaveLoad::LoadComponentByDB(int _gameObjectID, const wstring _gameObjectName, int _parentID, vector<int> _comTypeArr)
+{
+	sqlite3* db = CSQLMgr::GetInst()->GetDB();
+
+	CGameObject* pNewGameObject = new CGameObject;
+	pNewGameObject->SetName(_gameObjectName);
+
+	if (_gameObjectName == L"Sun")
+		int a = 0;
+
+	for (int i = 0; i < _comTypeArr.size(); i++) {
+
+		CComponent* Component = nullptr;
+
+		switch ((COMPONENT_TYPE)_comTypeArr[i])
+		{
+		case COMPONENT_TYPE::TRANSFORM:
+			Component = new CTransform;
+			break;
+		case COMPONENT_TYPE::COLLIDER2D:
+			Component = new CCollider2D;
+			break;
+		case COMPONENT_TYPE::COLLIDER3D:
+			//Component = new CCollider2D;
+			break;
+		case COMPONENT_TYPE::ANIMATOR2D:
+			Component = new CAnimator2D;
+			break;
+		case COMPONENT_TYPE::ANIMATOR3D:
+			break;
+		case COMPONENT_TYPE::LIGHT2D:
+			Component = new CLight2D;
+			break;
+		case COMPONENT_TYPE::LIGHT3D:
+			Component = new CLight3D;
+			break;
+		case COMPONENT_TYPE::CAMERA:
+			Component = new CCamera;
+			break;
+		case COMPONENT_TYPE::BEHAVIORTREE:
+			Component = new CBehaviorTree;
+			break;
+		case COMPONENT_TYPE::MESHRENDER:
+			Component = new CMeshRender;
+			break;
+		case COMPONENT_TYPE::PARTICLESYSTEM:
+			Component = new CParticleSystem;
+			break;
+		case COMPONENT_TYPE::TILEMAP:
+			Component = new CTileMap;
+			break;
+		case COMPONENT_TYPE::LANDSCAPE:
+			Component = nullptr;
+			break;
+		case COMPONENT_TYPE::SKYBOX:
+			Component = new CSkyBox;
+			break;
+		case COMPONENT_TYPE::DECAL:
+			Component = new CDecal;
+			break;
+		}
+
+		Component->LoadFromDB(_gameObjectID);
+		pNewGameObject->AddComponent(Component);
+	}
+
+	//ìŠ¤í¬ë¦½íŠ¸ ë¡œë“œ ì½”ë“œ ì§œê¸°
+	const char* sSzQuery = "SELECT Script_Name FROM SCRIPT WHERE GameObject_ID = ?";
+	sqlite3_stmt* sStmt;
+
+	// ì¿¼ë¦¬ ì¤€ë¹„
+	if (sqlite3_prepare_v2(db, sSzQuery, -1, &sStmt, NULL) == SQLITE_OK) {
+		// Level_ID ë°”ì¸ë”©
+		sqlite3_bind_int(sStmt, 1, _gameObjectID);
+
+		// ì¿¼ë¦¬ ì‹¤í–‰ ë° ê²°ê³¼ ì²˜ë¦¬
+		while (sqlite3_step(sStmt) == SQLITE_ROW) {
+			// ê²°ê³¼ë¥¼ ì–»ìŠµë‹ˆë‹¤.
+			const char* scriptName = reinterpret_cast<const char*>(sqlite3_column_text(sStmt, 0));
+			CScript* pScript = CScriptMgr::GetScript(ToWString(scriptName));
+			pNewGameObject->AddComponent(pScript);
+			pScript->LoadFromDB(_gameObjectID);
+		}
+
+		// ìŠ¤í…Œì´íŠ¸ë¨¼íŠ¸ ì¢…ë£Œ
+		sqlite3_finalize(sStmt);
+	}
+	else {
+		// ì¿¼ë¦¬ ì¤€ë¹„ì— ì‹¤íŒ¨í–ˆì„ ê²½ìš°ì˜ ì²˜ë¦¬
+		assert(false);
+	}
+
+
+	//ìì‹ì˜¤ë¸Œì íŠ¸
+	int parentID = _gameObjectID;
+
+	// ì¿¼ë¦¬ ë¬¸ìì—´ ì¤€ë¹„
+	const char* szQuery = "SELECT ID, GameObject_Name, Component_Type_Array FROM GAMEOBJECT WHERE Parent_ID = ?";
+	sqlite3_stmt* stmt;
+
+	// ì¿¼ë¦¬ ì¤€ë¹„
+	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
+		// Level_ID ë°”ì¸ë”©
+		sqlite3_bind_int(stmt, 1, parentID);
+
+		// ì¿¼ë¦¬ ì‹¤í–‰ ë° ê²°ê³¼ ì²˜ë¦¬
+		while (sqlite3_step(stmt) == SQLITE_ROW) {
+			// ê²°ê³¼ë¥¼ ì–»ìŠµë‹ˆë‹¤.
+			int gameObject_ID = (sqlite3_column_int(stmt, 0));
+			const wchar_t* gameObjectName = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
+			const wchar_t* comTypeArr = reinterpret_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
+
+			vector<int> vComTypeArr = WStringToIntArray(comTypeArr);
+
+			CGameObject* pChildObject = LoadComponentByDB(gameObject_ID, gameObjectName, parentID, vComTypeArr);
+			pNewGameObject->AddChild(pChildObject);
+		}
+
+		// ìŠ¤í…Œì´íŠ¸ë¨¼íŠ¸ ì¢…ë£Œ
+		sqlite3_finalize(stmt);
+	}
+	else {
+		// ì¿¼ë¦¬ ì¤€ë¹„ì— ì‹¤íŒ¨í–ˆì„ ê²½ìš°ì˜ ì²˜ë¦¬
+		assert(false);
+	}
+
+
+	return pNewGameObject;
 }

@@ -4,6 +4,8 @@
 #define DEVICE  CDevice::GetInst()->GetDevice()
 #define CONTEXT CDevice::GetInst()->GetDeviceContext()
 
+#define DELETE_UNVAILUBLE(key) if(key) { delete key; key = nullptr; }
+
 #define CLONE(type) public: virtual type* Clone() { return new type(*this); }
 #define CLONE_DISABLE(type) public: virtual type* Clone() { return nullptr; assert(nullptr); }
 
@@ -51,7 +53,6 @@ enum class COMPONENT_TYPE
 
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];
 extern const wchar_t* COMPONENT_TYPE_WSTR[(UINT)COMPONENT_TYPE::END];
-
 
 enum class RES_TYPE
 {
@@ -227,6 +228,7 @@ enum class SHAPE_TYPE
 	CIRCLE,
 	CUBE,
 	SPHERE,
+	FRUSTUM,
 	END,
 };
 
@@ -235,8 +237,11 @@ enum class COLLIDER2D_TYPE
 {
 	RECT,
 	CIRCLE,
+	END,
 };
 
+extern const char* COLLIDER2D_TYPE_STR[(UINT)COLLIDER2D_TYPE::END];
+extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COLLIDER2D_TYPE::END];
 
 enum class LIGHT_TYPE
 {

@@ -18,6 +18,9 @@ private:
     Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
+    float   m_fBoundingRadius;       // 최대 반경 반지름
+    Matrix  m_matWorldBoundingScale;
+    Matrix  m_matWorldBoundingBox;    // 최대 반경 행렬
 
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
@@ -44,6 +47,9 @@ public:
 
     void SetWorldMat(const Matrix& _mat) { m_matWorld = _mat; }
 
+    const float& GetBoundingRadius() { return m_fBoundingRadius; }
+    const Matrix& GetWorldBoundingMat() { return m_matWorldBoundingBox; }
+
 public:
     virtual void finaltick() override;    
     void UpdateData();
@@ -69,6 +75,9 @@ public:
 public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
+
+    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
+    virtual void LoadFromDB(int _gameObjectID) override;
 
     CLONE(CTransform);
 public:

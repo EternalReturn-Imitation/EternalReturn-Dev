@@ -1,18 +1,22 @@
 #include "pch.h"
 #include "TreeUI.h"
 
-
-
 // ========
 // TreeNode
 // ========
 TreeNode::TreeNode()
     : m_Owner(nullptr)
     , m_ParentNode(nullptr)
+    , m_CurGroupIdx(0)
+    , m_ChildNodeSize(0)
+    , m_NodeColorNum(0)
+    , m_CustomFlags(0)
     , m_ID(0)
     , m_Data(0)
     , m_CategoryNode(false)
     , m_Hilight(false)    
+    , m_ColorChange(false)
+    , m_bHovered(false)
 {
 }
 
@@ -26,7 +30,7 @@ void TreeNode::render_update()
     // FinalName 만들기
     string strFinalName = m_strName;
     strFinalName += "##";
-
+    
     char szBuff[100] = {};
     _itoa_s(m_ID, szBuff, 10);
     strFinalName += szBuff;
@@ -42,8 +46,93 @@ void TreeNode::render_update()
     if(m_Hilight || m_CategoryNode)
         flag |= ImGuiTreeNodeFlags_Selected;
 
+    flag |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+    flag |= m_CustomFlags;
+    
+    if (m_Owner->m_GroupIdx)
+    {
+        ImGui::Text("%d", m_CurGroupIdx);
+        ImGui::SameLine();
+    }
+    
+    // 노드 상하 이동
+    if (m_Owner->m_ArrowBtn)
+    {
+        float FrmHeight = ImGui::GetFrameHeight();
+        ImVec2 BtnSize = { FrmHeight,FrmHeight };
+
+        // 부모노드가 있고 동일계층 노드 수가 2개 이상인 경우
+        if (m_ParentNode && 1 < m_ParentNode->m_vecChildNode.size())
+        {
+
+            if (m_CurGroupIdx == m_ParentNode->m_vecChildNode.size())
+            {
+                ImGui::InvisibleButton("NONE", BtnSize);
+            }
+            else
+            {
+                string UpBtn = "u##";
+                UpBtn += szBuff;
+                if (ImGui::ArrowButtonSz(UpBtn.c_str(), ImGuiDir_Down, BtnSize))
+                {
+                    if (m_Owner->m_SwapBackInst && m_Owner->m_SwapBackFunc)
+                        m_Owner->SetSwapBackNode(this);
+                }
+            }
+
+            if (m_CurGroupIdx > 1)
+            {
+                ImGui::SameLine();
+                string DownBtn = "d##";
+                DownBtn += szBuff;
+                if (ImGui::ArrowButtonSz(DownBtn.c_str(), ImGuiDir_Up, BtnSize))
+                {
+                    if (m_Owner->m_SwapFrontInst && m_Owner->m_SwapFrontFunc)
+                        m_Owner->SetSwapFrontNode(this);
+                }
+            }
+            else
+            {
+                ImGui::SameLine();
+                ImGui::InvisibleButton("NONE", BtnSize);
+            }
+        }
+        ImGui::SameLine();
+    }
+
+    // 노드 색상 변경
+    int ChangCnt = 0;
+    if (m_ColorChange)
+    {
+        if (!m_Hilight && !m_bHovered)
+        {
+            ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.5f, 0.9f));
+            ChangCnt += 1;
+        }
+
+        ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.6f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.7f, 0.7f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(m_NodeColorNum / 7.0f, 0.8f, 0.8f));
+        ChangCnt += 3;
+    }
+
+
     if (ImGui::TreeNodeEx(strFinalName.c_str(), flag))
     {
+        if (ImGui::IsItemHovered())
+            m_bHovered = true;
+        else
+            m_bHovered = false;
+        
+
+        // 노드 색상이 변경되었으면 해제처리
+        if (0 < ChangCnt)
+        {
+            ImGui::PopStyleColor(ChangCnt);
+            ChangCnt = 0;
+        }
+    
+        
         // 해당 노드에 마우스 왼클릭이 발생하면 선택노드로 지정 준다.
         if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Left))
         {            
@@ -59,6 +148,8 @@ void TreeNode::render_update()
             m_Owner->m_dwPrevSelected = 0;
             m_Owner->SetSelectedNode(this);
         }
+
+        
 
         // 해당 노드 위에서 드래그 스타트 체크
         if (ImGui::BeginDragDropSource())
@@ -87,8 +178,6 @@ void TreeNode::render_update()
             ImGui::EndDragDropTarget();
         }
 
-
-
         for (size_t i = 0; i < m_vecChildNode.size(); ++i)
         {
             m_vecChildNode[i]->render_update();
@@ -96,7 +185,13 @@ void TreeNode::render_update()
 
         ImGui::TreePop();
     }
-
+    
+    // 노드 색상이 변경되었으면 해제처리 : if문에 들어가지 않아 해제되지 않았을 경우 예외처리
+    if (0 < ChangCnt)
+    {
+        ImGui::PopStyleColor(ChangCnt);
+        ChangCnt = 0;
+    }
 }
 
 
@@ -109,13 +204,25 @@ TreeUI::TreeUI()
     : UI("##Tree")
     , m_RootNode(nullptr)
     , g_NextId(0)
+    , m_NodeFlags(0)
     , m_bShowRoot(true)
+    , m_ArrowBtn(false)
+    , m_GroupIdx(false)
     , m_SelectedNode(nullptr)
+    , m_LbtDownNode(nullptr)
+    , m_DragNode(nullptr)
+    , m_DropNode(nullptr)
+    , m_SwapFrontNode(nullptr)
+    , m_SwapBackNode(nullptr)
     , m_dwPrevSelected(0)
     , m_SelectInst(nullptr)
     , m_SelectFunc(nullptr)    
     , m_DragDropInst(nullptr)
     , m_DragDropFunc(nullptr)
+    , m_SwapFrontInst(nullptr)
+    , m_SwapFrontFunc(nullptr)
+    , m_SwapBackInst(nullptr)
+    , m_SwapBackFunc(nullptr)
 {   
     m_strDragDropID = "PayLoad";
 }
@@ -153,6 +260,28 @@ int TreeUI::render_update()
         
         m_DragNode = nullptr;
         m_DropNode = nullptr;
+    }
+
+    // SwapFront 실행
+    if (m_SwapFrontNode)
+    {
+        if (m_SwapFrontInst && m_SwapFrontFunc)
+        {
+            (m_SwapFrontInst->*m_SwapFrontFunc)((DWORD_PTR)m_SwapFrontNode);
+        }
+
+        m_SwapFrontNode = nullptr;
+    }
+    
+    // SwapBack 실행
+    if (m_SwapBackNode)
+    {
+        if (m_SwapBackInst && m_SwapBackFunc)
+        {
+            (m_SwapBackInst->*m_SwapBackFunc)((DWORD_PTR)m_SwapBackNode);
+        }
+
+        m_SwapBackNode = nullptr;
     }
 
     return 0;
@@ -254,6 +383,16 @@ void TreeUI::SetDragNode(TreeNode* _Node)
 void TreeUI::SetDropNode(TreeNode* _Node)
 {
     m_DropNode = _Node;
+}
+
+void TreeUI::SetSwapFrontNode(TreeNode* _Node)
+{
+    m_SwapFrontNode = _Node;
+}
+
+void TreeUI::SetSwapBackNode(TreeNode* _Node)
+{
+    m_SwapBackNode = _Node;
 }
 
 bool TreeUI::GetSelectedNode(DWORD_PTR _Data)

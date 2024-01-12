@@ -43,7 +43,8 @@ public:
 
 public:
     int  RegisterCamera(CCamera* _Cam, int _idx);
-    void RegisterEditorCamera(CCamera* _Cam) { m_pEditorCam = _Cam; }
+    void RegisterEditorCamera(CCamera* _Cam);
+
     void SetRenderFunc(bool _IsPlay);
     UINT RegisterLight2D(CLight2D* _Light2D, const tLightInfo& _Info)
     {

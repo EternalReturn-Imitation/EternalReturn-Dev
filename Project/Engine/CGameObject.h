@@ -17,6 +17,7 @@ class CSkyBox;
 class CTileMap;
 class CDecal;
 class CScript;
+class CBehaviorTree;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -68,11 +69,10 @@ public:
     GET_COMPONENT(TileMap, TILEMAP);
     GET_COMPONENT(Animator2D, ANIMATOR2D);
     GET_COMPONENT(Animator3D, ANIMATOR3D);
+    GET_COMPONENT(BehaviorTree, BEHAVIORTREE);
     GET_COMPONENT(Light3D, LIGHT3D);
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
-
-
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
 

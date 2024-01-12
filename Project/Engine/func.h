@@ -15,7 +15,7 @@ class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName);
 
-// ø¿∫Í¡ß∆Æ ªË¡¶
+// ?§Î∏å?ùÌä∏ ??†ú
 void DestroyObject(CGameObject* _DeletObject);
 
 // DrawDebugShape
@@ -31,6 +31,9 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bo
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);
 
+
+void DrawDebugFrustumCube(const Matrix& _matWorld, bool DepthTest);
+
 // GameObject ¿Ø»øº∫ √º≈©
 bool IsValidObj(CGameObject*& _Target);
 
@@ -43,6 +46,13 @@ const wchar_t* ToWSTring(COMPONENT_TYPE);
 
 // Relative Path ∞°¡Æø¿±‚
 wstring GetRelativePath(const wstring& _strBase, const wstring& _strPath);
+const char* ToString(COLLIDER2D_TYPE);
+const wchar_t* ToWString(COLLIDER2D_TYPE);
+
+COLLIDER2D_TYPE ToCollider2DType(wstring _wstring);
+
+string ToString(wstring _wstring);
+wstring ToWString(string _string);
 
 // Save / Load
 void SaveWString(const wstring& _str, FILE* _File);
@@ -74,8 +84,43 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 }
 
 
+wstring SaveResRefToDB(Ptr<CRes> _Res);
+void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath);
 
+void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File);
+void LoadGameObjectPtr(wstring& _ObjName, FILE* _File);
 
+template<typename T>
+void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
+	int exists;
+	wss >> exists;
+	std::wstring line;
+	std::getline(wss, line); // ?´Ïûê ?§Ïùò Í∞úÌñâ Î¨∏ÏûêÎ•??åÎπÑ
+
+	if (exists) {
+		std::wstring strKey, strRelativePath;
+
+		std::getline(wss, strKey);
+		std::getline(wss, strRelativePath);
+
+		_Res = CResMgr::GetInst()->Load<T>(strKey, strRelativePath);
+	}
+}
+
+template<typename T>
+void LoadResRefFromDB(Ptr<T>& _Res, const wstring& _Key, const wstring& _RelativePath) {
+	if (_Key != L"0") {
+		_Res = CResMgr::GetInst()->Load<T>(_Key, _RelativePath);
+	}
+}
+
+const wchar_t* ToWString(COMPONENT_TYPE type);
+
+std::wstring Vec3ToWString(const Vec3& vec);
+Vec3 WStringToVec3(const std::wstring& wstr);
+
+std::wstring IntArrayToWString(const std::vector<int>& intArray);
+std::vector<int> WStringToIntArray(const std::wstring& str);
 
 
 
@@ -117,4 +162,6 @@ void Safe_Del_Map(map<T1, T2>& _map)
 }
 
 
-
+// math
+float Rad2Deg(float _radian); 
+float Deg2Rad(float _Degree); 

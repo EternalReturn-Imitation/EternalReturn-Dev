@@ -4,6 +4,9 @@
 #include <list>
 #include <map>
 #include <string>
+#include <unordered_map>
+#include <random>
+#include <sstream>
 
 using std::vector;
 using std::list;
@@ -11,10 +14,12 @@ using std::map;
 using std::make_pair;
 using std::wstring;
 using std::string;
+using std::unordered_map;
 
 #include <typeinfo>
 #include <assert.h>
 
+using std::type_info;
 
 // FileSystem
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
@@ -28,7 +33,7 @@ using namespace std::experimental::filesystem;
 using namespace Microsoft::WRL;
 
 #include <d3d11.h>					// DirectX11
-#include <d3dcompiler.h>			// Shader ƒƒ∆ƒ¿œ
+#include <d3dcompiler.h>			// ShaderÍ¥ÄÎ†® Ìó§Îçî
 #include <DirectXMath.h>			// DX Math
 #include <DirectXPackedVector.h>	
 
@@ -61,3 +66,7 @@ typedef Vector4 Vec4;
 #include "func.h"
 
 #include "CSingleton.h"
+
+#include "SQLLight/sqlite3.h"
+#pragma comment(lib, "SQLLite/sqlite3.lib")
+#pragma comment(lib, "SQLLite/sqlite3.dll")

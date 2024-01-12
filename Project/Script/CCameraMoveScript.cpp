@@ -6,7 +6,7 @@
 
 CCameraMoveScript::CCameraMoveScript()
 	: CScript((UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT)
-	, m_fCamSpeed(1000.f)
+	, m_fCamSpeed(250.f)
 {
 }
 
@@ -50,7 +50,6 @@ void CCameraMoveScript::Camera2DMove()
 	{
 		vPos.x += DT * fSpeed;
 	}
-
 
 	if (KEY_PRESSED(KEY::_1))
 	{
@@ -101,6 +100,16 @@ void CCameraMoveScript::Camera3DMove()
 	if (KEY_PRESSED(KEY::D))
 	{
 		vPos += DT * vRight * fSpeed;
+	}
+
+	if (KEY_PRESSED(KEY::E))
+	{
+		vPos += DT * vUp * fSpeed;
+	}
+
+	if (KEY_PRESSED(KEY::Q))
+	{
+		vPos -= DT * vUp * fSpeed;
 	}
 
 

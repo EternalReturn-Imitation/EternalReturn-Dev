@@ -30,6 +30,12 @@ int MaterialUI::render_update()
     string strKey = string(pMtrl->GetKey().begin(), pMtrl->GetKey().end());
     ImGui::InputText("##MtrlUIName", (char*)strKey.c_str(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
 
+    ImGui::SameLine();
+    if (ImGui::Button("Edit##EditName"))
+    {
+
+    }
+
     // GraphicsShader ¿Ã∏ß
     ImGui::Text("Shader  ");
     ImGui::SameLine();

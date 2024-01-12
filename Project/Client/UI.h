@@ -15,6 +15,8 @@ private:
 	UI*				m_ParentUI;		// 부모 UI
 	vector<UI*>		m_vecChildUI;	// 자식 UI 목록
 
+	ImGuiWindowFlags m_WinFlags;	// 윈도우 플래그
+
 	bool			m_Modal;		// 모달 or 모달리스
 	bool			m_Active;		// UI 활성화 체크
 
@@ -28,6 +30,10 @@ public:
 public:	
 	void SetActive(bool _Active) { m_Active = _Active; }
 	bool IsActive() { return m_Active; }
+	bool* IsActiveptr() { return &m_Active; }
+
+	ImGuiWindowFlags GetFlags() { return m_WinFlags; }
+	void SetFlags(ImGuiWindowFlags _flags) { m_WinFlags = _flags; }
 
 	void SetModal(bool _Modal) { m_Modal = _Modal; }
 	bool IsModal() { return m_Modal; }
