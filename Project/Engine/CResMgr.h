@@ -9,6 +9,7 @@
 #include "CMaterial.h"
 #include "CPrefab.h"
 #include "CSound.h"
+#include "CMeshData.h"
 
 #include "CPathMgr.h"
 #include "CSQLMgr.h"
@@ -31,7 +32,7 @@ private:
     void CreateDefaultMesh();
     void CreateDefaultGraphicsShader();
     void CreateDefaultComputeShader();
-    void CreateDefaultMaterial();  
+    void CreateDefaultMaterial();
 
 
 
@@ -44,13 +45,15 @@ public:
 
     Ptr<CTexture> CreateTexture(const wstring& _strKey, ComPtr<ID3D11Texture2D> _Tex2D);
 
+    Ptr<CMeshData> LoadFBX(const wstring& _strPath);
+
     bool IsResourceChanged() { return m_Changed; }
 
     template<typename T>
     Ptr<T> FindRes(const wstring& _strKey);
 
     template<typename T>
-    void AddRes(const wstring& _strKey, Ptr<T>& _Res);
+    void AddRes(const wstring& _strKey, Ptr<T> _Res);
 
     template<typename T>
     void AddRes(const wstring& _strKey, const wstring& _strPath, const wstring& _strExt, Ptr<T>& _Res);
@@ -68,7 +71,7 @@ template<typename T>
 RES_TYPE GetResType()
 {
     const type_info& mesh = typeid(CMesh);
-    //const type_info& meshdata = typeid(CMeshData);
+    const type_info& meshdata = typeid(CMeshData);
     const type_info& material = typeid(CMaterial);
     const type_info& texture = typeid(CTexture);
     const type_info& sound = typeid(CSound);
@@ -78,6 +81,8 @@ RES_TYPE GetResType()
 
     if (typeid(T).hash_code() == mesh.hash_code())
         return RES_TYPE::MESH;
+    if (typeid(T).hash_code() == meshdata.hash_code())
+        return RES_TYPE::MESHDATA;
     if (typeid(T).hash_code() == gs.hash_code())
         return RES_TYPE::GRAPHICS_SHADER;
     if (typeid(T).hash_code() == cs.hash_code())
@@ -99,20 +104,20 @@ template<typename T>
 inline Ptr<T> CResMgr::FindRes(const wstring& _strKey)
 {
     RES_TYPE type = GetResType<T>();
-      
+
     map<wstring, Ptr<CRes>>::iterator iter = m_arrRes[(UINT)type].find(_strKey);
     if (iter == m_arrRes[(UINT)type].end())
         return nullptr;
 
-    return (T*)iter->second.Get();    
+    return (T*)iter->second.Get();
 }
 
 
 template<typename T>
-inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T>& _Res)
+inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T> _Res)
 {
     // 중복키로 리소스 추가하려는 경우
-    assert( ! FindRes<T>(_strKey).Get() );
+    assert(!FindRes<T>(_strKey).Get());
 
     RES_TYPE type = GetResType<T>();
     m_arrRes[(UINT)type].insert(make_pair(_strKey, _Res.Get()));
@@ -152,11 +157,11 @@ template<typename T>
 inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strRelativePath, const wstring& _strDirectoryPath)
 {
     Ptr<CRes> pRes = FindRes<T>(_strKey).Get();
-    
+
     // 이미 해당 키로 리소스가 있다면, 반환
     if (nullptr != pRes)
         return (T*)pRes.Get();
-            
+
     pRes = new T;
     pRes->SetKey(_strKey);
     pRes->SetRelativePath(_strRelativePath);

@@ -19,7 +19,7 @@ void CResMgr::init()
 	CreateDefaultMesh();
 	CreateDefaultGraphicsShader();
 	CreateDefaultComputeShader();
-	CreateDefaultMaterial();	
+	CreateDefaultMaterial();
 }
 
 
@@ -46,7 +46,7 @@ void CResMgr::tick()
 Ptr<CTexture> CResMgr::CreateTexture(const wstring& _strKey, UINT _Width, UINT _Height
 	, DXGI_FORMAT _pixelformat, UINT _BindFlag, D3D11_USAGE _Usage)
 {
-	Ptr<CTexture> pTex =  FindRes<CTexture>(_strKey);
+	Ptr<CTexture> pTex = FindRes<CTexture>(_strKey);
 
 	assert(nullptr == pTex);
 
@@ -78,6 +78,30 @@ Ptr<CTexture> CResMgr::CreateTexture(const wstring& _strKey, ComPtr<ID3D11Textur
 	return pTex;
 }
 
+Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
+{
+	wstring strFileName = path(_strPath).stem();
+
+	wstring strName = L"meshdata\\";
+	strName += strFileName + L".mdat";
+
+	Ptr<CMeshData> pMeshData = FindRes<CMeshData>(strName);
+
+	if (nullptr != pMeshData)
+		return pMeshData;
+
+	pMeshData = CMeshData::LoadFromFBX(_strPath);
+	pMeshData->SetKey(strName);
+	pMeshData->SetRelativePath(strName);
+
+	m_arrRes[(UINT)RES_TYPE::MESHDATA].insert(make_pair(strName, pMeshData.Get()));
+
+	// meshdata 를 실제파일로 저장
+	pMeshData->Save(strName);
+
+	return pMeshData;
+}
+
 
 void CResMgr::DeleteRes(RES_TYPE _type, const wstring& _strKey)
 {
@@ -85,7 +109,7 @@ void CResMgr::DeleteRes(RES_TYPE _type, const wstring& _strKey)
 
 	assert(!(iter == m_arrRes[(UINT)_type].end()));
 
-	m_arrRes[(UINT)_type].erase(iter);	
+	m_arrRes[(UINT)_type].erase(iter);
 
 	m_Changed = true;
 }

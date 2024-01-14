@@ -9,18 +9,20 @@ class CLight3D :
 {
 private:
     tLightInfo      m_LightInfo;
-
     Ptr<CMesh>      m_Mesh;
     Ptr<CMaterial>  m_Mtrl;
+    int             m_LightIdx;
+    bool            m_bShowRange;
 
-    UINT            m_LightIdx;
+    CGameObject* m_pCamObj;
 
     bool            m_bDebug;
 
 public:
     virtual void finaltick() override;
-    void render();
-
+    
+    void render(); // 라이팅 렌더
+    void render_shadowmap(); // 광원 시점에서 물체들의 깊이(ShadowMap)를 그림
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
@@ -43,9 +45,12 @@ public:
     float GetAngle() { return m_LightInfo.Angle; }
     bool IsDebug() { return m_bDebug; }
 
+    void ShowRange(bool _bSet) { m_bShowRange = _bSet; }
+
     CLONE(CLight3D);
 public:
     CLight3D();
+    CLight3D(const CLight3D& _Origin);
     ~CLight3D();
 };
 

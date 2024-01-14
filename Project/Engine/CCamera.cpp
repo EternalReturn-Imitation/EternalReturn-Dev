@@ -70,7 +70,7 @@ CCamera::CCamera(const CCamera& _Other)
 }
 
 CCamera::~CCamera()
-{	
+{
 }
 
 void CCamera::begin()
@@ -85,7 +85,7 @@ void CCamera::finaltick()
 {
 	CalcViewMat();
 
-	CalcProjMat();	
+	CalcProjMat();
 
 	m_Frustum.finaltick();
 }
@@ -93,15 +93,15 @@ void CCamera::finaltick()
 void CCamera::CalcViewMat()
 {
 	// ==============
-	// View í–‰ë ¬ ê³„ì‚°
+	// View ?‰ë ¬ ê³„ì‚°
 	// ==============
 	m_matView = XMMatrixIdentity();
 
-	// ì¹´ë©”ë¼ ì¢Œí‘œë¥¼ ì›ì ìœ¼ë¡œ ì´ë™
+	// ì¹´ë©”??ì¢Œí‘œë¥??ì ?¼ë¡œ ?´ë™
 	Vec3 vCamPos = Transform()->GetRelativePos();
 	Matrix matViewTrans = XMMatrixTranslation(-vCamPos.x, -vCamPos.y, -vCamPos.z);
 
-	// ì¹´ë©”ë¼ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥ì„ Z ì¶•ê³¼ í‰í–‰í•˜ê²Œ ë§Œë“œëŠ” íšŒì „ í–‰ë ¬ì„ ì ìš©
+	// ì¹´ë©”?¼ê? ë°”ë¼ë³´ëŠ” ë°©í–¥??Z ì¶•ê³¼ ?‰í–‰?˜ê²Œ ë§Œë“œ???Œì „ ?‰ë ¬???ìš©
 	Matrix matViewRot = XMMatrixIdentity();
 
 	Vec3 vR = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -115,30 +115,30 @@ void CCamera::CalcViewMat()
 	m_matView = matViewTrans * matViewRot;
 
 
-	// View ì—­í–‰ë ¬ êµ¬í•˜ê¸°
+	// View ??–‰??êµ¬í•˜ê¸?
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 }
 
 void CCamera::CalcProjMat()
 {
 	// =============
-	// íˆ¬ì˜ í–‰ë ¬ ê³„ì‚°
+	// ?¬ì˜ ?‰ë ¬ ê³„ì‚°
 	// =============
 	m_matProj = XMMatrixIdentity();
-	
+
 	if (PROJ_TYPE::ORTHOGRAPHIC == m_ProjType)
 	{
-		// ì§êµ íˆ¬ì˜
+		// Á÷±³ Åõ¿µ
 		Vec2 vResolution = CDevice::GetInst()->GetRenderResolution();
 		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), m_Near, m_Far);
 	}
 	else
 	{
-		// ì›ê·¼ íˆ¬ì˜
+		// ¿ø±Ù Åõ¿µ
 		m_matProj = XMMatrixPerspectiveFovLH(m_FOV, m_fAspectRatio, m_Near, m_Far);
 	}
 
-	// íˆ¬ì˜í–‰ë ¬ ì—­í–‰ë ¬ êµ¬í•˜ê¸°
+	// Åõ¿µÇà·Ä ¿ªÇà·Ä ±¸ÇÏ±â
 	m_matProjInv = XMMatrixInverse(nullptr, m_matProj);
 }
 
@@ -197,15 +197,15 @@ void CCamera::SetCameraIndex(int _idx)
 
 void CCamera::SortObject()
 {
-	// ì´ì „ í”„ë ˆì„ ë¶„ë¥˜ì •ë³´ ì œê±°
+	// ÀÌÀü ÇÁ·¹ÀÓ ºĞ·ùÁ¤º¸ Á¦°Å
 	clear();
 
-	// í˜„ì¬ ë ˆë²¨ ê°€ì ¸ì™€ì„œ ë¶„ë¥˜
+	// ÇöÀç ·¹º§ °¡Á®¿Í¼­ ºĞ·ù
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
-		// ë ˆì´ì–´ ë§ˆìŠ¤í¬ í™•ì¸
+		// ?ˆì´??ë§ˆìŠ¤???•ì¸
 		if (m_iLayerMask & (1 << i))
 		{
 			CLayer* pLayer = pCurLevel->GetLayer(i);
@@ -215,25 +215,26 @@ void CCamera::SortObject()
 			{
 				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
 
-				// ë Œë”ë§ ê¸°ëŠ¥ì´ ì—†ëŠ” ì˜¤ë¸Œì íŠ¸ëŠ” ì œì™¸
-				if (   nullptr == pRenderCom
-					|| nullptr == pRenderCom->GetMaterial()
-					|| nullptr == pRenderCom->GetMaterial()->GetShader())
+				// ·»´õ¸µ ±â´ÉÀÌ ¾ø´Â ¿ÀºêÁ§Æ®´Â Á¦¿Ü
+				if (nullptr == pRenderCom
+					|| nullptr == pRenderCom->GetMaterial(0)
+					|| nullptr == pRenderCom->GetMaterial(0)->GetShader())
 					continue;
 
 				// Frustum Check
-				if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ì ˆë‘ì²´ë Œë” ì—¬ë¶€ íŒë‹¨, ì†Œì† ë ˆì´ì–´ í˜¹ì€ ë³¸ì¸ ìì²´ ì ˆë‘ì²´ë Œë” ì²´í¬ê°€ ë˜ì–´ìˆëŠ” ê²½ìš°
+				if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ?ˆë‘ì²´ë Œ???¬ë? ?ë‹¨, ?Œì† ?ˆì´???¹ì? ë³¸ì¸ ?ì²´ ?ˆë‘ì²´ë Œ??ì²´í¬ê°€ ?˜ì–´?ˆëŠ” ê²½ìš°
 				{
 					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
 					if (IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
 						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
-
+				
 					if (false == m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius()))
 						continue;
 				}
 
-				// ì‰ì´ë” ë„ë©”ì¸ì— ë”°ë¥¸ ë¶„ë¥˜
-				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
+					// ½¦ÀÌ´õ µµ¸ŞÀÎ¿¡ µû¸¥ ºĞ·ù
+				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(0)->GetShader()->GetDomain();
+
 				switch (eDomain)
 				{
 				case SHADER_DOMAIN::DOMAIN_DEFERRED:
@@ -243,7 +244,6 @@ void CCamera::SortObject()
 				case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
 					m_vecDeferredDecal.push_back(vecObject[j]);
 					break;
-
 				case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					m_vecOpaque.push_back(vecObject[j]);
 					break;
@@ -261,7 +261,7 @@ void CCamera::SortObject()
 					break;
 				case SHADER_DOMAIN::DOMAIN_UI:
 					m_vecUI.push_back(vecObject[j]);
-					break;				
+					break;
 				}
 			}
 		}
@@ -270,15 +270,15 @@ void CCamera::SortObject()
 
 void CCamera::SortObject(CCamera* _MainCamera)
 {
-	// ì´ì „ í”„ë ˆì„ ë¶„ë¥˜ì •ë³´ ì œê±°
+	// ÀÌÀü ÇÁ·¹ÀÓ ºĞ·ùÁ¤º¸ Á¦°Å
 	clear();
 
-	// í˜„ì¬ ë ˆë²¨ ê°€ì ¸ì™€ì„œ ë¶„ë¥˜
+	// ÇöÀç ·¹º§ °¡Á®¿Í¼­ ºĞ·ù
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
-		// ë ˆì´ì–´ ë§ˆìŠ¤í¬ í™•ì¸
+		// ·¹ÀÌ¾î ¸¶½ºÅ© È®ÀÎ
 		if (_MainCamera->m_iLayerMask & (1 << i))
 		{
 			CLayer* pLayer = pCurLevel->GetLayer(i);
@@ -288,26 +288,26 @@ void CCamera::SortObject(CCamera* _MainCamera)
 			{
 				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
 
-				// ë Œë”ë§ ê¸°ëŠ¥ì´ ì—†ëŠ” ì˜¤ë¸Œì íŠ¸ëŠ” ì œì™¸
+				// ·»´õ¸µ ±â´ÉÀÌ ¾ø´Â ¿ÀºêÁ§Æ®´Â Á¦¿Ü
 				if (nullptr == pRenderCom
-					|| nullptr == pRenderCom->GetMaterial()
-					|| nullptr == pRenderCom->GetMaterial()->GetShader())
+					|| nullptr == pRenderCom->GetMaterial(0)
+					|| nullptr == pRenderCom->GetMaterial(0)->GetShader())
 					continue;
 
 				// Frustum Check
-				if (_MainCamera->m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ì ˆë‘ì²´ë Œë” ì—¬ë¶€ íŒë‹¨, ì†Œì† ë ˆì´ì–´ í˜¹ì€ ë³¸ì¸ ìì²´ ì ˆë‘ì²´ë Œë” ì²´í¬ê°€ ë˜ì–´ìˆëŠ” ê²½ìš°
+				if (_MainCamera->m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ÀıµÎÃ¼·»´õ ¿©ºÎ ÆÇ´Ü, ¼Ò¼Ó ·¹ÀÌ¾î È¤Àº º»ÀÎ ÀÚÃ¼ ÀıµÎÃ¼·»´õ Ã¼Å©°¡ µÇ¾îÀÖ´Â °æ¿ì
 				{
 					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
 
 					if (false == _MainCamera->m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius() / 2.f))
 						continue;
 
-					if(vecObject[j]->GetParent() == nullptr && IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
+					if (vecObject[j]->GetParent() == nullptr && IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
 						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
 				}
 
-				// ì‰ì´ë” ë„ë©”ì¸ì— ë”°ë¥¸ ë¶„ë¥˜
-				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial()->GetShader()->GetDomain();
+				// ½¦ÀÌ´õ µµ¸ŞÀÎ¿¡ µû¸¥ ºĞ·ù
+				SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(0)->GetShader()->GetDomain();
 				switch (eDomain)
 				{
 				case SHADER_DOMAIN::DOMAIN_DEFERRED:
@@ -342,9 +342,43 @@ void CCamera::SortObject(CCamera* _MainCamera)
 	}
 }
 
+void CCamera::SortObject_Shadow()
+{
+	// ÀÌÀü ÇÁ·¹ÀÓ ºĞ·ùÁ¤º¸ Á¦°Å
+	clear_shadow();
+
+	// ÇöÀç ·¹º§ °¡Á®¿Í¼­ ºĞ·ù
+	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+
+	for (UINT i = 0; i < MAX_LAYER; ++i)
+	{
+		// ·¹ÀÌ¾î ¸¶½ºÅ© È®ÀÎ
+		if (m_iLayerMask & (1 << i))
+		{
+			CLayer* pLayer = pCurLevel->GetLayer(i);
+			const vector<CGameObject*>& vecObject = pLayer->GetObjects();
+
+			for (size_t j = 0; j < vecObject.size(); ++j)
+			{
+				CRenderComponent* pRenderCom = vecObject[j]->GetRenderComponent();
+
+				// ·»´õ¸µ ±â´ÉÀÌ ¾ø´Â ¿ÀºêÁ§Æ®´Â Á¦¿Ü
+				if (nullptr == pRenderCom
+					|| nullptr == pRenderCom->GetMaterial(0)
+					|| nullptr == pRenderCom->GetMaterial(0)->GetShader())
+				{
+					continue;
+				}
+
+				m_vecShadow.push_back(vecObject[j]);
+			}
+		}
+	}
+}
+
 void CCamera::render()
 {
-	// í–‰ë ¬ ì—…ë°ì´íŠ¸
+	// ?‰ë ¬ ?…ë°?´íŠ¸
 	g_transform.matView = m_matView;
 	g_transform.matViewInv = m_matViewInv;
 
@@ -353,15 +387,15 @@ void CCamera::render()
 
 	if (m_bMainCamera)
 	{
-		// ì‰ì´ë” ë„ë©”ì¸ì— ë”°ë¼ì„œ ìˆœì°¨ì ìœ¼ë¡œ ê·¸ë¦¬ê¸°
-		// Deferred MRT ë¡œ ë³€ê²½
-		// Deferred ë¬¼ì²´ë“¤ì„ Deferred MRT ì— ê·¸ë¦¬ê¸°
+		// ½¦ÀÌ´õ µµ¸ŞÀÎ¿¡ µû¶ó¼­ ¼øÂ÷ÀûÀ¸·Î ±×¸®±â
+	// Deferred MRT ·Î º¯°æ
+	// Deferred ¹°Ã¼µéÀ» Deferred MRT ¿¡ ±×¸®±â
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 		render_deferred();
 
-		// Light MRT ë¡œ ë³€ê²½
-		// ë¬¼ì²´ë“¤ì— ì ìš©ë  ê´‘ì›ì„ ê·¸ë¦¬ê¸°
-		// Deferred ë¬¼ì²´ì— ê´‘ì› ì ìš©ì‹œí‚¤ê¸°
+		// Light MRT ·Î º¯°æ
+		// ¹°Ã¼µé¿¡ Àû¿ëµÉ ±¤¿øÀ» ±×¸®±â
+		// Deferred ¹°Ã¼¿¡ ±¤¿ø Àû¿ë½ÃÅ°±â
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
 
 		const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
@@ -370,9 +404,9 @@ void CCamera::render()
 			vecLight3D[i]->render();
 		}
 
-		// Deferred MRT ì— ê·¸ë¦° ë¬¼ì²´ì— Light MRT ì¶œë ¥í•œ ê´‘ì›ê³¼ í•©ì³ì„œ
-		// ë‹¤ì‹œ SwapChain íƒ€ê²Ÿìœ¼ë¡œ ìœ¼ë¡œ ê·¸ë¦¬ê¸°
-		// SwapChain MRT ë¡œ ë³€ê²½
+		// Deferred MRT ¿¡ ±×¸° ¹°Ã¼¿¡ Light MRT Ãâ·ÂÇÑ ±¤¿ø°ú ÇÕÃÄ¼­
+		// ´Ù½Ã SwapChain Å¸°ÙÀ¸·Î À¸·Î ±×¸®±â
+		// SwapChain MRT ·Î º¯°æ
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN)->OMSet();
 		static Ptr<CMesh> pRectMesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		static Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"MergeMtrl");
@@ -385,23 +419,35 @@ void CCamera::render()
 			pMtrl->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"DiffuseTargetTex"));
 			pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
 			pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
+			pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
 		}
 
 		pMtrl->UpdateData();
-		pRectMesh->render();
+		pRectMesh->render(0);
 	}
-	
+
 	// Forward Rendering
 	render_opaque();
 	render_mask();
 	render_decal();
 	render_transparent();
 
-	// PostProcess - í›„ì²˜ë¦¬
+	// PostProcess - ?„ì²˜ë¦?
 	render_postprocess();
 
 	// UI
 	render_ui();
+}
+
+void CCamera::render_shadowmap()
+{
+	g_transform.matView = m_matView;
+	g_transform.matProj = m_matProj;
+
+	for (size_t i = 0; i < m_vecShadow.size(); ++i)
+	{
+		m_vecShadow[i]->render_shadowmap();
+	}
 }
 
 
@@ -416,6 +462,11 @@ void CCamera::clear()
 	m_vecTransparent.clear();
 	m_vecPost.clear();
 	m_vecUI.clear();
+}
+
+void CCamera::clear_shadow()
+{
+	m_vecShadow.clear();
 }
 
 void CCamera::render_deferred()
@@ -506,11 +557,9 @@ void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	sqlite3* db = CSQLMgr::GetInst()->GetDB();
 
-	// ì¿¼ë¦¬ ë¬¸ìì—´ ì¤€ë¹„
 	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	sqlite3_stmt* stmt;
 
-	// ì¿¼ë¦¬ ì¤€ë¹„
 	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
 		sqlite3_bind_int(stmt, 1, _gameObjectID);
 		sqlite3_bind_double(stmt, 2, static_cast<double>(m_fAspectRatio));
@@ -520,17 +569,13 @@ void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 		sqlite3_bind_int(stmt, 6, m_iCamIdx);
 		sqlite3_bind_int(stmt, 7, static_cast<int>(m_bMainCamera));
 
-		// ì¿¼ë¦¬ ì‹¤í–‰
 		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			// ì—ëŸ¬ ì²˜ë¦¬: ì¿¼ë¦¬ ì‹¤í–‰ì— ì‹¤íŒ¨í–ˆì„ ê²½ìš°
 			assert(false);
 		}
 
-		// ìŠ¤í…Œì´íŠ¸ë¨¼íŠ¸ ì¢…ë£Œ
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// ì¿¼ë¦¬ ì¤€ë¹„ì— ì‹¤íŒ¨í–ˆì„ ê²½ìš°ì˜ ì²˜ë¦¬
 		assert(false);
 	}
 }
@@ -558,7 +603,6 @@ void CCamera::LoadFromDB(int _gameObjectID)
 		sqlite3_finalize(stmt);
 	}
 	else {
-		// ì¿¼ë¦¬ ì¤€ë¹„ì— ì‹¤íŒ¨í–ˆì„ ê²½ìš°ì˜ ì²˜ë¦¬
 		assert(false);
 	}
 }

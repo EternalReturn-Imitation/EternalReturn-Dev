@@ -74,12 +74,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)OutputFile\bin_d\</OutDir>
-    <IncludePath>$(SolutionDir)External\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\Include\;$(SolutionDir)External\Include\FBXLoader\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\Library\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)OutputFile\bin\</OutDir>
-    <IncludePath>$(SolutionDir)External\Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\Include\;$(SolutionDir)External\Include\FBXLoader\;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)External\Library\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

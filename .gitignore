@@ -4,13 +4,13 @@
 # VS 관련 제외
 /.vs/
 
-#Extenal(외부 임포드) 관련 제외
-/External/Library/Engine/**
-
 #Content 관련 제외
-/OutputFile/bin/content/Mesh
+#/OutputFile/bin/content/Mesh
 
 #Debug 관련 로그 제외
+#Project/Client/x64/
+#Project/Engine/x64/
+#Project/Script/x64/
 x64/
 
 #실행 파일 제외

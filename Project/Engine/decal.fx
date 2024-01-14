@@ -21,8 +21,8 @@
 // ================================
 struct VS_DECAL_IN
 {
-    float3 vPos : POSITION;    
-    float2 vUV  : TEXCOORD;
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
 };
 
 struct VS_DECAL_OUT
@@ -49,8 +49,8 @@ float4 PS_Decal(VS_DECAL_OUT _in) : SV_Target
     
     // 데칼오브젝트 영역에 해당하는 Position 값을 가져온다.
     float2 vScreenUV = _in.vPosition.xy / g_Resolution;
-    float3 vViewPos = PositionTargetTex.Sample(g_sam_0, vScreenUV).xyz;    
-    float3 vWorldPos = mul(float4(vViewPos, 1.f), g_matViewInv).xyz;    
+    float3 vViewPos = PositionTargetTex.Sample(g_sam_0, vScreenUV).xyz;
+    float3 vWorldPos = mul(float4(vViewPos, 1.f), g_matViewInv).xyz;
     float3 vLocal = mul(float4(vWorldPos, 1.f), g_matWorldInv).xyz;
     
     if (abs(vLocal.x) < 0.5f && abs(vLocal.y) < 0.5f && abs(vLocal.z) < 0.5f)
@@ -59,7 +59,7 @@ float4 PS_Decal(VS_DECAL_OUT _in) : SV_Target
         //vOutColor = float4(1.f, 0.f, 0.f, 1.f);        
         float2 vUV = vLocal.xz;
         vUV.x = vUV.x + 0.5f;
-        vUV.y = (1.f - vUV.y) - 0.5f; 
+        vUV.y = (1.f - vUV.y) - 0.5f;
         
         if (IsOutputTex)
         {
@@ -68,18 +68,16 @@ float4 PS_Decal(VS_DECAL_OUT _in) : SV_Target
         else
         {
             discard;
-        }         
+        }
     }
     else
     {
         // Deacl 외부에 있는 좌표        
-        discard;        
+        discard;
     }
     
     return vOutColor;
 }
-
-
 
 // ================================
 // Deferred DecalShader
@@ -152,8 +150,6 @@ PS_DECAL_OUT PS_DeferredDecal(VS_DECAL_OUT _in) : SV_Target
     
     return output;
 }
-
-
 
 
 #endif

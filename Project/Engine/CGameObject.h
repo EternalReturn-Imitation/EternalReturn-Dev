@@ -8,6 +8,7 @@ class CMeshRender;
 class CParticleSystem;
 class CCollider2D;
 class CAnimator2D;
+class CAnimator3D;
 class CLight2D;
 class CLight3D;
 class CCamera;
@@ -26,11 +27,11 @@ class CGameObject :
     public CEntity
 {
 private:
-    CComponent*             m_arrCom[(UINT)COMPONENT_TYPE::END];
-    CRenderComponent*       m_RenderCom;
+    CComponent* m_arrCom[(UINT)COMPONENT_TYPE::END];
+    CRenderComponent* m_RenderCom;
     vector<CScript*>        m_vecScript;
 
-    CGameObject*            m_Parent;
+    CGameObject* m_Parent;
     vector<CGameObject*>    m_vecChild;
 
     int                     m_iLayerIdx; // 소속된 레이어 인덱스값
@@ -42,11 +43,13 @@ private:
 public:
     // 레벨이 시작될 때 호출 or 시작 된 레벨에 합류할 때 호출
     // 생성자
-    void begin();       
+    void begin();
 
-    void tick();        
+    void tick();
     virtual void finaltick();
+    void finaltick_module();
     void render();
+    void render_shadowmap();
 
 public:
     void AddComponent(CComponent* _Component);
@@ -65,12 +68,13 @@ public:
     GET_COMPONENT(Light2D, LIGHT2D);
     GET_COMPONENT(TileMap, TILEMAP);
     GET_COMPONENT(Animator2D, ANIMATOR2D);
+    GET_COMPONENT(Animator3D, ANIMATOR3D);
     GET_COMPONENT(BehaviorTree, BEHAVIORTREE);
-    GET_COMPONENT(Light3D, LIGHT3D);  
+    GET_COMPONENT(Light3D, LIGHT3D);
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
 
-    CRenderComponent* GetRenderComponent() const {  return m_RenderCom; }
+    CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
 
 
     int GetLayerIndex() { return m_iLayerIdx; }
@@ -99,7 +103,7 @@ private:
     void AddParentList();
 
 
-    CLONE(CGameObject)    
+    CLONE(CGameObject)
 public:
     CGameObject();
     CGameObject(const CGameObject& _Other);

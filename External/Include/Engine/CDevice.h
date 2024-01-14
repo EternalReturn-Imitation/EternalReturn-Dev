@@ -15,6 +15,9 @@ private:
 
 	ComPtr<IDXGISwapChain>			m_SwapChain;
 
+	Ptr<CTexture>					m_RTTex;
+	Ptr<CTexture>					m_DSTex;
+
 	// Sampler
 	ComPtr<ID3D11SamplerState>		m_Sampler[3];
 
@@ -35,8 +38,8 @@ private:
 	CConstBuffer*					m_arrConstBuffer[(UINT)CB_TYPE::END];
 
 public:
-	int init(HWND _hWnd, UINT _iWidth, UINT _iHeight);	
-	void Present()	{ m_SwapChain->Present(0, 0); }
+	int init(HWND _hWnd, UINT _iWidth, UINT _iHeight);
+	void Present() { m_SwapChain->Present(0, 0); }
 	Vec2 GetRenderResolution() { return m_vRenderResolution; }
 
 private:

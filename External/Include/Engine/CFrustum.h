@@ -25,13 +25,11 @@ private:
     // 투영 공간에서의 8개의 점
     Vec3        m_arrProj[8];
 
-
     // 절두체의 6면
     Vec4        m_arrFace[FT_END];
 
 public:
     void finaltick();
-
 
 public:
     bool FrustumCheck(Vec3 _vPos);
@@ -39,8 +37,6 @@ public:
 
 public:
     CLONE(CFrustum);
-
-
 
 public:
     CFrustum() {}

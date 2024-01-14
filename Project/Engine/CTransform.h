@@ -54,6 +54,24 @@ public:
     virtual void finaltick() override;    
     void UpdateData();
 
+    void operator = (const CTransform& _OtherTransform)
+    {
+        m_vRelativePos = _OtherTransform.m_vRelativePos;
+        m_vRelativeScale = _OtherTransform.m_vRelativeScale;
+        m_vRelativeRot = _OtherTransform.m_vRelativeRot;
+        m_bAbsolute = _OtherTransform.m_bAbsolute;
+        m_matWorldScale = _OtherTransform.m_matWorldScale;
+        m_matWorld = _OtherTransform.m_matWorld;
+        m_matWorldInv = _OtherTransform.m_matWorldInv;
+
+
+        for (int i = 0; i < 3; ++i)
+        {
+            m_vRelativeDir[i] = _OtherTransform.m_vRelativeDir[i];
+            m_vWorldDir[i] = _OtherTransform.m_vWorldDir[i];
+        }
+    }
+
 public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
