@@ -18,13 +18,14 @@ CParticleSystem::CParticleSystem()
 	m_ModuleData.iMaxParticleCount = 3000;
 	
 	m_ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	m_ModuleData.SpawnRate = 50;
+	m_ModuleData.SpawnRate = 100;
 	m_ModuleData.vSpawnColor = Vec3(0.4f, 1.f, 0.4f);
 	m_ModuleData.vSpawnScaleMin = Vec3(15.f, 15.f, 1.f);
 	m_ModuleData.vSpawnScaleMax = Vec3(20.f, 20.f, 1.f);
 
 	m_ModuleData.SpawnShapeType = 0;
-	m_ModuleData.vBoxShapeScale = Vec3(200.f, 200.f, 200.f);	
+	m_ModuleData.fSphereShapeRadius = 100.f;
+	m_ModuleData.vBoxShapeScale = Vec3(1.f, 1.f, 0.f);	
 	m_ModuleData.Space = 0; // ½Ã¹Ä·¹ÀÌ¼Ç ÁÂÇ¥°è
 
 	m_ModuleData.MinLifeTime = 3.f;

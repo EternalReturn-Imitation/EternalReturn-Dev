@@ -43,7 +43,7 @@ int CameraUI::render_update()
 
     int         iCamIdx= pCamComponent->GetCamIdx();            // 카메라 인덱스
 
-    bool        bDebugView = pCamComponent->IsDebugView();         // 카메라 디버그큐브
+    bool        bDebugView = pCamComponent->IsDebugView();      // 카메라 디버그큐브
 
     
     ImGui::Text("Near         ");
@@ -79,18 +79,18 @@ int CameraUI::render_update()
 
     fScale = pCamComponent->GetScale();             // Orthograpic 에서 사용하는 카메라 배율
 
-    pCamComponent->SetNear(fNear);               // Near 값
-    pCamComponent->SetFar(fFar);                 // Far 값
+    pCamComponent->SetNear(fNear);                  // Near 값
+    pCamComponent->SetFar(fFar);                    // Far 값
 
-    pCamComponent->SetFOV(fFOV);                 // 화각
+    pCamComponent->SetFOV(fFOV);                    // 화각
     bMainCamera = pCamComponent->IsMainCamera();    // 메인카메라 여부
 
-    pCamComponent->SetOrthoWidth(fOrthoWidth);   // OrthoGraphic 에서의 가로 투영 범위
-    pCamComponent->SetOrthoHeight(fOrthoHeight); // OrthoGraphic 에서의 세로 투영 범위
+    pCamComponent->SetOrthoWidth(fOrthoWidth);      // OrthoGraphic 에서의 가로 투영 범위
+    pCamComponent->SetOrthoHeight(fOrthoHeight);    // OrthoGraphic 에서의 세로 투영 범위
 
-    pCamComponent->SetProjType(eProjType);       // 투영 타입
+    pCamComponent->SetProjType(eProjType);          // 투영 타입
 
-    pCamComponent->ViewDebugCube(bDebugView);         // 카메라 디버그큐브
+    pCamComponent->ViewDebugCube(bDebugView);       // 카메라 디버그큐브
 
     return TRUE;
 }

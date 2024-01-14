@@ -103,7 +103,7 @@ void CreateTestLevel()
 	TestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 
 	TestObj->AddComponent(new CParticleSystem);
-	TestObj->ParticleSystem()->SetSpawnRate(200);
+	TestObj->ParticleSystem()->SetSpawnRate(5);
 	TestObj->ParticleSystem()->SetSpawnInitialColor(Vec3(1.f, 0.f, 1.f));
 
 	SpawnGameObject(TestObj, Vec3(0.f, 0.f, 500.f), L"Player");
