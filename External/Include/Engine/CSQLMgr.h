@@ -3,6 +3,8 @@
 
 #include <SQLLight/sqlite3.h>
 
+//테스트
+//테스트2
     //쿼리 실행 매크로
     #define EXECQUERY(Query, ErrMsg)		\
 	    if (sqlite3_exec(db, Query, 0, 0, &ErrMsg) != SQLITE_OK)	\

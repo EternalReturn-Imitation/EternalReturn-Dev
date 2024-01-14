@@ -8,12 +8,12 @@
 struct VS_SKY_IN
 {
     float3 vPos : POSITION;
-    float2 vUV : TEXCOORD;    
+    float2 vUV : TEXCOORD;
 };
 
 struct VS_SKY_OUT
 {
-    float4 vPosition : SV_Position; 
+    float4 vPosition : SV_Position;
     float2 vUV : TEXCOORD;
     
     float3 vPos : POSITION;
@@ -30,7 +30,7 @@ VS_SKY_OUT VS_SkyBoxShader(VS_SKY_IN _in)
     float4 vProjPos = mul(vViewPos, g_matProj);
     vProjPos.z = vProjPos.w;
         
-    output.vPosition = vProjPos;    
+    output.vPosition = vProjPos;
     output.vUV = _in.vUV;
     output.vPos = _in.vPos;
     

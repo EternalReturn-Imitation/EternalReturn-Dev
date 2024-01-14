@@ -12,19 +12,19 @@
 
 
 ContentUI::ContentUI()
-    : UI("##Content")
+	: UI("##Content")
 {
-    SetName("Content");
+	SetName("Content");
 
-    // ContentUI 안에 자식으로 Tree 를 추가한다.
-    m_Tree = new TreeUI;
-    m_Tree->SetName("ContentTree");
-    m_Tree->SetActive(true);
-    m_Tree->ShowRoot(false);
+	// ContentUI 안에 자식으로 Tree 를 추가한다.
+	m_Tree = new TreeUI;
+	m_Tree->SetName("ContentTree");
+	m_Tree->SetActive(true);
+	m_Tree->ShowRoot(false);
 
 	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&ContentUI::SetTargetToInspector);
 	m_Tree->SetDragDropID("Resource");
-    AddChildUI(m_Tree);   
+	AddChildUI(m_Tree);
 }
 
 ContentUI::~ContentUI()
@@ -38,7 +38,7 @@ void ContentUI::init()
 
 void ContentUI::tick()
 {
-    UI::tick();
+	UI::tick();
 
 	if (CResMgr::GetInst()->IsResourceChanged())
 	{
@@ -47,8 +47,8 @@ void ContentUI::tick()
 }
 
 int ContentUI::render_update()
-{   
-    return 0;
+{
+	return 0;
 }
 
 void ContentUI::Reload()
@@ -76,7 +76,7 @@ void ContentUI::Reload()
 		switch (type)
 		{
 		case RES_TYPE::MESHDATA:
-
+			CResMgr::GetInst()->Load<CMeshData>(m_vecResPath[i], m_vecResPath[i]);
 			break;
 		case RES_TYPE::MATERIAL:
 			CResMgr::GetInst()->Load<CMaterial>(strFileKey, m_vecResPath[i], stdDirPath);
@@ -85,14 +85,14 @@ void ContentUI::Reload()
 
 			break;
 		case RES_TYPE::MESH:
-
+			CResMgr::GetInst()->Load<CMesh>(m_vecResPath[i], m_vecResPath[i]);
 			break;
 		case RES_TYPE::TEXTURE:
 			CResMgr::GetInst()->Load<CTexture>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
 		case RES_TYPE::SOUND:
 			CResMgr::GetInst()->Load<CSound>(strFileKey, m_vecResPath[i], stdDirPath);
-			break;		
+			break;
 		}
 	}
 
@@ -137,7 +137,7 @@ void ContentUI::ResetContent()
 
 		// m_Tree 에 현재 리소스 목록을 AddItem
 		TreeNode* pCategory = m_Tree->AddItem(ToString((RES_TYPE)i), 0);
-        pCategory->SetCategoryNode(true);
+		pCategory->SetCategoryNode(true);
 
 		for (const auto& pair : mapRes)
 		{
@@ -202,7 +202,7 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath, wstring& _File
 
 	_FileKey = szFileName + strExt;
 	_Dir = szdir;
-		
+
 	if (L".mdat" == strExt)
 		return RES_TYPE::MESHDATA;
 	else if (L".pref" == strExt)

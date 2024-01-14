@@ -29,12 +29,12 @@ void CAnimator2D::finaltick()
 		}
 
 		m_pCurAnim->finaltick();
-	}	
+	}
 }
 
 void CAnimator2D::UpdateData()
 {
-	Ptr<CMaterial> pMtrl = MeshRender()->GetMaterial();
+	Ptr<CMaterial> pMtrl = MeshRender()->GetMaterial(0);
 
 	const tAnim2DFrm& frm = m_pCurAnim->GetCurFrame();
 	Vec2 vBackSize = m_pCurAnim->GetBackSize();
@@ -51,7 +51,7 @@ void CAnimator2D::UpdateData()
 
 void CAnimator2D::Clear()
 {
-	Ptr<CMaterial> pMtrl = MeshRender()->GetMaterial();
+	Ptr<CMaterial> pMtrl = MeshRender()->GetMaterial(0);
 
 	int iAnimUse = 0;
 	pMtrl->SetScalarParam(INT_0, &iAnimUse);
@@ -95,17 +95,17 @@ void CAnimator2D::CreateAnimation(const wstring& _strAnimName
 void CAnimator2D::SaveToLevelFile(FILE* _File)
 {
 	fwrite(&m_bRepeat, sizeof(bool), 1, _File);
-	
+
 	size_t AnimCount = m_mapAnim.size();
 	fwrite(&AnimCount, sizeof(size_t), 1, _File);
 
 	for (const auto& pair : m_mapAnim)
-	{		
+	{
 		pair.second->SaveToLevelFile(_File);
 	}
 
-	wstring strCurAnimName;	
-	if(nullptr != m_pCurAnim)	
+	wstring strCurAnimName;
+	if (nullptr != m_pCurAnim)
 	{
 		strCurAnimName = m_pCurAnim->GetName();
 	}
@@ -123,7 +123,7 @@ void CAnimator2D::LoadFromLevelFile(FILE* _File)
 	{
 		CAnim2D* pNewAnim = new CAnim2D;
 		pNewAnim->LoadFromLevelFile(_File);
-		
+
 		m_mapAnim.insert(make_pair(pNewAnim->GetName(), pNewAnim));
 		pNewAnim->m_pOwner = this;
 	}
@@ -131,7 +131,7 @@ void CAnimator2D::LoadFromLevelFile(FILE* _File)
 	wstring strCurAnimName;
 	LoadWString(strCurAnimName, _File);
 
-	m_pCurAnim = FindAnim(strCurAnimName);		
+	m_pCurAnim = FindAnim(strCurAnimName);
 }
 
 void CAnimator2D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)

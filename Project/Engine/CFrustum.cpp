@@ -66,8 +66,6 @@ void CFrustum::finaltick()
     m_arrFace[FT_LEFT] = XMPlaneFromPoints(arrWorld[7], arrWorld[4], arrWorld[0]);
     m_arrFace[FT_RIGHT] = XMPlaneFromPoints(arrWorld[1], arrWorld[5], arrWorld[6]);
 
-    
-    
     if (m_pCam->IsDebugView() && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
         DrawDebugFrustumCube(matPVInv, true);
 }
@@ -83,6 +81,7 @@ bool CFrustum::FrustumCheck(Vec3 _vPos)
     return true;
 }
 
+//경계선을 설정해서 조건이 더 완화됨. 경계선은 해당 오브젝트의 크기임.
 bool CFrustum::FrustumCheckBound(Vec3 _vPos, float _fRadis)
 {
     for (int i = 0; i < FT_END; ++i)

@@ -45,6 +45,8 @@ private:
 
 public:
     void CreateVertexShader(const wstring& _strFileName, const string& _strFuncName);
+    void CreateHullShader(const wstring& _strFileName, const string& _strFuncName);
+    void CreateDomainShader(const wstring& _strFileName, const string& _strFuncName);
     void CreateGeometryShader(const wstring& _strFileName, const string& _strFuncName);
     void CreatePixelShader(const wstring& _strFileName, const string& _strFuncName);
     void SetTopology(D3D11_PRIMITIVE_TOPOLOGY _Topology) { m_eTopology = _Topology; }

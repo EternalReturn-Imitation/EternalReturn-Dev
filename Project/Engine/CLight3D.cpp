@@ -5,63 +5,101 @@
 
 #include "CRenderMgr.h"
 #include "CTransform.h"
+#include "CCamera.h"
 
 CLight3D::CLight3D()
 	: CComponent(COMPONENT_TYPE::LIGHT3D)
+	, m_bShowRange(false)
+	, m_LightIdx(-1)
+	, m_pCamObj(nullptr)
 	, m_bDebug(false)
-{	
+{
+
+	m_pCamObj = new CGameObject;
+	m_pCamObj->AddComponent(new CTransform);
+	m_pCamObj->AddComponent(new CCamera);
+
+	m_pCamObj->Camera()->SetLayerMaskAll(true);
+	m_pCamObj->Camera()->SetLayerMask(31, false);
+
 	SetLightType(LIGHT_TYPE::DIRECTIONAL);
 	SetLightColor(Vec3(1.f, 1.f, 1.f));
 	SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 }
 
+CLight3D::CLight3D(const CLight3D& _Origin)
+	: CComponent(_Origin)
+	, m_bShowRange(_Origin.m_bShowRange)
+	, m_LightIdx(-1)
+	, m_pCamObj(nullptr)
+{
+	m_pCamObj = new CGameObject(*_Origin.m_pCamObj);
+}
+
 CLight3D::~CLight3D()
 {
-
+	if (nullptr != m_pCamObj)
+		delete m_pCamObj;
 }
 
 void CLight3D::finaltick()
 {
 	m_LightInfo.vWorldPos = Transform()->GetWorldPos();
 	m_LightInfo.vWorldDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	
+
 	m_LightIdx = (UINT)CRenderMgr::GetInst()->RegisterLight3D(this, m_LightInfo);
 
-	UINT LightType = m_LightInfo.LightType;
-	if (m_bDebug)
+	if (m_bShowRange || m_bDebug)//¹üÀ§ º¸ÀÌ´Â°Ô trueÀÏ‹š¸¸ º¸ÀÌ°Ô
 	{
-		if (LightType == (UINT)LIGHT_TYPE::POINT)
+		if ((UINT)LIGHT_TYPE::POINT == m_LightInfo.LightType)
 		{
-			DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 0.5f), 0.f, true);
+			DrawDebugSphere(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 1.f), 0.f, true);
 		}
-		else if (LightType == (UINT)LIGHT_TYPE::SPOT)
+		else if ((UINT)LIGHT_TYPE::SPOT == m_LightInfo.LightType)
 		{
-			// ì½˜ ë””ë²„ê·¸
+			//DrawDebugCone(Transform()->GetWorldMat(), Vec4(0.2f, 1.f, 0.2f, 1.f), 0.f, true);
 		}
 	}
+
+	// ±¤¿ø¿¡ ºÎÂøÇÑ Ä«¸Ş¶ó ¿ÀºêÁ§Æ®µµ À§Ä¡¸¦ ±¤¿ø À§Ä¡¶û µ¿ÀÏÇÏ°Ô..
+	// finaltick È£Ãâ½ÃÄÑ¼­ Ä«¸Ş¶ó ¿ÀºêÁ§Æ®ÀÇ Ä«¸Ş¶ó ÄÄÆ÷³ÍÆ®ÀÇ view, proj Çà·Ä ¿¬»êÇÒ¼ö ÀÖ°Ô ÇÔ
+	*m_pCamObj->Transform() = *Transform();
+	m_pCamObj->finaltick_module();
 }
 
 void CLight3D::render()
 {
 	Transform()->UpdateData();
-	
-	// Light ì¬ì§ˆ ì—…ë°ì´íŠ¸
+
+	// Light ÀçÁú ¾÷µ¥ÀÌÆ®
 	m_Mtrl->SetScalarParam(INT_0, &m_LightIdx);
 	m_Mtrl->UpdateData();
 
-	// ë³¼ë¥¨ ë©”ì‹œ ë Œë”
-	m_Mesh->render();
+	if (m_LightInfo.LightType == (UINT)LIGHT_TYPE::DIRECTIONAL)
+	{
+		Matrix matVP = m_pCamObj->Camera()->GetViewMat() * m_pCamObj->Camera()->GetProjMat();
+		m_Mtrl->SetScalarParam(MAT_0, &matVP);
+		m_Mtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"DynamicShadowMapTex"));
+	}
+
+	// º¼·ı ¸Ş½Ã ·»´õ
+	m_Mesh->render(0);
 }
 
+void CLight3D::render_shadowmap()
+{
+	m_pCamObj->Camera()->SortObject_Shadow();
+
+	m_pCamObj->Camera()->render_shadowmap();
+}
 
 void CLight3D::SetRadius(float _Radius)
 {
 	m_LightInfo.Radius = _Radius;
 
-	// SphereMesh ì˜ ë¡œì»¬ ë°˜ì§€ë¦„ì´ 0.5f ì´ê¸° ë•Œë¬¸ì— 2ë°°ë¡œ ì ìš©
+	// SphereMesh ÀÇ ·ÎÄÃ ¹İÁö¸§ÀÌ 0.5f ÀÌ±â ¶§¹®¿¡ 2¹è·Î Àû¿ë
 	Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
 }
-
 
 void CLight3D::SetLightType(LIGHT_TYPE _type)
 {
@@ -69,9 +107,14 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 
 	if (LIGHT_TYPE::DIRECTIONAL == (LIGHT_TYPE)m_LightInfo.LightType)
 	{
-		// ê´‘ì›ì„ ë Œë”ë§ í•  ë•Œ, ê´‘ì›ì˜ ì˜í–¥ë²”ìœ„ë¥¼ í˜•ìƒí™” í•  ìˆ˜ ìˆëŠ” ë©”ì‰¬(ë³¼ë¥¨ë©”ì‰¬) ë¥¼ ì„ íƒ
+		// ±¤¿øÀ» ·»´õ¸µ ÇÒ ¶§, ±¤¿øÀÇ ¿µÇâ¹üÀ§¸¦ Çü»óÈ­ ÇÒ ¼ö ÀÖ´Â ¸Ş½¬(º¼·ı¸Ş½¬) ¸¦ ¼±ÅÃ
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
+
+		m_pCamObj->Camera()->SetFar(100000.f);
+		m_pCamObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+		m_pCamObj->Camera()->SetOrthoWidth(16000.f);
+		m_pCamObj->Camera()->SetOrthoHeight(16000.f);
 	}
 
 	else if (LIGHT_TYPE::POINT == (LIGHT_TYPE)m_LightInfo.LightType)
@@ -80,8 +123,8 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
 	}
 
-	else 
-	{		
+	else
+	{
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"ConeMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"SpotLightMtrl");
 	}
@@ -165,7 +208,7 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 			const void* data = sqlite3_column_blob(stmt, 0);
 			int bytes = sqlite3_column_bytes(stmt, 0);
 
-			// tLightInfoë¡œ ë³€í™˜
+			// tLightInfoë¡?ë³€??
 			if (bytes == sizeof(tLightInfo)) {
 				memcpy(&m_LightInfo, data, bytes);
 			}
@@ -173,7 +216,7 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 				assert(false);
 			}
 
-			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path ?°ì´??ë¶ˆëŸ¬?¤ê¸°
 			const wchar_t* meshKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
 			const wchar_t* meshPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
 			const wchar_t* mtrlKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
@@ -182,7 +225,7 @@ void CLight3D::LoadFromDB(int _gameObjectID)
 			LoadResRefFromDB(m_Mesh, meshKey, meshPath);
 			LoadResRefFromDB(m_Mtrl, mtrlKey, mtrlPath);
 
-			// Light_Idx ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+			// Light_Idx ?°ì´??ë¶ˆëŸ¬?¤ê¸°
 			m_LightIdx = sqlite3_column_int(stmt, 5);
 		}
 		else {

@@ -107,4 +107,12 @@ struct tParticleModule
     int modulepad;    
 };
 
+struct tSkinningInfo
+{
+    float3 vPos;
+    float3 vTangent;
+    float3 vBinormal;
+    float3 vNormal;
+};
+
 #endif
