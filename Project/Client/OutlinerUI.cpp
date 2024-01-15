@@ -13,8 +13,6 @@
 
 #include "TreeUI.h"
 
-#include <ImGuizmo/ImGuizmo.h>
-
 OutlinerUI::OutlinerUI()
     : UI("##Outliner")
 	, m_Tree(nullptr)
