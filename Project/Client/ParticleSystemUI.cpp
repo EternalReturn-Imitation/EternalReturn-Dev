@@ -56,25 +56,52 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		{
 			OnOffBtn(mParticle.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN], "##PARTICLE_SPAWN", (UINT)PARTICLE_MODULE::PARTICLE_SPAWN);
 
-			// ImGui::Text("Max ParticleCount	: ");
-			// ImGui::SameLine();
-			// ImGui::SliderInt("##MaxParticleCount", &mParticle.iMaxParticleCount, 0, 3000, "%d");
-			
-			ImGui::Text("SpawnRate			: ");
+			// 생성 주기
+			ImGui::Text("SpawnRate	 		: ");
 			ImGui::SameLine();
 			ImGui::SliderInt("##SpawnRate", &mParticle.SpawnRate, 0, 3000, "%d");
 
-
-			Vec4    vSpawnColor;		// 생성시 색상
-			Vec4	vSpawnScaleMin;		// 생성시 최소 크기범위
-			Vec4	vSpawnScaleMax;		// 생성시 최대 크기범위
-			Vec3	vBoxShapeScale;		// 생성공간 크기
-			float	fSphereShapeRadius;	// 원형타입 시, 반지름 길이
-			int		SpawnShapeType;		// 0 : BOX, 1 : Sphere
-			int		Space;				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)
-			float   MinLifeTime;		// 최소 수명
-			float   MaxLifeTime;		// 최대 수명
+			// 생성시 색상
+			ImGui::Text("SpawnColor			: ");
+			ImGui::SameLine();
+			ImGui::ColorEdit3("##SpawnColor", mParticle.vSpawnColor);
 			
+
+			// static float begin = 10, end = 90;
+			// static int begin_i = 100, end_i = 1000;
+			// ImGui::DragFloatRange2("range float", &begin, &end, 0.25f, 0.0f, 100.0f, "Min: %.1f %%", "Max: %.1f %%", ImGuiSliderFlags_AlwaysClamp);
+			// ImGui::DragIntRange2("range int", &begin_i, &end_i, 5, 0, 1000, "Min: %d units", "Max: %d units");
+
+			
+			// 생성 크기 범위
+			ImGui::Text("SpawnScale			: ");
+			ImGui::SameLine();
+			ImGui::DragFloatRange2("##SpawnScale", mParticle.vSpawnScaleMin, mParticle.vSpawnScaleMax, 0.25f, 1.f, 1000.f, "Min: %.1f", "Max: %.1f", ImGuiSliderFlags_AlwaysClamp);
+
+			// 파티클 생성 박스 크기
+			ImGui::Text("SpawnBoxScale	 	: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat3("##SpawnBoxScale", mParticle.vBoxShapeScale, 1, 1000);
+			
+			/*
+			// 원형타입 시 생성 크기
+			ImGui::Text("SpawnScaleMax		: ");
+			ImGui::SameLine();
+			float	fSphereShapeRadius;
+			*/
+
+			// 파티클 모양 타입
+			ImGui::Text("SpawnShapeType		: ");
+			ImGui::SameLine();
+			ImGui::Combo("##SpawnShapeType", &mParticle.SpawnShapeType, "BOX\0SPHERE\0\0");
+
+			ImGui::Text("SpawnSpace			: ");
+			ImGui::SameLine();
+			ImGui::Combo("##SpawnSpaceType", &mParticle.Space, "World\0Local\0\0");
+			
+			ImGui::Text("LifeTime		  	: ");
+			ImGui::SameLine();
+			ImGui::DragFloatRange2("##SpawnLifeTime", &mParticle.MinLifeTime, &mParticle.MaxLifeTime, 0.1f, 0.1f, 20.f, "Min: %.1f", "Max: %.1f", ImGuiSliderFlags_AlwaysClamp);
 
 			break;
 		}
@@ -82,10 +109,15 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		{
 			OnOffBtn(mParticle.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE], "##COLOR_CHANGE", (UINT)PARTICLE_MODULE::COLOR_CHANGE);
 
-			ImGui::Text("COLOR_CHANGE");
+			// 초기 색상
+			ImGui::Text("StartColor			: ");
+			ImGui::SameLine();
+			ImGui::ColorEdit3("##StartColor", mParticle.vStartColor);
 
-			Vec4	vStartColor;		// 초기 색상
-			Vec4	vEndColor;			// 최종 색상
+			// 최종시 색상
+			ImGui::Text("EndColor	 	 	: ");
+			ImGui::SameLine();
+			ImGui::ColorEdit3("##EndColor", mParticle.vEndColor);
 
 			break;
 		}
@@ -93,10 +125,15 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		{
 			OnOffBtn(mParticle.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE], "##SCALE_CHANGE", (UINT)PARTICLE_MODULE::SCALE_CHANGE);
 
-			ImGui::Text("SCALE_CHANGE");
+			// 초기 크기 배율
+			ImGui::Text("StartScale			: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##StartScale", &mParticle.StartScale, 0, 10, "%.1f");
 
-			float	StartScale;			// 초기 배율
-			float	EndScale;			// 최종 배율	
+			// 최종 크기 배율
+			ImGui::Text("EndScale	  		: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##EndScale", &mParticle.EndScale, 0, 10, "%.1f");
 
 			break;
 		}
@@ -104,13 +141,35 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		{
 			OnOffBtn(mParticle.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY], "##ADD_VELOCITY", (UINT)PARTICLE_MODULE::ADD_VELOCITY);
 
-			ImGui::Text("ADD_VELOCITY");
+			ImGui::Text("Set VELOCITY Dir  	:");
+			ImGui::SameLine();
+			ImGui::SliderFloat3("##VelocityDir", mParticle.vVelocityDir, -1.f, 1.f, "%.2f");
 
-			Vec4	vVelocityDir;
-			int     AddVelocityType;	// 0 : From Center, 1: To Center, 2 : Fixed Direction	
-			float	OffsetAngle;
-			float	Speed;
-			int     addvpad;
+			// ImGui::Text("VelocityDir[x]		: ");
+			// ImGui::SameLine();
+			// ImGui::SliderAngle("##VelocityDirX", &mParticle.vVelocityDir.x);
+			// 
+			// ImGui::Text("VelocityDir[y]		: ");
+			// ImGui::SameLine();
+			// ImGui::SliderAngle("##VelocityDirY", &mParticle.vVelocityDir.y);
+			// 
+			// ImGui::Text("VelocityDir[z]		: ");
+			// ImGui::SameLine();
+			// ImGui::SliderAngle("##VelocityDirZ", &mParticle.vVelocityDir.z);
+			
+			ImGui::Spacing();
+
+			ImGui::Text("VelocityType	  	:");
+			ImGui::SameLine();
+			ImGui::Combo("##AddVelocityType", &mParticle.AddVelocityType, "From Center\0To Center\0 Fixed Direction\0\0");
+
+			ImGui::Text("OffsetAngle  	 	: ");
+			ImGui::SameLine();
+			ImGui::SliderAngle("##OffsetAngle", &mParticle.OffsetAngle);
+			
+			ImGui::Text("Speed		 		: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##VelocitySpeed", &mParticle.Speed, 0, 100.f);
 
 			break;
 		}
@@ -118,10 +177,13 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		{
 			OnOffBtn(mParticle.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG], "##DRAG", (UINT)PARTICLE_MODULE::DRAG);
 
-			ImGui::Text("DRAG");
+			ImGui::Text("StartDrag	 		: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##StartDrag", &mParticle.StartDrag, 0, 1000.f);
 
-			float	StartDrag;
-			float	EndDrag;
+			ImGui::Text("EndDrag	  	 	: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##EndDrag", &mParticle.EndDrag, 0, 1000.f);
 
 			break;
 		}
@@ -129,10 +191,13 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		{
 			OnOffBtn(mParticle.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE], "##NOISE_FORCE", (UINT)PARTICLE_MODULE::NOISE_FORCE);
 
-			ImGui::Text("NOISE_FORCE");
+			ImGui::Text("NoiseTerm	 		: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##NoiseTerm", &mParticle.fNoiseTerm, 0, 1000.f);
 
-			float	fNoiseTerm;		// 랜덤 힘 변경 간격
-			float	fNoiseForce;	// 랜덤 힘 크기
+			ImGui::Text("NoiseForce			: ");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##NoiseForce", &mParticle.fNoiseForce, 0, 1000.f);
 
 			break;
 		}
@@ -140,13 +205,33 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		{
 			OnOffBtn(mParticle.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER], "##RENDER", (UINT)PARTICLE_MODULE::RENDER);
 
-			ImGui::Text("RENDER");
+			// 1 : 속도정렬 사용(이동 방향으로 회전) 0 : 사용 안함
+			ImGui::Text("VelocityAlignment 	:");
+			ImGui::SameLine();
+			ImGui::Combo("##VelocityAlignment", &mParticle.VelocityAlignment, "OFF\0ON\0\0");
+			
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Rotaition To Movedirection");
 
-			int		VelocityAlignment;	// 1 : 속도정렬 사용(이동 방향으로 회전) 0 : 사용 안함
-			int		VelocityScale;		// 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
-			float   vMaxSpeed;			// 최대 크기에 도달하는 속력
-			Vec4	vMaxVelocityScale;	// 속력에 따른 크기 변화량 최대치
-			int		renderpad;
+			// 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
+			ImGui::Text("VelocityScale	 	:");
+			ImGui::SameLine();
+			ImGui::Combo("##VelocityScale", &mParticle.VelocityScale, "OFF\0ON\0\0");
+			
+			if (ImGui::IsItemHovered())
+				ImGui::SetTooltip("Transform scale on the velocity");
+
+
+			// 최대 크기에 도달하는 속력
+			ImGui::Text("MaxSpeed		  	:");
+			ImGui::SameLine();
+			ImGui::SliderFloat("##vMaxSpeed", &mParticle.vMaxSpeed, 0, 1000.f);
+
+			// 속력에 따른 크기 변화량 최대치
+
+			ImGui::Text("MaxVelocityScale  	:");
+			ImGui::SameLine();
+			ImGui::SliderFloat4("##vMaxVelocityScale", mParticle.vMaxVelocityScale, 0, 10.f);
 
 			break;
 		}

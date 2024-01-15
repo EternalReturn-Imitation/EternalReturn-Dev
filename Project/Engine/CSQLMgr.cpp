@@ -64,7 +64,7 @@ int CSQLMgr::InsertToLevel(wstring _levelName)
 
 	long long insertedId = sqlite3_last_insert_rowid(db);
 
-	return insertedId;
+	return (int)insertedId;
 }
 
 int CSQLMgr::InsertToLayer(int _levelID, wstring _layerName, int _layerIdx)
@@ -97,7 +97,7 @@ int CSQLMgr::InsertToLayer(int _levelID, wstring _layerName, int _layerIdx)
 
 	long long insertedId = sqlite3_last_insert_rowid(db);
 
-	return insertedId;
+	return (int)insertedId;
 }
 
 int CSQLMgr::InsertToGameObject(int _layerID, wstring _gameObjectName, int _parentID)
@@ -130,7 +130,7 @@ int CSQLMgr::InsertToGameObject(int _layerID, wstring _gameObjectName, int _pare
 
 	long long insertedId = sqlite3_last_insert_rowid(db);
 
-	return insertedId;
+	return (int)insertedId;
 }
 
 void CSQLMgr::SelectFromLevel(int _levelID, CLevel*& _level)

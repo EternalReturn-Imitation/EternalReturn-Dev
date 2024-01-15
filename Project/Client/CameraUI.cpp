@@ -46,13 +46,13 @@ int CameraUI::render_update()
     bool        bDebugView = pCamComponent->IsDebugView();      // 카메라 디버그큐브
 
     
-    ImGui::Text("Near         ");
+
+    ImGui::Text("Distance     ");
     ImGui::SameLine();
-    ImGui::SliderFloat("##CameraNear", &fNear, 1.f, fFar - 10.f);
+    ImGui::DragFloatRange2("##CameraNearFar", &fNear, &fFar, 1.f, 1.f, 10000.f, "Near: %.f", "Far: %.f", ImGuiSliderFlags_AlwaysClamp);
     
-    ImGui::Text("Far          ");
-    ImGui::SameLine();
-    ImGui::SliderFloat("##CameraFar", &fFar, fNear + 10.f, 10000.f);
+    if (fNear == fFar)
+        fFar += 1.f;
 
     ImGui::Text("FOV          ");
     ImGui::SameLine();
