@@ -269,6 +269,9 @@
     <ClInclude Include="TransformControllerUI.h">
       <Filter>UI\TransformUI</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleSystemUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -414,6 +417,9 @@
     </ClCompile>
     <ClCompile Include="TransformControllerUI.cpp">
       <Filter>UI\TransformUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

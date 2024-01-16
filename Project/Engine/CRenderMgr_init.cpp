@@ -104,7 +104,7 @@ void CRenderMgr::CreateMRT()
                                 , DXGI_FORMAT_R8G8B8A8_UNORM
                                 , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
-        arrRTTex[2] = CResMgr::GetInst()->CreateTexture(L"ShadowTargetTex", vResol.x, vResol.y
+        arrRTTex[2] = CResMgr::GetInst()->CreateTexture(L"ShadowTargetTex", (UINT)vResol.x, (UINT)vResol.y
             , DXGI_FORMAT_R32_FLOAT
             , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
 
@@ -120,11 +120,11 @@ void CRenderMgr::CreateMRT()
         Vec2 vResol = Vec2(8192, 8192);
 
         Ptr<CTexture> arrRTTex[8] = {};
-        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapTex", vResol.x, vResol.y
+        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapTex", (UINT)vResol.x, (UINT)vResol.y
             , DXGI_FORMAT_R32_FLOAT
             , D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);
 
-        Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapDepthTex", vResol.x, vResol.y
+        Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapDepthTex", (UINT)vResol.x, (UINT)vResol.y
             , DXGI_FORMAT_D32_FLOAT
             , D3D11_BIND_DEPTH_STENCIL);
 
