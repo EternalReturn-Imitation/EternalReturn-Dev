@@ -14,7 +14,7 @@ private:
     int             m_LightIdx;
     bool            m_bShowRange;
 
-    CGameObject* m_pCamObj;
+    CGameObject*    m_pCamObj;
 
     bool            m_bDebug;
 
@@ -44,6 +44,8 @@ public:
     float GetRadius() { return m_LightInfo.Radius; }
     float GetAngle() { return m_LightInfo.Angle; }
     bool IsDebug() { return m_bDebug; }
+
+    CCamera* GetLightRenderCam();
 
     void ShowRange(bool _bSet) { m_bShowRange = _bSet; }
 
