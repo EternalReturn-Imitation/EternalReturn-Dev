@@ -12,8 +12,6 @@ private:
 
 public:
     virtual int render_update() override;
-    void render_LightRenderLayer(bool* _bLightRenderLayerCheckWin, CCamera* _LightRenderCam);
-    
 
 public:
     Light3DUI();

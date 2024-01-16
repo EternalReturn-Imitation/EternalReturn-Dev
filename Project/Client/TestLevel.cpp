@@ -12,7 +12,6 @@
 
 #include <Script\CPlayerScript.h>
 #include <Script\CMonsterScript.h>
-#include <Script\CCameraMoveScript.h>
 
 #include "CLevelSaveLoad.h"
 
@@ -27,9 +26,11 @@ void CreateTestLevel()
 
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");
-	pCurLevel->GetLayer(1)->SetName(L"SkyBox");
-	pCurLevel->GetLayer(2)->SetName(L"Particle");
+	pCurLevel->GetLayer(1)->SetName(L"Tile");
+	pCurLevel->GetLayer(2)->SetName(L"Player");
 	pCurLevel->GetLayer(3)->SetName(L"Monster");
+	pCurLevel->GetLayer(4)->SetName(L"PlayerProjectile");
+	pCurLevel->GetLayer(5)->SetName(L"MonsterProjectile");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 
@@ -39,9 +40,8 @@ void CreateTestLevel()
 
 	pMainCam->AddComponent(new CTransform);
 	pMainCam->AddComponent(new CCamera);
-	pMainCam->AddComponent(new CCameraMoveScript);
 
-	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+	pMainCam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
@@ -49,31 +49,31 @@ void CreateTestLevel()
 	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
 
 	// UI cameara
-	// CGameObject* pUICam = new CGameObject;
-	// pUICam->SetName(L"UICamera");
-	// 
-	// pUICam->AddComponent(new CTransform);
-	// pUICam->AddComponent(new CCamera);
-	// 
-	// pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-	// pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
-	// pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-	// 
-	// SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"UICamera");
+
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
+	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
+
+	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 
-	//SkyBox 추가
+	// SkyBox 추가
 	CGameObject* pSkyBox = new CGameObject;
 	pSkyBox->SetName(L"SkyBox");
-	
+
 	pSkyBox->AddComponent(new CTransform);
 	pSkyBox->AddComponent(new CSkyBox);
-	
+
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
 	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Sky01.png"));
-	
-	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), L"SkyBox");
+
+	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 광원 추가
 	CGameObject* pLightObj = new CGameObject;
@@ -92,18 +92,27 @@ void CreateTestLevel()
 
 	// 오브젝트 생성
 	CGameObject* pObject = new CGameObject;
-	pObject->SetName(L"Particle");
+	pObject->SetName(L"Player");
 	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CParticleSystem);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CPlayerScript);
 
-	SpawnGameObject(pObject, Vec3(0.f, 100, 500.f), L"Particle");
+	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
+	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01.tga"));
+	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01_N.tga"));
+
+	SpawnGameObject(pObject, Vec3(-1000.f, 0.f, 0.f), L"Player");
 
 	pObject = new CGameObject;
 	pObject->SetName(L"Plane");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
 
-	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
+	pObject->Transform()->SetRelativeScale(Vec3(8000.f, 8000.f, 8000.f));
 	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -111,10 +120,21 @@ void CreateTestLevel()
 	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01.tga"));
 	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01_N.tga"));
 
-	SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
+	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Default");
 
-	/*
-	
+	pObject = new CGameObject;
+	pObject->SetName(L"Tess Object");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+
+	pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"TessMtrl"), 0);
+	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Sky01.png"));
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 100.f), L"Default");
+
 	// ============
 	// FBX Loading
 	// ============	
@@ -135,8 +155,8 @@ void CreateTestLevel()
 
 		SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
-	*/
+
 
 	// 충돌 시킬 레이어 짝 지정
-	// CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }

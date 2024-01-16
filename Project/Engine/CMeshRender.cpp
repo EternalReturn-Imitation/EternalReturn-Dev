@@ -3,7 +3,6 @@
 
 #include "CTransform.h"
 #include "CAnimator2D.h"
-#include "CAnimator3D.h"
 
 CMeshRender::CMeshRender()
 	: CRenderComponent(COMPONENT_TYPE::MESHRENDER)

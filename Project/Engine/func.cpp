@@ -229,14 +229,11 @@ const wchar_t* ToWString(COLLIDER2D_TYPE type)
 	return COLLIDER2D_TYPE_WSTR[(UINT)type];
 }
 
-COLLIDER2D_TYPE ToCollider2DType(wstring _wstring) 
-{
+COLLIDER2D_TYPE ToCollider2DType(wstring _wstring) {
 	for (int i = 0; i < (UINT)COLLIDER2D_TYPE::END; i++) {
 		if (COLLIDER2D_TYPE_WSTR[i] == _wstring)
 			return (COLLIDER2D_TYPE)i;
 	}
-
-	return COLLIDER2D_TYPE::END;
 }
 
 string ToString(wstring _wstring)

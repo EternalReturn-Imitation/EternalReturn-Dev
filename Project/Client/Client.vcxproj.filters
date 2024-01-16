@@ -290,9 +290,6 @@
     <ClInclude Include="ImGui\GraphEditor.h">
       <Filter>ImGui\ImGuizmo</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleSystemUI.h">
-      <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -453,9 +450,6 @@
     </ClCompile>
     <ClCompile Include="ImGui\GraphEditor.cpp">
       <Filter>ImGui\ImGuizmo</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystemUI.cpp">
-      <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

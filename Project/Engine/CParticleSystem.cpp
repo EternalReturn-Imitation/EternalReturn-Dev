@@ -124,7 +124,7 @@ void CParticleSystem::finaltick()
 	m_UpdateCS->SetParticleBuffer(m_ParticleBuffer);
 	m_UpdateCS->SetRWParticleBuffer(m_RWBuffer);
 	m_UpdateCS->SetModuleData(m_ModuleDataBuffer);
-	m_UpdateCS->SetNoiseTexture(CResMgr::GetInst()->FindRes<CTexture>(L"noise_01.png"));
+	m_UpdateCS->SetNoiseTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\noise\\noise_01.png"));
 	m_UpdateCS->SetParticleObjectPos(Transform()->GetWorldPos());
 
 	m_UpdateCS->Execute();

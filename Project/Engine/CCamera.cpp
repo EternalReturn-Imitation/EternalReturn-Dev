@@ -205,7 +205,7 @@ void CCamera::SortObject()
 
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
-		// 레이어 마스크 확인
+		// ?덉씠??留덉뒪???뺤씤
 		if (m_iLayerMask & (1 << i))
 		{
 			CLayer* pLayer = pCurLevel->GetLayer(i);

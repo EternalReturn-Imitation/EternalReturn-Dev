@@ -3,11 +3,6 @@
 
 #include <Engine\CGameObject.h>
 #include <Engine\CLight3D.h>
-#include <Engine\CCamera.h>
-
-#include <Engine\CLevelMgr.h>
-#include <Engine\CLevel.h>
-#include <Engine\CLayer.h>
 
 Light3DUI::Light3DUI()
     : ComponentUI("##Light3D", COMPONENT_TYPE::LIGHT3D)
@@ -28,7 +23,6 @@ int Light3DUI::render_update()
     if (FALSE == ComponentUI::render_update())
         return FALSE;
 
-
     LIGHT_TYPE eLightType = GetTarget()->Light3D()->GetLightType();
     Vec3 vLightColor = GetTarget()->Light3D()->GetLightColor();
     Vec3 vLightAmbient = GetTarget()->Light3D()->GetLightAmbient();
@@ -39,18 +33,39 @@ int Light3DUI::render_update()
     const char* lighttype[] = { "DIRECTIONAL", "POINT", "SPOT" };
     int CurrentType = (UINT)eLightType;
 
-    CCamera* pCamComponent = GetTarget()->Light3D()->GetLightRenderCam();
-
-    float       fFar = pCamComponent->GetFar();                 // Far 값
-    float       fOrthoWidth = pCamComponent->GetOrthoWidth();   // OrthoGraphic 에서의 가로 투영 범위
-    float       fOrthoHeight = pCamComponent->GetOrthoHeight(); // OrthoGraphic 에서의 세로 투영 범위
-
-    static bool bLightRenderLayerCheckWin = false;
    
 
     ImGui::Text("LightType   ");
     ImGui::SameLine();
     ImGui::Combo("##LightType", &CurrentType, lighttype, IM_ARRAYSIZE(lighttype));
+
+    // switch (eLightType)
+    // {
+    // case LIGHT_TYPE::DIRECTIONAL:
+    //     if (vMemLightAmbient != Vec3{ 0.f,0.f,0.f }
+    //         && vLightAmbient == Vec3{ 0.f,0.f,0.f })
+    //         vLightAmbient = vMemLightAmbient;
+    // 
+    //     vMemLightAmbient = vLightAmbient;
+    // 
+    //     fAngle = 0.f;
+    //     fRadius = 0.f;
+    //     break;
+    // case LIGHT_TYPE::SPOT:
+    //     if (fMemAngle != 0.f
+    //         && fAngle == 0.f)
+    //         fAngle = fMemAngle;
+    // 
+    //     fMemAngle = fAngle;
+    // case LIGHT_TYPE::POINT:
+    //     if (fMemRadius != 0.f
+    //         && fRadius == 0.f)
+    //         fRadius = fMemRadius;
+    // 
+    //     fMemRadius = fRadius;
+    //     vLightAmbient = {};
+    //     break;
+    // }
 
     ImGui::Text("LightColor  ");
     ImGui::SameLine();
@@ -83,28 +98,6 @@ int Light3DUI::render_update()
         ImGui::Text("ShowDebug   ");
         ImGui::Checkbox("##LightDebug", &bDebug);
     }
-    else if (CurrentType == (UINT)LIGHT_TYPE::DIRECTIONAL)
-    {
-        ImGui::Text("LightRender Camera Setting");
-        
-        ImGui::Text("Far          ");
-        ImGui::SameLine();
-        ImGui::SliderFloat("##LightRenderCamera_Far", &fFar, 10.f, 100000.f);
-
-        ImGui::Text("OrthoWidth   ");
-        ImGui::SameLine();
-        ImGui::SliderFloat("##LightRenderCamera_OrthoWidth", &fOrthoWidth, 10.f, 10000.f);
-
-        ImGui::Text("OrthoHeight  ");
-        ImGui::SameLine();
-        ImGui::SliderFloat("##LightRenderCamera_OrthoHeight", &fOrthoHeight, 10.f, 10000.f);
-
-        if (ImGui::Button("Layer Check##LightRenderLayerCheckWinOpen"))
-            bLightRenderLayerCheckWin = true;
-            
-        render_LightRenderLayer(&bLightRenderLayerCheckWin, pCamComponent);
-
-    }
 
     GetTarget()->Light3D()->SetLightType((LIGHT_TYPE)CurrentType);
     GetTarget()->Light3D()->SetLightColor(vLightColor);
@@ -113,58 +106,5 @@ int Light3DUI::render_update()
     GetTarget()->Light3D()->SetAngle(fAngle);
     GetTarget()->Light3D()->SetDebug(bDebug);
 
-    pCamComponent->SetOrthoWidth(fOrthoWidth);      // OrthoGraphic 에서의 가로 투영 범위
-    pCamComponent->SetOrthoHeight(fOrthoHeight);    // OrthoGraphic 에서의 세로 투영 범위
-    pCamComponent->SetFar(fFar);                    // Far 값
-
     return TRUE;
-}
-
-void Light3DUI::render_LightRenderLayer(bool* _bLightRenderLayerCheckWin, CCamera* _LightRenderCam)
-{
-    if ((*_bLightRenderLayerCheckWin)  == false)
-        return;
-
-    CLevel* CurLevel = CLevelMgr::GetInst()->GetCurLevel();
-    UINT        iLayerMask = _LightRenderCam->GetLayerMask();         // 촬영레이어 체크
-    wstring     WLayerName;
-
-    if (ImGui::Begin("Cam_LayerCheck", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDocking)) 
-    {
-        ImGui::BeginGroup();
-        for (int i = 0; i < MAX_LAYER; ++i)
-        {
-            WLayerName = CurLevel->GetLayer(i)->GetName();
-
-            // 레이어이름이 설정되어있지 않은 경우
-            if (L"" == WLayerName)
-                continue;
-
-            string LayerNumb = "##Layer " + std::to_string(i);
-            string LayerName;
-            LayerName.assign(WLayerName.begin(), WLayerName.end());
-
-            bool bChecked = iLayerMask & (1 << i);
-
-            ImGui::Button(LayerName.c_str());
-            ImGui::SameLine();
-            ImGui::Checkbox(LayerNumb.c_str(), &bChecked);
-
-            if (bChecked)
-                iLayerMask |= 1 << i;
-            else
-                iLayerMask &= ~(1 << i);
-        }
-        ImGui::EndGroup();
-
-        if (ImGui::Button("Close##LightRenderLayerCheckWinCloseBtn"))
-        {
-            (*_bLightRenderLayerCheckWin) = false;
-            ImGui::CloseCurrentPopup();
-        };
-
-        _LightRenderCam->SetLayerMask(iLayerMask);
-
-        ImGui::End();
-    }
 }

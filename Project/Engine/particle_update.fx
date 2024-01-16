@@ -66,7 +66,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                     {                           
                         particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * 0.5f
                                                       , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * 0.5f
-                                                      , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * 0.5f);
+                                                      , 0.f);//ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * 0.5f);
                         particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
                         
                         
@@ -78,12 +78,9 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                     // Sphere 스폰
                     else if (ModuleData.SpawnShapeType == 1)
                     {
-                        float fRadius = vOut1.r * ModuleData.fSphereShapeRadius;
+                        float fRadius = 500.f; //vOut1.r * 200.f;
                         float fAngle = vOut2.r * 2 * 3.1415926535f;
-                        particle.vWorldPos.xyz = float3(fRadius * cos(fAngle), fRadius * sin(fAngle), 100.f);
-                        
-                        // float4 vSpawnScale = float4(100.f, 100.f, 100.f, 1.f);
-                        // particle.vWorldScale.xyz = vSpawnScale.xyz;
+                        //particle.vWorldPos.xyz = float3(fRadius * cos(fAngle), fRadius * sin(fAngle), 100.f);
                     }
                     
                     // 파티클 질량 설정

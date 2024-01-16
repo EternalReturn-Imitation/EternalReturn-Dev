@@ -30,7 +30,7 @@ void CTransform::finaltick()
 	float y = m_vRelativeScale.y ;
 	float z = m_vRelativeScale.z ;
 
-	m_fBoundingRadius = (float)sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
+	m_fBoundingRadius = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2));
 
 	m_matWorldBoundingScale = XMMatrixIdentity();
 	m_matWorldBoundingScale = XMMatrixScaling(m_fBoundingRadius, m_fBoundingRadius, m_fBoundingRadius);
