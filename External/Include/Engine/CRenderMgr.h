@@ -31,6 +31,7 @@ private:
 
     CMRT* m_MRT[(UINT)MRT_TYPE::END];
 
+    CGameObject* m_GizMoTargetObject;  //기즈모가 생겨야할 타겟 오브젝트
 
     void (CRenderMgr::* RENDER_FUNC)(void);
 
@@ -66,6 +67,9 @@ public:
 
     const vector<CLight2D*>& GetLight2D() { return m_vecLight2D; }
     const vector<CLight3D*>& GetLight3D() { return m_vecLight3D; }
+
+    CGameObject* GetGizMoTargetObj() { return m_GizMoTargetObject; }   //기즈모가 생겨야할 타겟오브젝트 게터, 세터 함수
+    void SetGizMoTargetObj(CGameObject* _Object) { m_GizMoTargetObject = _Object; }
 
     CCamera* GetMainCam()
     {

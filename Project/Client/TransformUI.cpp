@@ -4,6 +4,8 @@
 #include <Engine\CGameObject.h>
 #include <Engine\CTransform.h>
 
+#include "ImGui/ImGuizmo.h"
+
 TransformUI::TransformUI()
 	: ComponentUI("##Transform", COMPONENT_TYPE::TRANSFORM)	
 {
@@ -43,4 +45,13 @@ int TransformUI::render_update()
 	GetTarget()->Transform()->SetRelativeRot(vRotation);
 
 	return TRUE;
+}
+
+void TransformUI::EditTransform(float* cameraView, float* cameraProjection, float* matrix, bool editTransformDecomposition)
+{
+}
+
+void TransformUI::RenderGizmo()
+{
+	ImGuizmo::BeginFrame();
 }
