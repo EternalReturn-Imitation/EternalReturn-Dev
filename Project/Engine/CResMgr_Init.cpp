@@ -1145,6 +1145,32 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetTopology(D3D_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 
 	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// LandScapeShader	
+	// RS_TYPE : CULL_BACK
+	// DS_TYPE : LESS
+	// BS_TYPE : DEFAULT
+	// 
+	// Parameter
+	// g_tex_0 : Output Texture
+	// g_tex_1 : Normal Texture
+	// Domain : Opaque
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"LandScapeShader");
+	pShader->CreateVertexShader(L"shader\\landscape.fx", "VS_LandScape");
+	pShader->CreateHullShader(L"shader\\landscape.fx", "HS_LandScape");
+	pShader->CreateDomainShader(L"shader\\landscape.fx", "DS_LandScape");
+	pShader->CreatePixelShader(L"shader\\landscape.fx", "PS_LandScape");
+
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::DEFAULT);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);
+
+	AddRes(pShader->GetKey(), pShader);
 }
 
 void CResMgr::CreateDefaultComputeShader()
@@ -1289,6 +1315,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ShadowMapShader"));
 	AddRes(L"ShadowMapMtrl", pMtrl);
+
+	// LandScapeMtrl
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"LandScapeShader"));
+	AddRes(L"LandScapeMtrl", pMtrl);
 
 	// =================
 	// == PostProcess ==

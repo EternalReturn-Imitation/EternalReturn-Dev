@@ -71,13 +71,7 @@ public:
     CGameObject* GetGizmoTarget() { return m_GizmoTarget; }   //기즈모가 생겨야할 타겟오브젝트 게터, 세터 함수
     void SetGizmoTarget(CGameObject* _Object) { m_GizmoTarget = _Object; }
 
-    CCamera* GetMainCam()
-    {
-        if (m_vecCam.empty())
-            return nullptr;
-
-        return m_vecCam[0];
-    }
+    CCamera* GetMainCam();
 
     void CopyRenderTarget();
 

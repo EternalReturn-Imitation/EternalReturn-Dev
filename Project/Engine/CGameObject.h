@@ -16,6 +16,7 @@ class CRenderComponent;
 class CSkyBox;
 class CTileMap;
 class CDecal;
+class CLandScape;
 class CScript;
 class CBehaviorTree;
 
@@ -73,6 +74,7 @@ public:
     GET_COMPONENT(Light3D, LIGHT3D);
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
+    GET_COMPONENT(LandScape, LANDSCAPE);
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
 

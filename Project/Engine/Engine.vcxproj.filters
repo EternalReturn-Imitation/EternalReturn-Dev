@@ -190,6 +190,15 @@
     <ClInclude Include="CMRT.h">
       <Filter>Source\03. Manager\06. RenderMgr\MRT</Filter>
     </ClInclude>
+    <ClInclude Include="CLandScape.h">
+      <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
+    </ClInclude>
+    <ClInclude Include="CRaycastShader.h">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightMapShader.h">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\HeightMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -365,6 +374,18 @@
     </ClCompile>
     <ClCompile Include="CMRT.cpp">
       <Filter>Source\03. Manager\06. RenderMgr\MRT</Filter>
+    </ClCompile>
+    <ClCompile Include="CLandScape.cpp">
+      <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
+    </ClCompile>
+    <ClCompile Include="CRaycastShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
+    </ClCompile>
+    <ClCompile Include="CLandScape_init.cpp">
+      <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightMapShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\HeightMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -551,6 +572,21 @@
     <Filter Include="Source\06. Component\8. BehaviorTree\BehaviorTreeMgr">
       <UniqueIdentifier>{0c382bc1-e8e5-4d0d-860a-16f4f827ef87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\08. ShaderCode\Render\3D">
+      <UniqueIdentifier>{3f6a2faa-1759-4a55-ab7f-55c7e0ec59c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Render\2D">
+      <UniqueIdentifier>{e667f236-670c-4d47-b2a4-1db1f6817c58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\LandScape">
+      <UniqueIdentifier>{877b2a4e-180e-4293-b67c-d36536e0a904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\LandScape\HeightMap">
+      <UniqueIdentifier>{09f019c1-19df-421f-a5f4-b2c0af651299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\LandScape\Raycast">
+      <UniqueIdentifier>{c5b64ad3-b06b-4ae5-b4ad-213be64ad661}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -562,19 +598,10 @@
     <FxCompile Include="value.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
-    <FxCompile Include="std2d.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="debugshape.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
     <FxCompile Include="struct.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="func.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="tilemap.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="setcolor.fx">
@@ -582,9 +609,6 @@
     </FxCompile>
     <FxCompile Include="particle_update.fx">
       <Filter>Source\08. ShaderCode\Compute\ParticleUpdate</Filter>
-    </FxCompile>
-    <FxCompile Include="particle_render.fx">
-      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="postprocess.fx">
       <Filter>Source\08. ShaderCode</Filter>
@@ -602,9 +626,6 @@
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
     <FxCompile Include="std2d.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="std3d.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
     <FxCompile Include="tilemap.fx">
@@ -637,11 +658,35 @@
     <FxCompile Include="skybox.fx">
       <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
-    <FxCompile Include="tess.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
     <FxCompile Include="animation3d.fx">
       <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
+    </FxCompile>
+    <FxCompile Include="landscape.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
+    </FxCompile>
+    <FxCompile Include="debugshape.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
+    </FxCompile>
+    <FxCompile Include="particle_render.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
+    </FxCompile>
+    <FxCompile Include="std3d.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
+    </FxCompile>
+    <FxCompile Include="tess.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
+    </FxCompile>
+    <FxCompile Include="tilemap.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="std2d.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="raycast.fx">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
+    </FxCompile>
+    <FxCompile Include="heightmap.fx">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\HeightMap</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

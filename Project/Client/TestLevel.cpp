@@ -113,7 +113,7 @@ void CreateTestLevel()
 
 	SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
 
-	/*
+	
 	
 	// ============
 	// FBX Loading
@@ -127,16 +127,31 @@ void CreateTestLevel()
 		//pObj = pMeshData->Instantiate();
 		//pObj->SetName(L"House");
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Monster");
+		pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
 
 		SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
-	*/
+
+	// LandScape Object
+	CGameObject* pLandScape = new CGameObject;
+	pLandScape->SetName(L"LandScape");
+
+	pLandScape->AddComponent(new CTransform);
+	pLandScape->AddComponent(new CLandScape);
+
+	pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
+
+	pLandScape->LandScape()->SetFace(64, 64);
+	pLandScape->LandScape()->SetFrustumCheck(false);
+	//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
+
+	SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 충돌 시킬 레이어 짝 지정
-	// CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
+	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }
