@@ -12,6 +12,7 @@ CTransform::CTransform()
 		  Vec3(1.f, 0.f, 0.f)
 		, Vec3(0.f, 1.f, 0.f)
 		, Vec3(0.f, 0.f, 1.f)}	
+	, b_GizmoOnSet(true)
 {
 	SetName(L"Transform");
 }
