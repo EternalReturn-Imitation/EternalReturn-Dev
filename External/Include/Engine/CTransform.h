@@ -44,6 +44,7 @@ public:
 
     const Matrix& GetWorldScaleMat() { return m_matWorldScale; }
     const Matrix& GetWorldMat() const { return m_matWorld; }
+    const Matrix& GetWorldInvMat() const { return m_matWorldInv; }
 
     void SetWorldMat(const Matrix& _mat) { m_matWorld = _mat; }
 

@@ -24,6 +24,7 @@ public:
     void SetClearColor(Vec4 _ClearColor, UINT _RTIdx) { m_ClearColor[_RTIdx] = _ClearColor; }
     void ClearTarget();
     void OMSet(bool _bStay = false);
+    const D3D11_VIEWPORT& GetViewPort() { return m_Viewport; }
 
 public:
     CLONE_DISABLE(CMRT);

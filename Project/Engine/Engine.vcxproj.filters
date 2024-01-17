@@ -193,6 +193,12 @@
     <ClInclude Include="CLandScape.h">
       <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
     </ClInclude>
+    <ClInclude Include="CRaycastShader.h">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
+    </ClInclude>
+    <ClInclude Include="CHeightMapShader.h">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\HeightMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -371,6 +377,15 @@
     </ClCompile>
     <ClCompile Include="CLandScape.cpp">
       <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
+    </ClCompile>
+    <ClCompile Include="CRaycastShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
+    </ClCompile>
+    <ClCompile Include="CLandScape_init.cpp">
+      <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeightMapShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\HeightMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -563,6 +578,15 @@
     <Filter Include="Source\08. ShaderCode\Render\2D">
       <UniqueIdentifier>{e667f236-670c-4d47-b2a4-1db1f6817c58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\LandScape">
+      <UniqueIdentifier>{877b2a4e-180e-4293-b67c-d36536e0a904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\LandScape\HeightMap">
+      <UniqueIdentifier>{09f019c1-19df-421f-a5f4-b2c0af651299}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\LandScape\Raycast">
+      <UniqueIdentifier>{c5b64ad3-b06b-4ae5-b4ad-213be64ad661}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -657,6 +681,12 @@
     </FxCompile>
     <FxCompile Include="std2d.fx">
       <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="raycast.fx">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
+    </FxCompile>
+    <FxCompile Include="heightmap.fx">
+      <Filter>Source\08. ShaderCode\Compute\LandScape\HeightMap</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

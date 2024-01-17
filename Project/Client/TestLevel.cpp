@@ -132,6 +132,7 @@ void CreateTestLevel()
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Monster");
+		pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
 
 		SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
@@ -143,11 +144,11 @@ void CreateTestLevel()
 	pLandScape->AddComponent(new CTransform);
 	pLandScape->AddComponent(new CLandScape);
 
-	pLandScape->Transform()->SetRelativeScale(Vec3(1000.f, 4000.f, 1000.f));
+	pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
 
 	pLandScape->LandScape()->SetFace(64, 64);
 	pLandScape->LandScape()->SetFrustumCheck(false);
-	pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
+	//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
 
 	SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 

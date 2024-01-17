@@ -1,25 +1,46 @@
 #include "pch.h"
 #include "CLandScape.h"
 
+#include "CRenderMgr.h"
 #include "CResMgr.h"
+#include "CKeyMgr.h"
+
+#include "CStructuredBuffer.h"
+
 #include "CTransform.h"
+#include "CCamera.h"
 
 CLandScape::CLandScape()
 	: CRenderComponent(COMPONENT_TYPE::LANDSCAPE)
 	, m_iFaceX(1)
 	, m_iFaceZ(1)
+	, m_vBrushScale(Vec2(0.05f, 0.05f))
 {
-	CreateMesh();
-	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
+	init();
 }
 
 CLandScape::~CLandScape()
 {
+	if (nullptr != m_pCrossBuffer)
+		delete m_pCrossBuffer;
 }
 
 
 void CLandScape::finaltick()
 {
+	if (KEY_PRESSED(KEY::LBTN))
+	{
+		Raycasting();
+
+		// 교점 위치정보를 토대로 높이를 수정 함
+		m_pCSHeightMap->SetInputBuffer(m_pCrossBuffer); // 픽킹 정보를 HeightMapShader 에 세팅
+
+		m_pCSHeightMap->SetBrushTex(m_pBrushTex);		// 사용할 브러쉬 텍스쳐 세팅
+		m_pCSHeightMap->SetBrushIndex(0);				// 브러쉬 인덱스 설정
+		m_pCSHeightMap->SetBrushScale(m_vBrushScale);   // 브러쉬 크기
+		m_pCSHeightMap->SetHeightMap(m_HeightMap);
+		m_pCSHeightMap->Execute();
+	}
 }
 
 void CLandScape::render()
@@ -49,52 +70,34 @@ void CLandScape::SetFace(UINT _iFaceX, UINT _iFaceZ)
 	CreateMesh();
 }
 
-void CLandScape::CreateMesh()
+
+void CLandScape::Raycasting()
 {
-	Vtx v;
-	vector<Vtx> vecVtx;
+	// 시점 카메라를 가져옴
+	CCamera* pMainCam = CRenderMgr::GetInst()->GetMainCam();
+	if (nullptr == pMainCam)
+		return;
 
-	for (int i = 0; i < m_iFaceZ + 1; ++i)
-	{
-		for (int j = 0; j < m_iFaceX + 1; ++j)
-		{
-			v.vPos = Vec3(j, 0.f, i);
-			v.vUV = Vec2((float)j, (float)m_iFaceZ - i);
-			v.vTangent = Vec3(1.f, 0.f, 0.f);
-			v.vNormal = Vec3(0.f, 1.f, 0.f);
-			v.vBinormal = Vec3(0.f, 0.f, -1.f);
-			v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+	// 월드 기준 광선을 지형의 로컬로 보냄
+	const Matrix& matWorldInv = Transform()->GetWorldInvMat();
+	const tRay& ray = pMainCam->GetRay();
 
-			vecVtx.push_back(v);
-		}
-	}
+	tRay CamRay = {};
+	CamRay.vStart = XMVector3TransformCoord(ray.vStart, matWorldInv);
+	CamRay.vDir = XMVector3TransformNormal(ray.vDir, matWorldInv);
+	CamRay.vDir.Normalize();
 
-	vector<UINT> vecIdx;
+	// 지형과 카메라 Ray 의 교점을 구함
+	tRaycastOut out = { Vec2(0.f, 0.f), 0x7fffffff, 0 };
+	m_pCrossBuffer->SetData(&out, 1);
 
-	for (int i = 0; i < m_iFaceZ; ++i)
-	{
-		for (int j = 0; j < m_iFaceX; ++j)
-		{
-			// 0
-			// | \
-			// 2--1  
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j));
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j + 1));
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j));
+	m_pCSRaycast->SetHeightMap(m_HeightMap);
+	m_pCSRaycast->SetFaceCount(m_iFaceX, m_iFaceZ);
+	m_pCSRaycast->SetCameraRay(CamRay);
+	m_pCSRaycast->SetOuputBuffer(m_pCrossBuffer);
 
-			// 0--1
-			//  \ |
-			//    2
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j));
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j + 1));
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j + 1));
-		}
-	}
+	m_pCSRaycast->Execute();
 
-	Ptr<CMesh> pMesh = new CMesh;
-	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
-	SetMesh(pMesh);
-
-	// Mesh 재설정하고 나면 재질이 날라가기 때문에 다시 설정
-	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
+	m_pCrossBuffer->GetData(&out);
+	int a = 0;
 }

@@ -166,6 +166,22 @@ struct tParticleModule
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
 };
 
+
+// 광선 구조체
+struct tRay
+{
+	Vec3 vStart;
+	Vec3 vDir;
+};
+
+// Raycast 결과를 받을 구조체
+struct tRaycastOut
+{
+	Vec2	vUV;
+	float	fDist;
+	int		bSuccess;
+};
+
 // ============
 // Animation 3D
 // ============
