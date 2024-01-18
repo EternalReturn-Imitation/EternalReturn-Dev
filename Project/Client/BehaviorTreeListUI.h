@@ -5,6 +5,7 @@ class BTNode;
 class TreeUI;
 class NodeInfoUI;
 class BlackBoardListUI;
+class TreeNode;
 
 class BehaviorTreeListUI :
     public UI
