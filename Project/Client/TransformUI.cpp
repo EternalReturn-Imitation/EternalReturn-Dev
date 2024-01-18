@@ -11,6 +11,8 @@
 
 #include "ImGui/ImGuizmo.h"
 
+#include <Engine/CKeyMgr.h>
+#include <Script/CCameraMoveScript.h>
 
 static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
@@ -58,6 +60,15 @@ int TransformUI::render_update()
 		CGameObject* TargetObj = CRenderMgr::GetInst()->GetGizmoTarget();
 		if (TargetObj->Transform())// 트랜스폼을 가지고있다면
 		{
+			if (!CRenderMgr::GetInst()->GetMainCam()->GetOwner()->GetScript<CCameraMoveScript>()->GetRBTNPressed()) {
+				if (KEY_TAP(KEY::Q))
+					mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+				else if (KEY_TAP(KEY::W))
+					mCurrentGizmoOperation = ImGuizmo::ROTATE;
+				else if (KEY_TAP(KEY::E))
+					mCurrentGizmoOperation = ImGuizmo::SCALE;
+			}			
+
 			if (TargetObj->Transform()->GetGizmoOnSet()) //기즈모를 배치할수 있는 오브젝트라면
 				RenderGizmo();  //기즈모 렌더 처리
 		}
