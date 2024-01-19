@@ -241,65 +241,84 @@ void CFBXLoader::GetTangent(FbxMesh* _pMesh
 	, int _iVtxOrder /*폴리곤 단위로 접근하는 순서*/)
 {
 	int iTangentCnt = _pMesh->GetElementTangentCount();
-	if (1 != iTangentCnt)
+	if (1 < iTangentCnt)
 		assert(NULL); // 정점 1개가 포함하는 탄젠트 정보가 2개 이상이다.
 
-	// 탄젠트 data 의 시작 주소
-	FbxGeometryElementTangent* pTangent = _pMesh->GetElementTangent();
-	UINT iTangentIdx = 0;
-
-	if (pTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+	if (1 == iTangentCnt)
 	{
-		if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iTangentIdx = _iVtxOrder;
-		else
-			iTangentIdx = pTangent->GetIndexArray().GetAt(_iVtxOrder);
+		// 탄젠트 data 의 시작 주소
+		FbxGeometryElementTangent* pTangent = _pMesh->GetElementTangent();
+		UINT iTangentIdx = 0;
+
+		if (pTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
+				iTangentIdx = _iVtxOrder;
+			else
+				iTangentIdx = pTangent->GetIndexArray().GetAt(_iVtxOrder);
+		}
+		else if (pTangent->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
+				iTangentIdx = _iIdx;
+			else
+				iTangentIdx = pTangent->GetIndexArray().GetAt(_iIdx);
+		}
+
+		FbxVector4 vTangent = pTangent->GetDirectArray().GetAt(iTangentIdx);
+
+		_pContainer->vecTangent[_iIdx].x = (float)vTangent.mData[0];
+		_pContainer->vecTangent[_iIdx].y = (float)vTangent.mData[2];
+		_pContainer->vecTangent[_iIdx].z = (float)vTangent.mData[1];
 	}
-	else if (pTangent->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+	else
 	{
-		if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iTangentIdx = _iIdx;
-		else
-			iTangentIdx = pTangent->GetIndexArray().GetAt(_iIdx);
+		_pContainer->vecTangent[_iIdx].x = 0.f;
+		_pContainer->vecTangent[_iIdx].y = 0.f;
+		_pContainer->vecTangent[_iIdx].z = 0.f;
 	}
-
-	FbxVector4 vTangent = pTangent->GetDirectArray().GetAt(iTangentIdx);
-
-	_pContainer->vecTangent[_iIdx].x = (float)vTangent.mData[0];
-	_pContainer->vecTangent[_iIdx].y = (float)vTangent.mData[2];
-	_pContainer->vecTangent[_iIdx].z = (float)vTangent.mData[1];
 }
 
 void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder)
 {
 	int iBinormalCnt = _pMesh->GetElementBinormalCount();
-	if (1 != iBinormalCnt)
+	if (1 < iBinormalCnt)
 		assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
 
-	// 종법선 data 의 시작 주소
-	FbxGeometryElementBinormal* pBinormal = _pMesh->GetElementBinormal();
-	UINT iBinormalIdx = 0;
-
-	if (pBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+	if (1 == iBinormalCnt)
 	{
-		if (pBinormal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iBinormalIdx = _iVtxOrder;
-		else
-			iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iVtxOrder);
+		// 종법선 data 의 시작 주소
+		FbxGeometryElementBinormal* pBinormal = _pMesh->GetElementBinormal();
+		UINT iBinormalIdx = 0;
+
+		if (pBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			if (pBinormal->GetReferenceMode() == FbxGeometryElement::eDirect)
+				iBinormalIdx = _iVtxOrder;
+			else
+				iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iVtxOrder);
+		}
+		else if (pBinormal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (pBinormal->GetReferenceMode() == FbxGeometryElement::eDirect)
+				iBinormalIdx = _iIdx;
+			else
+				iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iIdx);
+		}
+
+		FbxVector4 vBinormal = pBinormal->GetDirectArray().GetAt(iBinormalIdx);
+
+		_pContainer->vecBinormal[_iIdx].x = (float)vBinormal.mData[0];
+		_pContainer->vecBinormal[_iIdx].y = (float)vBinormal.mData[2];
+		_pContainer->vecBinormal[_iIdx].z = (float)vBinormal.mData[1];
 	}
-	else if (pBinormal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+	else
 	{
-		if (pBinormal->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iBinormalIdx = _iIdx;
-		else
-			iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iIdx);
+		_pContainer->vecBinormal[_iIdx].x = 0.f;
+		_pContainer->vecBinormal[_iIdx].y = 0.f;
+		_pContainer->vecBinormal[_iIdx].z = 0.f;
 	}
 
-	FbxVector4 vBinormal = pBinormal->GetDirectArray().GetAt(iBinormalIdx);
-
-	_pContainer->vecBinormal[_iIdx].x = (float)vBinormal.mData[0];
-	_pContainer->vecBinormal[_iIdx].y = (float)vBinormal.mData[2];
-	_pContainer->vecBinormal[_iIdx].z = (float)vBinormal.mData[1];
 }
 
 void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder)
@@ -662,9 +681,9 @@ void CFBXLoader::CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer)
 			// 가중치 값 순으로 내림차순 정렬
 			sort((*iter).begin(), (*iter).end()
 				, [](const tWeightsAndIndices& left, const tWeightsAndIndices& right)
-				{
-					return left.dWeight > right.dWeight;
-				}
+			{
+				return left.dWeight > right.dWeight;
+			}
 			);
 
 			double dWeight = 0.f;

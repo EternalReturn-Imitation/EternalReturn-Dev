@@ -7,7 +7,6 @@ UI::UI(const string& _ID)
 	, m_ParentUI(nullptr)
 	, m_Modal(false)
 	, m_Active(false)
-	, m_WinFlags(0)
 {
 	
 }
@@ -30,7 +29,7 @@ void UI::finaltick()
 		// 모달리스
 		if (!m_Modal)
 		{
-			ImGui::Begin(strFullName.c_str(), &m_Active, m_WinFlags);
+			ImGui::Begin(strFullName.c_str(), &m_Active);
 
 			render_update();
 
@@ -58,7 +57,7 @@ void UI::finaltick()
 
 			ImGui::OpenPopup(strFullName.c_str());
 			if (ImGui::BeginPopupModal(strFullName.c_str(), &m_Active))
-			{
+			{				
 				render_update();
 
 				for (size_t i = 0; i < m_vecChildUI.size(); ++i)
@@ -74,8 +73,13 @@ void UI::finaltick()
 						ImGui::Separator();
 				}
 
-				ImGui::EndPopup();
+				ImGui::EndPopup();				
+				if (!m_Active)
+					int a = 0;
 			}
+
+			if (!m_Active)
+				int a = 0;
 		}
 	}
 
@@ -96,4 +100,7 @@ void UI::finaltick()
 
 		ImGui::EndChild();
 	}
+
+	if (!m_Active)
+		int a = 0;
 }
