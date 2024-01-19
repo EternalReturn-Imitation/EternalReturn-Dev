@@ -190,6 +190,9 @@
     <ClInclude Include="CWeightMapShader.h">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
     </ClInclude>
+    <ClInclude Include="CSQLMgr.h">
+      <Filter>Source\03. Manager\08. SQLMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -371,6 +374,9 @@
     </ClCompile>
     <ClCompile Include="CWeightMapShader.cpp">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="CSQLMgr.cpp">
+      <Filter>Source\03. Manager\08. SQLMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -565,6 +571,9 @@
     </Filter>
     <Filter Include="Source\08. ShaderCode\Compute\LandScape\WeightMap">
       <UniqueIdentifier>{c8ce753e-94c0-40ac-8758-e705a76ab853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\08. SQLMgr">
+      <UniqueIdentifier>{01639250-4e2c-4d84-89ee-13cefa061b24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

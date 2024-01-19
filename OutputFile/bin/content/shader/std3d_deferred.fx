@@ -12,9 +12,10 @@ struct VS_IN
     float3 vNormal : NORMAL;
     float3 vTangent : TANGENT;
     float3 vBinormal : BINORMAL;
-    
+
     float4 vWeights : BLENDWEIGHT;
     float4 vIndices : BLENDINDICES;
+
 };
 
 struct VS_OUT
@@ -27,6 +28,8 @@ struct VS_OUT
     float3 vViewNormal : NORMAL;
     float3 vViewTangent : TANGENT;
     float3 vViewBinormal : BINORMAL;
+
+
 };
 
 // ===============
@@ -44,12 +47,12 @@ struct VS_OUT
 VS_OUT VS_Std3D_Deferred(VS_IN _in)
 {
     VS_OUT output = (VS_OUT) 0.f;
-    
-    if (g_iAnim)
-    {
-        Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, 0);
-    }
         
+    //if (g_iAnim)
+    //{
+    //    Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, 0);
+    //}
+
     // 로컬에서의 Normal 방향을 월드로 이동      
     output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
     
@@ -66,11 +69,11 @@ VS_OUT VS_Std3D_Deferred(VS_IN _in)
 
 struct PS_OUT
 {
-    float4 vColor : SV_Target0;
-    float4 vNormal : SV_Target1;
-    float4 vPosition : SV_Target2;
-    float4 vEmissive : SV_Target3;
-    float4 vData : SV_Target4;
+    float4 vColor       : SV_Target0;
+    float4 vNormal      : SV_Target1;
+    float4 vPosition    : SV_Target2;
+    float4 vEmissive    : SV_Target3;
+    float4 vData        : SV_Target4;
 };
 
 PS_OUT PS_Std3D_Deferred(VS_OUT _in)
@@ -83,7 +86,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     
     if (g_btex_0)
     {
-        output.vColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+        output.vColor = g_tex_0.Sample(g_sam_0, _in.vUV);        
     }
     
     if (g_btex_1)
@@ -101,15 +104,20 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         };
         
         vViewNormal = normalize(mul(vNormal, vRotateMat));
-    }
+    }   
     
     output.vNormal = float4(vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);
     output.vData = float4(0.f, 0.f, 0.f, 1.f);
-    
+        
     output.vColor.a = saturate(SpecCoeff);
     
     return output;
 }
+
+
+
+
+
 
 #endif

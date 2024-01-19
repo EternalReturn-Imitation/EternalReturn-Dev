@@ -15,7 +15,8 @@
 
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
-#define MAX_LAYER 32
+#define MAX_LAYER	32
+#define MAX_MIP		8
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 
@@ -36,8 +37,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2차원 광원
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
-
-	BEHAVIORTREE,
+	BEHAVIORTREE,	// BehaviorTree
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링
@@ -46,7 +46,8 @@ enum class COMPONENT_TYPE
 	LANDSCAPE,		// 3차원 지형
 	SKYBOX,			// SkyBox
 	DECAL,			// 내부 렌더링
-		
+	
+
 	END,
 
 	// custom
@@ -55,6 +56,7 @@ enum class COMPONENT_TYPE
 
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];
 extern const wchar_t* COMPONENT_TYPE_WSTR[(UINT)COMPONENT_TYPE::END];
+
 
 enum class RES_TYPE
 {
@@ -211,6 +213,7 @@ enum class SHADER_DOMAIN
 	DOMAIN_UNDEFINED,		// 미정
 };
 
+
 enum class EVENT_TYPE
 {
 	CREATE_OBJECT,	// wParam : GameObject, lParam : Layer Index
@@ -242,8 +245,6 @@ enum class COLLIDER2D_TYPE
 	END,
 };
 
-extern const char* COLLIDER2D_TYPE_STR[(UINT)COLLIDER2D_TYPE::END];
-extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COLLIDER2D_TYPE::END];
 
 enum class LIGHT_TYPE
 {
@@ -267,7 +268,7 @@ enum class SB_TYPE
 
 enum class PARTICLE_MODULE
 {
-	PARTICLE_SPAWN,	// 파티클 생성
+	PARTICLE_SPAWN,
 	COLOR_CHANGE,
 	SCALE_CHANGE,
 	ADD_VELOCITY,
