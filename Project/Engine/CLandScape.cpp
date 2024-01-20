@@ -32,13 +32,13 @@ CLandScape::~CLandScape()
 
 void CLandScape::finaltick()
 {
-	if (KEY_TAP(KEY::NUM_0))
+	if (KEY_TAP(KEY::_1))
 		m_eMod = LANDSCAPE_MOD::NONE;
-	else if (KEY_TAP(KEY::NUM_1))
+	else if (KEY_TAP(KEY::_2))
 		m_eMod = LANDSCAPE_MOD::HEIGHT_MAP;
-	else if (KEY_TAP(KEY::NUM_2))
+	else if (KEY_TAP(KEY::_3))
 		m_eMod = LANDSCAPE_MOD::SPLAT;
-	else if (KEY_TAP(KEY::NUM_3))
+	else if (KEY_TAP(KEY::_4))
 	{
 		m_iWeightIdx++;
 		if (3 <= m_iWeightIdx)
@@ -157,7 +157,7 @@ void CLandScape::Raycasting()
 	CamRay.vDir.Normalize();
 
 	// 지형과 카메라 Ray 의 교점을 구함
-	tRaycastOut out = { Vec2(0.f, 0.f), (float)0x7fffffff, 0 };
+	tRaycastOut out = { Vec2(0.f, 0.f), 0x7fffffff, 0 };
 	m_pCrossBuffer->SetData(&out, 1);
 
 	m_pCSRaycast->SetHeightMap(m_HeightMap);

@@ -99,10 +99,12 @@ void CTexture::UpdateData()
 {
 }
 
+
 int CTexture::Load(const wstring& _strFilePath)
 {
 	return Load(_strFilePath, 1);
 }
+
 
 int CTexture::Load(const wstring& _strFilePath, int _iMipLevel)
 {
@@ -151,7 +153,7 @@ int CTexture::Load(const wstring& _strFilePath, int _iMipLevel)
 		m_Desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 	}
 
-	m_Desc.ArraySize = (UINT)m_Image.GetMetadata().arraySize;
+	m_Desc.ArraySize = m_Image.GetMetadata().arraySize;
 
 	m_Desc.SampleDesc.Count = 1;
 	m_Desc.SampleDesc.Quality = 0;
@@ -159,21 +161,21 @@ int CTexture::Load(const wstring& _strFilePath, int _iMipLevel)
 	m_Desc.Usage = D3D11_USAGE_DEFAULT;
 	m_Desc.CPUAccessFlags = 0;
 
-	m_Desc.Width = (UINT)m_Image.GetMetadata().width;
-	m_Desc.Height = (UINT)m_Image.GetMetadata().height;
+	m_Desc.Width = m_Image.GetMetadata().width;
+	m_Desc.Height = m_Image.GetMetadata().height;
 
 	HRESULT hr = DEVICE->CreateTexture2D(&m_Desc, nullptr, m_Tex2D.GetAddressOf());
 
 	// 원본데이터(밉맵 레벨 0) 를 각 칸에 옮긴다.	
-	for (int i = 0; i < (int)m_Desc.ArraySize; ++i)
+	for (int i = 0; i < m_Desc.ArraySize; ++i)
 	{
 		// GPU 에 데이터 옮기기(밉맵 포함)
 		UINT iSubresIdx = D3D11CalcSubresource(0, i, m_Desc.MipLevels);
 
 		CONTEXT->UpdateSubresource(m_Tex2D.Get(), iSubresIdx, nullptr
 			, m_Image.GetImage(0, i, 0)->pixels
-			, (UINT)m_Image.GetImage(0, i, 0)->rowPitch
-			, (UINT)m_Image.GetImage(0, i, 0)->slicePitch);
+			, m_Image.GetImage(0, i, 0)->rowPitch
+			, m_Image.GetImage(0, i, 0)->slicePitch);
 	}
 
 	// SRV 생성
@@ -216,6 +218,8 @@ int CTexture::Load(const wstring& _strFilePath, int _iMipLevel)
 	}
 
 	m_Tex2D->GetDesc(&m_Desc);
+
+	return S_OK;
 }
 
 int CTexture::Create(UINT _Width, UINT _Height, DXGI_FORMAT _pixelformat
@@ -330,7 +334,6 @@ int CTexture::Create(ComPtr<ID3D11Texture2D> _tex2D)
 	return S_OK;
 }
 
-
 int CTexture::CreateArrayTexture(const vector<Ptr<CTexture>>& _vecTex, int _iMapLevel)
 {
 	m_Desc = _vecTex[0]->GetDesc();
@@ -356,7 +359,7 @@ int CTexture::CreateArrayTexture(const vector<Ptr<CTexture>>& _vecTex, int _iMap
 	viewdesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 	viewdesc.Texture2DArray.MipLevels = _iMapLevel;
 	viewdesc.Texture2DArray.MostDetailedMip = 0;
-	viewdesc.Texture2DArray.ArraySize = (UINT)_vecTex.size();
+	viewdesc.Texture2DArray.ArraySize = _vecTex.size();
 
 	DEVICE->CreateShaderResourceView(m_Tex2D.Get(), &viewdesc, m_SRV.GetAddressOf());
 
@@ -394,7 +397,7 @@ void CTexture::GenerateMip(UINT _iMipLevel)
 		tDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 	}
 
-	tDesc.ArraySize = (UINT)m_Image.GetMetadata().arraySize;
+	tDesc.ArraySize = m_Image.GetMetadata().arraySize;
 
 	tDesc.SampleDesc.Count = 1;
 	tDesc.SampleDesc.Quality = 0;
@@ -402,21 +405,21 @@ void CTexture::GenerateMip(UINT _iMipLevel)
 	tDesc.Usage = D3D11_USAGE_DEFAULT;
 	tDesc.CPUAccessFlags = 0;
 
-	tDesc.Width = (UINT)m_Image.GetMetadata().width;
-	tDesc.Height = (UINT)m_Image.GetMetadata().height;
+	tDesc.Width = m_Image.GetMetadata().width;
+	tDesc.Height = m_Image.GetMetadata().height;
 
 	HRESULT hr = DEVICE->CreateTexture2D(&tDesc, nullptr, m_Tex2D.GetAddressOf());
 
 	// 원본데이터(밉맵 레벨 0) 를 각 칸에 옮긴다.	
-	for (int i = 0; i < (int)tDesc.ArraySize; ++i)
+	for (int i = 0; i < tDesc.ArraySize; ++i)
 	{
 		// GPU 에 데이터 옮기기(밉맵 포함)
 		UINT iSubresIdx = D3D11CalcSubresource(0, i, tDesc.MipLevels);
 
 		CONTEXT->UpdateSubresource(m_Tex2D.Get(), iSubresIdx, nullptr
 			, m_Image.GetImage(0, i, 0)->pixels
-			, (UINT)m_Image.GetImage(0, i, 0)->rowPitch
-			, (UINT)m_Image.GetImage(0, i, 0)->slicePitch);
+			, m_Image.GetImage(0, i, 0)->rowPitch
+			, m_Image.GetImage(0, i, 0)->slicePitch);
 	}
 
 	// SRV 생성

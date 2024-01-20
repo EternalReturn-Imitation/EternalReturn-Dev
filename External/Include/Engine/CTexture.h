@@ -34,19 +34,19 @@ public:
 
 public:
     float                               Width() { return (float)m_Desc.Width; }
-	float                               Height() { return (float)m_Desc.Height; }
+    float                               Height() { return (float)m_Desc.Height; }
 
     UINT                                GetArraySize() { return m_Desc.ArraySize; }
     UINT                                GetRowPitch() const { return (UINT)m_Image.GetImages()->rowPitch; }
     UINT                                GetSlicePitch()const { return (UINT)m_Image.GetImages()->slicePitch; }
-    void*                               GetSysMem() { return m_Image.GetPixels(); }
+    void* GetSysMem() { return m_Image.GetPixels(); }
 
-    const D3D11_TEXTURE2D_DESC&         GetDesc() { return m_Desc; }
-	ComPtr<ID3D11Texture2D>             GetTex2D() { return m_Tex2D; }
-	ComPtr<ID3D11ShaderResourceView>    GetSRV() { return m_SRV; }
-	ComPtr<ID3D11RenderTargetView>	    GetRTV() { return m_RTV; }
-	ComPtr<ID3D11DepthStencilView>	    GetDSV() { return m_DSV; }
-	ComPtr<ID3D11UnorderedAccessView>   GetUAV() { return m_UAV; }
+    const D3D11_TEXTURE2D_DESC& GetDesc() { return m_Desc; }
+    ComPtr<ID3D11Texture2D>             GetTex2D() { return m_Tex2D; }
+    ComPtr<ID3D11ShaderResourceView>    GetSRV() { return m_SRV; }
+    ComPtr<ID3D11RenderTargetView>	    GetRTV() { return m_RTV; }
+    ComPtr<ID3D11DepthStencilView>	    GetDSV() { return m_DSV; }
+    ComPtr<ID3D11UnorderedAccessView>   GetUAV() { return m_UAV; }
 
 
 

@@ -7,6 +7,7 @@
 CCameraMoveScript::CCameraMoveScript()
 	: CScript((UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT)
 	, m_fCamSpeed(250.f)
+	, b_RBTNPressed(false)
 {
 }
 
@@ -119,7 +120,10 @@ void CCameraMoveScript::Camera3DMove()
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
 		vRot.y += DT * vMouseDir.x * 5.f;
 		vRot.x -= DT * vMouseDir.y * 5.f;
+		b_RBTNPressed = true;
 	}
+	else
+		b_RBTNPressed = false;
 
 	Transform()->SetRelativePos(vPos);
 	Transform()->SetRelativeRot(vRot);
