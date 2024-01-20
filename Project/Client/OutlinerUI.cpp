@@ -13,8 +13,6 @@
 
 #include "TreeUI.h"
 
-#include <Engine/CRenderMgr.h>
-
 OutlinerUI::OutlinerUI()
     : UI("##Outliner")
 	, m_Tree(nullptr)
@@ -93,7 +91,6 @@ void OutlinerUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 	BehaviorTreeListUI* pBehaviorTreeList = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
 	pBehaviorTreeList->SetTargetObject(pSelectObject);
 	
-	CRenderMgr::GetInst()->SetGizmoTarget(pSelectObject);
 }
 
 

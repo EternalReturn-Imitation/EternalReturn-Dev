@@ -4,18 +4,6 @@
 #include <Engine\CGameObject.h>
 #include <Engine\CTransform.h>
 
-//기즈모 관련
-#include <Engine/CCamera.h>
-#include <Engine/CRenderMgr.h>
-#include <Engine/CTransform.h>
-
-#include "ImGui/ImGuizmo.h"
-
-#include <Engine/CKeyMgr.h>
-#include <Script/CCameraMoveScript.h>
-
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-
 TransformUI::TransformUI()
 	: ComponentUI("##Transform", COMPONENT_TYPE::TRANSFORM)	
 {
@@ -31,7 +19,7 @@ int TransformUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 
-	/*Vec3 vPos = GetTarget()->Transform()->GetRelativePos();
+	Vec3 vPos = GetTarget()->Transform()->GetRelativePos();
 	Vec3 vScale = GetTarget()->Transform()->GetRelativeScale();
 	Vec3 vRotation = GetTarget()->Transform()->GetRelativeRot();
 	vRotation = (vRotation / XM_PI) * 180.f;
@@ -52,37 +40,7 @@ int TransformUI::render_update()
 	GetTarget()->Transform()->SetRelativeScale(vScale);
 
 	vRotation = (vRotation / 180.f) * XM_PI;
-	GetTarget()->Transform()->SetRelativeRot(vRotation);*/
-
-	//ImGui 렌더전에 기즈모 렌더를 해야함 ! (타겟오브젝트가 있을경우)
-	if (CRenderMgr::GetInst()->GetGizmoTarget())
-	{
-		CGameObject* TargetObj = CRenderMgr::GetInst()->GetGizmoTarget();
-		if (TargetObj->Transform())// 트랜스폼을 가지고있다면
-		{
-			if (!CRenderMgr::GetInst()->GetMainCam()->GetOwner()->GetScript<CCameraMoveScript>()->GetRBTNPressed()) {
-				if (KEY_TAP(KEY::Q))
-					mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-				else if (KEY_TAP(KEY::W))
-					mCurrentGizmoOperation = ImGuizmo::ROTATE;
-				else if (KEY_TAP(KEY::E))
-					mCurrentGizmoOperation = ImGuizmo::SCALE;
-			}			
-
-			if (TargetObj->Transform()->GetGizmoOnSet()) //기즈모를 배치할수 있는 오브젝트라면
-				RenderGizmo();  //기즈모 렌더 처리
-		}
-	}
-
-	bool b_IsWindowMode = ImGuiMgr::GetInst()->GetGizmoEditor_WindowMode();
-	if (!b_IsWindowMode)
-	{
-		ImGui::Checkbox("Window Mode", &b_IsWindowMode);
-		if (b_IsWindowMode)
-			ImGuiMgr::GetInst()->SetGizmoEditor_WindowMode(true);
-		else
-			ImGuiMgr::GetInst()->SetGizmoEditor_WindowMode(false);
-	}
+	GetTarget()->Transform()->SetRelativeRot(vRotation);
 
 	return TRUE;
 }

@@ -24,7 +24,6 @@ private:
 
     HANDLE              m_hObserver;
 
-    bool                b_GizmoEditorWindowMode;
 
 public:
     void init(HWND _hWnd);
@@ -33,9 +32,6 @@ public:
 public:
     UI* FindUI(const string& _UIName);
     HWND GetMainHwnd() { return m_hMainHwnd; }
-
-    bool GetGizmoEditor_WindowMode() { return b_GizmoEditorWindowMode; }
-    void SetGizmoEditor_WindowMode(bool _IsWindowMode) { b_GizmoEditorWindowMode = _IsWindowMode; }
 
 private:
     void CreateUI();

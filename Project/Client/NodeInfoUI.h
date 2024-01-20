@@ -1,8 +1,6 @@
 #pragma once
 #include "UI.h"
 
-class BTNode;
-
 class NodeInfoUI :
     public UI
 {

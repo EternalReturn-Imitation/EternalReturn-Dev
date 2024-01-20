@@ -22,8 +22,6 @@ private:
     Matrix  m_matWorldBoundingScale;
     Matrix  m_matWorldBoundingBox;    // 최대 반경 행렬
 
-    bool    b_GizmoOnSet;
-
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
     void SetRelativeScale(Vec3 _vScale) { m_vRelativeScale = _vScale; }
@@ -52,11 +50,6 @@ public:
 
     const float& GetBoundingRadius() { return m_fBoundingRadius; }
     const Matrix& GetWorldBoundingMat() { return m_matWorldBoundingBox; }
-
-
-    //기즈모가 세팅되어 있는 오브젝트인지
-    void SetGizmoOnSet(bool _IsNoGizmoObj) { b_GizmoOnSet = _IsNoGizmoObj; }
-    bool GetGizmoOnSet() { return b_GizmoOnSet; }
 
 public:
     virtual void finaltick() override;    
