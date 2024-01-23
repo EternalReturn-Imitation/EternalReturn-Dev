@@ -49,6 +49,36 @@ void CMaterial::UpdateData()
 	pMtrlBuffer->UpdateData();
 }
 
+void CMaterial::UpdateData_Inst()
+{
+	if (nullptr == m_pShader)
+		return;
+
+	m_pShader->UpdateData_Inst();
+
+	// Texture Update
+	for (UINT i = 0; i < TEX_END; ++i)
+	{
+		if (nullptr == m_arrTex[i])
+		{
+			m_Const.arrTex[i] = 0;
+			CTexture::Clear(i);
+			continue;
+		}
+
+		else
+		{
+			m_Const.arrTex[i] = 1;
+			m_arrTex[i]->UpdateData(i, PIPELINE_STAGE::PS_ALL);
+		}
+	}
+
+	// Constant Update
+	CConstBuffer* pMtrlBuffer = CDevice::GetInst()->GetConstBuffer(CB_TYPE::MATERIAL);
+	pMtrlBuffer->SetData(&m_Const);
+	pMtrlBuffer->UpdateData();
+}
+
 void CMaterial::SetScalarParam(SCALAR_PARAM _Param, const void* _Src)
 {
 	switch (_Param)

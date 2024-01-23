@@ -48,6 +48,11 @@ void CTileMap::render()
 	GetMesh()->render(0);
 }
 
+void CTileMap::render(UINT _iSubset)
+{
+	render();
+}
+
 void CTileMap::UpdateData()
 {
 	m_Buffer->SetData(m_vecTile.data(), sizeof(tTile) * (UINT)m_vecTile.size());

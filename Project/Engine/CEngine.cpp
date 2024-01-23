@@ -12,6 +12,7 @@
 #include "CEventMgr.h"
 #include "CFontMgr.h"
 #include "CSQLMgr.h"
+#include "CInstancingBuffer.h"
 
 CEngine::CEngine()
 	: m_hWnd(nullptr)
@@ -60,7 +61,8 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 	CFontMgr::GetInst()->init();
 
 	CLevelMgr::GetInst()->init();		
-	
+
+	CInstancingBuffer::GetInst()->init();
 
 
 	return S_OK;

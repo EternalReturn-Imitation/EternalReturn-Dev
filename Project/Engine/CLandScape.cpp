@@ -89,7 +89,7 @@ void CLandScape::render()
 
 	Transform()->UpdateData();
 
-	GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
+	//GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
 
 	GetMaterial(0)->SetScalarParam(INT_0, &m_iFaceX);
 	GetMaterial(0)->SetScalarParam(INT_1, &m_iFaceZ);
@@ -128,6 +128,11 @@ void CLandScape::render()
 	// 리소스 정리
 	// ==========
 	m_pWeightMapBuffer->Clear();
+}
+
+void CLandScape::render(UINT _iSubset)
+{
+	render();
 }
 
 

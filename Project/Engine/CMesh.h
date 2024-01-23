@@ -55,9 +55,11 @@ public:
 
 	void render(UINT _iSubset);
 	void render_particle(UINT _iParticleCount);
+	void render_instancing(UINT _isubset);
 
 private:
 	void UpdateData(UINT _iSubset);
+	void UpdateData_Inst(UINT _iSubset);
 
 public:
 	CMesh(bool _bEngine = false);

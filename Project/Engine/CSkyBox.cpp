@@ -88,6 +88,11 @@ void CSkyBox::render()
 	GetMesh()->render(0);
 }
 
+void CSkyBox::render(UINT _iSubset)
+{
+	render();
+}
+
 void CSkyBox::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 {
 	CRenderComponent::SaveToDB(_gameObjectID, _componentType);
