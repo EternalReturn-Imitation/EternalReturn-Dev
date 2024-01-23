@@ -120,15 +120,15 @@ void CCamera::CalRay()
 void CCamera::CalcViewMat()
 {
 	// ==============
-	// View ?됰젹 怨꾩궛
+	// View 행렬 계산
 	// ==============
 	m_matView = XMMatrixIdentity();
 
-	// 移대찓??醫뚰몴瑜??먯젏?쇰줈 ?대룞
+	// 카메라 좌표를 원점으로 이동
 	Vec3 vCamPos = Transform()->GetRelativePos();
 	Matrix matViewTrans = XMMatrixTranslation(-vCamPos.x, -vCamPos.y, -vCamPos.z);
 
-	// 移대찓?쇨? 諛붾씪蹂대뒗 諛⑺뼢??Z 異뺢낵 ?됲뻾?섍쾶 留뚮뱶???뚯쟾 ?됰젹???곸슜
+	// 카메라가 바라보는 방향을 Z 축과 평행하게 만드는 회전 행렬을 적용
 	Matrix matViewRot = XMMatrixIdentity();
 
 	Vec3 vR = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -142,14 +142,14 @@ void CCamera::CalcViewMat()
 	m_matView = matViewTrans * matViewRot;
 
 
-	// View ??뻾??援ы븯湲?
+	// View 역행렬 구하기
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 }
 
 void CCamera::CalcProjMat()
 {
 	// =============
-	// ?ъ쁺 ?됰젹 怨꾩궛
+	// 투영 행렬 계산
 	// =============
 	m_matProj = XMMatrixIdentity();
 
@@ -220,6 +220,15 @@ void CCamera::SetCameraIndex(int _idx)
 
 	m_iCamIdx = _idx;
 	CRenderMgr::GetInst()->RegisterCamera(this, m_iCamIdx);
+}
+
+void CCamera::MatrixUpdate()
+{
+	g_transform.matView = m_matView;
+	g_transform.matViewInv = m_matViewInv;
+
+	g_transform.matProj = m_matProj;
+	g_transform.matProjInv = m_matProjInv;
 }
 
 void CCamera::SortObject()
@@ -405,7 +414,7 @@ void CCamera::SortObject_Shadow()
 
 void CCamera::render()
 {
-	// ?됰젹 ?낅뜲?댄듃
+	// 행렬 업데이트
 	g_transform.matView = m_matView;
 	g_transform.matViewInv = m_matViewInv;
 

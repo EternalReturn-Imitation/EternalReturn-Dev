@@ -18,6 +18,7 @@
 #include "BehaviorTreeListUI.h"
 #include "CLevelSaveLoad.h"
 
+#include "AnimEditUI.h"
 
 
 MenuUI::MenuUI()
@@ -189,6 +190,29 @@ int MenuUI::render_update()
             {
                 CreateEmptyMaterial();
             }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("AnimationEditor"))
+        {
+            if (ImGui::MenuItem("Init"))
+            {
+                AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
+            }
+
+            if (ImGui::MenuItem("Open"))
+            {
+                AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
+                animedit->SetActive(true);
+            }
+
+            if (ImGui::MenuItem("Close"))
+            {
+                AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
+                animedit->SetActive(false);
+            }
+
 
             ImGui::EndMenu();
         }

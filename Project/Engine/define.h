@@ -293,5 +293,7 @@ enum class MRT_TYPE
 
 	SHADOWMAP,
 
+	_3DANIM_EDIT,
+
 	END,
 };

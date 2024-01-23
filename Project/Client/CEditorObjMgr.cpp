@@ -4,17 +4,22 @@
 
 
 #include "CGameObjectEx.h"
+#include "CAnimEditObj.h"
 #include <Engine\components.h>
 
 #include <Engine\CResMgr.h>
 #include <Engine\CRenderMgr.h>
 #include <Engine\CTimeMgr.h>
 #include <Engine\CKeyMgr.h>
+#include <Engine\CRenderMgr.h>
+#include <Engine\CMRT.h>
 
 #include <Script\CCameraMoveScript.h>
 
 CEditorObjMgr::CEditorObjMgr()
 	: m_DebugShape{}
+	, m_pTexRenderObj(nullptr)
+	, m_bRenderTex(false)
 {
 
 }
@@ -23,6 +28,9 @@ CEditorObjMgr::~CEditorObjMgr()
 {
 	Safe_Del_Vec(m_vecEditorObj);
 	Safe_Del_Array(m_DebugShape);
+	
+	if (nullptr != m_pTexRenderObj)
+		delete m_pTexRenderObj;
 }
 
 void CEditorObjMgr::init()
@@ -71,9 +79,9 @@ void CEditorObjMgr::init()
 
 	m_vecEditorObj.push_back(pEditorCamObj);
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
+
+	m_pTexRenderObj = new CAnimEditObj;
 }
-
-
 
 void CEditorObjMgr::progress()
 {
@@ -88,13 +96,13 @@ void CEditorObjMgr::progress()
 	render();
 }
 
-
 void CEditorObjMgr::tick()
 {
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
 		m_vecEditorObj[i]->tick();
 	}
+	
 
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
@@ -108,8 +116,6 @@ void CEditorObjMgr::render()
 	{
 		m_vecEditorObj[i]->render();
 	}
-
-
 
 	// DebugShape Render
 	CGameObjectEx* pShapeObj = nullptr;
@@ -167,4 +173,17 @@ void CEditorObjMgr::render()
 			++iter;
 		}
 	}
+
+	m_pTexRenderObj->tick();
+	m_pTexRenderObj->update();
+
+	m_pTexRenderObj->render();
+}
+
+void CEditorObjMgr::TestInit()
+{
+	Ptr<CMeshData> pMeshData = nullptr;
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+
+	m_pTexRenderObj->setobject(pMeshData);
 }

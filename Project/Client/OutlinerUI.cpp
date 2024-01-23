@@ -31,7 +31,6 @@ OutlinerUI::OutlinerUI()
 	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&OutlinerUI::DragDrop);
 	m_Tree->SetDragDropID("GameObject");
 
-
 	AddChildUI(m_Tree);
 }
 

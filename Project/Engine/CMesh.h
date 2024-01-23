@@ -50,6 +50,7 @@ public:
 
 private:
 	virtual int Load(const wstring& _strFilePath);
+
 public:
 	virtual int Save(const wstring& _strRelativePath);
 

@@ -108,6 +108,8 @@ public:
 
     int GetCamIdx() { return m_iCamIdx; }
 
+    void MatrixUpdate();
+
 public:
     void SortObject();
     void SortObject(CCamera* _MainCamera);
