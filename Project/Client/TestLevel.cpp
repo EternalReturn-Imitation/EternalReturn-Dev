@@ -117,26 +117,51 @@ void CreateTestLevel()
 
 	
 	
+	//// ============
+	//// FBX Loading
+	//// ============	
+	//{
+	//	Ptr<CMeshData> pMeshData = nullptr;
+	//	CGameObject* pObj = nullptr;
+	//
+	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+	//	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\house.mdat");
+	//	//pObj = pMeshData->Instantiate();
+	//	//pObj->SetName(L"House");
+	//
+	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+	//	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
+	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+	//	pObj = pMeshData->Instantiate();
+	//	pObj->SetName(L"Monster");
+	//	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+	//
+	//	SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
+	//}
+
 	// ============
 	// FBX Loading
 	// ============	
 	{
+		// 인스턴싱 테스트		
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
 
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\house.mdat");
-		//pObj = pMeshData->Instantiate();
-		//pObj->SetName(L"House");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
+		for (int i = 0; i < 10; ++i)
+		{
+			pObj = pMeshData->Instantiate();
+			pObj->SetName(L"House");
+			SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 0);
+		}
 
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Monster");
-		pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
-		
-		SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		//for (int i = 0; i < 10; ++i)
+		//{
+		//	pObj = pMeshData->Instantiate();
+		//	pObj->SetName(L"Monster");
+		//	SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
+		//}
 	}
 
 	CEditorObjMgr::GetInst()->TestInit();

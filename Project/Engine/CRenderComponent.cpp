@@ -93,6 +93,15 @@ Ptr<CMaterial> CRenderComponent::GetDynamicMaterial(UINT _idx)
 	return m_vecMtrls[_idx].pCurMtrl;
 }
 
+ULONG64 CRenderComponent::GetInstID(UINT _iMtrlIdx)
+{
+	if (m_pMesh == NULL || m_vecMtrls[_iMtrlIdx].pCurMtrl == NULL)
+		return 0;
+
+	uInstID id{ (UINT)m_pMesh->GetID(), (WORD)m_vecMtrls[_iMtrlIdx].pCurMtrl->GetID(), (WORD)_iMtrlIdx };
+	return id.llID;
+}
+
 
 void CRenderComponent::SaveToLevelFile(FILE* _File)
 {

@@ -205,6 +205,12 @@
     <ClInclude Include="CAnim3D.h">
       <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
     </ClInclude>
+    <ClInclude Include="CCopyBoneShader.h">
+      <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
+    </ClInclude>
+    <ClInclude Include="CInstancingBuffer.h">
+      <Filter>Source\03. Manager\12. InstancingMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -392,6 +398,12 @@
     </ClCompile>
     <ClCompile Include="CWeightMapShader.cpp">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="CCopyBoneShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
+    </ClCompile>
+    <ClCompile Include="CInstancingBuffer.cpp">
+      <Filter>Source\03. Manager\12. InstancingMgr</Filter>
     </ClCompile>
     <ClCompile Include="CAnim2D.cpp">
       <Filter>Source\06. Component\6. Animator2D\Animation2D</Filter>
@@ -602,6 +614,12 @@
     <Filter Include="Source\08. ShaderCode\Compute\LandScape\WeightMap">
       <UniqueIdentifier>{d222d659-6b79-4ab5-869f-1092d47a6ce8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\CopyBone">
+      <UniqueIdentifier>{1b8972a2-06f2-4a2b-8e82-e986e3ddca97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\12. InstancingMgr">
+      <UniqueIdentifier>{542c1d78-398a-4d62-a541-0ebac59ec4a3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\06. Component\6. Animator2D\Animation2D">
       <UniqueIdentifier>{935401ff-7073-4030-8d0b-07e4b924e471}</UniqueIdentifier>
     </Filter>
@@ -708,6 +726,9 @@
     </FxCompile>
     <FxCompile Include="weightmap.fx">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
+    </FxCompile>
+    <FxCompile Include="copybone.fx">
+      <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
     </FxCompile>
     <FxCompile Include="animedit3d.fx">
       <Filter>Source\08. ShaderCode\Render\3D</Filter>

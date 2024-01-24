@@ -152,6 +152,11 @@ void CParticleSystem::render()
 	m_ModuleDataBuffer->Clear();
 }
 
+void CParticleSystem::render(UINT _iSubset)
+{
+	render();
+}
+
 void CParticleSystem::SaveToLevelFile(FILE* _File)
 {
 	CRenderComponent::SaveToLevelFile(_File);

@@ -60,6 +60,8 @@ void LoadWString(wstring& _str, FILE* _File);
 
 Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat);
 
+int GetSizeofFormat(DXGI_FORMAT _eFormat);
+
 class CRes;
 template<typename T>
 class Ptr;

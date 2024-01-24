@@ -41,8 +41,12 @@ private:
     bool        m_bDebugFrustumView;
 
 
-    vector<CGameObject*>    m_vecDeferred;
-    vector<CGameObject*>    m_vecDeferredDecal;
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D;	    // Deferred
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F;	    // Foward ( Opaque, Mask )	
+    map<INT_PTR, vector<tInstObj>>		m_mapSingleObj;		    // Single Object
+
+    //vector<CGameObject*>    m_vecDeferred;
+    //vector<CGameObject*>    m_vecDeferredDecal;
 
     vector<CGameObject*>    m_vecOpaque;
     vector<CGameObject*>    m_vecMask;
@@ -130,8 +134,8 @@ private:
     void clear_shadow();
 
     void render_deferred();
-    void render_opaque();
-    void render_mask();
+    void render_forward();
+
     void render_decal();
     void render_transparent();
     void render_postprocess();
@@ -140,6 +144,7 @@ private:
 
     void CalcViewMat();
     void CalcProjMat();
+    void UpdateMatrix();
 
 
     virtual void SaveToLevelFile(FILE* _File) override;
