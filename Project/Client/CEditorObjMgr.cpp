@@ -180,6 +180,14 @@ void CEditorObjMgr::render()
 	m_pTexRenderObj->render();
 }
 
+void CEditorObjMgr::SetTexRender(CAnimEditObj* _pObj)
+{
+	if (m_pTexRenderObj)
+		delete m_pTexRenderObj;
+
+	m_pTexRenderObj = _pObj;
+}
+
 void CEditorObjMgr::TestInit()
 {
 	Ptr<CMeshData> pMeshData = nullptr;

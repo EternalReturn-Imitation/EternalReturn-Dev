@@ -29,8 +29,8 @@ void CreateTestLevel()
 
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");
-	//pCurLevel->GetLayer(1)->SetName(L"SkyBox");
-	//pCurLevel->GetLayer(2)->SetName(L"Particle");
+	pCurLevel->GetLayer(1)->SetName(L"SkyBox");
+	pCurLevel->GetLayer(2)->SetName(L"House");
 	pCurLevel->GetLayer(3)->SetName(L"Monster");
 	//pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
@@ -64,18 +64,18 @@ void CreateTestLevel()
 	// SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 
-	//SkyBox 추가
-	// CGameObject* pSkyBox = new CGameObject;
-	// pSkyBox->SetName(L"SkyBox");
-	// 
-	// pSkyBox->AddComponent(new CTransform);
-	// pSkyBox->AddComponent(new CSkyBox);
-	// 
-	// pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
-	// pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
-	// pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Sky01.png"));
-	// 
-	// SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), L"SkyBox");
+	//SkyBox 추가11
+	CGameObject* pSkyBox = new CGameObject;
+	pSkyBox->SetName(L"SkyBox");
+	
+	pSkyBox->AddComponent(new CTransform);
+	pSkyBox->AddComponent(new CSkyBox);
+	
+	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
+	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
+	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Sky01.png"));
+	
+	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), L"SkyBox");
 
 	// 광원 추가
 	CGameObject* pLightObj = new CGameObject;
@@ -144,16 +144,16 @@ void CreateTestLevel()
 	// ============	
 	{
 		// 인스턴싱 테스트		
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
-
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
-		for (int i = 0; i < 10; ++i)
-		{
-			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"House");
-			SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 0);
-		}
+		// Ptr<CMeshData> pMeshData = nullptr;
+		// CGameObject* pObj = nullptr;
+		// 
+		// pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
+		// for (int i = 0; i < 10; ++i)
+		// {
+		// 	pObj = pMeshData->Instantiate();
+		// 	pObj->SetName(L"House");
+		// 	SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 2);
+		// }
 
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		//for (int i = 0; i < 10; ++i)
@@ -163,8 +163,6 @@ void CreateTestLevel()
 		//	SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
 		//}
 	}
-
-	CEditorObjMgr::GetInst()->TestInit();
 
 	// LandScape Object
 	// CGameObject* pLandScape = new CGameObject;

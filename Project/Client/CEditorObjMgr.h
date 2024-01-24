@@ -25,9 +25,9 @@ private:
 	void tick();
 	void render();
 
-	void TextureRender(bool m_bRenderTex);
 
 public:
+	void SetTexRender(CAnimEditObj* _pObj);
 	void TestInit();
 };
 

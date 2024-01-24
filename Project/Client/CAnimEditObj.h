@@ -5,6 +5,7 @@
 class CGameObject;
 class CMeshData;
 class CGraphicsShader;
+class CAnimator3D;
 
 class CAnimEditObj
 {
@@ -27,8 +28,9 @@ public:
 
     // Camera
     void CamMatrixUpdate();
-
     void ChangeEditShader(bool _SetType);
+
+    CAnimator3D* GetAnimator3D() { return m_pRenderObj->Animator3D(); }
 
 public:
     CAnimEditObj();

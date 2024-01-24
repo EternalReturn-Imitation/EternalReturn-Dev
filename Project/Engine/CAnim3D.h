@@ -18,6 +18,9 @@ private:
 public:
 	void finaltick();
 
+	tMTAnimClip& GetAnimClip() { return m_tMTAnimClip; }
+	double GetAnimTime() { return m_dCurTime; }
+
 	void SetOwner(CAnimator3D* _pOwner) { m_pOwner = _pOwner; }
 	void Create(const tMTAnimClip& _tMTAnimClip) 
 	{

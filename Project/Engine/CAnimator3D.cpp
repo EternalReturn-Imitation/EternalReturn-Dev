@@ -129,6 +129,17 @@ void CAnimator3D::ClearData()
 	}
 }
 
+bool CAnimator3D::GetCurAnimClip(tMTAnimClip& _Clip)
+{
+	if (m_pCurAnim)
+	{
+		_Clip = m_pCurAnim->GetAnimClip(); 
+		return true;
+	}; 
+	
+	return false;
+}
+
 void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
 {
 	UINT iBoneCount = _pMesh->GetBoneCount();

@@ -41,6 +41,9 @@ public:
     UINT GetBoneCount() { return (UINT)m_pVecBones->size(); }
     void ClearData();
 
+    bool GetCurAnimClip(tMTAnimClip& _Clip);
+    int GetCurFrameIdx() { return m_iFrameIdx; }
+
 private:
     void check_mesh(Ptr<CMesh> _pMesh);
 
