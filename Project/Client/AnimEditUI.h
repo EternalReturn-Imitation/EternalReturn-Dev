@@ -3,14 +3,14 @@
 
 #include <Engine/ptr.h>
 
-class CMesh;
+class CMeshData;
 class CAnimEditObj;
 
 class AnimEditUI :
     public UI
 {
 private:
-    Ptr<CMesh> m_pSelectedMesh;  // 현재 불러온 mesh
+    Ptr<CMeshData> m_pSelectedMeshData;  // 현재 불러온 메시데이터
     CAnimEditObj* m_pRenderObj;  // 클립 리스트
     tMTAnimClip m_tMTCurAnimClip;
 
@@ -25,6 +25,8 @@ private:
     void render_infowindow();
     void render_TimeLine();
     void render_CamController();
+
+    void SelectMeshData(DWORD_PTR _data);
 
 public:
     virtual void tick() override;

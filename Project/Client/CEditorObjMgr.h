@@ -26,8 +26,8 @@ private:
 	void render();
 
 
+
 public:
 	void SetTexRender(CAnimEditObj* _pObj);
-	void TestInit();
 };
 

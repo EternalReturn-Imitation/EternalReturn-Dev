@@ -20,6 +20,8 @@ public:
 
 	CGameObject* Instantiate();
 
+	bool IsHaveAnim();
+
 	CLONE_DISABLE(CMeshData)
 public:
 	CMeshData(bool _bEngine = false);

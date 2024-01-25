@@ -26,6 +26,8 @@ public:
     void update();
     void render();
 
+    void Clear();
+
     // Camera
     void CamMatrixUpdate();
     void ChangeEditShader(bool _SetType);

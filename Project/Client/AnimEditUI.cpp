@@ -1,18 +1,20 @@
 #include "pch.h"
 #include "AnimEditUI.h"
 
+#include <Engine/CDevice.h>
+#include <Engine/CStructuredBuffer.h>
+
 #include <Engine/CGameObject.h>
 #include <Engine/components.h>
-#include <Engine/CResMgr.h>
-#include <Engine/CDevice.h>
-
 
 #include <Engine/CRenderMgr.h>
 #include <Engine/CMRT.h>
 
+#include <Engine/CResMgr.h>
 #include <Engine/CTexture.h>
-#include <Engine/CStructuredBuffer.h>
-#include <Script/CCameraMoveScript.h>
+#include <Engine/CMeshData.h>
+
+#include "ListUI.h"
 
 #include "CEditorObjMgr.h"
 #include "CAnimEditObj.h"
@@ -128,19 +130,22 @@ void AnimEditUI::render_infowindow()
     ImGui::EndGroup();
     //ImGui::EndChild();
 
-    if (ImGui::Button("SetMesh"))
+    if (ImGui::Button("OpenMeshData"))
     {
-        if (nullptr == m_pRenderObj)
+        const map<wstring, Ptr<CRes>>& mapMeshData = CResMgr::GetInst()->GetResources(RES_TYPE::MESHDATA);
+
+        ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+        pListUI->Reset("MeshData List", ImVec2(300.f, 500.f));
+        for (const auto& pair : mapMeshData)
         {
-            Ptr<CMeshData> pMeshData = nullptr;
-            pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-
-            m_pRenderObj = new CAnimEditObj;
-            m_pRenderObj->setobject(pMeshData);
-
-            CEditorObjMgr::GetInst()->SetTexRender(m_pRenderObj);
-            m_pRenderObj->GetAnimator3D()->GetCurAnimClip(m_tMTCurAnimClip);
+            pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
         }
+
+        pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&AnimEditUI::SelectMeshData);
+
+       
+
+        
     }
 }
 
@@ -190,8 +195,11 @@ void AnimEditUI::render_CamController()
     ImGui::Button("Cam Contorller", ImVec2(0, 0));
 }
 
+
 void AnimEditUI::tick()
 {
+   
+
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
     SetPopupPos(viewport->WorkPos);
@@ -251,4 +259,36 @@ int AnimEditUI::render_update()
     
 
     return 0;
+}
+
+void AnimEditUI::SelectMeshData(DWORD_PTR _data)
+{
+    string strKey = (char*)_data;
+
+    Ptr<CMeshData> temp = CResMgr::GetInst()->FindRes<CMeshData>(wstring(strKey.begin(), strKey.end()));
+    if (temp->IsHaveAnim())
+    {
+        m_pSelectedMeshData = temp;
+
+        if (m_pRenderObj)
+        {
+            delete m_pRenderObj;
+            m_pRenderObj = nullptr;
+        }
+
+        if (nullptr == m_pRenderObj && nullptr != m_pSelectedMeshData)
+        {
+            m_pRenderObj = new CAnimEditObj;
+            m_pRenderObj->setobject(m_pSelectedMeshData);
+
+            CEditorObjMgr::GetInst()->SetTexRender(m_pRenderObj);
+            m_pRenderObj->GetAnimator3D()->GetCurAnimClip(m_tMTCurAnimClip);
+        }
+    }
+    else
+    {
+        wstring errMsg = L"This MeshData Have Not Animation.";
+        MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+        return;
+    }
 }

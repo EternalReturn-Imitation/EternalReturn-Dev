@@ -143,6 +143,11 @@ void CAnimEditObj::render()
 	}
 }
 
+void CAnimEditObj::Clear()
+{
+
+}
+
 void CAnimEditObj::CamMatrixUpdate()
 {
 	// 기존 행렬 저장

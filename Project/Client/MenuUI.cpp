@@ -20,6 +20,7 @@
 
 #include "AnimEditUI.h"
 
+#include <Commdlg.h>
 
 MenuUI::MenuUI()
     : UI("##Menu")
@@ -191,6 +192,11 @@ int MenuUI::render_update()
                 CreateEmptyMaterial();
             }
 
+            if (ImGui::MenuItem("Load FBX.."))
+            {
+                LoadFBX();
+            }
+
             ImGui::EndMenu();
         }
 
@@ -271,7 +277,7 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         pSelectedObject->AddComponent(new CAnimator2D);
         break;
     case COMPONENT_TYPE::ANIMATOR3D:
-        //pSelectedObject->AddComponent(new CAnimator3D);
+        // pSelectedObject->AddComponent(new CAnimator3D);
         break;
     case COMPONENT_TYPE::LIGHT2D:
         pSelectedObject->AddComponent(new CLight2D);
@@ -324,4 +330,54 @@ void MenuUI::AddScript(const wstring& _strScriptName)
     pSelectedObject->AddComponent(pScript);
 
     inspector->SetTargetObject(pSelectedObject);
+}
+
+void MenuUI::LoadFBX()
+{
+    // open a file name
+
+    OPENFILENAME ofn = {};
+    wstring strFBXFolderPath = CPathMgr::GetInst()->GetContentPath();
+    strFBXFolderPath += L"fbx\\";
+
+    wchar_t szFullFilePath[256] = {};
+
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = NULL;
+    ofn.lpstrFile = szFullFilePath;
+    ofn.lpstrFile[0] = '\0';
+    ofn.nMaxFile = 256;
+    ofn.lpstrFilter = L"fbx\0*.fbx";
+    ofn.nFilterIndex = 1;
+    ofn.lpstrFileTitle = NULL;
+    ofn.nMaxFileTitle = 0;
+    ofn.lpstrInitialDir = strFBXFolderPath.c_str();
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+
+    ShowCursor(true);
+
+    if (false == GetOpenFileName(&ofn))
+    {
+        // ShowCursor(false);
+        return;
+    }
+    // ShowCursor(false);
+    
+    wstring strFilePath = szFullFilePath;
+    strFilePath = strFilePath.substr(strFilePath.find(L"fbx\\"), lstrlenW(szFullFilePath));
+    
+    if (nullptr == CResMgr::GetInst()->LoadFBX(strFilePath.c_str()))
+    {
+        wstring errMsg = L"FBX File Load Fail.";
+        MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+        return;
+    }
+    else
+    {
+        wstring errMsg = L"FBX File Load Compleat.\nMeshData Created.\n";
+        MessageBox(nullptr, errMsg.c_str(), L"SUCCESS", MB_OK);
+        return;
+    }
 }

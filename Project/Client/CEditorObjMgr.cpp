@@ -182,16 +182,8 @@ void CEditorObjMgr::render()
 
 void CEditorObjMgr::SetTexRender(CAnimEditObj* _pObj)
 {
-	if (m_pTexRenderObj)
-		delete m_pTexRenderObj;
+	if (nullptr != m_pTexRenderObj)
+		m_pTexRenderObj = nullptr;
 
 	m_pTexRenderObj = _pObj;
-}
-
-void CEditorObjMgr::TestInit()
-{
-	Ptr<CMeshData> pMeshData = nullptr;
-	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-
-	m_pTexRenderObj->setobject(pMeshData);
 }
