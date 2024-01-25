@@ -140,6 +140,38 @@ bool CAnimator3D::GetCurAnimClip(tMTAnimClip& _Clip)
 	return false;
 }
 
+void CAnimator3D::Play()
+{
+	if (m_pCurAnim)
+		m_pCurAnim->Play();
+}
+
+void CAnimator3D::Stop()
+{
+	if (m_pCurAnim)
+		m_pCurAnim->Stop();
+}
+
+void CAnimator3D::Reset()
+{
+	if (m_pCurAnim)
+		m_pCurAnim->Reset();
+}
+
+void CAnimator3D::SetFrame(int _Frame)
+{
+	if (m_pCurAnim)
+		m_pCurAnim->SetFrame(_Frame);
+}
+
+bool CAnimator3D::IsPlay()
+{
+	if (m_pCurAnim)
+		return m_pCurAnim->IsPlay();
+
+	return false;
+}
+
 void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
 {
 	UINT iBoneCount = _pMesh->GetBoneCount();

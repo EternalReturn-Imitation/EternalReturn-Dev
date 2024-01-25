@@ -79,8 +79,6 @@ void CEditorObjMgr::init()
 
 	m_vecEditorObj.push_back(pEditorCamObj);
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
-
-	m_pTexRenderObj = new CAnimEditObj;
 }
 
 void CEditorObjMgr::progress()
@@ -174,10 +172,13 @@ void CEditorObjMgr::render()
 		}
 	}
 
-	m_pTexRenderObj->tick();
-	m_pTexRenderObj->update();
+	if (m_pTexRenderObj)
+	{
+		m_pTexRenderObj->tick();
+		m_pTexRenderObj->update();
 
-	m_pTexRenderObj->render();
+		m_pTexRenderObj->render();
+	}
 }
 
 void CEditorObjMgr::SetTexRender(CAnimEditObj* _pObj)

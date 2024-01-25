@@ -11,7 +11,8 @@ class AnimEditUI :
 {
 private:
     Ptr<CMeshData> m_pSelectedMeshData;  // 현재 불러온 메시데이터
-    CAnimEditObj* m_pRenderObj;  // 클립 리스트
+    CAnimEditObj* m_pRenderObj;
+    map<wstring, tMTAnimClip> m_mapAnimClip;
     tMTAnimClip m_tMTCurAnimClip;
 
     int m_iFrameCount;  // 설정된 초당 재생 프레임

@@ -28,6 +28,8 @@ private:
 	vector<tMTAnimClip>		m_vecAnimClip;
 	vector<tMTBone>			m_vecBones;
 
+	UINT					m_iFrmCnt;
+
 	CStructuredBuffer* m_pBoneFrameData;   // 전체 본 프레임 정보(크기, 이동, 회전) (프레임 개수만큼)
 	CStructuredBuffer* m_pBoneOffset;	    // 각 뼈의 offset 행렬(각 뼈의 위치를 되돌리는 행렬) (1행 짜리)
 
@@ -38,6 +40,7 @@ public:
 
 	const vector<tMTBone>* GetBones() { return &m_vecBones; }
 	UINT GetBoneCount() { return (UINT)m_vecBones.size(); }
+	UINT GetFrameCount() { return m_iFrmCnt; }
 	const vector<tMTAnimClip>* GetAnimClip() { return &m_vecAnimClip; }
 	bool IsAnimMesh() { return !m_vecAnimClip.empty(); }
 

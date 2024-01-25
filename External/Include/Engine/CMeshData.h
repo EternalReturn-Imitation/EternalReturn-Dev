@@ -21,6 +21,7 @@ public:
 	CGameObject* Instantiate();
 
 	bool IsHaveAnim();
+	const Ptr<CMesh>& GetMesh() { return m_pMesh; }
 
 	CLONE_DISABLE(CMeshData)
 public:

@@ -15,11 +15,21 @@ private:
 
 	tMTAnimClip		m_tMTAnimClip;
 
+	bool			m_bPlay;		// 재생 여부
+
 public:
 	void finaltick();
 
 	tMTAnimClip& GetAnimClip() { return m_tMTAnimClip; }
 	double GetAnimTime() { return m_dCurTime; }
+
+	bool IsPlay() { return m_bPlay; }
+
+	void Play() { m_bPlay = true; }
+	void Stop() { m_bPlay = false; }
+	void Reset() { m_tMTAnimClip.fUpdateTime = 0.f; }
+
+	void SetFrame(int _Frame);
 
 	void SetOwner(CAnimator3D* _pOwner) { m_pOwner = _pOwner; }
 	void Create(const tMTAnimClip& _tMTAnimClip) 

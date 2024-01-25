@@ -482,10 +482,12 @@ int CMesh::Load(const wstring& _strFilePath)
 		fread(&iFrameCount, sizeof(int), 1, pFile);
 		m_vecBones[i].vecKeyFrame.resize(iFrameCount);
 		_iFrameCount = max(_iFrameCount, iFrameCount);
+
 		for (UINT j = 0; j < iFrameCount; ++j)
 		{
 			fread(&m_vecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
 		}
+		m_iFrmCnt = _iFrameCount;
 	}
 
 	// Animation 이 있는 Mesh 경우 Bone StructuredBuffer 만들기

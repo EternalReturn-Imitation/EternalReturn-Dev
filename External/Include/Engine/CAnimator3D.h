@@ -44,6 +44,14 @@ public:
     bool GetCurAnimClip(tMTAnimClip& _Clip);
     int GetCurFrameIdx() { return m_iFrameIdx; }
 
+public:
+    void Play();
+    void Stop();
+    void Reset();
+    void SetFrame(int _Frame);
+
+    bool IsPlay();
+
 private:
     void check_mesh(Ptr<CMesh> _pMesh);
 
