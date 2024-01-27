@@ -7,6 +7,14 @@
 struct VS_IN
 {
     float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+    
+    float3 vNormal : NORMAL;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
+    
+    float4 vWeights : BLENDWEIGHT;
+    float4 vIndices : BLENDINDICES;
 };
 
 struct VS_OUT
@@ -247,12 +255,18 @@ VS_SHADOW_OUT VS_ShadowMap(VS_IN _in)
 {
     VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
     
+    if (g_iAnim)
+    {
+        Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, 0);
+    }
+    
     // 사용하는 메쉬가 RectMesh(로컬 스페이스에서 반지름 0.5 짜리 정사각형)
     // 따라서 2배로 키워서 화면 전체가 픽셀쉐이더가 호출될 수 있게 한다.
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
-        
+    
     output.vProjPos = output.vPosition;
-    output.vProjPos.xyz /= output.vProjPos.w;
+    output.vProjPos.xyz /= output.vProjPos.w;    
+    
             
     return output;
 }
