@@ -3,6 +3,8 @@
 
 #include "CResMgr.h"
 #include "CTransform.h"
+#include "CAnimator3D.h"
+#include "CStructuredBuffer.h"
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 	: CComponent(_type)
@@ -20,13 +22,42 @@ CRenderComponent::~CRenderComponent()
 
 void CRenderComponent::render_shadowmap()
 {
+	//Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+	//
+	//Transform()->UpdateData();
+	//
+	//pShadowMapMtrl->UpdateData();
+	//
+	//GetMesh()->render(0);
 	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 
 	Transform()->UpdateData();
 
+	// Animator3D 업데이트
+	if (Animator3D())
+	{
+		Animator3D()->GetFinalBoneMat()->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
+		pShadowMapMtrl->SetAnim3D(true);
+	}
+	else {
+		pShadowMapMtrl->SetAnim3D(false);
+	}
+
 	pShadowMapMtrl->UpdateData();
 
-	GetMesh()->render(0);
+	UINT iSubsetCount = GetMesh()->GetSubsetCount();
+
+	for (int i = 0; i < iSubsetCount; i++) {
+		if (nullptr != GetMaterial(i))
+		{
+			GetMesh()->render(i);
+		}
+	}
+
+	if (Animator3D()) {
+		Animator3D()->GetFinalBoneMat()->Clear();
+		Animator3D()->ClearData();
+	}
 }
 
 

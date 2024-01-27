@@ -6,6 +6,7 @@
 #include "CAnimator3D.h"
 
 #include "CResMgr.h"
+#include "CStructuredBuffer.h"
 
 CMeshRender::CMeshRender()
 	: CRenderComponent(COMPONENT_TYPE::MESHRENDER)
@@ -114,28 +115,6 @@ void CMeshRender::render(UINT _iSubset)
 
 void CMeshRender::render_shadowmap()
 {
-	//CRenderComponent::render_shadowmap();
+	CRenderComponent::render_shadowmap();
 
-	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
-
-	Transform()->UpdateData();
-
-	// Animator3D 업데이트
-	if (Animator3D())
-	{
-		Animator3D()->UpdateData();
-		pShadowMapMtrl->SetAnim3D(true); // Animation Mesh 알리기
-		pShadowMapMtrl->SetBoneCount(Animator3D()->GetBoneCount());
-		int a = 0;
-	}
-
-	pShadowMapMtrl->UpdateData();
-
-	GetMesh()->render(0);
-
-	if (Animator3D())
-		Animator3D()->ClearData();
-
-	if (GetOwner()->GetName() == L"Monster")
-		int a = 0;
 }

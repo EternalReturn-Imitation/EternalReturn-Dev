@@ -8,13 +8,6 @@ struct VS_IN
 {
     float3 vPos : POSITION;
     float2 vUV : TEXCOORD;
-    
-    float3 vNormal : NORMAL;
-    float3 vTangent : TANGENT;
-    float3 vBinormal : BINORMAL;
-    
-    float4 vWeights : BLENDWEIGHT;
-    float4 vIndices : BLENDINDICES;
 };
 
 struct VS_OUT
@@ -244,6 +237,25 @@ float4 PS_MergeShader(VS_OUT _in) : SV_Target
 }
 
 
+// ===============
+// DepthMap Shader
+// MRT : ShadowMap MRT
+// RS : CULL_BACK
+// BS : Default
+// DS : Less
+// ===============
+struct VS_SHADOW_IN
+{
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+
+    float3 vTangent : TANGENT;
+    float3 vNormal : NORMAL;
+    float3 vBinormal : BINORMAL;
+
+    float4 vWeights : BLENDWEIGHT;
+    float4 vIndices : BLENDINDICES;
+};
 
 struct VS_SHADOW_OUT
 {
@@ -251,9 +263,11 @@ struct VS_SHADOW_OUT
     float4 vProjPos : POSITION;
 };
 
-VS_SHADOW_OUT VS_ShadowMap(VS_IN _in)
+VS_SHADOW_OUT VS_ShadowMap(VS_SHADOW_IN _in)
 {
     VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
+    
+    float3 backupVPos = _in.vPos;
     
     if (g_iAnim)
     {
