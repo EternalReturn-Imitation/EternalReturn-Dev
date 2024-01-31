@@ -146,20 +146,21 @@ void CreateTestLevel()
 		CGameObject* pObj = nullptr;
 
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
 			pObj = pMeshData->Instantiate();
 			pObj->SetName(L"House");
 			SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 0);
 		}
 
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		//for (int i = 0; i < 10; ++i)
-		//{
-		//	pObj = pMeshData->Instantiate();
-		//	pObj->SetName(L"Monster");
-		//	SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
-		//}
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		for (int i = 0; i < 1; ++i)
+		{
+			pObj = pMeshData->Instantiate();
+			pObj->SetName(L"Monster");
+			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
+			SpawnGameObject(pObj, Vec3((i + 1) * 300.f + 600.f, 200.f, 500.f), 0);
+		}
 	}
 
 	// LandScape Object

@@ -5,6 +5,9 @@
 #include "CAnimator2D.h"
 #include "CAnimator3D.h"
 
+#include "CResMgr.h"
+#include "CStructuredBuffer.h"
+
 CMeshRender::CMeshRender()
 	: CRenderComponent(COMPONENT_TYPE::MESHRENDER)
 {
@@ -68,6 +71,9 @@ void CMeshRender::render()
 
 	if (Animator3D())
 		Animator3D()->ClearData();
+
+	if (GetOwner()->GetName() == L"Monster")
+		int a = 0;
 }
 
 void CMeshRender::render(UINT _iSubset)
@@ -104,4 +110,11 @@ void CMeshRender::render(UINT _iSubset)
 
 	if (Animator3D())
 		Animator3D()->ClearData();
+
+}
+
+void CMeshRender::render_shadowmap()
+{
+	CRenderComponent::render_shadowmap();
+
 }
