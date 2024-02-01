@@ -36,7 +36,8 @@ void CAnimEditObj::tick()
 	if (nullptr != m_pRenderObj)
 	{
 		Vec3 vRot = m_pControlObj->Transform()->GetRelativeRot();
-		
+		Vec3 vScale = m_pControlObj->Transform()->GetRelativeScale();
+
 		if (KEY_PRESSED(KEY::UP))
 		{
 			vRot.x += DT * 5.f;
@@ -57,7 +58,22 @@ void CAnimEditObj::tick()
 			vRot.y -= DT * 5.f;
 		}
 
+		if (KEY_PRESSED(KEY::_1))
+		{
+			vScale.x += DT * 0.5f;
+			vScale.y += DT * 0.5f;
+			vScale.z += DT * 0.5f;
+		}
+
+		if (KEY_PRESSED(KEY::_2))
+		{
+			vScale.x -= DT * 0.5f;
+			vScale.y -= DT * 0.5f;
+			vScale.z -= DT * 0.5f;
+		}
+
 		m_pControlObj->Transform()->SetRelativeRot(vRot);
+		m_pControlObj->Transform()->SetRelativeScale(vScale);
 	}
 
 }
