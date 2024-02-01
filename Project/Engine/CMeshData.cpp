@@ -48,6 +48,11 @@ CGameObject* CMeshData::Instantiate()
 	return pNewObj;
 }
 
+bool CMeshData::IsHaveAnim()
+{
+	return m_pMesh->IsAnimMesh();
+}
+
 
 CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 {

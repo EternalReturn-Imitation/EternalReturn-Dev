@@ -165,6 +165,7 @@ int CTexture::Load(const wstring& _strFilePath, int _iMipLevel)
 	m_Desc.Height = m_Image.GetMetadata().height;
 
 	HRESULT hr = DEVICE->CreateTexture2D(&m_Desc, nullptr, m_Tex2D.GetAddressOf());
+	
 
 	// 원본데이터(밉맵 레벨 0) 를 각 칸에 옮긴다.	
 	for (int i = 0; i < m_Desc.ArraySize; ++i)

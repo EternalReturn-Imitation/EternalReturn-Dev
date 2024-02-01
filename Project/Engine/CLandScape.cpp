@@ -162,7 +162,7 @@ void CLandScape::Raycasting()
 	CamRay.vDir.Normalize();
 
 	// 지형과 카메라 Ray 의 교점을 구함
-	tRaycastOut out = { Vec2(0.f, 0.f), 0x7fffffff, 0 };
+	tRaycastOut out = { Vec2(0.f, 0.f), (float)0x7fffffff, 0 };
 	m_pCrossBuffer->SetData(&out, 1);
 
 	m_pCSRaycast->SetHeightMap(m_HeightMap);

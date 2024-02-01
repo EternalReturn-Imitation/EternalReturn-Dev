@@ -4,17 +4,22 @@
 
 
 #include "CGameObjectEx.h"
+#include "CAnimEditObj.h"
 #include <Engine\components.h>
 
 #include <Engine\CResMgr.h>
 #include <Engine\CRenderMgr.h>
 #include <Engine\CTimeMgr.h>
 #include <Engine\CKeyMgr.h>
+#include <Engine\CRenderMgr.h>
+#include <Engine\CMRT.h>
 
 #include <Script\CCameraMoveScript.h>
 
 CEditorObjMgr::CEditorObjMgr()
 	: m_DebugShape{}
+	, m_pTexRenderObj(nullptr)
+	, m_bRenderTex(false)
 {
 
 }
@@ -23,6 +28,9 @@ CEditorObjMgr::~CEditorObjMgr()
 {
 	Safe_Del_Vec(m_vecEditorObj);
 	Safe_Del_Array(m_DebugShape);
+	
+	if (nullptr != m_pTexRenderObj)
+		delete m_pTexRenderObj;
 }
 
 void CEditorObjMgr::init()
@@ -73,8 +81,6 @@ void CEditorObjMgr::init()
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
 }
 
-
-
 void CEditorObjMgr::progress()
 {
 	// DebugShape 정보 가져오기
@@ -88,13 +94,13 @@ void CEditorObjMgr::progress()
 	render();
 }
 
-
 void CEditorObjMgr::tick()
 {
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
 		m_vecEditorObj[i]->tick();
 	}
+	
 
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
@@ -108,8 +114,6 @@ void CEditorObjMgr::render()
 	{
 		m_vecEditorObj[i]->render();
 	}
-
-
 
 	// DebugShape Render
 	CGameObjectEx* pShapeObj = nullptr;
@@ -167,4 +171,20 @@ void CEditorObjMgr::render()
 			++iter;
 		}
 	}
+
+	if (m_pTexRenderObj)
+	{
+		m_pTexRenderObj->tick();
+		m_pTexRenderObj->update();
+
+		m_pTexRenderObj->render();
+	}
+}
+
+void CEditorObjMgr::SetTexRender(CAnimEditObj* _pObj)
+{
+	if (nullptr != m_pTexRenderObj)
+		m_pTexRenderObj = nullptr;
+
+	m_pTexRenderObj = _pObj;
 }

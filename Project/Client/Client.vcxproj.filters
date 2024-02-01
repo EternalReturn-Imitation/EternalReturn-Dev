@@ -134,6 +134,12 @@
     <Filter Include="ImGui\ImGuizmo">
       <UniqueIdentifier>{1afe48c2-ba8f-4ebb-adf6-d053082044e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\AnimationEditUI">
+      <UniqueIdentifier>{45cd07e6-1e11-4332-ab80-536d4c5b963e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\AnimEditObj">
+      <UniqueIdentifier>{ddf01b6b-65d5-4c33-968b-3ad04a7a162c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -292,6 +298,12 @@
     </ClInclude>
     <ClInclude Include="ParticleSystemUI.h">
       <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimEditUI.h">
+      <Filter>UI\AnimationEditUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimEditObj.h">
+      <Filter>Manager\AnimEditObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -456,6 +468,12 @@
     </ClCompile>
     <ClCompile Include="ParticleSystemUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimEditUI.cpp">
+      <Filter>UI\AnimationEditUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimEditObj.cpp">
+      <Filter>Manager\AnimEditObj</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

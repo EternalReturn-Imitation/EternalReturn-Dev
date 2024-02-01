@@ -10,6 +10,7 @@
 
 MaterialUI::MaterialUI()
     : ResUI(RES_TYPE::MATERIAL)
+    , m_eSelected()
 {
     SetName("Material");
 }

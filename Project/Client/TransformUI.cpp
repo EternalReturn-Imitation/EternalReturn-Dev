@@ -180,7 +180,7 @@ void TransformUI::EditTransform(float* cameraView, float* cameraProjection, floa
 	int windowY = clientTopLeft.y; // 윈도우의 좌상단 y 좌표
 
 
-	ImGuizmo::SetRect(windowX, windowY, io.DisplaySize.x, io.DisplaySize.y);
+	ImGuizmo::SetRect((float)windowX, (float)windowY, io.DisplaySize.x, io.DisplaySize.y);
 
 	//기즈모 계산 수행
 	ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);

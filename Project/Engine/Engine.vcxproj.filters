@@ -130,9 +130,6 @@
     <ClInclude Include="CAnimator2D.h">
       <Filter>Source\06. Component\6. Animator2D</Filter>
     </ClInclude>
-    <ClInclude Include="CAnim2D.h">
-      <Filter>Source\06. Component\6. Animator2D</Filter>
-    </ClInclude>
     <ClInclude Include="CComputeShader.h">
       <Filter>Source\07. Resource\4. Shader\ComputeShader</Filter>
     </ClInclude>
@@ -201,6 +198,12 @@
     </ClInclude>
     <ClInclude Include="CWeightMapShader.h">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnim2D.h">
+      <Filter>Source\06. Component\6. Animator2D\Animation2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnim3D.h">
+      <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
     </ClInclude>
     <ClInclude Include="CCopyBoneShader.h">
       <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
@@ -321,9 +324,6 @@
     <ClCompile Include="CAnimator2D.cpp">
       <Filter>Source\06. Component\6. Animator2D</Filter>
     </ClCompile>
-    <ClCompile Include="CAnim2D.cpp">
-      <Filter>Source\06. Component\6. Animator2D</Filter>
-    </ClCompile>
     <ClCompile Include="CComputeShader.cpp">
       <Filter>Source\07. Resource\4. Shader\ComputeShader</Filter>
     </ClCompile>
@@ -404,6 +404,12 @@
     </ClCompile>
     <ClCompile Include="CInstancingBuffer.cpp">
       <Filter>Source\03. Manager\12. InstancingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnim2D.cpp">
+      <Filter>Source\06. Component\6. Animator2D\Animation2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnim3D.cpp">
+      <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -614,6 +620,12 @@
     <Filter Include="Source\03. Manager\12. InstancingMgr">
       <UniqueIdentifier>{542c1d78-398a-4d62-a541-0ebac59ec4a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\06. Component\6. Animator2D\Animation2D">
+      <UniqueIdentifier>{935401ff-7073-4030-8d0b-07e4b924e471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\7. Animator3D\Animation3D">
+      <UniqueIdentifier>{8add7b18-af21-4f1d-af29-966aaa6b9d3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -717,6 +729,9 @@
     </FxCompile>
     <FxCompile Include="copybone.fx">
       <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
+    </FxCompile>
+    <FxCompile Include="animedit3d.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

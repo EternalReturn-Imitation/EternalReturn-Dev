@@ -19,6 +19,8 @@
 
 #include <Engine/CSetColorShader.h>
 
+#include "CEditorObjMgr.h"
+
 
 void CreateTestLevel()
 {
@@ -28,9 +30,9 @@ void CreateTestLevel()
 	// Layer 이름설정
 	pCurLevel->GetLayer(0)->SetName(L"Default");
 	pCurLevel->GetLayer(1)->SetName(L"SkyBox");
-	pCurLevel->GetLayer(2)->SetName(L"Particle");
+	pCurLevel->GetLayer(2)->SetName(L"House");
 	pCurLevel->GetLayer(3)->SetName(L"Monster");
-	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
+	//pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 
 	// Main Camera Object 생성
@@ -62,7 +64,7 @@ void CreateTestLevel()
 	// SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 
-	//SkyBox 추가
+	//SkyBox 추가11
 	CGameObject* pSkyBox = new CGameObject;
 	pSkyBox->SetName(L"SkyBox");
 	
@@ -91,27 +93,27 @@ void CreateTestLevel()
 	SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 
 	// 오브젝트 생성
-	CGameObject* pObject = new CGameObject;
-	pObject->SetName(L"Particle");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CParticleSystem);
+	// CGameObject* pObject = new CGameObject;
+	// pObject->SetName(L"Particle");
+	// pObject->AddComponent(new CTransform);
+	// pObject->AddComponent(new CParticleSystem);
+	// 
+	// SpawnGameObject(pObject, Vec3(0.f, 100, 500.f), L"Particle");
+	// 
+	// pObject = new CGameObject;
+	// pObject->SetName(L"Plane");
+	// pObject->AddComponent(new CTransform);
+	// pObject->AddComponent(new CMeshRender);
+	// 
+	// pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
+	// pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	// 
+	// pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	// pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+	// pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01.tga"));
+	// pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01_N.tga"));
 
-	SpawnGameObject(pObject, Vec3(0.f, 100, 500.f), L"Particle");
-
-	pObject = new CGameObject;
-	pObject->SetName(L"Plane");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-
-	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
-	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01.tga"));
-	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"TILE_01_N.tga"));
-
-	SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
+	// SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
 
 	
 	
@@ -144,39 +146,39 @@ void CreateTestLevel()
 		// 인스턴싱 테스트		
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
+		// 
+		// pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
+		// for (int i = 0; i < 10; ++i)
+		// {
+		// 	pObj = pMeshData->Instantiate();
+		// 	pObj->SetName(L"House");
+		// 	SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 2);
+		// }
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
-		for (int i = 0; i < 1; ++i)
-		{
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");
+		//for (int i = 0; i < 10; ++i)
+		//{
 			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"House");
-			SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 0);
-		}
-
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		for (int i = 0; i < 1; ++i)
-		{
-			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"Monster");
-			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
-			SpawnGameObject(pObj, Vec3((i + 1) * 300.f + 600.f, 200.f, 500.f), 0);
-		}
+			pObj->SetName(L"HW");
+			SpawnGameObject(pObj, Vec3(50.f, 200.f, 100.f), 0);
+			pObj->Transform()->SetRelativeScale(Vec3(100.f , 100.f, 100.f));
+		//}
 	}
 
 	// LandScape Object
-	CGameObject* pLandScape = new CGameObject;
-	pLandScape->SetName(L"LandScape");
-
-	pLandScape->AddComponent(new CTransform);
-	pLandScape->AddComponent(new CLandScape);
-
-	pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
-
-	pLandScape->LandScape()->SetFace(64, 64);
-	pLandScape->LandScape()->SetFrustumCheck(false);
-	//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
-
-	SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
+	// CGameObject* pLandScape = new CGameObject;
+	// pLandScape->SetName(L"LandScape");
+	// 
+	// pLandScape->AddComponent(new CTransform);
+	// pLandScape->AddComponent(new CLandScape);
+	// 
+	// pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
+	// 
+	// pLandScape->LandScape()->SetFace(64, 64);
+	// pLandScape->LandScape()->SetFrustumCheck(false);
+	// //pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
+	// 
+	// SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 충돌 시킬 레이어 짝 지정
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");

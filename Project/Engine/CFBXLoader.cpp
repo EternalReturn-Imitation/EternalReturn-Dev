@@ -67,7 +67,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	if (!m_pImporter->Initialize(strPath.c_str(), -1, m_pManager->GetIOSettings()))
 		assert(nullptr);
 
-	m_pImporter->Import(m_pScene);
+	m_pImporter->Import(m_pScene); // FBX 폴더에 fbm 폴더를 생성
 
 	/*FbxAxisSystem originAxis = FbxAxisSystem::eMax;
 	originAxis = m_pScene->GetGlobalSettings().GetAxisSystem();
@@ -180,12 +180,13 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 		{
 			// i 번째 폴리곤에, j 번째 정점
 			int iIdx = _pFbxMesh->GetPolygonVertex(i, j);
+			int _iUVIndex = _pFbxMesh->GetTextureUVIndex(i, j);
 			arrIdx[j] = iIdx;
 
 			GetTangent(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetBinormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
 			GetNormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
-			GetUV(_pFbxMesh, &Container, iIdx, _pFbxMesh->GetTextureUVIndex(i, j));
+			GetBinormal(_pFbxMesh, &Container, iIdx, iVtxOrder);
+			GetUV(_pFbxMesh, &Container, _iUVIndex, iVtxOrder, iIdx);
 
 			++iVtxOrder;
 		}
@@ -274,7 +275,17 @@ void CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx
 {
 	int iBinormalCnt = _pMesh->GetElementBinormalCount();
 	if (1 != iBinormalCnt)
-		assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
+	{
+		DirectX::XMVECTOR tangentVec = _pContainer->vecTangent[_iIdx];
+		DirectX::XMVECTOR normalVec = _pContainer->vecNormal[_iIdx];
+
+		DirectX::XMVECTOR binormalVec = DirectX::XMVector3Cross(tangentVec, normalVec);
+
+		DirectX::XMStoreFloat3(&_pContainer->vecBinormal[_iIdx], binormalVec);
+		
+		return;
+		// assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
+	}
 
 	// 종법선 data 의 시작 주소
 	FbxGeometryElementBinormal* pBinormal = _pMesh->GetElementBinormal();
@@ -334,17 +345,46 @@ void CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 	_pContainer->vecNormal[_iIdx].z = (float)vNormal.mData[1];
 }
 
-void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iUVIndex)
+
+
+void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iVtxId, int _iVtxCnt, int _iIdx)
 {
 	FbxGeometryElementUV* pUV = _pMesh->GetElementUV();
+	FbxGeometryElement::EMappingMode MappingMode = pUV->GetMappingMode();
+	FbxGeometryElement::EReferenceMode RefMode = FbxGeometryElement::eDirect;
 
 	UINT iUVIdx = 0;
-	if (pUV->GetReferenceMode() == FbxGeometryElement::eDirect)
-		iUVIdx = _iIdx;
-	else
-		iUVIdx = pUV->GetIndexArray().GetAt(_iIdx);
+	
+	switch (MappingMode)
+	{
+	case fbxsdk::FbxLayerElement::eNone:
+		// 모드 설정 되어있지 않음
+		break;
+	case fbxsdk::FbxLayerElement::eByControlPoint:
+	{
+		if (RefMode == FbxGeometryElement::eDirect)
+			iUVIdx = _iIdx;
+		else if (RefMode == FbxGeometryElement::eIndexToDirect)
+			iUVIdx = pUV->GetIndexArray().GetAt(_iIdx);
+		break;
+	}
+	case fbxsdk::FbxLayerElement::eByPolygonVertex:
+	{
+		if (RefMode == FbxGeometryElement::eDirect)
+			iUVIdx = _iVtxId;
+		else if (RefMode == FbxGeometryElement::eIndexToDirect)
+			iUVIdx = pUV->GetIndexArray().GetAt(_iVtxCnt);
+		break;
+	}
+	case fbxsdk::FbxLayerElement::eByPolygon:
+		break;
+	case fbxsdk::FbxLayerElement::eByEdge:
+		break;
+	case fbxsdk::FbxLayerElement::eAllSame:
+		break;
+	}
 
-	iUVIdx = _iUVIndex;
+
 	FbxVector2 vUV = pUV->GetDirectArray().GetAt(iUVIdx);
 	_pContainer->vecUV[_iIdx].x = (float)vUV.mData[0];
 	_pContainer->vecUV[_iIdx].y = 1.f - (float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0

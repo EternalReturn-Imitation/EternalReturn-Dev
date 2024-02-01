@@ -130,6 +130,27 @@ void CRenderMgr::CreateMRT()
 
         m_MRT[(UINT)MRT_TYPE::SHADOWMAP]->Create(arrRTTex, 1, pDSTex);
     }
+
+    // ====================
+    // 3DAnim_EDIT
+    // ====================
+    {
+        m_MRT[(UINT)MRT_TYPE::_3DANIM_EDIT] = new CMRT;
+
+        Vec2 vResol(800.f, 800.f);
+
+        Ptr<CTexture> arrRTTex[8] = {};
+        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"3DAnimEditTex", (UINT)vResol.x, (UINT)vResol.y
+                                        , DXGI_FORMAT_R8G8B8A8_UNORM
+                                        , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+
+        Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"3DAnimEditDepthTex", (UINT)vResol.x, (UINT)vResol.y
+            , DXGI_FORMAT_D32_FLOAT
+            , D3D11_BIND_DEPTH_STENCIL);
+        
+        m_MRT[(UINT)MRT_TYPE::_3DANIM_EDIT]->Create(arrRTTex, 1, pDSTex);
+        m_MRT[(UINT)MRT_TYPE::_3DANIM_EDIT]->SetClearColor(Vec4(0.3f, 0.3f, 0.3f, 1.f), 0);
+    }
 }
 
 void CRenderMgr::ClearMRT()

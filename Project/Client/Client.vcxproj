@@ -152,6 +152,8 @@
     <ClInclude Include="Animator2DUI.h" />
     <ClInclude Include="BlackBoardListUI.h" />
     <ClInclude Include="CameraUI.h" />
+    <ClInclude Include="AnimEditUI.h" />
+    <ClInclude Include="CAnimEditObj.h" />
     <ClInclude Include="CEditorObjMgr.h" />
     <ClInclude Include="CGameObjectEx.h" />
     <ClInclude Include="CLevelSaveLoad.h" />
@@ -207,6 +209,8 @@
     <ClCompile Include="Animator2DUI.cpp" />
     <ClCompile Include="BlackBoardListUI.cpp" />
     <ClCompile Include="CameraUI.cpp" />
+    <ClCompile Include="AnimEditUI.cpp" />
+    <ClCompile Include="CAnimEditObj.cpp" />
     <ClCompile Include="CEditorObjMgr.cpp" />
     <ClCompile Include="CGameObjectEx.cpp" />
     <ClCompile Include="CLevelSaveLoad.cpp" />

@@ -120,15 +120,15 @@ void CCamera::CalRay()
 void CCamera::CalcViewMat()
 {
 	// ==============
-	// View ?‰ë ¬ ê³„ì‚°
+	// View Çà·Ä °è»ê
 	// ==============
 	m_matView = XMMatrixIdentity();
 
-	// ì¹´ë©”??ì¢Œí‘œë¥??ì ?¼ë¡œ ?´ë™
+	// Ä«¸Þ¶ó ÁÂÇ¥¸¦ ¿øÁ¡À¸·Î ÀÌµ¿
 	Vec3 vCamPos = Transform()->GetRelativePos();
 	Matrix matViewTrans = XMMatrixTranslation(-vCamPos.x, -vCamPos.y, -vCamPos.z);
 
-	// ì¹´ë©”?¼ê? ë°”ë¼ë³´ëŠ” ë°©í–¥??Z ì¶•ê³¼ ?‰í–‰?˜ê²Œ ë§Œë“œ???Œì „ ?‰ë ¬???ìš©
+	// Ä«¸Þ¶ó°¡ ¹Ù¶óº¸´Â ¹æÇâÀ» Z Ãà°ú ÆòÇàÇÏ°Ô ¸¸µå´Â È¸Àü Çà·ÄÀ» Àû¿ë
 	Matrix matViewRot = XMMatrixIdentity();
 
 	Vec3 vR = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
@@ -142,14 +142,14 @@ void CCamera::CalcViewMat()
 	m_matView = matViewTrans * matViewRot;
 
 
-	// View ??–‰??êµ¬í•˜ê¸?
+	// View ¿ªÇà·Ä ±¸ÇÏ±â
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
 }
 
 void CCamera::CalcProjMat()
 {
 	// =============
-	// ?¬ì˜ ?‰ë ¬ ê³„ì‚°
+	// Åõ¿µ Çà·Ä °è»ê
 	// =============
 	m_matProj = XMMatrixIdentity();
 
@@ -229,6 +229,15 @@ void CCamera::SetCameraIndex(int _idx)
 
 	m_iCamIdx = _idx;
 	CRenderMgr::GetInst()->RegisterCamera(this, m_iCamIdx);
+}
+
+void CCamera::MatrixUpdate()
+{
+	g_transform.matView = m_matView;
+	g_transform.matViewInv = m_matViewInv;
+
+	g_transform.matProj = m_matProj;
+	g_transform.matProjInv = m_matProjInv;
 }
 
 void CCamera::SortObject()
