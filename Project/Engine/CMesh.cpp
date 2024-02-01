@@ -307,10 +307,20 @@ void CMesh::render_instancing(UINT _iSubset)
 int CMesh::Save(const wstring& _strRelativePath)
 {
 	// 상대경로 저장
-	SetRelativePath(_strRelativePath);
+	wstring RelativePath = L"mesh\\";
+	RelativePath += _strRelativePath;
+	SetRelativePath(RelativePath);
 
 	// 파일 경로 만들기
-	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + _strRelativePath;
+	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
+
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_mesh = path_content.wstring() + L"mesh\\";
+	
+	if (false == exists(path_mesh))
+	{
+		create_directory(path_mesh);
+	}
 
 	// 파일 쓰기모드로 열기
 	FILE* pFile = nullptr;

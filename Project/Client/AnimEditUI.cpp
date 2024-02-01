@@ -102,7 +102,6 @@ void AnimEditUI::render_previewwindow()
     int width = (int)pTex->Width();
     int height = (int)pTex->Height();
 
-
     ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
     ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
     ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
@@ -117,8 +116,33 @@ void AnimEditUI::render_infowindow()
     // ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
     // ImGui::BeginChild("##MeshInfo", ImVec2(200.f, 0.f), false, window_flags);
     ImGui::BeginGroup();
-    ImGui::Button("MeshInfo", ImVec2(0, 0));
+    ImGui::Button("420", ImVec2(420, 0));
+    ImGui::Button("425", ImVec2(425, 0));
+    ImGui::Button("430", ImVec2(430, 0));
+    ImGui::Button("435", ImVec2(435, 0));
+    ImGui::Button("440", ImVec2(440, 0));
+    ImGui::Button("445", ImVec2(445, 0));
+    ImGui::Button("450", ImVec2(450, 0));
+
     
+    // Mesh Res Name
+
+    string strMeshKey = "None";
+
+    if (m_pRenderObj)
+    {
+        Ptr<CMesh> pMesh = m_pRenderObj->GetObj()->MeshRender()->GetMesh();
+        
+        strMeshKey = ToString(pMesh->GetKey()).c_str();
+
+    }
+
+    ImGui::Button("MeshKey");
+    ImGui::SameLine();
+    ImGui::Spacing();
+    ImGui::SameLine();
+    ImGui::Text(strMeshKey.c_str());
+
     string strFrmCnt = "frameCnt : ";
     UINT BoneCnt = 0;
     if (nullptr != m_pSelectedMeshData)
@@ -239,8 +263,6 @@ void AnimEditUI::render_CamController()
 
 void AnimEditUI::tick()
 {
-   
-
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
     SetPopupPos(viewport->WorkPos);

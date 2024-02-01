@@ -33,6 +33,7 @@ public:
     void ChangeEditShader(bool _SetType);
 
     CAnimator3D* GetAnimator3D() { return m_pRenderObj->Animator3D(); }
+    CGameObject* GetObj() { return m_pRenderObj; }
 
 public:
     CAnimEditObj();

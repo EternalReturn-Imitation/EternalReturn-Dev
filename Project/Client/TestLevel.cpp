@@ -142,28 +142,28 @@ void CreateTestLevel()
 	// ============
 	// FBX Loading
 	// ============	
-	{
-		// 인스턴싱 테스트		
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
-		// 
-		// pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
-		// for (int i = 0; i < 10; ++i)
-		// {
-		// 	pObj = pMeshData->Instantiate();
-		// 	pObj->SetName(L"House");
-		// 	SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 2);
-		// }
-
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");
-		//for (int i = 0; i < 10; ++i)
-		//{
-			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"HW");
-			SpawnGameObject(pObj, Vec3(50.f, 200.f, 100.f), 0);
-			pObj->Transform()->SetRelativeScale(Vec3(100.f , 100.f, 100.f));
-		//}
-	}
+	// {
+	// 	// 인스턴싱 테스트		
+	// 	Ptr<CMeshData> pMeshData = nullptr;
+	// 	CGameObject* pObj = nullptr;
+	// 	 
+	// 	 pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
+	// 	 for (int i = 0; i < 10; ++i)
+	// 	 {
+	// 	 	pObj = pMeshData->Instantiate();
+	// 	 	pObj->SetName(L"House");
+	// 	 	SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 2);
+	// 	 }
+	// 
+	// 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");
+	// 	for (int i = 0; i < 10; ++i)
+	// 	{
+	// 		pObj = pMeshData->Instantiate();
+	// 		pObj->SetName(L"HW");
+	// 		SpawnGameObject(pObj, Vec3(50.f, 200.f, 100.f), 0);
+	// 		pObj->Transform()->SetRelativeScale(Vec3(100.f , 100.f, 100.f));
+	// 	}
+	// }
 
 	// LandScape Object
 	// CGameObject* pLandScape = new CGameObject;
