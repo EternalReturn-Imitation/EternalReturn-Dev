@@ -188,6 +188,15 @@ int CMaterial::Save(const wstring& _strRelativePath)
 		return E_FAIL;
 
 	wstring strFilePath = CPathMgr::GetInst()->GetContentPath();
+
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_material = path_content.wstring() + L"material\\";
+	
+	if (false == exists(path_material))
+	{
+		create_directory(path_material);
+	}
+
 	strFilePath += _strRelativePath;
 	
 	FILE* pFile = nullptr;

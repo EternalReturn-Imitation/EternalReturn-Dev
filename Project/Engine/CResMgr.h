@@ -154,6 +154,8 @@ inline void CResMgr::AddRes(const wstring& _strKey, const wstring& _strPath, con
     m_arrRes[(UINT)type].insert(make_pair(FileKey, _Res.Get()));
     _Res->SetKey(FileKey);
     _Res->SetRelativePath(FilePath);
+    // _Res->SetDirectoryPath()
+
 
     m_Changed = true;
 }

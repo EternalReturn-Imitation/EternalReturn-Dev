@@ -469,14 +469,14 @@ void CFBXLoader::LoadTexture()
 				}
 
 				path_dest = GetRelativePath(CPathMgr::GetInst()->GetContentPath(), path_dest);
-				CResMgr::GetInst()->Load<CTexture>(path_dest, path_dest);
+				CResMgr::GetInst()->Load<CTexture>(path_filename, path_dest);
 
 				switch (k)
 				{
-				case 0: m_vecContainer[i].vecMtrl[j].strDiff = path_dest; break;
-				case 1: m_vecContainer[i].vecMtrl[j].strNormal = path_dest; break;
-				case 2: m_vecContainer[i].vecMtrl[j].strSpec = path_dest; break;
-				case 3: m_vecContainer[i].vecMtrl[j].strEmis = path_dest; break;
+				case 0: m_vecContainer[i].vecMtrl[j].strDiff = path_filename; break;
+				case 1: m_vecContainer[i].vecMtrl[j].strNormal = path_filename; break;
+				case 2: m_vecContainer[i].vecMtrl[j].strSpec = path_filename; break;
+				case 3: m_vecContainer[i].vecMtrl[j].strEmis = path_filename; break;
 				}
 			}
 		}
@@ -489,6 +489,7 @@ void CFBXLoader::CreateMaterial()
 {
 	wstring strMtrlName;
 	wstring strPath;
+	wstring strKey;
 
 	for (UINT i = 0; i < m_vecContainer.size(); ++i)
 	{
@@ -500,20 +501,20 @@ void CFBXLoader::CreateMaterial()
 				strMtrlName = path(m_vecContainer[i].vecMtrl[j].strDiff).stem();
 
 			strPath = L"material\\";
-			strPath += strMtrlName + L".mtrl";
+			strKey = strMtrlName + L".mtrl";
+			strPath += strKey;
 
 			// 재질 이름
-			m_vecContainer[i].vecMtrl[j].strMtrlName = strPath;
+			m_vecContainer[i].vecMtrl[j].strMtrlName = strKey;
 
 			// 이미 로딩된 재질이면 로딩된 것을 사용
-			Ptr<CMaterial> pMaterial = CResMgr::GetInst()->FindRes<CMaterial>(strPath);
+			Ptr<CMaterial> pMaterial = CResMgr::GetInst()->FindRes<CMaterial>(strKey);
 			if (nullptr != pMaterial)
 				continue;
 
 			pMaterial = new CMaterial;
 
-			// 상대경로가 곧 키
-			pMaterial->SetKey(strPath);
+			pMaterial->SetKey(strKey);
 			pMaterial->SetRelativePath(strPath);
 
 			pMaterial->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
@@ -544,7 +545,7 @@ void CFBXLoader::CreateMaterial()
 				, m_vecContainer[i].vecMtrl[j].tMtrl.vSpec
 				, m_vecContainer[i].vecMtrl[j].tMtrl.vAmb
 				, m_vecContainer[i].vecMtrl[j].tMtrl.vEmv);
-
+		
 			CResMgr::GetInst()->AddRes<CMaterial>(pMaterial->GetKey(), pMaterial.Get());
 			pMaterial->Save(strPath);
 		}

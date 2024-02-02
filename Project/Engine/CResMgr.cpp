@@ -83,7 +83,8 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	wstring strFileName = path(_strPath).stem();
 
 	wstring strName = L"meshdata\\";
-	strName += strFileName + L".mdat";
+	wstring strKey = strFileName + L".mdat";
+	strName += strKey;
 
 	Ptr<CMeshData> pMeshData = FindRes<CMeshData>(strName);
 
@@ -91,13 +92,13 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 		return pMeshData;
 
 	pMeshData = CMeshData::LoadFromFBX(_strPath);
-	pMeshData->SetKey(strName);
+	pMeshData->SetKey(strKey);
 	pMeshData->SetRelativePath(strName);
 
-	m_arrRes[(UINT)RES_TYPE::MESHDATA].insert(make_pair(strName, pMeshData.Get()));
+	m_arrRes[(UINT)RES_TYPE::MESHDATA].insert(make_pair(strKey, pMeshData.Get()));
 
 	// meshdata 를 실제파일로 저장
-	pMeshData->Save(strName);
+	pMeshData->Save(strKey);
 
 	return pMeshData;
 }

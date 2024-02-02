@@ -70,7 +70,7 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 	// ResMgr 에 메쉬 등록
 	if (nullptr != pMesh)
 	{
-		wstring strMeshKey = L"mesh\\";
+		wstring strMeshKey;
 		strMeshKey += path(strFullPath).stem();
 		strMeshKey += L".mesh";
 		CResMgr::GetInst()->AddRes<CMesh>(strMeshKey, pMesh);
@@ -104,9 +104,20 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 
 int CMeshData::Save(const wstring& _strRelativePath)
 {
-	SetRelativePath(_strRelativePath);
+	// 상대경로 저장
+	wstring RelativePath = L"meshdata\\";
+	RelativePath += _strRelativePath;
+	SetRelativePath(RelativePath);
 
-	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + _strRelativePath;
+	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
+
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_meshdata = path_content.wstring() + L"meshdata\\";
+
+	if (false == exists(path_meshdata))
+	{
+		create_directory(path_meshdata);
+	}
 
 	FILE* pFile = nullptr;
 	errno_t err = _wfopen_s(&pFile, strFilePath.c_str(), L"wb");

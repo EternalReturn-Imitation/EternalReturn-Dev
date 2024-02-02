@@ -76,7 +76,7 @@ void ContentUI::Reload()
 		switch (type)
 		{
 		case RES_TYPE::MESHDATA:
-			CResMgr::GetInst()->Load<CMeshData>(m_vecResPath[i], m_vecResPath[i]);
+			CResMgr::GetInst()->Load<CMeshData>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
 		case RES_TYPE::MATERIAL:
 			CResMgr::GetInst()->Load<CMaterial>(strFileKey, m_vecResPath[i], stdDirPath);
@@ -85,7 +85,7 @@ void ContentUI::Reload()
 
 			break;
 		case RES_TYPE::MESH:
-			CResMgr::GetInst()->Load<CMesh>(m_vecResPath[i], m_vecResPath[i]);
+			CResMgr::GetInst()->Load<CMesh>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
 		case RES_TYPE::TEXTURE:
 			CResMgr::GetInst()->Load<CTexture>(strFileKey, m_vecResPath[i], stdDirPath);
