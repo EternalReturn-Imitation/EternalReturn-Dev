@@ -26,7 +26,6 @@ public:
 	virtual void finaltick();
 	virtual int render_update() = 0;
 
-
 public:	
 	void SetActive(bool _Active) { m_Active = _Active; }
 	bool IsActive() { return m_Active; }

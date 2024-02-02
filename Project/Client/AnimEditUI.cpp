@@ -52,6 +52,39 @@ AnimEditUI::~AnimEditUI()
 {
 }
 
+void AnimEditUI::render_menubar()
+{
+    if (ImGui::BeginMenuBar())
+    {
+        if (ImGui::MenuItem("Play"))
+        {
+            m_pRenderObj->GetAnimator3D()->Play();
+        }
+
+        if (ImGui::MenuItem("Stop"))
+        {
+            m_pRenderObj->GetAnimator3D()->Stop();
+
+        }
+
+        if (ImGui::MenuItem("Open MeshData"))
+        {
+            const map<wstring, Ptr<CRes>>& mapMeshData = CResMgr::GetInst()->GetResources(RES_TYPE::MESHDATA);
+
+            ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+            pListUI->Reset("MeshData List", ImVec2(300.f, 500.f));
+            for (const auto& pair : mapMeshData)
+            {
+                pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+            }
+
+            pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&AnimEditUI::SelectMeshData);
+        }
+
+        ImGui::EndMenuBar();
+    }
+}
+
 void AnimEditUI::render_cliplistwindow()
 {
     ImGui::Button("AnimClipList", ImVec2(200, 0));
@@ -62,8 +95,11 @@ void AnimEditUI::render_cliplistwindow()
     int ClipCount = m_mapAnimClip.size();
     int ClipIdx = 0;
     static int SelectClipIdx = 0;
-
+    
     ImGui::BeginChild("##AnimClipList", ImVec2(200.f, 600.f - ItemSize.y), false, window_flags);;
+
+    ImGuiTreeNodeFlags NodeFlag = ImGuiTreeNodeFlags_Leaf;
+        
 
     map<wstring, tMTAnimClip>::iterator iter = m_mapAnimClip.begin();
     // 클립이 1개 이상인 경우 리스트 출력
@@ -71,7 +107,10 @@ void AnimEditUI::render_cliplistwindow()
     {
         ClipIdx++;
 
-        if (ImGui::MenuItem(string(iter->first.begin(), iter->first.end()).c_str(),"", ClipIdx == SelectClipIdx))
+        if (ClipIdx == SelectClipIdx)
+            NodeFlag |= ImGuiTreeNodeFlags_Selected;
+        
+        if (ImGui::TreeNodeEx(string(iter->first.begin(), iter->first.end()).c_str(), NodeFlag))
         {
             SelectClipIdx = ClipIdx;
             m_tMTCurAnimClip = iter->second;
@@ -112,56 +151,50 @@ void AnimEditUI::render_previewwindow()
 
 void AnimEditUI::render_infowindow()
 {
-    // 전체 애니메이션 정보
-    // ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
-    // ImGui::BeginChild("##MeshInfo", ImVec2(200.f, 0.f), false, window_flags);
-    ImGui::BeginGroup();
-    ImGui::Button("420", ImVec2(420, 0));
-    ImGui::Button("425", ImVec2(425, 0));
-    ImGui::Button("430", ImVec2(430, 0));
-    ImGui::Button("435", ImVec2(435, 0));
-    ImGui::Button("440", ImVec2(440, 0));
-    ImGui::Button("445", ImVec2(445, 0));
-    ImGui::Button("450", ImVec2(450, 0));
+    // ==================== Set Print Info =======================
+    // MeshData
+    string  strMeshDataKey = "None"; // MeshData Key
+    string  strMeshKey = "None";    // Mesh Key
+    string  strMaterialKey = "None"; // 적용된 재질 이름
+    string  strTextureKey = "None"; // 적용된 텍스쳐 이름
 
-    
-    // Mesh Res Name
-
-    string strMeshKey = "None";
+    string  AnimClipCnt = "None";    // 보유 클립 갯수
+    string  KeyFrameCount = "None";  // 키프레임 갯수
+    string  FPS = "None";           // FPS
 
     if (m_pRenderObj)
     {
+        // Load Src
         Ptr<CMesh> pMesh = m_pRenderObj->GetObj()->MeshRender()->GetMesh();
+        Ptr<CMaterial> pMaterial = m_pRenderObj->GetObj()->MeshRender()->GetMaterial(0);        // 메인 재질
         
+        // SetInfo from Src
+        strMeshDataKey = ToString(m_pSelectedMeshData->GetKey().c_str());
         strMeshKey = ToString(pMesh->GetKey()).c_str();
-
+        strMaterialKey = ToString(pMaterial->GetKey()).c_str();
+        strTextureKey = ToString(pMaterial->GetTexParam(TEX_PARAM::TEX_0)->GetKey()).c_str();   // 메인재질의 diff 텍스쳐 key
+        AnimClipCnt = std::to_string(pMesh->GetAnimClip()->size());
+        KeyFrameCount = std::to_string(pMesh->GetFrameCount());
     }
+    
+    // ==================== Set Print Info =======================
 
-    ImGui::Button("MeshKey");
-    ImGui::SameLine();
-    ImGui::Spacing();
-    ImGui::SameLine();
-    ImGui::Text(strMeshKey.c_str());
+    // MeshData Info
+    ImGui::Button("MeshDataInfo", ImVec2(450, 0));
+    ImGui::BeginGroup();
+    
+    print_strElement("MeshData Key", strMeshDataKey.c_str());
+    print_strElement("Mesh     Key", strMeshKey.c_str());
+    print_strElement("Material Key", strMaterialKey.c_str());
+    print_strElement("Texture  Key", strTextureKey.c_str());
+    print_strElement("AnimClip Cnt", AnimClipCnt.c_str());
+    print_strElement("AllKeyFrmCnt", KeyFrameCount.c_str());
 
-    string strFrmCnt = "frameCnt : ";
-    UINT BoneCnt = 0;
-    if (nullptr != m_pSelectedMeshData)
-    {
-        BoneCnt = m_pSelectedMeshData->GetMesh()->GetFrameCount();
-    }
-    strFrmCnt += std::to_string(BoneCnt);
-
-    ImGui::Text(strFrmCnt.c_str());
-    ImGui::Text("frame value2");
-    ImGui::Text("frame value3");
-    ImGui::Text("frame value4");
-    ImGui::Text("frame value5");
     ImGui::EndGroup();
-    //ImGui::EndChild();
 
     // 현재 애니메이션 정보
     //ImGui::BeginChild("##CurAnimInfo", ImVec2(200.f, 0.f), false, window_flags);
-    ImGui::Button("CurAnimInfo", ImVec2(0, 0));
+    ImGui::Button("CurAnimInfo", ImVec2(450, 0));
     ImGui::BeginGroup();
     ImGui::Text("frame value1");
     ImGui::Text("frame value2");
@@ -171,30 +204,6 @@ void AnimEditUI::render_infowindow()
     ImGui::EndGroup();
     //ImGui::EndChild();
 
-    if (ImGui::Button("Play"))
-    {
-        m_pRenderObj->GetAnimator3D()->Play();
-    }
-
-    if (ImGui::Button("Stop"))
-    {
-        m_pRenderObj->GetAnimator3D()->Stop();
-    }
-
-
-    if (ImGui::Button("OpenMeshData"))
-    {
-        const map<wstring, Ptr<CRes>>& mapMeshData = CResMgr::GetInst()->GetResources(RES_TYPE::MESHDATA);
-
-        ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-        pListUI->Reset("MeshData List", ImVec2(300.f, 500.f));
-        for (const auto& pair : mapMeshData)
-        {
-            pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
-        }
-
-        pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&AnimEditUI::SelectMeshData);
-    }
 }
 
 void AnimEditUI::render_TimeLine()
@@ -280,6 +289,8 @@ void AnimEditUI::finaltick()
 
 int AnimEditUI::render_update()
 {
+    render_menubar();
+
     ImGui::BeginGroup();
     {
         // Mesh가 보유한 Clip Tree
@@ -362,4 +373,11 @@ void AnimEditUI::SelectMeshData(DWORD_PTR _data)
         MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
         return;
     }
+}
+
+void AnimEditUI::print_strElement(const char* _BtnTitle, const char* _str, Vec2 _Btnsize)
+{
+    ImGui::Button(_BtnTitle);
+    ImGui::SameLine();
+    ImGui::Text(_str);
 }

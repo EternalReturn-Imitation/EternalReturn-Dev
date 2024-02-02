@@ -19,7 +19,7 @@ private:
 	ComPtr<ID3D11Buffer>	m_VB;
 	D3D11_BUFFER_DESC		m_tVBDesc;
 	UINT					m_VtxCount;
-	void* m_pVtxSys;
+	void*					m_pVtxSys;
 
 	// 하나의 버텍스버퍼에 여러개의 인덱스버퍼가 연결
 	vector<tIndexInfo>		m_vecIdxInfo;

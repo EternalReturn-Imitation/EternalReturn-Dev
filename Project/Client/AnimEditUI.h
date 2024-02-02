@@ -17,10 +17,14 @@ private:
 
     int m_iFrameCount;  // 설정된 초당 재생 프레임
 
+private:
+    void print_strElement(const char* _BtnTitle, const char* _str, Vec2 _Btnsize = Vec2(0, 0));
+
 public:
     void MeshLoad() {};
 
 private:
+    void render_menubar();
     void render_cliplistwindow();
     void render_previewwindow();
     void render_infowindow();
