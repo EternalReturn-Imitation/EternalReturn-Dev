@@ -508,7 +508,7 @@ void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
 //	int exists;
 //	wss >> exists;
 //	std::wstring line;
-//	std::getline(wss, line); // 숫자 뒤의 개행 문자를 소비
+//	std::getline(wss, line); // 
 //
 //	if (exists) {
 //		std::wstring strKey, strRelativePath;

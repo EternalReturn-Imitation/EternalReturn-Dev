@@ -5,6 +5,7 @@
 #include "CTexture.h"
 #include "CMaterial.h"
 #include "CMesh.h"
+#include "CBone.h"
 
 class CStructuredBuffer;
 
@@ -14,17 +15,17 @@ class CAnimator3D :
     public CComponent
 {
 private:
-    const vector<tMTBone>*      m_pVecBones;
-
+    // const vector<tMTBone>*      m_pVecBones;    // 사용안함
+    
     map<wstring, CAnim3D*>      m_mapAnim;
     CAnim3D*                    m_pCurAnim;
 
-    vector<Matrix>				m_vecFinalBoneMat;          // 텍스쳐에 전달할 최종 행렬정보
+    // vector<Matrix>				m_vecFinalBoneMat;          // 텍스쳐에 전달할 최종 행렬정보
     int							m_iFrameCount;              // 30
 
-    int							m_iFrameIdx;                // 클립의 현재 프레임
-    int							m_iNextFrameIdx;            // 클립의 다음 프레임
-    float						m_fRatio;	                // 프레임 사이 비율
+    // int							m_iFrameIdx;                // 클립의 현재 프레임
+    // int							m_iNextFrameIdx;            // 클립의 다음 프레임
+    // float						m_fRatio;	                // 프레임 사이 비율
 
     CStructuredBuffer*          m_pBoneFinalMatBuffer;      // 특정 프레임의 최종 행렬
     bool						m_bFinalMatUpdate;          // 최종행렬 연산 수행여부
@@ -34,15 +35,19 @@ public:
     void UpdateData();
 
 public:
-    void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; m_vecFinalBoneMat.resize(m_pVecBones->size()); }
-    void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
+    // [delete]
+    // void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; m_vecFinalBoneMat.resize(m_pVecBones->size()); }
+    // void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
 
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
-    UINT GetBoneCount() { return (UINT)m_pVecBones->size(); }
+    UINT GetBoneCount();
     void ClearData();
 
-    bool GetCurAnimClip(tMTAnimClip& _Clip);
-    int GetCurFrameIdx() { return m_iFrameIdx; }
+    map<wstring, CAnim3D*>& GetAnims() { return m_mapAnim; }
+    CAnim3D* AddAnim(Ptr<CBone> _pBone);
+    CAnim3D* GetCurAnim() { return m_pCurAnim; }
+
+    // int GetCurFrameIdx() { return m_iFrameIdx; }
 
 public:
     void Play();
@@ -50,10 +55,12 @@ public:
     void Reset();
     void SetFrame(int _Frame);
 
+    CAnim3D* SelectAnimation(const wstring& _AnimName);
+
     bool IsPlay();
 
 private:
-    void check_mesh(Ptr<CMesh> _pMesh);
+    void Check_Bone(Ptr<CBone> _pBone);
 
 public:
     virtual void SaveToLevelFile(FILE* _pFile) override;

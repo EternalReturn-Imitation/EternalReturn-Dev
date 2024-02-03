@@ -101,6 +101,46 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	CreateMaterial();
 }
 
+void CFBXLoader::LoadFbxBone(const wstring& _strPath)
+{
+	m_vecContainer.clear();
+
+	m_pImporter = FbxImporter::Create(m_pManager, "");
+
+	//wstring str = wstring_convert<codecvt_utf8<wchar_t>>().from_bytes(strName.c_str());
+	string strPath(_strPath.begin(), _strPath.end());
+
+	if (!m_pImporter->Initialize(strPath.c_str(), -1, m_pManager->GetIOSettings()))
+		assert(nullptr);
+
+	m_pImporter->Import(m_pScene); // FBX 폴더에 fbm 폴더를 생성
+
+	/*FbxAxisSystem originAxis = FbxAxisSystem::eMax;
+	originAxis = m_pScene->GetGlobalSettings().GetAxisSystem();
+	FbxAxisSystem DesireAxis = FbxAxisSystem::DirectX;
+	DesireAxis.ConvertScene(m_pScene);
+	originAxis = m_pScene->GetGlobalSettings().GetAxisSystem();*/
+
+	m_pScene->GetGlobalSettings().SetAxisSystem(FbxAxisSystem::Max);
+
+	// Bone 정보 읽기
+	LoadSkeleton(m_pScene->GetRootNode());
+
+	// Animation 이름정보 
+	m_pScene->FillAnimStackNameArray(m_arrAnimName);
+
+	// Animation Clip 정보
+	LoadAnimationClip();
+
+	// 삼각화(Triangulate)
+	Triangulate(m_pScene->GetRootNode());
+
+	// 메쉬 데이터 얻기
+	LoadMeshDataFromNode(m_pScene->GetRootNode());
+
+	m_pImporter->Destroy();
+}
+
 void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 {
 	// 노드의 메쉬정보 읽기

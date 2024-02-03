@@ -7,6 +7,7 @@
 #include <Engine/CGameObject.h>
 #include <Engine/components.h>
 
+#include <Engine/CKeyMgr.h>
 #include <Engine/CRenderMgr.h>
 #include <Engine/CMRT.h>
 
@@ -14,6 +15,10 @@
 #include <Engine/CTexture.h>
 #include <Engine/CMeshData.h>
 #include <Engine/CMesh.h>
+#include <Engine/CBone.h>
+
+#include <Engine/CAnim3D.h>
+#include <Engine/CAnimator3D.h>
 
 #include "ListUI.h"
 
@@ -24,7 +29,9 @@
 AnimEditUI::AnimEditUI()
     : UI("##AnimEditUI")
     , m_pRenderObj(nullptr)
+    , m_pCurAnimation(nullptr)
     , m_iFrameCount(0)
+    , m_bPlay(true)
 {
     SetName("AnimEditUI");
 
@@ -58,27 +65,48 @@ void AnimEditUI::render_menubar()
     {
         if (ImGui::MenuItem("Play"))
         {
-            m_pRenderObj->GetAnimator3D()->Play();
+            m_pCurAnimation->Play();
+            m_bPlay = true;
         }
 
         if (ImGui::MenuItem("Stop"))
         {
-            m_pRenderObj->GetAnimator3D()->Stop();
-
+            m_pCurAnimation->Stop();
+            m_bPlay = false;
         }
 
-        if (ImGui::MenuItem("Open MeshData"))
+        if (ImGui::BeginMenu("Set.."))
         {
-            const map<wstring, Ptr<CRes>>& mapMeshData = CResMgr::GetInst()->GetResources(RES_TYPE::MESHDATA);
 
-            ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-            pListUI->Reset("MeshData List", ImVec2(300.f, 500.f));
-            for (const auto& pair : mapMeshData)
+            if (ImGui::MenuItem("New.."))
             {
-                pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+                const map<wstring, Ptr<CRes>>& mapMesh = CResMgr::GetInst()->GetResources(RES_TYPE::MESHDATA);
+
+                ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+                pListUI->Reset("MeshData List", ImVec2(300.f, 500.f));
+                for (const auto& pair : mapMesh)
+                {
+                    pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+                }
+
+                pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&AnimEditUI::SelectMeshData);
             }
 
-            pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&AnimEditUI::SelectMeshData);
+            if (ImGui::MenuItem("Add Bone.."))
+            {
+                const map<wstring, Ptr<CRes>>& mapBone = CResMgr::GetInst()->GetResources(RES_TYPE::BONE);
+
+                ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+                pListUI->Reset("Animation List", ImVec2(300.f, 500.f));
+                for (const auto& pair : mapBone)
+                {
+                    pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+                }
+
+                pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&AnimEditUI::SelectBone);
+            }
+            
+            ImGui::EndMenu();
         }
 
         ImGui::EndMenuBar();
@@ -92,7 +120,13 @@ void AnimEditUI::render_cliplistwindow()
 
     ImVec2 ItemSize = ImGui::GetItemRectSize();
 
-    int ClipCount = m_mapAnimClip.size();
+    map<wstring, CAnim3D*> mapAnims;
+    if (m_pRenderObj)
+    {
+        mapAnims = m_pRenderObj->GetAnimator3D()->GetAnims();
+    }
+
+    int ClipCount = (UINT)mapAnims.size();
     int ClipIdx = 0;
     static int SelectClipIdx = 0;
     
@@ -100,20 +134,26 @@ void AnimEditUI::render_cliplistwindow()
 
     ImGuiTreeNodeFlags NodeFlag = ImGuiTreeNodeFlags_Leaf;
         
+    string strFinalName;
 
-    map<wstring, tMTAnimClip>::iterator iter = m_mapAnimClip.begin();
+    map<wstring, CAnim3D*>::iterator iter = mapAnims.begin();
     // 클립이 1개 이상인 경우 리스트 출력
-    while (iter != m_mapAnimClip.end())
+    while (iter != mapAnims.end())
     {
         ClipIdx++;
 
-        if (ClipIdx == SelectClipIdx)
-            NodeFlag |= ImGuiTreeNodeFlags_Selected;
+        //strFinalName = ToString(iter->first) + "##";
+        //char szBuff[100] = {};
+        //_itoa_s(ClipIdx, szBuff, 10);
+        //strFinalName += szBuff;
         
-        if (ImGui::TreeNodeEx(string(iter->first.begin(), iter->first.end()).c_str(), NodeFlag))
+        const bool is_selected = (SelectClipIdx == ClipIdx);
+
+        if (ImGui::Selectable(ToString(iter->first).c_str(), is_selected))
         {
             SelectClipIdx = ClipIdx;
-            m_tMTCurAnimClip = iter->second;
+            m_pRenderObj->GetAnimator3D()->SelectAnimation(iter->first);
+            m_pCurAnimation = m_pRenderObj->GetAnimator3D()->GetCurAnim();
         }
 
         iter++;
@@ -158,23 +198,45 @@ void AnimEditUI::render_infowindow()
     string  strMaterialKey = "None"; // 적용된 재질 이름
     string  strTextureKey = "None"; // 적용된 텍스쳐 이름
 
-    string  AnimClipCnt = "None";    // 보유 클립 갯수
-    string  KeyFrameCount = "None";  // 키프레임 갯수
-    string  FPS = "None";           // FPS
+    int  AnimClipCnt = 0;   // 보유 클립 갯수
+    int KeyFrameCount = 0;  // 전체 키프레임 갯수
+
+    // CurAnimClip
+    string  strCurClipName = "None";    // CurClip Anim Name
+    int  startFrm = 0;
+    int  EndFrm = 0;
+    int  FrameLength = 0;
+
+    double  StartTime = 0;
+    double  EndTime = 0;
+    double  TimeLength = 0;
 
     if (m_pRenderObj)
     {
         // Load Src
         Ptr<CMesh> pMesh = m_pRenderObj->GetObj()->MeshRender()->GetMesh();
         Ptr<CMaterial> pMaterial = m_pRenderObj->GetObj()->MeshRender()->GetMaterial(0);        // 메인 재질
+        CAnimator3D* pAnimComp = m_pRenderObj->GetAnimator3D();
         
-        // SetInfo from Src
-        strMeshDataKey = ToString(m_pSelectedMeshData->GetKey().c_str());
         strMeshKey = ToString(pMesh->GetKey()).c_str();
         strMaterialKey = ToString(pMaterial->GetKey()).c_str();
         strTextureKey = ToString(pMaterial->GetTexParam(TEX_PARAM::TEX_0)->GetKey()).c_str();   // 메인재질의 diff 텍스쳐 key
-        AnimClipCnt = std::to_string(pMesh->GetAnimClip()->size());
-        KeyFrameCount = std::to_string(pMesh->GetFrameCount());
+        AnimClipCnt = (UINT)pAnimComp->GetAnims().size();
+    }
+
+
+    if (m_pCurAnimation)
+    {
+        // SetInfo from Src
+        KeyFrameCount = m_pCurAnimation->GetAnimClip().iFrameLength;
+        
+        strCurClipName = ToString(m_pCurAnimation->GetAnimClip().strAnimName);
+        startFrm      = m_pCurAnimation->GetAnimClip().iStartFrame;
+        EndFrm        = m_pCurAnimation->GetAnimClip().iEndFrame;
+        FrameLength   = m_pCurAnimation->GetAnimClip().iFrameLength;
+        StartTime     = m_pCurAnimation->GetAnimClip().dStartTime;
+        EndTime       = m_pCurAnimation->GetAnimClip().dEndTime;
+        TimeLength    = m_pCurAnimation->GetAnimClip().dTimeLength;
     }
     
     // ==================== Set Print Info =======================
@@ -183,12 +245,11 @@ void AnimEditUI::render_infowindow()
     ImGui::Button("MeshDataInfo", ImVec2(450, 0));
     ImGui::BeginGroup();
     
-    print_strElement("MeshData Key", strMeshDataKey.c_str());
-    print_strElement("Mesh     Key", strMeshKey.c_str());
-    print_strElement("Material Key", strMaterialKey.c_str());
-    print_strElement("Texture  Key", strTextureKey.c_str());
-    print_strElement("AnimClip Cnt", AnimClipCnt.c_str());
-    print_strElement("AllKeyFrmCnt", KeyFrameCount.c_str());
+    print_strElement("   Mesh   Key", strMeshKey.c_str());
+    print_strElement(" Material Key", strMaterialKey.c_str());
+    print_strElement(" Texture  Key", strTextureKey.c_str());
+    print_intElement(" AnimClip Cnt", AnimClipCnt);
+    print_intElement("AllKeyFrm Cnt", KeyFrameCount);
 
     ImGui::EndGroup();
 
@@ -196,12 +257,19 @@ void AnimEditUI::render_infowindow()
     //ImGui::BeginChild("##CurAnimInfo", ImVec2(200.f, 0.f), false, window_flags);
     ImGui::Button("CurAnimInfo", ImVec2(450, 0));
     ImGui::BeginGroup();
-    ImGui::Text("frame value1");
-    ImGui::Text("frame value2");
-    ImGui::Text("frame value3");
-    ImGui::Text("frame value4");
-    ImGui::Text("frame value5");
+    ImGui::Button("OriginInfo", ImVec2(220, 0));
+    
+    print_strElement("AnimClip Name", strCurClipName.c_str());
+    print_intElement(" Start Frame ", startFrm);
+    print_intElement("  End Frame  ", EndFrm);
+    print_intElement(" FrameLength ", FrameLength);
+    print_doubleElement(" Start  Time ", StartTime);
+    print_doubleElement("  End   Time ", EndTime);
+    print_doubleElement(" Time Length ", TimeLength);
+
+
     ImGui::EndGroup();
+
     //ImGui::EndChild();
 
 }
@@ -216,52 +284,26 @@ void AnimEditUI::render_TimeLine()
     int MaxFrame = 0; 
     int iCurFrame = 0; 
     
-    if (m_pRenderObj)
+    if (m_pCurAnimation)
     {
-        MaxFrame = m_tMTCurAnimClip.iFrameLength;
-        iCurFrame = m_pRenderObj->GetAnimator3D()->GetCurFrameIdx();
-        
+        MaxFrame = m_pCurAnimation->GetAnimClip().iFrameLength;
+        iCurFrame = m_pCurAnimation->GetCurFrameIdx();
     }
 
     static float test = 1.f;
     
-    for (int frame = 0; frame < MaxFrame; frame++)
-    {
-        if (frame > 0)
-            ImGui::SameLine();
-        
-        if (frame == iCurFrame)
-        {
-            ImGui::TextColored(ImVec4(1, 1, 0, 1), "  ");
-            //   //  ImGui::SetScrollHereX(0.5f);    // half position
-            ImGui::SetScrollHereX((float)iCurFrame / (float)MaxFrame);
-        }
-        else
-        {
-            ImGui::Text("  ");
-        }
-    }
-    
-    float scroll_x = ImGui::GetScrollX();
-    float scroll_max_x = ImGui::GetScrollMaxX();
-
     // 좌표값을 프레임으로 변환
     float SliderWidth = ImGui::GetWindowWidth();
     ImGui::EndChild();
 
-    scroll_x *= MaxFrame / scroll_max_x;
-    scroll_max_x *= MaxFrame / scroll_max_x;
-
-    ImGui::Text("%.0f/%.0f", scroll_x, scroll_max_x);
-    ImGui::Spacing();
+    ImGui::SetNextItemWidth(SliderWidth);
+    ImGui::SliderInt("Lines", &iCurFrame, 0, MaxFrame);
+    ImGui::Text("%.0f/%.0f", iCurFrame, MaxFrame);
     
-    if (m_pRenderObj && false == m_pRenderObj->GetAnimator3D()->IsPlay())
+    if (m_pCurAnimation && false == m_pRenderObj->GetAnimator3D()->IsPlay())
     {
-        m_pRenderObj->GetAnimator3D()->SetFrame(scroll_x);
+        m_pRenderObj->GetAnimator3D()->SetFrame(iCurFrame);
     }
-
-    // ImGui::SetNextItemWidth(SliderWidth);
-    // ImGui::SliderInt("Lines", &iCurFrame, 0, MaxFrame);
 }
 
 void AnimEditUI::render_CamController()
@@ -272,6 +314,20 @@ void AnimEditUI::render_CamController()
 
 void AnimEditUI::tick()
 {
+    if (m_pCurAnimation && KEY_TAP(KEY::SPACE))
+    {
+        if (m_bPlay)
+        {
+            m_pCurAnimation->Stop();
+            m_bPlay = false;
+        }
+        else
+        {
+            m_pCurAnimation->Play();
+            m_bPlay = true;
+        }
+    }
+
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
     SetPopupPos(viewport->WorkPos);
@@ -340,36 +396,62 @@ void AnimEditUI::SelectMeshData(DWORD_PTR _data)
     string strKey = (char*)_data;
 
     Ptr<CMeshData> temp = CResMgr::GetInst()->FindRes<CMeshData>(wstring(strKey.begin(), strKey.end()));
-    
-    if (temp->IsHaveAnim())
+
+    if (nullptr != temp)
     {
-        m_pSelectedMeshData = temp;
-        const vector<tMTAnimClip>* clips = m_pSelectedMeshData->GetMesh()->GetAnimClip();
-
-        for (size_t i = 0; i < clips->size(); ++i)
-        {
-            tMTAnimClip tmp = clips->at(i);
-            m_mapAnimClip.insert(make_pair(tmp.strAnimName, tmp));
-        }
-
         if (m_pRenderObj)
         {
             delete m_pRenderObj;
             m_pRenderObj = nullptr;
+            m_pCurAnimation = nullptr;
         }
 
-        if (nullptr == m_pRenderObj && nullptr != m_pSelectedMeshData)
+        if (nullptr == m_pRenderObj)
         {
             m_pRenderObj = new CAnimEditObj;
-            m_pRenderObj->setobject(m_pSelectedMeshData);
+            m_pRenderObj->setobject(temp);
 
             CEditorObjMgr::GetInst()->SetTexRender(m_pRenderObj);
-            m_pRenderObj->GetAnimator3D()->GetCurAnimClip(m_tMTCurAnimClip);
         }
     }
     else
     {
-        wstring errMsg = L"This MeshData Have Not Animation.";
+        wstring errMsg = L"This MeshData Select Fail.";
+        MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+        return;
+    }
+}
+
+void AnimEditUI::SelectBone(DWORD_PTR _data)
+{
+    string strKey = (char*)_data;
+
+    Ptr<CBone> temp = CResMgr::GetInst()->FindRes<CBone>(wstring(strKey.begin(), strKey.end()));
+    
+    if (nullptr == m_pRenderObj)
+    {
+        wstring errMsg = L"No RenderObj. Select RenderObj First.";
+        MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+        return;
+    }
+
+    if (nullptr != temp)
+    {
+        // 중복 검사
+        CAnimator3D* pAnimComp = m_pRenderObj->GetAnimator3D();
+        if (nullptr == pAnimComp->AddAnim(temp))
+        {
+            wstring errMsg = L"This Bone Already Exists.";
+            MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+            return;
+        }
+
+        // 정상적으로 애니메이션이 추가된 경우 추가한 애니메이션으로 변경해준다.
+        m_pCurAnimation = pAnimComp->SelectAnimation(temp->GetKey());
+    }
+    else
+    {
+        wstring errMsg = L"Can't Find Bond Data.";
         MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
         return;
     }
@@ -380,4 +462,18 @@ void AnimEditUI::print_strElement(const char* _BtnTitle, const char* _str, Vec2 
     ImGui::Button(_BtnTitle);
     ImGui::SameLine();
     ImGui::Text(_str);
+}
+
+void AnimEditUI::print_intElement(const char* _BtnTitle, int& _int, Vec2 _Btnsize)
+{
+    ImGui::Button(_BtnTitle);
+    ImGui::SameLine();
+    ImGui::Text("%d", _int);
+}
+
+void AnimEditUI::print_doubleElement(const char* _BtnTitle, double& _double, Vec2 _Btnsize)
+{
+    ImGui::Button(_BtnTitle);
+    ImGui::SameLine();
+    ImGui::Text("%.2f", _double);
 }

@@ -197,6 +197,11 @@ int MenuUI::render_update()
                 LoadFBX();
             }
 
+            if (ImGui::MenuItem("Load Bone from FBX.."))
+            {
+                LoadFBX_Bone();
+            }
+
             ImGui::EndMenu();
         }
 
@@ -377,6 +382,56 @@ void MenuUI::LoadFBX()
     else
     {
         wstring errMsg = L"FBX File Load Compleat.\nMeshData Created.\n";
+        MessageBox(nullptr, errMsg.c_str(), L"SUCCESS", MB_OK);
+        return;
+    }
+}
+
+void MenuUI::LoadFBX_Bone()
+{
+    // open a file name
+
+    OPENFILENAME ofn = {};
+    wstring strFBXFolderPath = CPathMgr::GetInst()->GetContentPath();
+    strFBXFolderPath += L"fbx\\";
+
+    wchar_t szFullFilePath[256] = {};
+
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = NULL;
+    ofn.lpstrFile = szFullFilePath;
+    ofn.lpstrFile[0] = '\0';
+    ofn.nMaxFile = 256;
+    ofn.lpstrFilter = L"fbx\0*.fbx";
+    ofn.nFilterIndex = 1;
+    ofn.lpstrFileTitle = NULL;
+    ofn.nMaxFileTitle = 0;
+    ofn.lpstrInitialDir = strFBXFolderPath.c_str();
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+
+    ShowCursor(true);
+
+    if (false == GetOpenFileName(&ofn))
+    {
+        // ShowCursor(false);
+        return;
+    }
+    // ShowCursor(false);
+
+    wstring strFilePath = szFullFilePath;
+    strFilePath = strFilePath.substr(strFilePath.find(L"fbx\\"), lstrlenW(szFullFilePath));
+
+    if (nullptr == CResMgr::GetInst()->LoadFBXBone(strFilePath.c_str()))
+    {
+        wstring errMsg = L"Bone Data Load from FBX Fail.";
+        MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+        return;
+    }
+    else
+    {
+        wstring errMsg = L"Bone Data Load from FBX Compleat.\nBone File Created.\n";
         MessageBox(nullptr, errMsg.c_str(), L"SUCCESS", MB_OK);
         return;
     }

@@ -140,6 +140,9 @@
     <Filter Include="Manager\AnimEditObj">
       <UniqueIdentifier>{ddf01b6b-65d5-4c33-968b-3ad04a7a162c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ResUI\BoneUI">
+      <UniqueIdentifier>{d53cf3f4-ffd3-4d0b-9058-4e85673ac35c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -304,6 +307,9 @@
     </ClInclude>
     <ClInclude Include="CAnimEditObj.h">
       <Filter>Manager\AnimEditObj</Filter>
+    </ClInclude>
+    <ClInclude Include="BoneUI.h">
+      <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -474,6 +480,9 @@
     </ClCompile>
     <ClCompile Include="CAnimEditObj.cpp">
       <Filter>Manager\AnimEditObj</Filter>
+    </ClCompile>
+    <ClCompile Include="BoneUI.cpp">
+      <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -87,6 +87,8 @@ void CAnimEditObj::setobject(Ptr<CMeshData> _MeshData)
 	m_pRenderObj->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
 	m_pRenderObj->SetName(L"AnimEditObj");
 
+	m_pRenderObj->AddComponent(new CAnimator3D);
+
 	// 카메라 연결
 	m_pControlObj = new CGameObject;
 	m_pControlObj->SetName(L"AnimEditControlObj");

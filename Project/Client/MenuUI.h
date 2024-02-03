@@ -22,6 +22,7 @@ private:
     void AddScript(const wstring& _strScriptName);
 
     void LoadFBX();
+    void LoadFBX_Bone();
 
 public:
     MenuUI();

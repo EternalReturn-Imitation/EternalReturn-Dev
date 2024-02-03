@@ -36,7 +36,7 @@ void CMeshRender::render()
 	}
 
 	// Animator3D 업데이트
-	if (Animator3D())
+	if (Animator3D() && Animator3D()->GetCurAnim())
 	{
 		Animator3D()->UpdateData();
 
@@ -46,7 +46,7 @@ void CMeshRender::render()
 				continue;
 
 			GetMaterial(i)->SetAnim3D(true); // Animation Mesh 알리기
-			GetMaterial(i)->SetBoneCount(Animator3D()->GetBoneCount());
+			GetMaterial(i)->SetBoneCount(Animator3D()->GetBoneCount()); // 보유중인 뼈 갯수 알리기
 		}
 	}
 
@@ -95,7 +95,7 @@ void CMeshRender::render(UINT _iSubset)
 	{
 		Animator3D()->UpdateData();
 		GetMaterial(_iSubset)->SetAnim3D(true); // Animation Mesh 알리기
-		GetMaterial(_iSubset)->SetBoneCount(Animator3D()->GetBoneCount());
+		GetMaterial(_iSubset)->SetBoneCount(Animator3D()->GetBoneCount()); // 보유중인 뼈 갯수 알리기
 	}
 
 	// 사용할 재질 업데이트

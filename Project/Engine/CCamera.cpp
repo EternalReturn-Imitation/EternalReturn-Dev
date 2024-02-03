@@ -665,7 +665,7 @@ void CCamera::render_deferred()
 		if (bHasAnim3D)
 		{
 			pMtrl->SetAnim3D(true); // Animation Mesh 알리기
-			pMtrl->SetBoneCount(pMesh->GetBoneCount());
+			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
 		pMtrl->UpdateData_Inst();
@@ -774,7 +774,7 @@ void CCamera::render_forward()
 		if (bHasAnim3D)
 		{
 			pMtrl->SetAnim3D(true); // Animation Mesh 알리기
-			pMtrl->SetBoneCount(pMesh->GetBoneCount());
+			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
 		pMtrl->UpdateData_Inst();

@@ -14,6 +14,7 @@
 #include "TileMapUI.h"
 #include "Light2DUI.h"
 #include "Light3DUI.h"
+#include "BoneUI.h"
 
 #include "MeshDataUI.h"
 #include "TextureUI.h"
@@ -112,6 +113,11 @@ InspectorUI::InspectorUI()
 	m_arrResUI[(UINT)RES_TYPE::SOUND] = new SoundUI;
 	m_arrResUI[(UINT)RES_TYPE::SOUND]->SetSize(0.f, 0.f);
 	AddChildUI(m_arrResUI[(UINT)RES_TYPE::SOUND]);
+
+	m_arrResUI[(UINT)RES_TYPE::BONE] = new BoneUI;
+	m_arrResUI[(UINT)RES_TYPE::BONE]->SetSize(0.f, 0.f);
+	AddChildUI(m_arrResUI[(UINT)RES_TYPE::BONE]);
+
 }
 
 InspectorUI::~InspectorUI()

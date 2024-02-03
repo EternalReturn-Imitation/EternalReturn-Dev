@@ -86,7 +86,7 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	wstring strKey = strFileName + L".mdat";
 	strName += strKey;
 
-	Ptr<CMeshData> pMeshData = FindRes<CMeshData>(strName);
+	Ptr<CMeshData> pMeshData = FindRes<CMeshData>(strKey);
 
 	if (nullptr != pMeshData)
 		return pMeshData;
@@ -101,6 +101,36 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	pMeshData->Save(strKey);
 
 	return pMeshData;
+}
+
+Ptr<CBone> CResMgr::LoadFBXBone(const wstring& _strPath)
+{
+	wstring strFileName = path(_strPath).stem();
+
+	wstring strName = L"Bone\\";
+	wstring strKey = strFileName + L".bone";
+	strName += strKey;
+
+	Ptr<CBone> pBone = FindRes<CBone>(strKey);
+
+	if (nullptr != pBone)
+		return pBone;
+
+	pBone = CBone::LoadFbx(_strPath);
+
+	// ResMgr 에 Bone 등록
+	if (nullptr != pBone)
+	{
+		pBone->SetKey(strKey);
+		pBone->SetRelativePath(strName);
+		
+		m_arrRes[(UINT)RES_TYPE::BONE].insert(make_pair(strKey, pBone.Get()));
+
+		// meshdata 를 실제파일로 저장
+		pBone->Save(strKey);
+	}
+
+	return pBone;
 }
 
 

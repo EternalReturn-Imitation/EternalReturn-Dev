@@ -36,23 +36,17 @@ CGameObject* CMeshData::Instantiate()
 	}
 
 	// Animation 파트 추가
-	if (false == m_pMesh->IsAnimMesh())
-		return pNewObj;
+	// if (false == m_pMesh->IsAnimMesh())
+	// 	return pNewObj;
 
-	CAnimator3D* pAnimator = new CAnimator3D;
-	pNewObj->AddComponent(pAnimator);
-
-	pAnimator->SetBones(m_pMesh->GetBones());
-	pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
+	// CAnimator3D* pAnimator = new CAnimator3D;
+	// pNewObj->AddComponent(pAnimator);
+	// 
+	// pAnimator->SetBones(m_pMesh->GetBones());
+	// pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
 
 	return pNewObj;
 }
-
-bool CMeshData::IsHaveAnim()
-{
-	return m_pMesh->IsAnimMesh();
-}
-
 
 CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 {

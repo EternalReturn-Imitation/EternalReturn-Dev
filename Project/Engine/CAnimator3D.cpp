@@ -15,12 +15,8 @@
 
 
 CAnimator3D::CAnimator3D()
-	: m_pVecBones(nullptr)
-	, m_pCurAnim(nullptr)
+	: m_pCurAnim(nullptr)
 	, m_iFrameCount(30)
-	, m_iFrameIdx(0)
-	, m_iNextFrameIdx(0)
-	, m_fRatio(0.f)
 	, m_pBoneFinalMatBuffer(nullptr)
 	, m_bFinalMatUpdate(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
@@ -29,12 +25,8 @@ CAnimator3D::CAnimator3D()
 }
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
-	: m_pVecBones(_origin.m_pVecBones)
-	, m_pCurAnim(nullptr)
+	: m_pCurAnim(nullptr)
 	, m_iFrameCount(_origin.m_iFrameCount)
-	, m_iFrameIdx(_origin.m_iFrameIdx)
-	, m_iNextFrameIdx(_origin.m_iNextFrameIdx)
-	, m_fRatio(_origin.m_fRatio)
 	, m_pBoneFinalMatBuffer(nullptr)
 	, m_bFinalMatUpdate(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
@@ -65,42 +57,42 @@ void CAnimator3D::finaltick()
 	}
 }
 
-void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
-{
-	for (size_t i = 0; i < _vecAnimClip->size(); ++i)
-	{
-		CAnim3D* pAnim = new CAnim3D();
-		pAnim->SetOwner(this);
-
-		tMTAnimClip tmp = _vecAnimClip->at(i);
-		pAnim->Create((*_vecAnimClip)[i]);
-
-		m_mapAnim.insert(make_pair(tmp.strAnimName, pAnim));
-		m_pCurAnim = pAnim;
-	}
-}
+// void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)
+// {
+// 	for (size_t i = 0; i < _vecAnimClip->size(); ++i)
+// 	{
+// 		CAnim3D* pAnim = new CAnim3D();
+// 		pAnim->SetOwner(this);
+// 
+// 		tMTAnimClip tmp = _vecAnimClip->at(i);
+// 		pAnim->Create((*_vecAnimClip)[i]);
+// 
+// 		m_mapAnim.insert(make_pair(tmp.strAnimName, pAnim));
+// 		m_pCurAnim = pAnim;
+// 	}
+// }
 
 
 void CAnimator3D::UpdateData()
 {
-	if (!m_bFinalMatUpdate)
+	if (!m_bFinalMatUpdate && m_pCurAnim)
 	{
 		// Animation3D Update Compute Shader
 		CAnimation3DShader* pUpdateShader = (CAnimation3DShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"Animation3DUpdateCS").Get();
 
 		// Bone Data
-		Ptr<CMesh> pMesh = MeshRender()->GetMesh();
-		check_mesh(pMesh);
+		Ptr<CBone> pBone = m_pCurAnim->GetBone();
+		Check_Bone(pBone);
 
-		pUpdateShader->SetFrameDataBuffer(pMesh->GetBoneFrameDataBuffer());
-		pUpdateShader->SetOffsetMatBuffer(pMesh->GetBoneOffsetBuffer());
+		pUpdateShader->SetFrameDataBuffer(pBone->GetBoneFrameDataBuffer());
+		pUpdateShader->SetOffsetMatBuffer(pBone->GetBoneOffsetBuffer());
 		pUpdateShader->SetOutputBuffer(m_pBoneFinalMatBuffer);
 
-		UINT iBoneCount = (UINT)m_pVecBones->size();
+		UINT iBoneCount = (UINT)pBone->GetBones()->size();
 		pUpdateShader->SetBoneCount(iBoneCount);
-		pUpdateShader->SetFrameIndex(m_iFrameIdx);
-		pUpdateShader->SetNextFrameIdx(m_iNextFrameIdx);
-		pUpdateShader->SetFrameRatio(m_fRatio);
+		pUpdateShader->SetFrameIndex(m_pCurAnim->m_iFrameIdx);
+		pUpdateShader->SetNextFrameIdx(m_pCurAnim->m_iNextFrameIdx);
+		pUpdateShader->SetFrameRatio(m_pCurAnim->m_fRatio);
 
 		// 업데이트 쉐이더 실행
 		pUpdateShader->Execute();
@@ -110,6 +102,11 @@ void CAnimator3D::UpdateData()
 
 	// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 	m_pBoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
+}
+
+UINT CAnimator3D::GetBoneCount()
+{
+	return m_pCurAnim->m_pBone->GetBoneCount(); 
 }
 
 void CAnimator3D::ClearData()
@@ -129,15 +126,17 @@ void CAnimator3D::ClearData()
 	}
 }
 
-bool CAnimator3D::GetCurAnimClip(tMTAnimClip& _Clip)
+CAnim3D* CAnimator3D::AddAnim(Ptr<CBone> _pBone)
 {
-	if (m_pCurAnim)
-	{
-		_Clip = m_pCurAnim->GetAnimClip(); 
-		return true;
-	}; 
-	
-	return false;
+	map<wstring, CAnim3D*>::iterator iter = m_mapAnim.find(_pBone->GetKey());
+	if(iter != m_mapAnim.end())
+		return nullptr;
+	CAnim3D* pAnim = new CAnim3D;
+	pAnim = CAnim3D::CreateAnimation(_pBone);
+	pAnim->SetOwner(this);
+	m_mapAnim.insert(make_pair(_pBone->GetKey(), pAnim));
+
+	return pAnim;
 }
 
 void CAnimator3D::Play()
@@ -164,6 +163,13 @@ void CAnimator3D::SetFrame(int _Frame)
 		m_pCurAnim->SetFrame(_Frame);
 }
 
+CAnim3D* CAnimator3D::SelectAnimation(const wstring& _AnimName)
+{
+	m_pCurAnim = m_mapAnim.find(_AnimName)->second;
+	m_pCurAnim->Play();
+	return m_pCurAnim;
+}
+
 bool CAnimator3D::IsPlay()
 {
 	if (m_pCurAnim)
@@ -172,9 +178,9 @@ bool CAnimator3D::IsPlay()
 	return false;
 }
 
-void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
+void CAnimator3D::Check_Bone(Ptr<CBone> _pBone)
 {
-	UINT iBoneCount = _pMesh->GetBoneCount();
+	UINT iBoneCount = _pBone->GetBoneCount();
 	if (m_pBoneFinalMatBuffer->GetElementCount() != iBoneCount)
 	{
 		m_pBoneFinalMatBuffer->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, false, nullptr);
