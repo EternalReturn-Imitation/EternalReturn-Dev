@@ -18,10 +18,12 @@ private:
     void CreateEmptyObject();
     void CreateEmptyMaterial();
 
+    void CreateObjectFromMeshData(DWORD_PTR _pMeshData);
+
     void AddComponent(COMPONENT_TYPE _type);
     void AddScript(const wstring& _strScriptName);
 
-    void LoadFBX();
+    void LoadFBX(int _MeshCnt = 0);
     void LoadFBX_Bone();
 
 public:

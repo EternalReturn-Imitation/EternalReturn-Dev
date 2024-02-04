@@ -50,7 +50,7 @@ public:
 	// CStructuredBuffer* GetBoneOffsetBuffer() { return  m_pBoneOffset; }	   // °¢ »ÀÀÇ offset Çà·Ä
 
 public:
-	static CMesh* CreateFromContainer(CFBXLoader& _loader);
+	static CMesh* CreateFromContainer(CFBXLoader& _loader, int _iContainerIdx);
 	void Create(void* _VtxSysMem, UINT _iVtxCount, void* _IdxSysMem, UINT _IdxCount);
 
 private:

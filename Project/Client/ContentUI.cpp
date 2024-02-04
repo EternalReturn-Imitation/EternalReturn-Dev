@@ -104,6 +104,11 @@ void ContentUI::Reload()
 	{
 		const map<wstring, Ptr<CRes>>& mapRes = CResMgr::GetInst()->GetResources((RES_TYPE)i);
 
+		if (i == (UINT)RES_TYPE::BONE)
+		{
+			int i = 0;
+		}
+
 		for (const auto& pair : mapRes)
 		{
 			if (pair.second->IsEngineRes())

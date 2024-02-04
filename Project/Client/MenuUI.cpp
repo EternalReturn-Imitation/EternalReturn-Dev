@@ -19,6 +19,7 @@
 #include "CLevelSaveLoad.h"
 
 #include "AnimEditUI.h"
+#include "ListUI.h"
 
 #include <Commdlg.h>
 
@@ -75,6 +76,22 @@ int MenuUI::render_update()
             if (ImGui::MenuItem("Create Empty Object"))
             {
                 CreateEmptyObject();
+            }
+            ImGui::Separator();
+
+            // 현재 레벨에 게임오브젝트 생성
+            if (ImGui::MenuItem("Create Object from MeshData.."))
+            {
+                const map<wstring, Ptr<CRes>>& mapMesh = CResMgr::GetInst()->GetResources(RES_TYPE::MESHDATA);
+
+                ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+                pListUI->Reset("MeshData List", ImVec2(300.f, 500.f));
+                for (const auto& pair : mapMesh)
+                {
+                    pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+                }
+
+                pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&MenuUI::CreateObjectFromMeshData);
             }
             ImGui::Separator();
 
@@ -197,6 +214,11 @@ int MenuUI::render_update()
                 LoadFBX();
             }
 
+            if (ImGui::MenuItem("Load FBX SingleMesh.."))
+            {
+                LoadFBX(1);
+            }
+
             if (ImGui::MenuItem("Load Bone from FBX.."))
             {
                 LoadFBX_Bone();
@@ -253,6 +275,32 @@ void MenuUI::CreateEmptyMaterial()
     Ptr<CMaterial> pNewMtrl = new CMaterial;
     CResMgr::GetInst()->AddRes<CMaterial>(L"EmptyMtrl", L"material\\Custom\\", L".mtrl", pNewMtrl);
     pNewMtrl->Save(pNewMtrl->GetRelativePath());
+}
+
+void MenuUI::CreateObjectFromMeshData(DWORD_PTR _pMeshData)
+{
+    string strKey = (char*)_pMeshData;
+    Ptr<CMeshData> temp = CResMgr::GetInst()->FindRes<CMeshData>(wstring(strKey.begin(), strKey.end()));
+
+    if (nullptr != temp)
+    {
+        CGameObject* pNewObject = nullptr;
+        pNewObject = temp->Instantiate();
+        pNewObject->SetName(ToWString(strKey));
+        SpawnGameObject(pNewObject, Vec3(0.f, 0.f, 0.f), L"Default");
+        
+        // Outliner 를 가져온다.
+        OutlinerUI* outliner = (OutlinerUI*)ImGuiMgr::GetInst()->FindUI("##Outliner");
+
+        // 새로추가된 오브젝트를 데이터로 하는 노드가 추가되면, 선택상태로 두게 한다.
+        outliner->SetSelectedNodeData(DWORD_PTR(pNewObject));
+    }
+    else
+    {
+        wstring errMsg = L"This MeshData Select Fail.";
+        MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+        return;
+    }
 }
 
 void MenuUI::AddComponent(COMPONENT_TYPE _type)
@@ -337,7 +385,7 @@ void MenuUI::AddScript(const wstring& _strScriptName)
     inspector->SetTargetObject(pSelectedObject);
 }
 
-void MenuUI::LoadFBX()
+void MenuUI::LoadFBX(int _MeshCnt)
 {
     // open a file name
 
@@ -373,7 +421,7 @@ void MenuUI::LoadFBX()
     wstring strFilePath = szFullFilePath;
     strFilePath = strFilePath.substr(strFilePath.find(L"fbx\\"), lstrlenW(szFullFilePath));
     
-    if (nullptr == CResMgr::GetInst()->LoadFBX(strFilePath.c_str()))
+    if (nullptr == CResMgr::GetInst()->LoadFBX(strFilePath.c_str(), _MeshCnt))
     {
         wstring errMsg = L"FBX File Load Fail.";
         MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);

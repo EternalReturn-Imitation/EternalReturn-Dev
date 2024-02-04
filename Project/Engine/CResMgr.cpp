@@ -78,7 +78,7 @@ Ptr<CTexture> CResMgr::CreateTexture(const wstring& _strKey, ComPtr<ID3D11Textur
 	return pTex;
 }
 
-Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
+Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath, int singleMeshData)
 {
 	wstring strFileName = path(_strPath).stem();
 
@@ -91,7 +91,7 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	if (nullptr != pMeshData)
 		return pMeshData;
 
-	pMeshData = CMeshData::LoadFromFBX(_strPath);
+	pMeshData = CMeshData::LoadFromFBX(_strPath, singleMeshData);
 	pMeshData->SetKey(strKey);
 	pMeshData->SetRelativePath(strName);
 
@@ -99,6 +99,8 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 
 	// meshdata 를 실제파일로 저장
 	pMeshData->Save(strKey);
+
+	m_Changed = true;
 
 	return pMeshData;
 }
@@ -129,6 +131,8 @@ Ptr<CBone> CResMgr::LoadFBXBone(const wstring& _strPath)
 		// meshdata 를 실제파일로 저장
 		pBone->Save(strKey);
 	}
+
+	m_Changed = true;
 
 	return pBone;
 }

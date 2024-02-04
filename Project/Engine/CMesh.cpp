@@ -36,9 +36,9 @@ CMesh::~CMesh()
 }
 
 
-CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
+CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader, int _iContainerIdx)
 {
-	const tContainer* container = &_loader.GetContainer(0);
+	const tContainer* container = &_loader.GetContainer(_iContainerIdx);
 
 	UINT iVtxCount = (UINT)container->vecPos.size();
 
@@ -73,6 +73,7 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 	}
 
 	CMesh* pMesh = new CMesh;
+	pMesh->SetName(container->strName);
 	pMesh->m_VB = pVB;
 	pMesh->m_tVBDesc = tVtxDesc;
 	pMesh->m_pVtxSys = pSys;

@@ -99,7 +99,6 @@ private:
 public:
 	void init();
 	void LoadFbx(const wstring& _strPath);
-	void LoadFbxBone(const wstring& _strPath);
 
 public:
 	int GetContainerCount() { return (int)m_vecContainer.size(); }

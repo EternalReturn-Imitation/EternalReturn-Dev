@@ -50,7 +50,7 @@ public:
 
     Ptr<CTexture> CreateTexture(const wstring& _strKey, ComPtr<ID3D11Texture2D> _Tex2D);
 
-    Ptr<CMeshData> LoadFBX(const wstring& _strPath);
+    Ptr<CMeshData> LoadFBX(const wstring& _strPath, int singleMeshData = 0);
     Ptr<CBone> LoadFBXBone(const wstring& _strPath);
 
     const vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutInfo() { return m_vecLayoutInfo; }
