@@ -14,6 +14,7 @@ extern const char* RES_TYPE_STR[(UINT)RES_TYPE::END] =
 	"MESH",
 	"TEXTURE",
 	"SOUND",
+	"BONE",
 	"GRAPHICS_SHADER",
 	"COMPUTE_SHADER"
 };
@@ -26,6 +27,7 @@ extern const wchar_t* RES_TYPE_WSTR[(UINT)RES_TYPE::END] =
 	L"MESH",
 	L"TEXTURE",
 	L"SOUND",
+	L"BONE",
 	L"GRAPHICS_SHADER",
 	L"COMPUTE_SHADER"
 };

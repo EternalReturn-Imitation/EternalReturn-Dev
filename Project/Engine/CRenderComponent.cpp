@@ -47,7 +47,7 @@ void CRenderComponent::render_shadowmap()
 
 	UINT iSubsetCount = GetMesh()->GetSubsetCount();
 
-	for (int i = 0; i < iSubsetCount; i++) {
+	for (UINT i = 0; i < iSubsetCount; i++) {
 		if (nullptr != GetMaterial(i))
 		{
 			GetMesh()->render(i);

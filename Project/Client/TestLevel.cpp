@@ -164,6 +164,15 @@ void CreateTestLevel()
 	// 		pObj->Transform()->SetRelativeScale(Vec3(100.f , 100.f, 100.f));
 	// 	}
 	// }
+	// CGameObject* pObj = nullptr;
+	// Ptr<CMeshData> pMeshData = nullptr;
+	// 
+	// pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_STR_Base.mdat");
+	// pObj = pMeshData->Instantiate();
+	// pObj->SetName(L"World");
+	// SpawnGameObject(pObj, Vec3(50.f, 200.f, 100.f), 0);
+	// pObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
+
 
 	// LandScape Object
 	// CGameObject* pLandScape = new CGameObject;

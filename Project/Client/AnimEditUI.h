@@ -5,20 +5,24 @@
 
 class CMeshData;
 class CAnimEditObj;
+class CAnimator3D;
+class CAnim3D;
+class CBone;
 
 class AnimEditUI :
     public UI
 {
 private:
-    Ptr<CMeshData> m_pSelectedMeshData;  // 현재 불러온 메시데이터
-    CAnimEditObj* m_pRenderObj;
-    map<wstring, tMTAnimClip> m_mapAnimClip;
-    tMTAnimClip m_tMTCurAnimClip;
+    CAnimEditObj* m_pRenderObj;             // 현재 재생되는 오브젝트
+    CAnim3D*    m_pCurAnimation;            // 현재 선택된 애니메이션
+    bool        m_bPlay;
 
     int m_iFrameCount;  // 설정된 초당 재생 프레임
 
 private:
     void print_strElement(const char* _BtnTitle, const char* _str, Vec2 _Btnsize = Vec2(0, 0));
+    void print_intElement(const char* _BtnTitle, int& _int, Vec2 _Btnsize = Vec2(0, 0));
+    void print_doubleElement(const char* _BtnTitle, double& _double, Vec2 _Btnsize = Vec2(0, 0));
 
 public:
     void MeshLoad() {};
@@ -32,6 +36,7 @@ private:
     void render_CamController();
 
     void SelectMeshData(DWORD_PTR _data);
+    void SelectBone(DWORD_PTR _data);
 
 public:
     virtual void tick() override;

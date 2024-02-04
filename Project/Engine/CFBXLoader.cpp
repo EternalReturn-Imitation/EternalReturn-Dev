@@ -106,15 +106,17 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
 
-
 	if (pAttr && FbxNodeAttribute::eMesh == pAttr->GetAttributeType())
 	{
 		FbxAMatrix matGlobal = _pNode->EvaluateGlobalTransform();
 		matGlobal.GetR();
 
-		FbxMesh* pMesh = _pNode->GetMesh();
+		fbxsdk::FbxMesh* pMesh = _pNode->GetMesh();
 		if (NULL != pMesh)
+		{
+			pMesh->SetName(_pNode->GetName());
 			LoadMesh(pMesh);
+		}
 	}
 
 	// 해당 노드의 재질정보 읽기
@@ -480,9 +482,10 @@ void CFBXLoader::LoadTexture()
 				}
 			}
 		}
-		path_origin = path_origin.parent_path();
-		remove_all(path_origin);
 	}
+
+	path_origin = path_origin.parent_path();
+	remove_all(path_origin);
 }
 
 void CFBXLoader::CreateMaterial()

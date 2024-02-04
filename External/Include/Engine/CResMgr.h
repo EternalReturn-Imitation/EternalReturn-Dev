@@ -10,6 +10,7 @@
 #include "CPrefab.h"
 #include "CSound.h"
 #include "CMeshData.h"
+#include "CBone.h"
 
 #include "CPathMgr.h"
 #include "CSQLMgr.h"
@@ -49,7 +50,8 @@ public:
 
     Ptr<CTexture> CreateTexture(const wstring& _strKey, ComPtr<ID3D11Texture2D> _Tex2D);
 
-    Ptr<CMeshData> LoadFBX(const wstring& _strPath);
+    Ptr<CMeshData> LoadFBX(const wstring& _strPath, int singleMeshData = 0);
+    Ptr<CBone> LoadFBXBone(const wstring& _strPath);
 
     const vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutInfo() { return m_vecLayoutInfo; }
 
@@ -84,11 +86,14 @@ RES_TYPE GetResType()
     const type_info& prefab = typeid(CPrefab);
     const type_info& gs = typeid(CGraphicsShader);
     const type_info& cs = typeid(CComputeShader);
+    const type_info& bone = typeid(CBone);
 
     if (typeid(T).hash_code() == mesh.hash_code())
         return RES_TYPE::MESH;
     if (typeid(T).hash_code() == meshdata.hash_code())
         return RES_TYPE::MESHDATA;
+    if (typeid(T).hash_code() == bone.hash_code())
+        return RES_TYPE::BONE;
     if (typeid(T).hash_code() == gs.hash_code())
         return RES_TYPE::GRAPHICS_SHADER;
     if (typeid(T).hash_code() == cs.hash_code())

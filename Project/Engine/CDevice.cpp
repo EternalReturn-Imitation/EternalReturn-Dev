@@ -4,6 +4,8 @@
 #include "CEngine.h"
 #include "CConstBuffer.h"
 
+#include <d3d11sdklayers.h>
+
 #include "CResMgr.h"
 
 CDevice::CDevice()
@@ -15,6 +17,8 @@ CDevice::CDevice()
 
 CDevice::~CDevice()
 {
+  
+
     Safe_Del_Array(m_arrConstBuffer);
 }
 
@@ -24,8 +28,6 @@ int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
     m_vRenderResolution = Vec2((float)_iWidth, (float)_iHeight);
 
     GlobalData.Resolution = m_vRenderResolution;
-
-
 
     int iFlag = 0;
 #ifdef _DEBUG
@@ -104,7 +106,6 @@ int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 
     // 상수버퍼 생성
     CreateConstBuffer();
-
 
     return S_OK; // E_FAIL;
 }

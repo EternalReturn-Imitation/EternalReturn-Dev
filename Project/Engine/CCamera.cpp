@@ -265,15 +265,15 @@ void CCamera::SortObject()
 					continue;
 
 				// Frustum Check
-				if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ?ˆë‘ì²´ë Œ???¬ë? ?ë‹¨, ?Œì† ?ˆì´???¹ì? ë³¸ì¸ ?ì²´ ?ˆë‘ì²´ë Œ??ì²´í¬ê°€ ?˜ì–´?ˆëŠ” ê²½ìš°
-				{
-					Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
-					if (IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
-						DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
-				
-					if (false == m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius()))
-						continue;
-				}
+				// if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ?ˆë‘ì²´ë Œ???¬ë? ?ë‹¨, ?Œì† ?ˆì´???¹ì? ë³¸ì¸ ?ì²´ ?ˆë‘ì²´ë Œ??ì²´í¬ê°€ ?˜ì–´?ˆëŠ” ê²½ìš°
+				// {
+				// 	Vec3 vPos = vecObject[j]->Transform()->GetWorldPos();
+				// 	if (IsDebugFrustumView()) // && CLevelMgr::GetInst()->GetCurLevel()->GetState() != LEVEL_STATE::PLAY)
+				// 		DrawDebugSphere(vecObject[j]->Transform()->GetWorldBoundingMat(), Vec4(0.8f, 0.8f, 0.f, 0.5f), 0.f, false);
+				// 
+				// 	if (false == m_Frustum.FrustumCheckBound(vPos, vecObject[j]->Transform()->GetBoundingRadius()))
+				// 		continue;
+				// }
 
 				// ¸ÞÅ×¸®¾ó °³¼ö¸¸Å­ ¹Ýº¹
 				UINT iMtrlCount = pRenderCom->GetMtrlCount();
@@ -665,7 +665,7 @@ void CCamera::render_deferred()
 		if (bHasAnim3D)
 		{
 			pMtrl->SetAnim3D(true); // Animation Mesh ¾Ë¸®±â
-			pMtrl->SetBoneCount(pMesh->GetBoneCount());
+			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
 		pMtrl->UpdateData_Inst();
@@ -774,7 +774,7 @@ void CCamera::render_forward()
 		if (bHasAnim3D)
 		{
 			pMtrl->SetAnim3D(true); // Animation Mesh ¾Ë¸®±â
-			pMtrl->SetBoneCount(pMesh->GetBoneCount());
+			pMtrl->SetBoneCount(pObj->Animator3D()->GetBoneCount());
 		}
 
 		pMtrl->UpdateData_Inst();

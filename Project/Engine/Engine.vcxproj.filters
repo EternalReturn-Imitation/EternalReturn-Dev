@@ -211,6 +211,9 @@
     <ClInclude Include="CInstancingBuffer.h">
       <Filter>Source\03. Manager\12. InstancingMgr</Filter>
     </ClInclude>
+    <ClInclude Include="CBone.h">
+      <Filter>Source\07. Resource\8. Bone</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -410,6 +413,9 @@
     </ClCompile>
     <ClCompile Include="CAnim3D.cpp">
       <Filter>Source\06. Component\7. Animator3D\Animation3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CBone.cpp">
+      <Filter>Source\07. Resource\8. Bone</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -625,6 +631,9 @@
     </Filter>
     <Filter Include="Source\06. Component\7. Animator3D\Animation3D">
       <UniqueIdentifier>{8add7b18-af21-4f1d-af29-966aaa6b9d3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\07. Resource\8. Bone">
+      <UniqueIdentifier>{42ead4ff-48ef-486e-a638-2997be65c251}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
