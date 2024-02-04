@@ -35,6 +35,12 @@ struct tContainer
 	vector<vector<UINT>>				vecIdx;
 	vector<tFbxMaterial>				vecMtrl;
 
+	// Transform 관련 정보
+	bool								bGroupNode;	// 그룹노드 여부
+	tTransformInfo						tLocalTransform;
+	tTransformInfo						tGlobalTransform;
+
+
 	// Animation 관련 정보
 	bool								bAnimation;
 	vector<vector<tWeightsAndIndices>>	vecWI;
@@ -113,6 +119,7 @@ private:
 	void LoadMeshDataFromNode(FbxNode* _pRoot, int _iParentIdx = -1);
 	void LoadMesh(FbxMesh* _pFbxMesh);
 	void LoadMaterial(FbxSurfaceMaterial* _pMtrlSur);
+	void LoadTransfrom(FbxNode* _pNode);
 
 	void GetTangent(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);

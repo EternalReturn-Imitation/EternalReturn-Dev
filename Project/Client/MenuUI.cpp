@@ -286,8 +286,10 @@ void MenuUI::CreateObjectFromMeshData(DWORD_PTR _pMeshData)
     {
         CGameObject* pNewObject = nullptr;
         pNewObject = temp->Instantiate();
+        
         pNewObject->SetName(ToWString(strKey));
-        SpawnGameObject(pNewObject, Vec3(0.f, 0.f, 0.f), L"Default");
+        SpawnGameObject(pNewObject, L"Default");
+        // SpawnChlidGameObject(pNewObject, L"Default");
         
         // Outliner 를 가져온다.
         OutlinerUI* outliner = (OutlinerUI*)ImGuiMgr::GetInst()->FindUI("##Outliner");

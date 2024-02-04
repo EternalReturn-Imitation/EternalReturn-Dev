@@ -19,7 +19,12 @@ struct tVertex
 
 typedef tVertex Vtx;
 
-
+struct tTransformInfo
+{
+	Vec4 translation;
+	Vec4 rotation;
+	Vec4 scaling;
+};
 
 
 // Event

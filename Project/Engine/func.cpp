@@ -23,6 +23,17 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 
+void SpawnGameObject(CGameObject* _NewObject, const wstring& _LayerName)
+{
+	tEvent evn = {};
+
+	evn.Type = EVENT_TYPE::CREATE_OBJECT;
+	evn.wParam = (DWORD_PTR)_NewObject;
+	evn.lParam = CLevelMgr::GetInst()->GetCurLevel()->FindLayerByName(_LayerName)->GetLayerIndex();
+
+	CEventMgr::GetInst()->AddEvent(evn);
+}
+
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName)
 {
 	_NewObject->Transform()->SetRelativePos(_vWorldPos);
@@ -34,6 +45,21 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _L
 	evn.lParam = CLevelMgr::GetInst()->GetCurLevel()->FindLayerByName(_LayerName)->GetLayerIndex();
 
 	CEventMgr::GetInst()->AddEvent(evn);
+}
+
+void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
+{
+	vector<CGameObject*> vecChildObj = _ParentObject->GetChild();
+	
+	int iChildCnt = vecChildObj.size();
+
+	for (int i = 0; i < iChildCnt; ++i)
+	{
+		SpawnChlidGameObject(vecChildObj[i], _LayerName);
+	}
+
+	SpawnGameObject(_ParentObject,_LayerName);
+
 }
 
 void DestroyObject(CGameObject* _DeletObject)

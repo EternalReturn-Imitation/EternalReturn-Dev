@@ -93,7 +93,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	Triangulate(m_pScene->GetRootNode());
 
 	// 메쉬 데이터 얻기
-	LoadMeshDataFromNode(m_pScene->GetRootNode());
+	LoadMeshDataFromNode(m_pScene->GetRootNode()->GetChild(0));
 
 	m_pImporter->Destroy();
 
@@ -108,8 +108,9 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode, int _iParentIdx)
 {
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
-	
-	int iThisIdx = -1;
+	int iChildCnt = _pNode->GetChildCount();
+	int iThisIdx = 0;
+	bool bGroupNode = 0;
 
 	if (pAttr && FbxNodeAttribute::eMesh == pAttr->GetAttributeType())
 	{
@@ -122,10 +123,37 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode, int _iParentIdx)
 			pMesh->SetName(_pNode->GetName());
 			LoadMesh(pMesh);
 			iThisIdx = m_iContainerCnt;
+			
+			// 그룹노드 여부
+			m_vecContainer.back().bGroupNode = 0;
+
+			// Parent Idx
+			m_vecContainer.back().iParentIdx = _iParentIdx;
+			
+			// 해당 메시의 Transform 정보 받아오기
+			LoadTransfrom(_pNode);
 		}
 	}
+	else if (!pAttr && 0 < iChildCnt)
+	{
+		m_vecContainer.push_back(tContainer{});
+		m_iContainerCnt++; // 컨테이너 갯수 추가
+		tContainer& Container = m_vecContainer[m_vecContainer.size() - 1];
 
-	m_vecContainer.back().iParentIdx = _iParentIdx;
+		iThisIdx = m_iContainerCnt;
+
+		// 그룹노드 여부
+		m_vecContainer.back().bGroupNode = 1;
+
+		// Parent Idx
+		m_vecContainer.back().iParentIdx = _iParentIdx;
+
+		string strName = _pNode->GetName();
+		Container.strName = wstring(strName.begin(), strName.end());
+
+		// 해당 메시의 Transform 정보 받아오기
+		LoadTransfrom(_pNode);
+	}
 
 	// 해당 노드의 재질정보 읽기
 	UINT iMtrlCnt = _pNode->GetMaterialCount();
@@ -139,7 +167,7 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode, int _iParentIdx)
 	}
 
 	// 자식 노드 정보 읽기
-	int iChildCnt = _pNode->GetChildCount();
+	
 	for (int i = 0; i < iChildCnt; ++i)
 	{
 		LoadMeshDataFromNode(_pNode->GetChild(i), iThisIdx);
@@ -245,6 +273,61 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 
 
 	m_vecContainer.back().vecMtrl.push_back(tMtrlInfo);
+}
+
+void CFBXLoader::LoadTransfrom(FbxNode* _pNode)
+{
+	// 로컬 변환 얻기
+	FbxAMatrix localTransform = _pNode->EvaluateLocalTransform();
+
+	// 전역 변환 얻기
+	FbxAMatrix globalTransform = _pNode->EvaluateGlobalTransform();
+
+	// 변환 값 출력
+	FbxVector4 translation = localTransform.GetT();
+	FbxVector4 rotation = localTransform.GetR();
+	FbxVector4 scaling = localTransform.GetS();
+
+	// Local translation
+	m_vecContainer.back().tLocalTransform.translation.x = (float)translation.mData[0];
+	m_vecContainer.back().tLocalTransform.translation.y = (float)translation.mData[1];
+	m_vecContainer.back().tLocalTransform.translation.z = (float)translation.mData[2];
+	m_vecContainer.back().tLocalTransform.translation.w = (float)translation.mData[3];
+
+	// Local rotation
+	m_vecContainer.back().tLocalTransform.rotation.x = (float)rotation.mData[0];
+	m_vecContainer.back().tLocalTransform.rotation.y = (float)rotation.mData[1];
+	m_vecContainer.back().tLocalTransform.rotation.z = (float)rotation.mData[2];
+	m_vecContainer.back().tLocalTransform.rotation.w = (float)rotation.mData[3];
+
+	// Local scaling
+	m_vecContainer.back().tLocalTransform.scaling.x = (float)scaling.mData[0];
+	m_vecContainer.back().tLocalTransform.scaling.y = (float)scaling.mData[1];
+	m_vecContainer.back().tLocalTransform.scaling.z = (float)scaling.mData[2];
+	m_vecContainer.back().tLocalTransform.scaling.w = (float)scaling.mData[3];
+
+	// 전역 변환 출력
+	translation = globalTransform.GetT();
+	rotation = globalTransform.GetR();
+	scaling = globalTransform.GetS();
+
+	// World translation
+	m_vecContainer.back().tGlobalTransform.translation.x = (float)translation.mData[0];
+	m_vecContainer.back().tGlobalTransform.translation.y = (float)translation.mData[1];
+	m_vecContainer.back().tGlobalTransform.translation.z = (float)translation.mData[2];
+	m_vecContainer.back().tGlobalTransform.translation.w = (float)translation.mData[3];
+	
+	// World rotation
+	m_vecContainer.back().tGlobalTransform.rotation.x = (float)rotation.mData[0];
+	m_vecContainer.back().tGlobalTransform.rotation.y = (float)rotation.mData[1];
+	m_vecContainer.back().tGlobalTransform.rotation.z = (float)rotation.mData[2];
+	m_vecContainer.back().tGlobalTransform.rotation.w = (float)rotation.mData[3];
+	
+	// World scaling
+	m_vecContainer.back().tGlobalTransform.scaling.x = (float)scaling.mData[0];
+	m_vecContainer.back().tGlobalTransform.scaling.y = (float)scaling.mData[1];
+	m_vecContainer.back().tGlobalTransform.scaling.z = (float)scaling.mData[2];
+	m_vecContainer.back().tGlobalTransform.scaling.w = (float)scaling.mData[3];
 }
 
 void CFBXLoader::GetTangent(FbxMesh* _pMesh

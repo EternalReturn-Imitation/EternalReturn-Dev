@@ -38,6 +38,7 @@ AnimEditUI::AnimEditUI()
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
     window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    window_flags |= ImGuiWindowFlags_NoBackground;
 
     SetFlags(window_flags);
     SetModal(false);
@@ -179,7 +180,7 @@ void AnimEditUI::render_menubar()
 
 void AnimEditUI::render_cliplistwindow()
 {
-    ImGui::Button("AnimClipList", ImVec2(200, 0));
+    ImGui::Button("AnimClipList", ImVec2(300, 0));
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
     ImVec2 ItemSize = ImGui::GetItemRectSize();
@@ -306,7 +307,7 @@ void AnimEditUI::render_infowindow()
     // ==================== Set Print Info =======================
 
     // MeshData Info
-    ImGui::Button("MeshDataInfo", ImVec2(450, 0));
+    ImGui::Button("MeshDataInfo", ImVec2(350, 0));
     ImGui::BeginGroup();
     
     print_strElement("   Mesh   Key", strMeshKey.c_str());
@@ -319,9 +320,9 @@ void AnimEditUI::render_infowindow()
 
     // 현재 애니메이션 정보
     //ImGui::BeginChild("##CurAnimInfo", ImVec2(200.f, 0.f), false, window_flags);
-    ImGui::Button("CurAnimInfo", ImVec2(450, 0));
+    ImGui::Button("CurAnimInfo", ImVec2(350, 0));
     ImGui::BeginGroup();
-    ImGui::Button("OriginInfo", ImVec2(220, 0));
+    ImGui::Button("OriginInfo", ImVec2(350, 0));
     
     print_strElement("AnimClip Name", strCurClipName.c_str());
     print_intElement(" Start Frame ", startFrm);
@@ -335,16 +336,10 @@ void AnimEditUI::render_infowindow()
     ImGui::EndGroup();
 
     //ImGui::EndChild();
-
 }
 
 void AnimEditUI::render_TimeLine()
 {
-    ImGuiStyle& style = ImGui::GetStyle();
-    float child_height = ImGui::GetTextLineHeight() + style.ScrollbarSize + style.WindowPadding.y * 2.0f;
-    ImGuiWindowFlags child_flags = ImGuiWindowFlags_HorizontalScrollbar;
-    ImGui::BeginChild("##AnimEditTimeLine", ImVec2(0, child_height), true, child_flags);
-    
     int MaxFrame = 0; 
     int iCurFrame = 0; 
     
@@ -354,16 +349,11 @@ void AnimEditUI::render_TimeLine()
         iCurFrame = m_pCurAnimation->GetCurFrameIdx();
     }
 
-    static float test = 1.f;
-    
-    // 좌표값을 프레임으로 변환
-    float SliderWidth = ImGui::GetWindowWidth();
-    ImGui::EndChild();
-
-    ImGui::SetNextItemWidth(SliderWidth);
+    ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::SliderInt("Lines", &iCurFrame, 0, MaxFrame);
     ImGui::Text("%.0f/%.0f", iCurFrame, MaxFrame);
     
+
     if (m_pCurAnimation && false == m_pRenderObj->GetAnimator3D()->IsPlay())
     {
         m_pRenderObj->GetAnimator3D()->SetFrame(iCurFrame);
