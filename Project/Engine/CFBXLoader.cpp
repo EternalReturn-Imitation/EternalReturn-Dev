@@ -14,6 +14,7 @@ CFBXLoader::CFBXLoader()
 	: m_pManager(NULL)
 	, m_pScene(NULL)
 	, m_pImporter(NULL)
+	, m_iContainerCnt(-1)
 {
 }
 
@@ -53,6 +54,8 @@ void CFBXLoader::init()
 	m_pScene = FbxScene::Create(m_pManager, "");
 	if (NULL == m_pScene)
 		assert(NULL);
+
+	m_iContainerCnt = -1;
 }
 
 void CFBXLoader::LoadFbx(const wstring& _strPath)
@@ -101,10 +104,12 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	CreateMaterial();
 }
 
-void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
+void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode, int _iParentIdx)
 {
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
+	
+	int iThisIdx = -1;
 
 	if (pAttr && FbxNodeAttribute::eMesh == pAttr->GetAttributeType())
 	{
@@ -116,8 +121,11 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 		{
 			pMesh->SetName(_pNode->GetName());
 			LoadMesh(pMesh);
+			iThisIdx = m_iContainerCnt;
 		}
 	}
+
+	m_vecContainer.back().iParentIdx = _iParentIdx;
 
 	// 해당 노드의 재질정보 읽기
 	UINT iMtrlCnt = _pNode->GetMaterialCount();
@@ -134,13 +142,14 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 	int iChildCnt = _pNode->GetChildCount();
 	for (int i = 0; i < iChildCnt; ++i)
 	{
-		LoadMeshDataFromNode(_pNode->GetChild(i));
+		LoadMeshDataFromNode(_pNode->GetChild(i), iThisIdx);
 	}
 }
 
 void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 {
 	m_vecContainer.push_back(tContainer{});
+	m_iContainerCnt++; // 컨테이너 갯수 추가
 	tContainer& Container = m_vecContainer[m_vecContainer.size() - 1];
 
 	string strName = _pFbxMesh->GetName();

@@ -92,7 +92,7 @@ void CAnim3D::SetFrame(int _Frame)
 {
 	// 현재 시간 구하기
 	double dCurTime = _Frame / (double)m_iFrameCount;
-	m_tMTAnimClip.fUpdateTime = dCurTime - m_tMTAnimClip.dStartTime;
+	m_tMTAnimClip.fUpdateTime = float(dCurTime - m_tMTAnimClip.dStartTime);
 
 	if (m_tMTAnimClip.fUpdateTime >= m_tMTAnimClip.dTimeLength)
 	{

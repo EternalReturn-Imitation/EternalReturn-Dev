@@ -50,7 +50,6 @@ CGameObject* CMeshData::Instantiate()
 			CGameObject* pNewChildObj = new CGameObject;
 
 			pNewChildObj->AddComponent(new CTransform);
-			pNewChildObj->Transform()->SetAbsolute(false);
 			pNewChildObj->AddComponent(new CMeshRender);
 
 			pNewChildObj->MeshRender()->SetMesh(m_vecMeshData[i]->m_pMesh);
@@ -112,6 +111,8 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, int singleMeshData)
 			pMesh->Save(strMeshKey);
 		}
 
+		// 컨테이너 받아오기
+		const tContainer* container = &loader.GetContainer(i);
 
 		vector<Ptr<CMaterial>> vecMtrl;
 
@@ -128,6 +129,7 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, int singleMeshData)
 		tMeshData* MeshData = new tMeshData;
 		MeshData->m_pMesh = pMesh;
 		MeshData->m_vecMtrl = vecMtrl;
+		MeshData->m_ParentIdx = container->iParentIdx;
 		pMeshData->m_vecMeshData.emplace_back(MeshData);
 	}
 

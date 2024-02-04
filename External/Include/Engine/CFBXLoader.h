@@ -50,6 +50,8 @@ struct tContainer
 		vecWeights.resize(_iSize);
 		vecWI.resize(_iSize);
 	}
+
+	int									iParentIdx = -1;
 };
 
 struct tKeyFrame
@@ -89,6 +91,7 @@ private:
 	FbxImporter* m_pImporter;
 
 	vector<tContainer>				m_vecContainer;
+	int								m_iContainerCnt;
 
 	// Animation
 	vector<tBone*>					m_vecBone;
@@ -107,7 +110,7 @@ public:
 	vector<tAnimClip*>& GetAnimClip() { return m_vecAnimClip; }
 
 private:
-	void LoadMeshDataFromNode(FbxNode* _pRoot);
+	void LoadMeshDataFromNode(FbxNode* _pRoot, int _iParentIdx = -1);
 	void LoadMesh(FbxMesh* _pFbxMesh);
 	void LoadMaterial(FbxSurfaceMaterial* _pMtrlSur);
 

@@ -9,6 +9,7 @@ struct tMeshData
 {
 	Ptr<CMesh>				m_pMesh;
 	vector<Ptr<CMaterial>>	m_vecMtrl;
+	int						m_ParentIdx = -1;
 };
 
 class CMeshData :
