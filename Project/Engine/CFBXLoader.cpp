@@ -277,57 +277,52 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 
 void CFBXLoader::LoadTransfrom(FbxNode* _pNode)
 {
-	// 로컬 변환 얻기
-	FbxAMatrix localTransform = _pNode->EvaluateLocalTransform();
+	FbxDouble3 translation = _pNode->LclTranslation;
+	FbxDouble3 rotation = _pNode->LclRotation;
+	FbxDouble3 scaling = _pNode->LclScaling;
 
-	// 전역 변환 얻기
-	FbxAMatrix globalTransform = _pNode->EvaluateGlobalTransform();
+	Vec3 lclTranslation = {};
+	Vec3 lclRotation= {};
+	Vec3 lclScaling= {};
 
-	// 변환 값 출력
-	FbxVector4 translation = localTransform.GetT();
-	FbxVector4 rotation = localTransform.GetR();
-	FbxVector4 scaling = localTransform.GetS();
+	wstring NodeName = m_vecContainer.back().strName;
+
+	// unity : translation.x -> -1.f;
+	translation.mData[0] *= -1.f;
+
+	// euler -> quaternion
+
+
+	// unity :: rotation.z -> -1.f;
+	rotation.mData[2] *= -1.f;
+	
+	// unity rotation-> -1.f;
+	rotation.mData[1] *= -1.f;
+	
+	// unity tranlation -> / 100.f;
+	translation.mData[0] /= 100.f;
+	translation.mData[1] /= 100.f;
+	translation.mData[2] /= 100.f;
+
 
 	// Local translation
-	m_vecContainer.back().tLocalTransform.translation.x = (float)translation.mData[0];
-	m_vecContainer.back().tLocalTransform.translation.y = (float)translation.mData[1];
-	m_vecContainer.back().tLocalTransform.translation.z = (float)translation.mData[2];
-	m_vecContainer.back().tLocalTransform.translation.w = (float)translation.mData[3];
+	lclTranslation.x = roundToDecimal(translation.mData[0], 3);
+	lclTranslation.y = roundToDecimal(translation.mData[1], 3);
+	lclTranslation.z = roundToDecimal(translation.mData[2], 3);
 
 	// Local rotation
-	m_vecContainer.back().tLocalTransform.rotation.x = (float)rotation.mData[0];
-	m_vecContainer.back().tLocalTransform.rotation.y = (float)rotation.mData[1];
-	m_vecContainer.back().tLocalTransform.rotation.z = (float)rotation.mData[2];
-	m_vecContainer.back().tLocalTransform.rotation.w = (float)rotation.mData[3];
+	lclRotation.x = roundToDecimal(rotation.mData[0],3);
+	lclRotation.y = roundToDecimal(rotation.mData[1],3);
+	lclRotation.z = roundToDecimal(rotation.mData[2],3);
 
 	// Local scaling
-	m_vecContainer.back().tLocalTransform.scaling.x = (float)scaling.mData[0];
-	m_vecContainer.back().tLocalTransform.scaling.y = (float)scaling.mData[1];
-	m_vecContainer.back().tLocalTransform.scaling.z = (float)scaling.mData[2];
-	m_vecContainer.back().tLocalTransform.scaling.w = (float)scaling.mData[3];
+	lclScaling.x = roundToDecimal(scaling.mData[0],3);
+	lclScaling.y = roundToDecimal(scaling.mData[1],3);
+	lclScaling.z = roundToDecimal(scaling.mData[2],3);
 
-	// 전역 변환 출력
-	translation = globalTransform.GetT();
-	rotation = globalTransform.GetR();
-	scaling = globalTransform.GetS();
-
-	// World translation
-	m_vecContainer.back().tGlobalTransform.translation.x = (float)translation.mData[0];
-	m_vecContainer.back().tGlobalTransform.translation.y = (float)translation.mData[1];
-	m_vecContainer.back().tGlobalTransform.translation.z = (float)translation.mData[2];
-	m_vecContainer.back().tGlobalTransform.translation.w = (float)translation.mData[3];
-	
-	// World rotation
-	m_vecContainer.back().tGlobalTransform.rotation.x = (float)rotation.mData[0];
-	m_vecContainer.back().tGlobalTransform.rotation.y = (float)rotation.mData[1];
-	m_vecContainer.back().tGlobalTransform.rotation.z = (float)rotation.mData[2];
-	m_vecContainer.back().tGlobalTransform.rotation.w = (float)rotation.mData[3];
-	
-	// World scaling
-	m_vecContainer.back().tGlobalTransform.scaling.x = (float)scaling.mData[0];
-	m_vecContainer.back().tGlobalTransform.scaling.y = (float)scaling.mData[1];
-	m_vecContainer.back().tGlobalTransform.scaling.z = (float)scaling.mData[2];
-	m_vecContainer.back().tGlobalTransform.scaling.w = (float)scaling.mData[3];
+	m_vecContainer.back().tLocalTransform.translation = lclTranslation;
+	m_vecContainer.back().tLocalTransform.rotation = lclRotation;
+	m_vecContainer.back().tLocalTransform.scaling = lclScaling;
 }
 
 void CFBXLoader::GetTangent(FbxMesh* _pMesh
@@ -836,6 +831,24 @@ void CFBXLoader::CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer)
 		memcpy(&_pContainer->vecWeights[iVtxIdx], fWeights, sizeof(Vec4));
 		memcpy(&_pContainer->vecIndices[iVtxIdx], fIndices, sizeof(Vec4));
 	}
+}
+
+FbxQuaternion CFBXLoader::EulerToQuaternion(const FbxVector4& euler)
+{
+	double cy = cos(euler[2] * 0.5);
+	double sy = sin(euler[2] * 0.5);
+	double cr = cos(euler[0] * 0.5);
+	double sr = sin(euler[0] * 0.5);
+	double cp = cos(euler[1] * 0.5);
+	double sp = sin(euler[1] * 0.5);
+
+	FbxQuaternion quaternion;
+	quaternion[0] = cy * cr * cp + sy * sr * sp;
+	quaternion[1] = cy * sr * cp - sy * cr * sp;
+	quaternion[2] = cy * cr * sp + sy * sr * cp;
+	quaternion[3] = sy * cr * cp - cy * sr * sp;
+
+	return quaternion;
 }
 
 void CFBXLoader::LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster

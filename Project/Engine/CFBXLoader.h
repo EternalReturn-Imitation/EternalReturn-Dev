@@ -38,7 +38,6 @@ struct tContainer
 	// Transform 관련 정보
 	bool								bGroupNode;	// 그룹노드 여부
 	tTransformInfo						tLocalTransform;
-	tTransformInfo						tGlobalTransform;
 
 
 	// Animation 관련 정보
@@ -148,6 +147,8 @@ private:
 	FbxAMatrix GetTransform(FbxNode* _pNode);
 
 	void CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer);
+
+	FbxQuaternion EulerToQuaternion(const FbxVector4& euler);
 public:
 	CFBXLoader();
 	~CFBXLoader();

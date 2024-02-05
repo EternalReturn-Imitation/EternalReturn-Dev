@@ -17,7 +17,7 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName);
 void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName);
 
-// ?ㅻ툕?앺듃 ??젣
+// 오브젝트 삭제
 void DestroyObject(CGameObject* _DeletObject);
 
 // DrawDebugShape
@@ -169,3 +169,5 @@ void Safe_Del_Map(map<T1, T2>& _map)
 // math
 float Rad2Deg(float _radian); 
 float Deg2Rad(float _Degree); 
+
+float roundToDecimal(double value, int decimalPlaces);

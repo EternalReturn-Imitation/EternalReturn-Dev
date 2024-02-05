@@ -21,9 +21,9 @@ typedef tVertex Vtx;
 
 struct tTransformInfo
 {
-	Vec4 translation;
-	Vec4 rotation;
-	Vec4 scaling;
+	Vec3 translation = {};
+	Vec3 rotation = {};
+	Vec3 scaling = { 1.f,1.f,1.f };
 };
 
 

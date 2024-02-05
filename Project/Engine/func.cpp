@@ -496,6 +496,12 @@ float Deg2Rad(float _Degree)
 	return _Degree * XM_PI / 180;
 }
 
+float roundToDecimal(double value, int decimalPlaces)
+{
+	float factor = pow(10, decimalPlaces);
+	return round((float)value * factor) / factor;
+}
+
 wstring SaveResRefToDB(Ptr<CRes> _Res)
 {
 	std::wstringstream wss;

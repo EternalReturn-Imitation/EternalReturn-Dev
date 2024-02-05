@@ -54,6 +54,7 @@ CGameObject* CMeshData::Instantiate()
 
 			pNewChildObj->SetName(m_vecMeshData[i]->m_strObjName);
 			pNewChildObj->AddComponent(new CTransform);
+			pNewChildObj->Transform()->SetAbsolute(false);
 
 			// 렌더 오브젝트
 			if (!(m_vecMeshData[i]->m_bGroupObj))
@@ -67,9 +68,13 @@ CGameObject* CMeshData::Instantiate()
 				}
 			}
 
-			pNewChildObj->Transform()->SetRelativePos(m_vecMeshData[i]->m_tLocalTransform.translation);
-			pNewChildObj->Transform()->SetRelativeRot(m_vecMeshData[i]->m_tLocalTransform.rotation);
-			pNewChildObj->Transform()->SetRelativeScale(m_vecMeshData[i]->m_tLocalTransform.scaling);
+			Vec3 translation = m_vecMeshData[i]->m_tLocalTransform.translation;
+			Vec3 rotation = m_vecMeshData[i]->m_tLocalTransform.rotation;
+			Vec3 scaling = m_vecMeshData[i]->m_tLocalTransform.scaling;
+
+			pNewChildObj->Transform()->SetRelativePos(translation);
+			pNewChildObj->Transform()->SetRelativeRot(rotation);
+			pNewChildObj->Transform()->SetRelativeScale(scaling);
 
 			if (0 == i) // 가장 첫번째 노드
 				pNewObj = pNewChildObj;
@@ -118,10 +123,14 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, int singleMeshData)
 		vector<Ptr<CMaterial>> vecMtrl;
 
 		tTransformInfo			tlocalTransform = {};
-		tTransformInfo			tglobalTransform = {};
 		// Transform 정보 받아오기.
-		tlocalTransform = container->tLocalTransform;
-		tglobalTransform = container->tGlobalTransform;
+		{
+			tlocalTransform = container->tLocalTransform;
+			// rotation 정보 degree -> radian으로 변환
+			tlocalTransform.rotation.x = Deg2Rad(tlocalTransform.rotation.x);
+			tlocalTransform.rotation.y = Deg2Rad(tlocalTransform.rotation.y);
+			tlocalTransform.rotation.z = Deg2Rad(tlocalTransform.rotation.z);
+		}
 
 		if (!container->bGroupNode)
 		{
@@ -169,7 +178,6 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, int singleMeshData)
 		MeshData->m_ParentIdx = container->iParentIdx;
 		MeshData->m_bGroupObj = container->bGroupNode;
 		MeshData->m_tLocalTransform = tlocalTransform;
-		MeshData->m_tGlobalTransform = tglobalTransform;
 		pMeshData->m_vecMeshData.emplace_back(MeshData);
 	}
 
@@ -215,12 +223,9 @@ int CMeshData::Save(const wstring& _strRelativePath)
 		fwrite(&m_vecMeshData[i]->m_ParentIdx, sizeof(int), 1, pFile);
 		
 		// Transform 정보 저장
-		fwrite(&m_vecMeshData[i]->m_tLocalTransform.translation, sizeof(Vec4), 1, pFile);
-		fwrite(&m_vecMeshData[i]->m_tLocalTransform.rotation, sizeof(Vec4), 1, pFile);
-		fwrite(&m_vecMeshData[i]->m_tLocalTransform.scaling, sizeof(Vec4), 1, pFile);
-		fwrite(&m_vecMeshData[i]->m_tGlobalTransform.translation, sizeof(Vec4), 1, pFile);
-		fwrite(&m_vecMeshData[i]->m_tGlobalTransform.rotation, sizeof(Vec4), 1, pFile);
-		fwrite(&m_vecMeshData[i]->m_tGlobalTransform.scaling, sizeof(Vec4), 1, pFile);
+		fwrite(&m_vecMeshData[i]->m_tLocalTransform.translation, sizeof(Vec3), 1, pFile);
+		fwrite(&m_vecMeshData[i]->m_tLocalTransform.rotation, sizeof(Vec3), 1, pFile);
+		fwrite(&m_vecMeshData[i]->m_tLocalTransform.scaling, sizeof(Vec3), 1, pFile);
 		
 		if (!(m_vecMeshData[i]->m_bGroupObj))
 		{
@@ -281,12 +286,9 @@ int CMeshData::Load(const wstring& _strFilePath)
 		fread(&MeshData->m_ParentIdx, sizeof(int), 1, pFile);
 
 		// Transform Load
-		fread(&MeshData->m_tLocalTransform.translation, sizeof(Vec4), 1, pFile);
-		fread(&MeshData->m_tLocalTransform.rotation, sizeof(Vec4), 1, pFile);
-		fread(&MeshData->m_tLocalTransform.scaling, sizeof(Vec4), 1, pFile);
-		fread(&MeshData->m_tGlobalTransform.translation, sizeof(Vec4), 1, pFile);
-		fread(&MeshData->m_tGlobalTransform.rotation, sizeof(Vec4), 1, pFile);
-		fread(&MeshData->m_tGlobalTransform.scaling, sizeof(Vec4), 1, pFile);
+		fread(&MeshData->m_tLocalTransform.translation, sizeof(Vec3), 1, pFile);
+		fread(&MeshData->m_tLocalTransform.rotation, sizeof(Vec3), 1, pFile);
+		fread(&MeshData->m_tLocalTransform.scaling, sizeof(Vec3), 1, pFile);
 
 		if (!(MeshData->m_bGroupObj))
 		{
