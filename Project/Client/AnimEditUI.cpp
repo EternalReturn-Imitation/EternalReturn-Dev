@@ -29,7 +29,7 @@
 AnimEditUI::AnimEditUI()
     : UI("##AnimEditUI")
     , m_pRenderObj(nullptr)
-    , m_pCurAnimation(nullptr)
+    , m_pCurAnimator(nullptr)
     , m_iFrameCount(0)
     , m_bPlay(true)
 {
@@ -38,7 +38,7 @@ AnimEditUI::AnimEditUI()
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
     window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
     window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-    window_flags |= ImGuiWindowFlags_NoBackground;
+    // window_flags |= ImGuiWindowFlags_NoBackground;
 
     SetFlags(window_flags);
     SetModal(false);
@@ -51,16 +51,16 @@ AnimEditUI::~AnimEditUI()
 
 void AnimEditUI::tick()
 {
-    if (m_pCurAnimation && KEY_TAP(KEY::SPACE))
+    if (m_pCurAnimator && KEY_TAP(KEY::SPACE))
     {
         if (m_bPlay)
         {
-            m_pCurAnimation->Stop();
+            m_pCurAnimator->Stop();
             m_bPlay = false;
         }
         else
         {
-            m_pCurAnimation->Play();
+            m_pCurAnimator->Play();
             m_bPlay = true;
         }
     }
@@ -109,7 +109,7 @@ int AnimEditUI::render_update()
             render_infowindow();
 
             // Preview Cam Postion Controller
-            render_CamController();
+            // render_CamController();
         }
         ImGui::EndGroup();
     }
@@ -129,13 +129,13 @@ void AnimEditUI::render_menubar()
     {
         if (ImGui::MenuItem("Play"))
         {
-            m_pCurAnimation->Play();
+            m_pCurAnimator->Play();
             m_bPlay = true;
         }
 
         if (ImGui::MenuItem("Stop"))
         {
-            m_pCurAnimation->Stop();
+            m_pCurAnimator->Stop();
             m_bPlay = false;
         }
 
@@ -188,7 +188,7 @@ void AnimEditUI::render_cliplistwindow()
     map<wstring, CAnim3D*> mapAnims;
     if (m_pRenderObj)
     {
-        mapAnims = m_pRenderObj->GetAnimator3D()->GetAnims();
+        mapAnims = m_pCurAnimator->GetAnims();
     }
 
     int ClipCount = (UINT)mapAnims.size();
@@ -217,8 +217,8 @@ void AnimEditUI::render_cliplistwindow()
         if (ImGui::Selectable(ToString(iter->first).c_str(), is_selected))
         {
             SelectClipIdx = ClipIdx;
-            m_pRenderObj->GetAnimator3D()->SelectAnimation(iter->first);
-            m_pCurAnimation = m_pRenderObj->GetAnimator3D()->GetCurAnim();
+            m_pCurAnimator->SelectAnimation(iter->first);
+            m_pCurAnimator = m_pRenderObj->GetAnimator3D();
         }
 
         iter++;
@@ -263,45 +263,67 @@ void AnimEditUI::render_infowindow()
     string  strMaterialKey = "None"; // 적용된 재질 이름
     string  strTextureKey = "None"; // 적용된 텍스쳐 이름
 
-    int  AnimClipCnt = 0;   // 보유 클립 갯수
-    int KeyFrameCount = 0;  // 전체 키프레임 갯수
+    int     AnimClipCnt = 0;   // 보유 클립 갯수
 
     // CurAnimClip
-    string  strCurClipName = "None";    // CurClip Anim Name
-    int  startFrm = 0;
-    int  EndFrm = 0;
-    int  FrameLength = 0;
+    CAnim3D* pCurAnimation = nullptr;
 
-    double  StartTime = 0;
-    double  EndTime = 0;
-    double  TimeLength = 0;
+    string  Origin_strCurClipName = "None";    // CurClip Anim Name
+    int  Origin_startFrm = 0;
+    int  Origin_EndFrm = 0;
+    int  Origin_FrameLength = 0;
+
+    double  Origin_StartTime = 0;
+    double  Origin_EndTime = 0;
+    double  Origin_TimeLength = 0;
+
+   
 
     if (m_pRenderObj)
     {
         // Load Src
         Ptr<CMesh> pMesh = m_pRenderObj->GetObj()->MeshRender()->GetMesh();
         Ptr<CMaterial> pMaterial = m_pRenderObj->GetObj()->MeshRender()->GetMaterial(0);        // 메인 재질
-        CAnimator3D* pAnimComp = m_pRenderObj->GetAnimator3D();
         
         strMeshKey = ToString(pMesh->GetKey()).c_str();
         strMaterialKey = ToString(pMaterial->GetKey()).c_str();
         strTextureKey = ToString(pMaterial->GetTexParam(TEX_PARAM::TEX_0)->GetKey()).c_str();   // 메인재질의 diff 텍스쳐 key
-        AnimClipCnt = (UINT)pAnimComp->GetAnims().size();
+        AnimClipCnt = m_pCurAnimator->GetAnims().size();
+
+        pCurAnimation = m_pCurAnimator->GetCurAnim();
     }
 
+    char Modify_strCurClipName[50] = "None";    // CurClip Anim Name
+    int  Modify_startFrm = 0;
+    int  Modify_EndFrm = 0;
+    int  Modify_FrameLength = 0;
 
-    if (m_pCurAnimation)
+    double  Modify_StartTime = 0;
+    double  Modify_EndTime = 0;
+    double  Modify_TimeLength = 0;
+
+    if (pCurAnimation)
     {
-        // SetInfo from Src
-        KeyFrameCount = m_pCurAnimation->GetAnimClip().iFrameLength;
+        tMTAnimClip tAnimClip = pCurAnimation->GetAnimClip();
+
+        // Origin Anim Info
         
-        strCurClipName = ToString(m_pCurAnimation->GetAnimClip().strAnimName);
-        startFrm      = m_pCurAnimation->GetAnimClip().iStartFrame;
-        EndFrm        = m_pCurAnimation->GetAnimClip().iEndFrame;
-        FrameLength   = m_pCurAnimation->GetAnimClip().iFrameLength;
-        StartTime     = m_pCurAnimation->GetAnimClip().dStartTime;
-        EndTime       = m_pCurAnimation->GetAnimClip().dEndTime;
-        TimeLength    = m_pCurAnimation->GetAnimClip().dTimeLength;
+        Origin_strCurClipName   = ToString(m_tTempAnimclip.strAnimName);
+        Origin_startFrm         = m_tTempAnimclip.iStartFrame;
+        Origin_EndFrm           = m_tTempAnimclip.iEndFrame;
+        Origin_FrameLength      = m_tTempAnimclip.iFrameLength;
+        Origin_StartTime        = m_tTempAnimclip.dStartTime;
+        Origin_EndTime          = m_tTempAnimclip.dEndTime;
+        Origin_TimeLength       = m_tTempAnimclip.dTimeLength;
+
+        // Modifiy Anim Info
+        scanf_s(Modify_strCurClipName, ToString(tAnimClip.strAnimName).c_str());
+        Modify_startFrm = tAnimClip.iStartFrame;
+        Modify_EndFrm = tAnimClip.iEndFrame;
+        Modify_FrameLength = tAnimClip.iFrameLength;
+        Modify_StartTime = tAnimClip.dStartTime;
+        Modify_EndTime = tAnimClip.dEndTime;
+        Modify_TimeLength = tAnimClip.dTimeLength;
     }
     
     // ==================== Set Print Info =======================
@@ -314,7 +336,6 @@ void AnimEditUI::render_infowindow()
     print_strElement(" Material Key", strMaterialKey.c_str());
     print_strElement(" Texture  Key", strTextureKey.c_str());
     print_intElement(" AnimClip Cnt", AnimClipCnt);
-    print_intElement("AllKeyFrm Cnt", KeyFrameCount);
 
     ImGui::EndGroup();
 
@@ -324,14 +345,86 @@ void AnimEditUI::render_infowindow()
     ImGui::BeginGroup();
     ImGui::Button("OriginInfo", ImVec2(350, 0));
     
-    print_strElement("AnimClip Name", strCurClipName.c_str());
-    print_intElement(" Start Frame ", startFrm);
-    print_intElement("  End Frame  ", EndFrm);
-    print_intElement(" FrameLength ", FrameLength);
-    print_doubleElement(" Start  Time ", StartTime);
-    print_doubleElement("  End   Time ", EndTime);
-    print_doubleElement(" Time Length ", TimeLength);
+    print_strElement("AnimClip Name", Origin_strCurClipName.c_str());
+    print_intElement(" Start Frame ", Origin_startFrm);
+    print_intElement("  End Frame  ", Origin_EndFrm);
+    print_intElement(" FrameLength ", Origin_FrameLength);
+    print_doubleElement(" Start  Time ", Origin_StartTime);
+    print_doubleElement("  End   Time ", Origin_EndTime);
+    print_doubleElement(" Time Length ", Origin_TimeLength);
+    
+    ImGui::EndGroup();
 
+    {
+        ImGui::BeginGroup();
+        ImGui::Button("ModifyInfo", ImVec2(350, 0));
+
+        ImGui::Button("AnimClip Name");
+        ImGui::SameLine();
+        ImGui::InputText("##AnimClipName", Modify_strCurClipName, 50);
+
+        print_intElement(" Start Frame ", Origin_startFrm);
+
+        // ImGui::Button(" Start Frame ");
+        // ImGui::SameLine();
+        // ImGui::SetNextItemWidth(240);
+        // if (ImGui::InputInt("##Modify_startFrm", &Modify_startFrm))
+        // {
+        //     Modify_StartTime = Modify_startFrm * Modify_TimeLength / Modify_FrameLength;
+        // }
+        
+        ImGui::Button("  End Frame  ");
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(240);
+        if (ImGui::InputInt("##Modify_EndFrm", &Modify_EndFrm))
+        {
+            Modify_EndFrm = Modify_FrameLength < Modify_EndFrm ? Modify_FrameLength : Modify_EndFrm;
+            Modify_EndTime = Modify_EndFrm * Modify_TimeLength / Modify_FrameLength;
+        }
+
+        print_intElement(" FrameLength ", Modify_FrameLength);
+
+        print_doubleElement(" Start  Time ", Origin_StartTime);
+
+        // ImGui::Button(" Start  Time ");
+        // ImGui::SameLine();
+        // ImGui::SetNextItemWidth(240);
+        // if (ImGui::InputDouble("##Modify_StartTime", &Modify_StartTime, 0.01f, 1.0f, "%.3f"))
+        // {
+        //     Modify_startFrm = Modify_StartTime * Modify_FrameLength / Modify_TimeLength;
+        // }
+
+        print_doubleElement("  End   Time ", Origin_EndTime);
+
+        // ImGui::Button("  End   Time ");
+        // ImGui::SameLine();
+        // ImGui::SetNextItemWidth(240);
+        // if (ImGui::InputDouble("##Modify_EndTime", &Modify_EndTime, 0.01f, 1.0f,"%.3f"))
+        // {
+        //     Modify_EndTime = Modify_TimeLength < Modify_EndTime ? Modify_TimeLength : Modify_EndTime;
+        //     Modify_EndFrm = Modify_EndTime * Modify_FrameLength / Modify_TimeLength;
+        // }
+
+        print_doubleElement(" Time Length ", Modify_TimeLength);
+    }
+
+    if (pCurAnimation)
+    {
+        // Modifiy Anim Info
+        tMTAnimClip AnimClip = pCurAnimation->GetAnimClip();
+        
+        string strName = Modify_strCurClipName;
+    
+        AnimClip.strAnimName = ToWString(strName);
+        AnimClip.iStartFrame = Modify_startFrm;
+        AnimClip.iEndFrame = Modify_EndFrm;
+        AnimClip.iFrameLength = Modify_FrameLength;
+        AnimClip.dStartTime = Modify_StartTime;
+        AnimClip.dEndTime = Modify_EndTime;
+        AnimClip.dTimeLength = Modify_TimeLength;
+    
+        pCurAnimation->SetAnimClip(AnimClip);
+    }
 
     ImGui::EndGroup();
 
@@ -343,10 +436,14 @@ void AnimEditUI::render_TimeLine()
     int MaxFrame = 0; 
     int iCurFrame = 0; 
     
-    if (m_pCurAnimation)
+    CAnim3D* pCurAnim = nullptr;
+    if(m_pCurAnimator)
+        pCurAnim = m_pCurAnimator->GetCurAnim();
+
+    if (pCurAnim)
     {
-        MaxFrame = m_pCurAnimation->GetAnimClip().iFrameLength;
-        iCurFrame = m_pCurAnimation->GetCurFrameIdx();
+        MaxFrame = pCurAnim->GetAnimClip().iEndFrame;
+        iCurFrame = m_pCurAnimator->GetCurFrame();
     }
 
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
@@ -354,9 +451,9 @@ void AnimEditUI::render_TimeLine()
     ImGui::Text("%.0f/%.0f", iCurFrame, MaxFrame);
     
 
-    if (m_pCurAnimation && false == m_pRenderObj->GetAnimator3D()->IsPlay())
+    if (pCurAnim && false == m_pCurAnimator->IsPlay())
     {
-        m_pRenderObj->GetAnimator3D()->SetFrame(iCurFrame);
+        m_pCurAnimator->SetFrame(iCurFrame);
     }
 }
 
@@ -399,13 +496,14 @@ void AnimEditUI::SelectMeshData(DWORD_PTR _data)
         {
             delete m_pRenderObj;
             m_pRenderObj = nullptr;
-            m_pCurAnimation = nullptr;
+            m_pCurAnimator = nullptr;
         }
 
         if (nullptr == m_pRenderObj)
         {
             m_pRenderObj = new CAnimEditObj;
             m_pRenderObj->setobject(temp);
+            m_pCurAnimator = m_pRenderObj->GetAnimator3D();
 
             CEditorObjMgr::GetInst()->SetTexRender(m_pRenderObj);
         }
@@ -434,16 +532,23 @@ void AnimEditUI::SelectBone(DWORD_PTR _data)
     if (nullptr != temp)
     {
         // 중복 검사
-        CAnimator3D* pAnimComp = m_pRenderObj->GetAnimator3D();
-        if (nullptr == pAnimComp->AddAnim(temp))
+        if (nullptr == m_pCurAnimator->AddAnim(temp))
         {
             wstring errMsg = L"This Bone Already Exists.";
             MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
             return;
         }
 
+        // temp animClip 
+        // 기존 애니메이션이 있었는지
+        CAnim3D* pPreviousAnim = m_pCurAnimator->GetCurAnim();
+        
+        if (pPreviousAnim)
+            pPreviousAnim->SetAnimClip(m_tTempAnimclip);
+
         // 정상적으로 애니메이션이 추가된 경우 추가한 애니메이션으로 변경해준다.
-        m_pCurAnimation = pAnimComp->SelectAnimation(temp->GetKey());
+        m_pCurAnimator->SelectAnimation(temp->GetKey());
+        m_tTempAnimclip = m_pCurAnimator->GetCurAnim()->GetAnimClip();
     }
     else
     {

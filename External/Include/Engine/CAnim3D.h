@@ -34,6 +34,8 @@ public:
 
 	Ptr<CBone> GetBone() { return m_pBone; }
 
+	void SetAnimClip(tMTAnimClip& _tMTAnimClip) { m_tMTAnimClip = _tMTAnimClip; }
+
 	tMTAnimClip& GetAnimClip() { return m_tMTAnimClip; }
 	double GetAnimTime() { return m_dCurTime; }
 
