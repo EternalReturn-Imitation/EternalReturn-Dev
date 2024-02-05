@@ -7,8 +7,15 @@
 
 struct tMeshData
 {
+	wstring					m_strObjName;
+
 	Ptr<CMesh>				m_pMesh;
 	vector<Ptr<CMaterial>>	m_vecMtrl;
+	
+	tTransformInfo			m_tLocalTransform;
+
+	int						m_bGroupObj;
+	int						m_ParentIdx;
 };
 
 class CMeshData :

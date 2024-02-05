@@ -34,6 +34,7 @@ private:
     void render_infowindow();
     void render_TimeLine();
     void render_CamController();
+    void render_window();
 
     void SelectMeshData(DWORD_PTR _data);
     void SelectBone(DWORD_PTR _data);

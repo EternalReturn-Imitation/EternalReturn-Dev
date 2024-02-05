@@ -128,8 +128,8 @@ template<typename T>
 inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T> _Res)
 {
     // 중복키로 리소스 추가하려는 경우
-    assert(!FindRes<T>(_strKey).Get());
-
+    // assert(!FindRes<T>(_strKey).Get());
+    
     RES_TYPE type = GetResType<T>();
     m_arrRes[(UINT)type].insert(make_pair(_strKey, _Res.Get()));
     _Res->SetKey(_strKey);

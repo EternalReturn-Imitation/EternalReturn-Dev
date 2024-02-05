@@ -35,28 +35,92 @@ AnimEditUI::AnimEditUI()
 {
     SetName("AnimEditUI");
 
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    window_flags |= ImGuiWindowFlags_NoBackground;
 
-    // 에디터 윈도우 세팅
-    {
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
-        const ImGuiViewport* viewport = ImGui::GetMainViewport();
-
-        ImGui::SetNextWindowPos(viewport->WorkPos);
-        ImGui::SetNextWindowSize(viewport->WorkSize);
-        ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-        SetFlags(window_flags);
-        SetModal(false);
-    }
+    SetFlags(window_flags);
+    SetModal(false);
+    
 }
 
 AnimEditUI::~AnimEditUI()
 {
+}
+
+void AnimEditUI::tick()
+{
+    if (m_pCurAnimation && KEY_TAP(KEY::SPACE))
+    {
+        if (m_bPlay)
+        {
+            m_pCurAnimation->Stop();
+            m_bPlay = false;
+        }
+        else
+        {
+            m_pCurAnimation->Play();
+            m_bPlay = true;
+        }
+    }
+
+}
+
+void AnimEditUI::finaltick()
+{
+    render_window();
+
+    UI::finaltick();
+}
+
+int AnimEditUI::render_update()
+{
+
+    render_menubar();
+
+    ImGui::BeginGroup();
+    {
+        // Mesh가 보유한 Clip Tree
+        {
+            ImGui::BeginGroup();
+
+            render_cliplistwindow();
+
+            ImGui::EndGroup();
+        }
+    }
+
+    ImGui::SameLine();
+    // Render Preview Window
+    {
+        ImGui::BeginGroup();
+        {
+            render_previewwindow();
+        }
+        ImGui::EndGroup();
+    }
+
+    ImGui::SameLine();
+    // Anim Info Window
+    {
+        ImGui::BeginGroup();
+        {
+            render_infowindow();
+
+            // Preview Cam Postion Controller
+            render_CamController();
+        }
+        ImGui::EndGroup();
+    }
+
+    ImGui::EndGroup();
+
+    // 타임라인 스크롤
+    render_TimeLine();
+
+
+    return 0;
 }
 
 void AnimEditUI::render_menubar()
@@ -91,6 +155,7 @@ void AnimEditUI::render_menubar()
 
                 pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&AnimEditUI::SelectMeshData);
             }
+            ImGui::Separator();
 
             if (ImGui::MenuItem("Add Bone.."))
             {
@@ -115,7 +180,7 @@ void AnimEditUI::render_menubar()
 
 void AnimEditUI::render_cliplistwindow()
 {
-    ImGui::Button("AnimClipList", ImVec2(200, 0));
+    ImGui::Button("AnimClipList", ImVec2(300, 0));
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
     ImVec2 ItemSize = ImGui::GetItemRectSize();
@@ -242,7 +307,7 @@ void AnimEditUI::render_infowindow()
     // ==================== Set Print Info =======================
 
     // MeshData Info
-    ImGui::Button("MeshDataInfo", ImVec2(450, 0));
+    ImGui::Button("MeshDataInfo", ImVec2(350, 0));
     ImGui::BeginGroup();
     
     print_strElement("   Mesh   Key", strMeshKey.c_str());
@@ -255,9 +320,9 @@ void AnimEditUI::render_infowindow()
 
     // 현재 애니메이션 정보
     //ImGui::BeginChild("##CurAnimInfo", ImVec2(200.f, 0.f), false, window_flags);
-    ImGui::Button("CurAnimInfo", ImVec2(450, 0));
+    ImGui::Button("CurAnimInfo", ImVec2(350, 0));
     ImGui::BeginGroup();
-    ImGui::Button("OriginInfo", ImVec2(220, 0));
+    ImGui::Button("OriginInfo", ImVec2(350, 0));
     
     print_strElement("AnimClip Name", strCurClipName.c_str());
     print_intElement(" Start Frame ", startFrm);
@@ -271,16 +336,10 @@ void AnimEditUI::render_infowindow()
     ImGui::EndGroup();
 
     //ImGui::EndChild();
-
 }
 
 void AnimEditUI::render_TimeLine()
 {
-    ImGuiStyle& style = ImGui::GetStyle();
-    float child_height = ImGui::GetTextLineHeight() + style.ScrollbarSize + style.WindowPadding.y * 2.0f;
-    ImGuiWindowFlags child_flags = ImGuiWindowFlags_HorizontalScrollbar;
-    ImGui::BeginChild("##AnimEditTimeLine", ImVec2(0, child_height), true, child_flags);
-    
     int MaxFrame = 0; 
     int iCurFrame = 0; 
     
@@ -290,16 +349,11 @@ void AnimEditUI::render_TimeLine()
         iCurFrame = m_pCurAnimation->GetCurFrameIdx();
     }
 
-    static float test = 1.f;
-    
-    // 좌표값을 프레임으로 변환
-    float SliderWidth = ImGui::GetWindowWidth();
-    ImGui::EndChild();
-
-    ImGui::SetNextItemWidth(SliderWidth);
+    ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::SliderInt("Lines", &iCurFrame, 0, MaxFrame);
     ImGui::Text("%.0f/%.0f", iCurFrame, MaxFrame);
     
+
     if (m_pCurAnimation && false == m_pRenderObj->GetAnimator3D()->IsPlay())
     {
         m_pRenderObj->GetAnimator3D()->SetFrame(iCurFrame);
@@ -311,84 +365,26 @@ void AnimEditUI::render_CamController()
     ImGui::Button("Cam Contorller", ImVec2(0, 0));
 }
 
-
-void AnimEditUI::tick()
+void AnimEditUI::render_window()
 {
-    if (m_pCurAnimation && KEY_TAP(KEY::SPACE))
+    // 에디터 윈도우 세팅
     {
-        if (m_bPlay)
-        {
-            m_pCurAnimation->Stop();
-            m_bPlay = false;
-        }
-        else
-        {
-            m_pCurAnimation->Play();
-            m_bPlay = true;
-        }
+        const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     }
 
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
 
     SetPopupPos(viewport->WorkPos);
     SetSize(viewport->WorkSize.x, viewport->WorkSize.y);
-}
 
-void AnimEditUI::finaltick()
-{
     // 반투명 배경
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::PopStyleVar();
-
-    UI::finaltick();
-}
-
-int AnimEditUI::render_update()
-{
-    render_menubar();
-
-    ImGui::BeginGroup();
-    {
-        // Mesh가 보유한 Clip Tree
-        {
-            ImGui::BeginGroup();
-
-            render_cliplistwindow();
-
-            ImGui::EndGroup();
-        }
-    }
-
-    ImGui::SameLine();
-    // Render Preview Window
-    {
-        ImGui::BeginGroup();
-        {
-            render_previewwindow();
-        }
-        ImGui::EndGroup();
-    }
-
-    ImGui::SameLine();
-    // Anim Info Window
-    {
-        ImGui::BeginGroup();
-        {
-            render_infowindow();
-
-            // Preview Cam Postion Controller
-            render_CamController();
-        }
-        ImGui::EndGroup();
-    }
-
-    ImGui::EndGroup();
-
-    // 타임라인 스크롤
-    render_TimeLine();
-    
-
-    return 0;
+    ImGui::PopStyleVar(3);
 }
 
 void AnimEditUI::SelectMeshData(DWORD_PTR _data)

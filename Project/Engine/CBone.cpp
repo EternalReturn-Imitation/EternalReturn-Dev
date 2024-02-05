@@ -25,9 +25,13 @@ CBone::~CBone()
 
 CBone* CBone::CreateFromContatiner(CFBXLoader& _loader)
 {
-	const tContainer* container = &_loader.GetContainer(0);
+	// 그룹오브젝트 컨테이너를 위해 판단여부를 VecBone 사이즈로 변경
+	// const tContainer* container = &_loader.GetContainer(0);
+	// 
+	// if (!container->bAnimation)	// 애니메이션이 없다
+	// 	return nullptr;
 
-	if (!container->bAnimation)	// 애니메이션이 없다
+	if (_loader.GetBones().size() == 0)
 		return nullptr;
 
 	CBone* pBone = new CBone;

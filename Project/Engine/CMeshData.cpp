@@ -25,14 +25,15 @@ CMeshData::~CMeshData()
 
 CGameObject* CMeshData::Instantiate()
 {
-	CGameObject* pNewObj = new CGameObject;
-	pNewObj->AddComponent(new CTransform);
+	CGameObject* pNewObj = nullptr;
 
 	int iMeshDataCnt = (int)m_vecMeshData.size();
 	
 	// 단일메시
 	if (1 == iMeshDataCnt)
 	{
+		pNewObj = new CGameObject;
+		pNewObj->AddComponent(new CTransform);
 		pNewObj->AddComponent(new CMeshRender);
 		pNewObj->MeshRender()->SetMesh(m_vecMeshData[0]->m_pMesh);
 
@@ -45,22 +46,42 @@ CGameObject* CMeshData::Instantiate()
 	// 복수메시
 	else if (1 < iMeshDataCnt)
 	{
+		vector<CGameObject*> vecObj;
+		
 		for (size_t i = 0; i < iMeshDataCnt; ++i)
 		{
 			CGameObject* pNewChildObj = new CGameObject;
 
+			pNewChildObj->SetName(m_vecMeshData[i]->m_strObjName);
 			pNewChildObj->AddComponent(new CTransform);
 			pNewChildObj->Transform()->SetAbsolute(false);
-			pNewChildObj->AddComponent(new CMeshRender);
 
-			pNewChildObj->MeshRender()->SetMesh(m_vecMeshData[i]->m_pMesh);
-
-			for (UINT j = 0; j < m_vecMeshData[i]->m_vecMtrl.size(); ++j)
+			// 렌더 오브젝트
+			if (!(m_vecMeshData[i]->m_bGroupObj))
 			{
-				pNewChildObj->MeshRender()->SetMaterial(m_vecMeshData[i]->m_vecMtrl[j], j);
+				pNewChildObj->AddComponent(new CMeshRender);
+				pNewChildObj->MeshRender()->SetMesh(m_vecMeshData[i]->m_pMesh);
+
+				for (UINT j = 0; j < m_vecMeshData[i]->m_vecMtrl.size(); ++j)
+				{
+					pNewChildObj->MeshRender()->SetMaterial(m_vecMeshData[i]->m_vecMtrl[j], j);
+				}
 			}
 
-			pNewObj->AddChild(pNewChildObj);
+			Vec3 translation = m_vecMeshData[i]->m_tLocalTransform.translation;
+			Vec3 rotation = m_vecMeshData[i]->m_tLocalTransform.rotation;
+			Vec3 scaling = m_vecMeshData[i]->m_tLocalTransform.scaling;
+
+			pNewChildObj->Transform()->SetRelativePos(translation);
+			pNewChildObj->Transform()->SetRelativeRot(rotation);
+			pNewChildObj->Transform()->SetRelativeScale(scaling);
+
+			if (0 == i) // 가장 첫번째 노드
+				pNewObj = pNewChildObj;
+			else
+				vecObj[m_vecMeshData[i]->m_ParentIdx]->AddChild(pNewChildObj);
+
+			vecObj.emplace_back(pNewChildObj);
 		}
 	}
 
@@ -95,39 +116,68 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, int singleMeshData)
 
 	for (int i = 0; i < iContainerCnt; ++i)
 	{
-		// 메쉬 가져오기
+		// 컨테이너 받아오기
+		const tContainer* container = &loader.GetContainer(i);
+
 		CMesh* pMesh = nullptr;
-		pMesh = CMesh::CreateFromContainer(loader, i);
-
-		// ResMgr 에 메쉬 등록
-		if (nullptr != pMesh)
-		{
-			wstring strMeshKey;
-			// strMeshKey += path(strFullPath).stem();
-			strMeshKey = pMesh->GetName();
-			strMeshKey += L".mesh";
-			CResMgr::GetInst()->AddRes<CMesh>(strMeshKey, pMesh);
-
-			// 메시를 실제 파일로 저장
-			pMesh->Save(strMeshKey);
-		}
-
-
 		vector<Ptr<CMaterial>> vecMtrl;
 
-		// 메테리얼 가져오기
-		for (UINT j = 0; j < loader.GetContainer(i).vecMtrl.size(); ++j)
+		tTransformInfo			tlocalTransform = {};
+		// Transform 정보 받아오기.
 		{
-			// 예외처리 (material 이름이 입력 안되어있을 수도 있다.)
-			Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(loader.GetContainer(i).vecMtrl[j].strMtrlName);
-			assert(pMtrl.Get());
+			tlocalTransform = container->tLocalTransform;
+			// rotation 정보 degree -> radian으로 변환
+			tlocalTransform.rotation.x = Deg2Rad(tlocalTransform.rotation.x);
+			tlocalTransform.rotation.y = Deg2Rad(tlocalTransform.rotation.y);
+			tlocalTransform.rotation.z = Deg2Rad(tlocalTransform.rotation.z);
+		}
 
-			vecMtrl.push_back(pMtrl);
+		if (!container->bGroupNode)
+		{
+			// 메쉬 가져오기
+			pMesh = CMesh::CreateFromContainer(loader, i);
+
+
+			// ResMgr 에 메쉬 등록
+			if (nullptr != pMesh)
+			{
+				wstring strMeshKey;
+				// strMeshKey += path(strFullPath).stem();
+				strMeshKey = pMesh->GetName();
+				strMeshKey += L".mesh";
+
+				if (nullptr == CResMgr::GetInst()->FindRes<CMesh>(strMeshKey))
+				{
+					CResMgr::GetInst()->AddRes<CMesh>(strMeshKey, pMesh);
+
+					// 메시를 실제 파일로 저장
+					pMesh->Save(strMeshKey);
+				}
+				else
+				{
+					pMesh = CResMgr::GetInst()->FindRes<CMesh>(strMeshKey).Get();
+				}
+
+			}
+
+			// 메테리얼 가져오기
+			for (UINT j = 0; j < loader.GetContainer(i).vecMtrl.size(); ++j)
+			{
+				// 예외처리 (material 이름이 입력 안되어있을 수도 있다.)
+				Ptr<CMaterial> pMtrl = CResMgr::GetInst()->FindRes<CMaterial>(loader.GetContainer(i).vecMtrl[j].strMtrlName);
+				assert(pMtrl.Get());
+
+				vecMtrl.push_back(pMtrl);
+			}
 		}
 
 		tMeshData* MeshData = new tMeshData;
+		MeshData->m_strObjName = container->strName;
 		MeshData->m_pMesh = pMesh;
 		MeshData->m_vecMtrl = vecMtrl;
+		MeshData->m_ParentIdx = container->iParentIdx;
+		MeshData->m_bGroupObj = container->bGroupNode;
+		MeshData->m_tLocalTransform = tlocalTransform;
 		pMeshData->m_vecMeshData.emplace_back(MeshData);
 	}
 
@@ -163,25 +213,44 @@ int CMeshData::Save(const wstring& _strRelativePath)
 	// Mesh Data 저장
 	for (UINT i = 0; i < iMeshDataCnt; ++i)
 	{
-		SaveResRef(m_vecMeshData[i]->m_pMesh.Get(), pFile);
+		// MeshData Name
+		SaveWString(m_vecMeshData[i]->m_strObjName, pFile);
 
-		// material 정보 저장
-		UINT iMtrlCount = (UINT)m_vecMeshData[i]->m_vecMtrl.size();
-		fwrite(&iMtrlCount, sizeof(UINT), 1, pFile);
+		// Group 여부
+		fwrite(&m_vecMeshData[i]->m_bGroupObj, sizeof(int), 1, pFile);
 
-		UINT iIdx = 0;
-		wstring strMtrlPath = CPathMgr::GetInst()->GetContentPath();
-		strMtrlPath += L"material\\";
-
-		for (; iIdx < iMtrlCount; ++iIdx)
+		// ParentIndx 정보 저장
+		fwrite(&m_vecMeshData[i]->m_ParentIdx, sizeof(int), 1, pFile);
+		
+		// Transform 정보 저장
+		fwrite(&m_vecMeshData[i]->m_tLocalTransform.translation, sizeof(Vec3), 1, pFile);
+		fwrite(&m_vecMeshData[i]->m_tLocalTransform.rotation, sizeof(Vec3), 1, pFile);
+		fwrite(&m_vecMeshData[i]->m_tLocalTransform.scaling, sizeof(Vec3), 1, pFile);
+		
+		if (!(m_vecMeshData[i]->m_bGroupObj))
 		{
-			if (nullptr == m_vecMeshData[i]->m_vecMtrl[iIdx])
-				continue;
+			// Mesh 정보 저장
+			SaveResRef(m_vecMeshData[i]->m_pMesh.Get(), pFile);
 
-			// Material 인덱스, Key, Path 저장
-			fwrite(&iIdx, sizeof(UINT), 1, pFile);
-			SaveResRef(m_vecMeshData[i]->m_vecMtrl[iIdx].Get(), pFile);
+			// material 정보 저장
+			UINT iMtrlCount = (UINT)m_vecMeshData[i]->m_vecMtrl.size();
+			fwrite(&iMtrlCount, sizeof(UINT), 1, pFile);
+
+			UINT iIdx = 0;
+			wstring strMtrlPath = CPathMgr::GetInst()->GetContentPath();
+			strMtrlPath += L"material\\";
+
+			for (; iIdx < iMtrlCount; ++iIdx)
+			{
+				if (nullptr == m_vecMeshData[i]->m_vecMtrl[iIdx])
+					continue;
+
+				// Material 인덱스, Key, Path 저장
+				fwrite(&iIdx, sizeof(UINT), 1, pFile);
+				SaveResRef(m_vecMeshData[i]->m_vecMtrl[iIdx].Get(), pFile);
+			}
 		}
+
 
 		// iIdx = -1; // 마감 값
 		// fwrite(&iIdx, sizeof(UINT), 1, pFile);
@@ -207,39 +276,57 @@ int CMeshData::Load(const wstring& _strFilePath)
 	{
 		tMeshData* MeshData = new tMeshData;
 
-		// Mesh Load
-		Ptr<CMesh> pMesh = nullptr;
-		LoadResRef<CMesh>(pMesh, pFile);
-		assert(pMesh.Get());
-		MeshData->m_pMesh = pMesh;
+		// MeshData Name
+		LoadWString(MeshData->m_strObjName, pFile);
 
+		// Group 여부
+		fread(&MeshData->m_bGroupObj, sizeof(int), 1, pFile);
 
-		// material 정보 읽기
-		vector<Ptr<CMaterial>> vecMtrl;
+		// ParentIndx Load
+		fread(&MeshData->m_ParentIdx, sizeof(int), 1, pFile);
 
-		// 재질 갯수
-		UINT iMtrlCount = 0;
-		fread(&iMtrlCount, sizeof(UINT), 1, pFile);
+		// Transform Load
+		fread(&MeshData->m_tLocalTransform.translation, sizeof(Vec3), 1, pFile);
+		fread(&MeshData->m_tLocalTransform.rotation, sizeof(Vec3), 1, pFile);
+		fread(&MeshData->m_tLocalTransform.scaling, sizeof(Vec3), 1, pFile);
 
-
-		vecMtrl.resize(iMtrlCount);
-
-		for (UINT i = 0; i < iMtrlCount; ++i)
+		if (!(MeshData->m_bGroupObj))
 		{
-			UINT idx = -1;
-			fread(&idx, 4, 1, pFile);
-			if (idx == -1)
-				break;
 
-			wstring strKey, strPath;
+			// Mesh Load
+			Ptr<CMesh> pMesh = nullptr;
+			LoadResRef<CMesh>(pMesh, pFile);
+			assert(pMesh.Get());
+			MeshData->m_pMesh = pMesh;
 
-			Ptr<CMaterial> pMtrl;
-			LoadResRef<CMaterial>(pMtrl, pFile);
 
-			vecMtrl[i] = pMtrl;
+			// material 정보 읽기
+			vector<Ptr<CMaterial>> vecMtrl;
+
+			// 재질 갯수
+			UINT iMtrlCount = 0;
+			fread(&iMtrlCount, sizeof(UINT), 1, pFile);
+
+
+			vecMtrl.resize(iMtrlCount);
+
+			for (UINT i = 0; i < iMtrlCount; ++i)
+			{
+				UINT idx = -1;
+				fread(&idx, 4, 1, pFile);
+				if (idx == -1)
+					break;
+
+				wstring strKey, strPath;
+
+				Ptr<CMaterial> pMtrl;
+				LoadResRef<CMaterial>(pMtrl, pFile);
+
+				vecMtrl[i] = pMtrl;
+			}
+
+			MeshData->m_vecMtrl = vecMtrl;
 		}
-		
-		MeshData->m_vecMtrl = vecMtrl;
 
 		m_vecMeshData.emplace_back(MeshData);
 	}
