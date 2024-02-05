@@ -35,6 +35,11 @@ struct tContainer
 	vector<vector<UINT>>				vecIdx;
 	vector<tFbxMaterial>				vecMtrl;
 
+	// Transform 관련 정보
+	bool								bGroupNode;	// 그룹노드 여부
+	tTransformInfo						tLocalTransform;
+
+
 	// Animation 관련 정보
 	bool								bAnimation;
 	vector<vector<tWeightsAndIndices>>	vecWI;
@@ -50,6 +55,8 @@ struct tContainer
 		vecWeights.resize(_iSize);
 		vecWI.resize(_iSize);
 	}
+
+	int									iParentIdx = -1;
 };
 
 struct tKeyFrame
@@ -89,6 +96,7 @@ private:
 	FbxImporter* m_pImporter;
 
 	vector<tContainer>				m_vecContainer;
+	int								m_iContainerCnt;
 
 	// Animation
 	vector<tBone*>					m_vecBone;
@@ -107,9 +115,10 @@ public:
 	vector<tAnimClip*>& GetAnimClip() { return m_vecAnimClip; }
 
 private:
-	void LoadMeshDataFromNode(FbxNode* _pRoot);
+	void LoadMeshDataFromNode(FbxNode* _pRoot, int _iParentIdx = -1);
 	void LoadMesh(FbxMesh* _pFbxMesh);
 	void LoadMaterial(FbxSurfaceMaterial* _pMtrlSur);
+	void LoadTransfrom(FbxNode* _pNode);
 
 	void GetTangent(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
 	void GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder);
@@ -138,6 +147,8 @@ private:
 	FbxAMatrix GetTransform(FbxNode* _pNode);
 
 	void CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer);
+
+	FbxQuaternion EulerToQuaternion(const FbxVector4& euler);
 public:
 	CFBXLoader();
 	~CFBXLoader();

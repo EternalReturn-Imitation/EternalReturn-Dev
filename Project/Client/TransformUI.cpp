@@ -30,7 +30,8 @@ int TransformUI::render_update()
 {
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
-
+	
+	
 	/*Vec3 vPos = GetTarget()->Transform()->GetRelativePos();
 	Vec3 vScale = GetTarget()->Transform()->GetRelativeScale();
 	Vec3 vRotation = GetTarget()->Transform()->GetRelativeRot();
@@ -52,8 +53,10 @@ int TransformUI::render_update()
 	GetTarget()->Transform()->SetRelativeScale(vScale);
 
 	vRotation = (vRotation / 180.f) * XM_PI;
-	GetTarget()->Transform()->SetRelativeRot(vRotation);*/
-
+	GetTarget()->Transform()->SetRelativeRot(vRotation);
+	
+	return TRUE;*/
+	
 	//ImGui 렌더전에 기즈모 렌더를 해야함 ! (타겟오브젝트가 있을경우)
 	if (CRenderMgr::GetInst()->GetGizmoTarget())
 	{
@@ -223,7 +226,7 @@ void TransformUI::RenderGizmo()
 
 		////ImGuizmo::SetRect(100.f, 100.f, 100.f);
 		//ImGuizmo::Manipulate(ViewMatArray, ProjMatArray, ImGuizmo::TRANSLATE, ImGuizmo::WORLD, WorldMatArray);
-		Matrix WorldMat = GizTarget->Transform()->GetWorldMat();
+		Matrix WorldMat = GizTarget->Transform()->GetWorldMatForGizmo();
 		Matrix ViewMat = CRenderMgr::GetInst()->GetMainCam()->GetViewMat();
 		Matrix ProjMat = CRenderMgr::GetInst()->GetMainCam()->GetProjMat();
 

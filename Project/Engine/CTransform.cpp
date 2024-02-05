@@ -46,6 +46,7 @@ void CTransform::finaltick()
 
 	
 	m_matWorld = m_matWorldScale * matRot * matTranslation;
+	m_matWorldForGizmo = m_matWorld;
 	m_matWorldBoundingBox = m_matWorldBoundingScale * matRot * matTranslation;
 
 	Vec3 vDefaultDir[3] = {
@@ -76,11 +77,21 @@ void CTransform::finaltick()
 		}
 		else
 		{
+			/*
 			m_matWorldScale = pParent->Transform()->m_matWorldScale;
 			m_matWorld *= pParent->Transform()->m_matWorld;
 
 			m_matWorldBoundingScale = pParent->Transform()->m_matWorldBoundingScale;
 			m_matWorldBoundingBox *= pParent->Transform()->m_matWorldBoundingBox;
+			*/
+
+			// 로컬 변환
+
+			Matrix chilslclPosition = pParent->Transform()->m_matWorldInv * matTranslation;
+			Matrix childlclRotation = matRot;
+			Matrix childlclScale = pParent->Transform()->m_matWorldInv * XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
+
+			m_matWorld = childlclScale * childlclRotation * chilslclPosition;
 		}
 
 		m_fBoundingRadius = m_matWorldBoundingScale._11;

@@ -38,6 +38,7 @@ CFBXLoader::CFBXLoader()
 	: m_pManager(NULL)
 	, m_pScene(NULL)
 	, m_pImporter(NULL)
+	, m_iContainerCnt(-1)
 {
 }
 
@@ -77,6 +78,8 @@ void CFBXLoader::init()
 	m_pScene = FbxScene::Create(m_pManager, "");
 	if (NULL == m_pScene)
 		assert(NULL);
+
+	m_iContainerCnt = -1;
 }
 
 void CFBXLoader::LoadFbx(const wstring& _strPath)
@@ -114,7 +117,7 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	Triangulate(m_pScene->GetRootNode());
 
 	// 메쉬 데이터 얻기
-	LoadMeshDataFromNode(m_pScene->GetRootNode());
+	LoadMeshDataFromNode(m_pScene->GetRootNode()->GetChild(0));
 
 	m_pImporter->Destroy();
 
@@ -125,10 +128,13 @@ void CFBXLoader::LoadFbx(const wstring& _strPath)
 	CreateMaterial();
 }
 
-void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
+void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode, int _iParentIdx)
 {
 	// 노드의 메쉬정보 읽기
 	FbxNodeAttribute* pAttr = _pNode->GetNodeAttribute();
+	int iChildCnt = _pNode->GetChildCount();
+	int iThisIdx = 0;
+	bool bGroupNode = 0;
 
 	if (pAttr && FbxNodeAttribute::eMesh == pAttr->GetAttributeType())
 	{
@@ -140,7 +146,37 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 		{
 			pMesh->SetName(_pNode->GetName());
 			LoadMesh(pMesh);
+			iThisIdx = m_iContainerCnt;
+			
+			// 그룹노드 여부
+			m_vecContainer.back().bGroupNode = 0;
+
+			// Parent Idx
+			m_vecContainer.back().iParentIdx = _iParentIdx;
+			
+			// 해당 메시의 Transform 정보 받아오기
+			LoadTransfrom(_pNode);
 		}
+	}
+	else if (!pAttr && 0 < iChildCnt)
+	{
+		m_vecContainer.push_back(tContainer{});
+		m_iContainerCnt++; // 컨테이너 갯수 추가
+		tContainer& Container = m_vecContainer[m_vecContainer.size() - 1];
+
+		iThisIdx = m_iContainerCnt;
+
+		// 그룹노드 여부
+		m_vecContainer.back().bGroupNode = 1;
+
+		// Parent Idx
+		m_vecContainer.back().iParentIdx = _iParentIdx;
+
+		string strName = _pNode->GetName();
+		Container.strName = wstring(strName.begin(), strName.end());
+
+		// 해당 메시의 Transform 정보 받아오기
+		LoadTransfrom(_pNode);
 	}
 
 	// 해당 노드의 재질정보 읽기
@@ -155,16 +191,17 @@ void CFBXLoader::LoadMeshDataFromNode(FbxNode* _pNode)
 	}
 
 	// 자식 노드 정보 읽기
-	int iChildCnt = _pNode->GetChildCount();
+	
 	for (int i = 0; i < iChildCnt; ++i)
 	{
-		LoadMeshDataFromNode(_pNode->GetChild(i));
+		LoadMeshDataFromNode(_pNode->GetChild(i), iThisIdx);
 	}
 }
 
 void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 {
 	m_vecContainer.push_back(tContainer{});
+	m_iContainerCnt++; // 컨테이너 갯수 추가
 	tContainer& Container = m_vecContainer[m_vecContainer.size() - 1];
 
 	string strName = _pFbxMesh->GetName();
@@ -260,6 +297,56 @@ void CFBXLoader::LoadMaterial(FbxSurfaceMaterial* _pMtrlSur)
 
 
 	m_vecContainer.back().vecMtrl.push_back(tMtrlInfo);
+}
+
+void CFBXLoader::LoadTransfrom(FbxNode* _pNode)
+{
+	FbxDouble3 translation = _pNode->LclTranslation;
+	FbxDouble3 rotation = _pNode->LclRotation;
+	FbxDouble3 scaling = _pNode->LclScaling;
+
+	Vec3 lclTranslation = {};
+	Vec3 lclRotation= {};
+	Vec3 lclScaling= {};
+
+	wstring NodeName = m_vecContainer.back().strName;
+
+	// unity : translation.x -> -1.f;
+	translation.mData[0] *= -1.f;
+
+	// euler -> quaternion
+
+
+	// unity :: rotation.z -> -1.f;
+	rotation.mData[2] *= -1.f;
+	
+	// unity rotation-> -1.f;
+	rotation.mData[1] *= -1.f;
+	
+	// unity tranlation -> / 100.f;
+	translation.mData[0] /= 100.f;
+	translation.mData[1] /= 100.f;
+	translation.mData[2] /= 100.f;
+
+
+	// Local translation
+	lclTranslation.x = roundToDecimal(translation.mData[0], 3);
+	lclTranslation.y = roundToDecimal(translation.mData[1], 3);
+	lclTranslation.z = roundToDecimal(translation.mData[2], 3);
+
+	// Local rotation
+	lclRotation.x = roundToDecimal(rotation.mData[0],3);
+	lclRotation.y = roundToDecimal(rotation.mData[1],3);
+	lclRotation.z = roundToDecimal(rotation.mData[2],3);
+
+	// Local scaling
+	lclScaling.x = roundToDecimal(scaling.mData[0],3);
+	lclScaling.y = roundToDecimal(scaling.mData[1],3);
+	lclScaling.z = roundToDecimal(scaling.mData[2],3);
+
+	m_vecContainer.back().tLocalTransform.translation = lclTranslation;
+	m_vecContainer.back().tLocalTransform.rotation = lclRotation;
+	m_vecContainer.back().tLocalTransform.scaling = lclScaling;
 }
 
 void CFBXLoader::GetTangent(FbxMesh* _pMesh
@@ -787,6 +874,24 @@ void CFBXLoader::CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer)
 		memcpy(&_pContainer->vecWeights[iVtxIdx], fWeights, sizeof(Vec4));
 		memcpy(&_pContainer->vecIndices[iVtxIdx], fIndices, sizeof(Vec4));
 	}
+}
+
+FbxQuaternion CFBXLoader::EulerToQuaternion(const FbxVector4& euler)
+{
+	double cy = cos(euler[2] * 0.5);
+	double sy = sin(euler[2] * 0.5);
+	double cr = cos(euler[0] * 0.5);
+	double sr = sin(euler[0] * 0.5);
+	double cp = cos(euler[1] * 0.5);
+	double sp = sin(euler[1] * 0.5);
+
+	FbxQuaternion quaternion;
+	quaternion[0] = cy * cr * cp + sy * sr * sp;
+	quaternion[1] = cy * sr * cp - sy * cr * sp;
+	quaternion[2] = cy * cr * sp + sy * sr * cp;
+	quaternion[3] = sy * cr * cp - cy * sr * sp;
+
+	return quaternion;
 }
 
 void CFBXLoader::LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster
