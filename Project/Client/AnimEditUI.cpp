@@ -42,7 +42,6 @@ AnimEditUI::AnimEditUI()
 
     SetFlags(window_flags);
     SetModal(false);
-    
 }
 
 AnimEditUI::~AnimEditUI()
@@ -129,14 +128,20 @@ void AnimEditUI::render_menubar()
     {
         if (ImGui::MenuItem("Play"))
         {
-            m_pCurAnimator->Play();
+            if (m_pCurAnimator)
+            {
+                m_pCurAnimator->Play();
+            }
             m_bPlay = true;
         }
 
         if (ImGui::MenuItem("Stop"))
         {
-            m_pCurAnimator->Stop();
-            m_bPlay = false;
+            if (m_pCurAnimator)
+            {
+                m_pCurAnimator->Stop();
+            }
+                m_bPlay = false;
         }
 
         if (ImGui::BeginMenu("Set.."))
@@ -216,9 +221,21 @@ void AnimEditUI::render_cliplistwindow()
 
         if (ImGui::Selectable(ToString(iter->first).c_str(), is_selected))
         {
-            SelectClipIdx = ClipIdx;
-            m_pCurAnimator->SelectAnimation(iter->first);
-            m_pCurAnimator = m_pRenderObj->GetAnimator3D();
+            // 새로운 클립 선택
+            if (SelectClipIdx != ClipIdx)
+            {
+                SelectClipIdx = ClipIdx;
+
+                // 기존 애니메이션이 있었는지
+                CAnim3D* pPreviousAnim = m_pCurAnimator->GetCurAnim();
+
+                if (pPreviousAnim)
+                    pPreviousAnim->SetAnimClip(m_tTempAnimclip);
+
+                // 정상적으로 애니메이션이 추가된 경우 추가한 애니메이션으로 변경해준다.
+                m_pCurAnimator->SelectAnimation(iter->first);
+                m_tTempAnimclip = m_pCurAnimator->GetCurAnim()->GetAnimClip();
+            }
         }
 
         iter++;
@@ -288,12 +305,12 @@ void AnimEditUI::render_infowindow()
         strMeshKey = ToString(pMesh->GetKey()).c_str();
         strMaterialKey = ToString(pMaterial->GetKey()).c_str();
         strTextureKey = ToString(pMaterial->GetTexParam(TEX_PARAM::TEX_0)->GetKey()).c_str();   // 메인재질의 diff 텍스쳐 key
-        AnimClipCnt = m_pCurAnimator->GetAnims().size();
+        AnimClipCnt = (UINT)m_pCurAnimator->GetAnims().size();
 
         pCurAnimation = m_pCurAnimator->GetCurAnim();
     }
 
-    char Modify_strCurClipName[50] = "None";    // CurClip Anim Name
+    string Modify_strCurClipName = "None";    // CurClip Anim Name
     int  Modify_startFrm = 0;
     int  Modify_EndFrm = 0;
     int  Modify_FrameLength = 0;
@@ -317,7 +334,7 @@ void AnimEditUI::render_infowindow()
         Origin_TimeLength       = m_tTempAnimclip.dTimeLength;
 
         // Modifiy Anim Info
-        scanf_s(Modify_strCurClipName, ToString(tAnimClip.strAnimName).c_str());
+        Modify_strCurClipName = ToString(tAnimClip.strAnimName).c_str();
         Modify_startFrm = tAnimClip.iStartFrame;
         Modify_EndFrm = tAnimClip.iEndFrame;
         Modify_FrameLength = tAnimClip.iFrameLength;
@@ -361,7 +378,10 @@ void AnimEditUI::render_infowindow()
 
         ImGui::Button("AnimClip Name");
         ImGui::SameLine();
-        ImGui::InputText("##AnimClipName", Modify_strCurClipName, 50);
+        
+        char tmp[50] = {};
+        strcpy_s(tmp, Modify_strCurClipName.c_str());
+        ImGui::InputText("##AnimClipName", tmp, 50);
 
         print_intElement(" Start Frame ", Origin_startFrm);
 
@@ -407,6 +427,14 @@ void AnimEditUI::render_infowindow()
 
         print_doubleElement(" Time Length ", Modify_TimeLength);
     }
+
+    if (ImGui::Button("Save Clip.."))
+    {
+        if(nullptr != m_pCurAnimator && m_pCurAnimator->GetCurAnim())
+            ImGui::OpenPopup("Save##SaveAnimClip");
+    }
+
+    render_SavePopUp();
 
     if (pCurAnimation)
     {
@@ -482,6 +510,133 @@ void AnimEditUI::render_window()
     // 반투명 배경
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
     ImGui::PopStyleVar(3);
+}
+
+void AnimEditUI::render_SavePopUp()
+{
+    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+    if (ImGui::BeginPopupModal("Save##SaveAnimClip", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Change List\n\n");
+        ImGui::Separator();
+
+        tMTAnimClip tAnimClip = m_pCurAnimator->GetCurAnim()->GetAnimClip();
+
+        int ChangInfoCnt = 0;
+
+        if (m_tTempAnimclip.strAnimName != tAnimClip.strAnimName)
+        {
+            ImGui::Text(ToString(m_tTempAnimclip.strAnimName).c_str());
+            ImGui::SameLine();
+            ImGui::Text(" -> ");
+            ImGui::SameLine();
+            ImGui::Text(ToString(tAnimClip.strAnimName).c_str());
+
+            ChangInfoCnt++;
+        }
+        if (m_tTempAnimclip.iStartFrame != tAnimClip.iStartFrame)
+        {
+            ImGui::Text("StartFrm : ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(m_tTempAnimclip.iStartFrame).c_str());
+            ImGui::SameLine();
+            ImGui::Text(" -> ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(tAnimClip.iStartFrame).c_str());
+
+            ChangInfoCnt++;
+        }
+        if (m_tTempAnimclip.iEndFrame != tAnimClip.iEndFrame)
+        {
+            ImGui::Text("EndFrm : ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(m_tTempAnimclip.iEndFrame).c_str());
+            ImGui::SameLine();
+            ImGui::Text(" -> ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(tAnimClip.iEndFrame).c_str());
+            ChangInfoCnt++;
+        }
+        if (m_tTempAnimclip.iFrameLength != tAnimClip.iFrameLength)
+        {
+            ImGui::Text("FrmLength : ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(m_tTempAnimclip.iFrameLength).c_str());
+            ImGui::SameLine();
+            ImGui::Text(" -> ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(tAnimClip.iFrameLength).c_str());
+            ChangInfoCnt++;
+        }
+        if (m_tTempAnimclip.dStartTime != tAnimClip.dStartTime)
+        {
+            ImGui::Text("StartTime : ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(m_tTempAnimclip.dStartTime).c_str());
+            ImGui::SameLine();
+            ImGui::Text(" -> ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(tAnimClip.dStartTime).c_str());
+            ChangInfoCnt++;
+        }
+        if (m_tTempAnimclip.dEndTime != tAnimClip.dEndTime)
+        {
+            ImGui::Text("EndTime : ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(m_tTempAnimclip.dEndTime).c_str());
+            ImGui::SameLine();
+            ImGui::Text(" -> ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(tAnimClip.dEndTime).c_str());
+            ChangInfoCnt++;
+        }
+        if (m_tTempAnimclip.dTimeLength != tAnimClip.dTimeLength)
+        {
+            ImGui::Text("TimeLength : ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(m_tTempAnimclip.dTimeLength).c_str());
+            ImGui::SameLine();
+            ImGui::Text(" -> ");
+            ImGui::SameLine();
+            ImGui::Text(std::to_string(tAnimClip.dTimeLength).c_str());
+            ChangInfoCnt++;
+        }
+
+        ImGui::Spacing();
+
+        if (ChangInfoCnt == 0)
+        {
+            ImGui::SameLine();
+            ImGui::Text("  No Change  ");
+
+            if (ImGui::Button(" Close ", ImVec2(120, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+        }
+        else
+        {
+            if (ImGui::Button(" Save ", ImVec2(120, 0)))
+            {
+                CBone* pBone = m_pCurAnimator->GetCurAnim()->GetBone().Get();
+
+                pBone->SetAnimClip(tAnimClip);
+                pBone->Save(pBone->GetKey());
+
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SetItemDefaultFocus();
+            ImGui::SameLine();
+            if (ImGui::Button(" Cancel ", ImVec2(120, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+            }
+        }
+
+        ImGui::EndPopup();
+    }
 }
 
 void AnimEditUI::SelectMeshData(DWORD_PTR _data)

@@ -17,16 +17,39 @@
 CAnimator3D::CAnimator3D()
 	: m_pCurAnim(nullptr)
 	, m_iFrameCount(30)
+	, m_iFrameIdx(0)
+	, m_iNextFrameIdx(0)
+	, m_fRatio(0.f)
+	, m_dCurTime(0.f)
+	, m_bPlay(false)
+	, m_pPreviousAnim(nullptr)
+	, m_iPreviousAnimFrmIdx(0)
+	, m_bAnimTrans(false)
+	, m_dTransitionUpdateTime(0.f)
+	, m_fTransitionTime(0.1f)
+	, m_fTransitionsRatio(0.f)
 	, m_pBoneFinalMatBuffer(nullptr)
 	, m_bFinalMatUpdate(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
+	m_fTransitionTime = 5.f / m_iFrameCount;
 }
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: m_pCurAnim(nullptr)
 	, m_iFrameCount(_origin.m_iFrameCount)
+	, m_iFrameIdx(0)
+	, m_iNextFrameIdx(0)
+	, m_fRatio(0.f)
+	, m_dCurTime(0.f)
+	, m_bPlay(false)
+	, m_pPreviousAnim(nullptr)
+	, m_iPreviousAnimFrmIdx(0)
+	, m_bAnimTrans(false)
+	, m_dTransitionUpdateTime(0.f)
+	, m_fTransitionTime(_origin.m_fTransitionTime)
+	, m_fTransitionsRatio(0.f)
 	, m_pBoneFinalMatBuffer(nullptr)
 	, m_bFinalMatUpdate(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
@@ -150,33 +173,39 @@ void CAnimator3D::UpdateData()
 			UINT iBoneCount = (UINT)pBone->GetBones()->size();
 			pUpdateShader->SetBoneCount(iBoneCount);
 			pUpdateShader->SetFrameIndex(m_iFrameIdx);
-			pUpdateShader->SetNextFrameIdx(m_iNextFrameIdx);
 			pUpdateShader->SetFrameRatio(m_fRatio);
+			pUpdateShader->SetIsAnimTrans(m_bAnimTrans);
+			pUpdateShader->SetEndFrameIndex(m_pCurAnim->GetAnimClip().iEndFrame);
 
 			// 업데이트 쉐이더 실행
 			pUpdateShader->Execute();
 		}
 		else
 		{
-			// Animation3D Update Compute Shader
-			CAnimation3DShader* pUpdateShader = (CAnimation3DShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"Animation3DUpdateCS").Get();
+			 // Animation3D Update Compute Shader
+			 CAnimation3DShader* pUpdateShader = (CAnimation3DShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"Animation3DUpdateCS").Get();
+			 
+			 // 현재 재생 Bone Data에 맞춰서.
+			 Ptr<CBone> pBone = m_pCurAnim->GetBone();
+			 Check_Bone(pBone);
 
-			// 현재 재생 Bone Data에 맞춰서.
-			Ptr<CBone> pBone = m_pCurAnim->GetBone();
-			Check_Bone(pBone);
+			 Ptr<CBone> pPreviousBone = m_pPreviousAnim->GetBone();
+			 
+			 pUpdateShader->SetFrameDataBuffer(pBone->GetBoneFrameDataBuffer());
+			 pUpdateShader->SetPreviousFrameDataBuffer(pPreviousBone->GetBoneFrameDataBuffer());
+			 pUpdateShader->SetOffsetMatBuffer(pBone->GetBoneOffsetBuffer());
+			 pUpdateShader->SetOutputBuffer(m_pBoneFinalMatBuffer);
+			 
+			 UINT iBoneCount = (UINT)pBone->GetBones()->size();
 
-			pUpdateShader->SetFrameDataBuffer(pBone->GetBoneFrameDataBuffer());
-			pUpdateShader->SetOffsetMatBuffer(pBone->GetBoneOffsetBuffer());
-			pUpdateShader->SetOutputBuffer(m_pBoneFinalMatBuffer);
-
-			UINT iBoneCount = (UINT)pBone->GetBones()->size();
-			pUpdateShader->SetBoneCount(iBoneCount);
-			pUpdateShader->SetFrameIndex(m_pCurAnim->m_iFrameIdx);
-			pUpdateShader->SetNextFrameIdx(m_pCurAnim->m_iNextFrameIdx);
-			pUpdateShader->SetFrameRatio(m_pCurAnim->m_fRatio);
-
-			// 업데이트 쉐이더 실행
-			pUpdateShader->Execute();
+			 pUpdateShader->SetBoneCount(iBoneCount);
+			 pUpdateShader->SetIsAnimTrans(m_bAnimTrans);
+			 pUpdateShader->SetFrameIndex(m_iPreviousAnimFrmIdx);
+			 pUpdateShader->SetFrameRatio(m_fTransitionsRatio);
+			 pUpdateShader->SetEndFrameIndex(m_pCurAnim->GetAnimClip().iEndFrame);
+			 
+			 // 업데이트 쉐이더 실행
+			 pUpdateShader->Execute();
 		}
 
 		m_bFinalMatUpdate = true;
@@ -276,8 +305,34 @@ void CAnimator3D::SetFrame(int _Frame)
 
 CAnim3D* CAnimator3D::SelectAnimation(const wstring& _AnimName)
 {
-	m_pCurAnim = m_mapAnim.find(_AnimName)->second;
-	Play();
+	// 재생중이던 애니메이션이 없었다.
+	if (!m_pCurAnim)
+	{
+		m_pCurAnim = m_mapAnim.find(_AnimName)->second;
+		Play();
+	}
+	else
+	{
+		// 이전 애니메이션 세팅
+		m_pPreviousAnim = m_pCurAnim;
+		m_iPreviousAnimFrmIdx = m_iFrameIdx;
+		
+		// 신규 애니메이션 프레임정보 초기화
+		m_iFrameIdx = 0;
+		m_iNextFrameIdx = 0;
+
+		// 신규 애니메이션 세팅
+		m_pCurAnim = m_mapAnim.find(_AnimName)->second;
+		m_pCurAnim->Reset();
+
+		// 애니메이션 전환 세팅
+		m_bAnimTrans = 1;
+		m_dTransitionUpdateTime = 0.f;
+		m_fTransitionsRatio = 0.f;
+
+		Play();
+	}
+
 	return m_pCurAnim;
 }
 
