@@ -13,11 +13,13 @@ class AnimEditUI :
     public UI
 {
 private:
-    CAnimEditObj* m_pRenderObj;             // 현재 재생되는 오브젝트
-    CAnim3D*    m_pCurAnimation;            // 현재 선택된 애니메이션
-    bool        m_bPlay;
+    CAnimEditObj* m_pRenderObj;         // 현재 재생되는 오브젝트
+    CAnimator3D*  m_pCurAnimator;       // 현재 선택된 애니메이션
+    bool          m_bPlay;
 
-    int m_iFrameCount;  // 설정된 초당 재생 프레임
+    tMTAnimClip   m_tTempAnimclip;      // 임시 저장용 AnimClip 정보
+
+    int           m_iFrameCount;        // 설정된 초당 재생 프레임
 
 private:
     void print_strElement(const char* _BtnTitle, const char* _str, Vec2 _Btnsize = Vec2(0, 0));
@@ -35,6 +37,7 @@ private:
     void render_TimeLine();
     void render_CamController();
     void render_window();
+    void render_SavePopUp();
 
     void SelectMeshData(DWORD_PTR _data);
     void SelectBone(DWORD_PTR _data);

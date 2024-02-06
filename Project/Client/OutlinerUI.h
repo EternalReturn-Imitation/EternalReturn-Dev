@@ -8,8 +8,10 @@ class OutlinerUI :
     public UI
 {
 private:
-    TreeUI*     m_Tree;
-    DWORD_PTR   m_dwSelectedData;
+    TreeUI*         m_Tree;
+    DWORD_PTR       m_dwSelectedData;
+    CGameObject*    m_dwRSelectedObj;
+    bool            m_bOpenMenu;
 
 
 public:
@@ -30,6 +32,7 @@ public:
 private:
     void AddGameObject(CGameObject* _Obj, TreeNode* _ParentNode);
     void DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode);
+    void OpenObjMenu(TreeNode* _data);
 
 
 
