@@ -317,11 +317,11 @@ void CFBXLoader::LoadTransfrom(FbxNode* _pNode)
 	// euler -> quaternion
 
 
-	// unity :: rotation.z -> -1.f;
-	rotation.mData[2] *= -1.f;
-	
-	// unity rotation-> -1.f;
-	rotation.mData[1] *= -1.f;
+	// // unity :: rotation.z -> -1.f;
+	rotation.mData[2] += 180.f;
+	// 
+	// // unity rotation-> -1.f;
+	rotation.mData[1] += 180.f;
 	
 	// unity tranlation -> / 100.f;
 	translation.mData[0] /= 100.f;

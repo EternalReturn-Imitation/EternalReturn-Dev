@@ -84,7 +84,7 @@ void CAnimEditObj::setobject(Ptr<CMeshData> _MeshData)
 		delete m_pRenderObj;
 
 	m_pRenderObj = _MeshData->Instantiate();
-	m_pRenderObj->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
+	m_pRenderObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
 	m_pRenderObj->SetName(L"AnimEditObj");
 
 	m_pRenderObj->AddComponent(new CAnimator3D);
@@ -93,11 +93,12 @@ void CAnimEditObj::setobject(Ptr<CMeshData> _MeshData)
 	m_pControlObj = new CGameObject;
 	m_pControlObj->SetName(L"AnimEditControlObj");
 	m_pControlObj->AddComponent(new CTransform);
+	m_pControlObj->Transform()->SetRelativePos(Vec3(0.f, 1.f, 0.f));
 
 	m_pCamObj = new CGameObject;
 	m_pCamObj->SetName(L"AnimEditCamObj");
 	m_pCamObj->AddComponent(new CTransform);
-	m_pCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -200.f));
+	m_pCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -2.5f));
 
 	m_pRenderObj->AddChild(m_pControlObj);
 	m_pControlObj->AddChild(m_pCamObj);

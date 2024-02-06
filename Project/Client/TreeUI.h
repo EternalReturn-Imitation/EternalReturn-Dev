@@ -73,6 +73,8 @@ private:
 
     TreeNode* m_SelectedNode;
     TreeNode* m_LbtDownNode;
+    TreeNode* m_RSelectedNode;
+    TreeNode* m_RbtDownNode;
 
     TreeNode* m_DragNode;
     TreeNode* m_DropNode;
@@ -92,6 +94,9 @@ private:
 
     UI* m_SwapBackInst;
     UI_DELEGATE_1   m_SwapBackFunc;
+
+    UI* m_RSelectInst;
+    UI_DELEGATE_1   m_RSelectFunc;
 
     string          m_strDragDropID;
 
@@ -131,11 +136,18 @@ public:
         m_SwapBackFunc = _MemFunc;
     }
 
+    void AddDynamic_RSelect(UI* _UI, UI_DELEGATE_1 _MemFunc)
+    {
+        m_RSelectInst = _UI;
+        m_RSelectFunc = _MemFunc;
+    }
+
     void SetDragDropID(const string& _strID) { m_strDragDropID = _strID; }
 
 
 private:
     void SetSelectedNode(TreeNode* _Node);   
+    void SetRSelectedNode(TreeNode* _Node);
     void SetDragNode(TreeNode* _Node);
     void SetDropNode(TreeNode* _Node);
     void SetSwapFrontNode(TreeNode* _Node);
@@ -144,7 +156,6 @@ private:
 public:
     TreeNode* GetSelectedNode() { return m_SelectedNode; }
     bool GetSelectedNode(DWORD_PTR _Data);  // 입력된 데이터와 동일한 데이터를 보유하고 있는 노드를 선택상태로 만듬
-
 
 public:
     TreeUI();

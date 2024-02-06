@@ -149,6 +149,16 @@ void TreeNode::render_update()
             m_Owner->SetSelectedNode(this);
         }
 
+        // 해당 노드에 마우스 오른쪽클릭이 발생하면 선택노드로 지정 준다.
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right))
+        {
+            m_Owner->m_RbtDownNode = this;
+        }
+        else if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Right))
+        {
+            m_Owner->SetRSelectedNode(this);
+        }
+
         
 
         // 해당 노드 위에서 드래그 스타트 체크
@@ -370,6 +380,27 @@ void TreeUI::SetSelectedNode(TreeNode* _Node)
         if (m_SelectInst && m_SelectFunc)
         {
             (m_SelectInst->*m_SelectFunc)((DWORD_PTR)m_SelectedNode);
+        }
+    }
+}
+
+void TreeUI::SetRSelectedNode(TreeNode* _Node)
+{
+    // 마우스를 누른 노드와 뗀 노드가 일치해야 함
+    if (m_RbtDownNode != _Node)
+    {
+        m_RbtDownNode = nullptr;
+        return;
+    }
+
+    m_RSelectedNode = _Node;
+    m_RbtDownNode = nullptr;
+
+    if (m_RSelectedNode)
+    {
+        if (m_RSelectInst && m_RSelectFunc)
+        {
+            (m_RSelectInst->*m_RSelectFunc)((DWORD_PTR)m_RSelectedNode);
         }
     }
 }

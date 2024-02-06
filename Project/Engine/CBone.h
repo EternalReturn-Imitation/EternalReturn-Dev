@@ -16,6 +16,8 @@ private:
     UINT    m_iFrmCnt;
 
 public:
+    void SetAnimClip(const tMTAnimClip& _tAnimClip) { m_vecAnimClip[0] = _tAnimClip; }
+
     const vector<tMTAnimClip>* GetAnimClip() { return &m_vecAnimClip; }
     const vector<tMTBone>* GetBones() { return &m_vecBones; }
     UINT GetBoneCount() { return (UINT)m_vecBones.size(); }
