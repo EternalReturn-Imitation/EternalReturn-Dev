@@ -102,6 +102,9 @@ StructuredBuffer<tLightInfo> g_Light3DBuffer : register(t13);
 // Animation3D Bone Matrix Buffer
 StructuredBuffer<Matrix> g_arrBoneMat : register(t30);
 
+// Laycast VertexPos Buffer
+StructuredBuffer<float3> g_arrVtx : register(t20);
+
 SamplerState g_sam_0 : register(s0);
 SamplerState g_sam_1 : register(s1);
 

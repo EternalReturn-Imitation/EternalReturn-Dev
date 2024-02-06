@@ -190,7 +190,7 @@
     <ClInclude Include="CLandScape.h">
       <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
     </ClInclude>
-    <ClInclude Include="CRaycastShader.h">
+    <ClInclude Include="CLandScapeRaycastShader.h">
       <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
     </ClInclude>
     <ClInclude Include="CHeightMapShader.h">
@@ -213,6 +213,13 @@
     </ClInclude>
     <ClInclude Include="CBone.h">
       <Filter>Source\07. Resource\8. Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="CNaviMap.h">
+      <Filter>Source\06. Component\9. NaviMap</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="CRaycastShader.h">
+      <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -390,7 +397,7 @@
     <ClCompile Include="CLandScape.cpp">
       <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
     </ClCompile>
-    <ClCompile Include="CRaycastShader.cpp">
+    <ClCompile Include="CLandScapeRaycastShader.cpp">
       <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
     </ClCompile>
     <ClCompile Include="CLandScape_init.cpp">
@@ -416,6 +423,12 @@
     </ClCompile>
     <ClCompile Include="CBone.cpp">
       <Filter>Source\07. Resource\8. Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="CNaviMap.cpp">
+      <Filter>Source\06. Component\9. NaviMap</Filter>
+    </ClCompile>
+    <ClCompile Include="CRaycastShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -635,6 +648,12 @@
     <Filter Include="Source\07. Resource\8. Bone">
       <UniqueIdentifier>{42ead4ff-48ef-486e-a638-2997be65c251}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\06. Component\9. NaviMap">
+      <UniqueIdentifier>{f18188a7-9ba7-4214-af4e-42fb77adb30d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\NaviMap">
+      <UniqueIdentifier>{5031d0ca-7e57-4455-b01a-3b411e02a580}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -742,5 +761,11 @@
     <FxCompile Include="animedit3d.fx">
       <Filter>Source\08. ShaderCode\Render\3D</Filter>
     </FxCompile>
+    <FxCompile Include="RaycastBase.fx">
+      <Filter>Source\08. ShaderCode\Compute</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
 </Project>

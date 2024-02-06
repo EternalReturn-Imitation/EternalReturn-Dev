@@ -3,11 +3,10 @@
 
 #include "CConstBuffer.h"
 #include "CStructuredBuffer.h"
-#include "CTexture.h"
 
 CRaycastShader::CRaycastShader(UINT _iGroupPerThreadX, UINT _iGroupPerThreadY, UINT _iGroupPerThreadZ)
-	: m_iXFace(0)
-	, m_iZFace(0)
+	: m_iXFace(64)
+	, m_iZFace(64)
 	, m_ray{}
 	, m_pOutput(nullptr)
 {
@@ -28,9 +27,6 @@ void CRaycastShader::UpdateData()
 	m_Const.arrV4[0] = m_ray.vStart;
 	m_Const.arrV4[1] = m_ray.vDir;
 
-	// 높이맵 (SRV)
-	m_pHeightMap->UpdateData_CS(0, true);
-
 	// 출력 버퍼	(UAV)
 	m_pOutput->UpdateData_CS(0, false);
 
@@ -42,6 +38,5 @@ void CRaycastShader::UpdateData()
 
 void CRaycastShader::Clear()
 {
-	m_pHeightMap->Clear_CS(0);
 	m_pOutput->Clear();
 }

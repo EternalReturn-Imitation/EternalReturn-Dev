@@ -95,10 +95,10 @@ void CLandScape::CreateComputeShader()
 	// =====================
 	// 지형 피킹 컴퓨트 쉐이더
 	// =====================
-	m_pCSRaycast = (CRaycastShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"RaycastShader").Get();
+	m_pCSRaycast = (CLandScapeRaycastShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"RaycastShader").Get();
 	if (nullptr == m_pCSRaycast)
 	{
-		m_pCSRaycast = new CRaycastShader(32, 32, 1);
+		m_pCSRaycast = new CLandScapeRaycastShader(32, 32, 1);
 		m_pCSRaycast->CreateComputeShader(L"shader\\raycast.fx", "CS_Raycast");
 		CResMgr::GetInst()->AddRes<CComputeShader>(L"RaycastShader", m_pCSHeightMap.Get());
 	}

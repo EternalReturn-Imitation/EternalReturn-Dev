@@ -60,7 +60,7 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
     for (int i = 0; i < 3; ++i)
     {
         float2 uv = float2(saturate(vPos[i].x / (float) FACE_X), saturate(1.f - vPos[i].z / (float) FACE_Z));
-        vPos[i].y = HEIGHT_MAP.SampleLevel(g_sam_0, uv, 0).x;
+        //vPos[i].y = HEIGHT_MAP.SampleLevel(g_sam_0, uv, 0).x;
     }
 
     float3 vCrossPoint = (float3) 0.f;

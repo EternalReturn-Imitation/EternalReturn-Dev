@@ -172,6 +172,6 @@ void CLandScape::Raycasting()
 
 	m_pCSRaycast->Execute();
 
-	/*m_pCrossBuffer->GetData(&out);
-	int a = 0;*/
+	m_pCrossBuffer->GetData(&out);
+	int a = 0;
 }
