@@ -14,6 +14,8 @@ private:
 
     Ptr<CTexture>       m_NaviMap; //네비 맵 텍스쳐
 
+    bool                m_bTrigger;
+
 public:
     CNaviMap();
     ~CNaviMap();

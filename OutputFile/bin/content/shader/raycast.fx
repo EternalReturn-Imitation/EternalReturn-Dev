@@ -59,7 +59,7 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
 
     for (int i = 0; i < 3; ++i)
     {
-        float2 uv = float2(saturate(vPos[i].x / (float) FACE_X), saturate(1.f - vPos[i].z / (float) FACE_Z));
+        //float2 uv = float2(saturate(vPos[i].x / (float) FACE_X), saturate(1.f - vPos[i].z / (float) FACE_Z));
         //vPos[i].y = HEIGHT_MAP.SampleLevel(g_sam_0, uv, 0).x;
     }
 
@@ -69,6 +69,7 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
     if (IntersectsLay(vPos, CAM_POS.xyz, CAM_DIR.xyz, vCrossPoint, fDist))
     {
         OUTPUT[0].vUV = float2(saturate(vCrossPoint.x / (float) FACE_X), saturate(1.f - vCrossPoint.z / (float) FACE_Z));
+        //OUTPUT[0].vUV = float2(vCrossPoint.x, vCrossPoint.z);
         OUTPUT[0].fDist = fDist;
         OUTPUT[0].success = 1;
     }

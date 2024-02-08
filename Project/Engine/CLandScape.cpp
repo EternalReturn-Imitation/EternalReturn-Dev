@@ -128,6 +128,23 @@ void CLandScape::render()
 	// 리소스 정리
 	// ==========
 	m_pWeightMapBuffer->Clear();
+
+	Vtx* vertices = GetOwner()->GetRenderComponent()->GetMesh()->GetVtxSysMem();
+	vector<Vector4> vVtx;
+
+	for (auto& indexInfo : GetOwner()->GetRenderComponent()->GetMesh()->GetIdxInfo()) {
+		UINT* indices = (UINT*)indexInfo.pIdxSysMem; // 인덱스 데이터 접근
+		vVtx.resize(indexInfo.iIdxCount);
+		for (UINT i = 0; i < indexInfo.iIdxCount; i += 3) {
+			// 삼각형 구성
+			Vtx v1 = vertices[indices[i]];
+			Vtx v2 = vertices[indices[i + 1]];
+			Vtx v3 = vertices[indices[i + 2]];
+			vVtx[i] = v1.vPos;
+			vVtx[i + 1] = v1.vPos;
+			vVtx[i + 2] = v1.vPos;
+		}
+	}
 }
 
 void CLandScape::render(UINT _iSubset)

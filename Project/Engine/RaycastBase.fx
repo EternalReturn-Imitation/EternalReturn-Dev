@@ -6,6 +6,9 @@
 
 RWStructuredBuffer<tRaycastOut> OUTPUT : register(u0);
 
+// Laycast Vertex Pos Buffer
+StructuredBuffer<float4> g_arrVtx : register(t25);
+
 #define HEIGHT_MAP      g_tex_0
 
 #define CAM_POS         g_vec4_0
@@ -13,64 +16,61 @@ RWStructuredBuffer<tRaycastOut> OUTPUT : register(u0);
 
 #define FACE_X          g_int_0
 #define FACE_Z          g_int_1
+#define BUFFER_LEN      g_int_2
 
-[numthreads(32, 32, 1)]
+#define MIN_X            g_float_0
+#define MAX_X            g_float_1
+#define MIN_Z            g_float_2
+#define MAX_Z            g_float_3
+
+[numthreads(1024, 1, 1)]
 void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
 {
     int2 id = _iThreadID.xy;
-
-    if (FACE_X * 2 <= id.x || FACE_Z <= id.y)
+    
+    int whileNum1 = BUFFER_LEN / 1024;
+    whileNum1 += 3;
+    if (whileNum1 % 3 == 0)
     {
-        return;
-    }
-
-    float3 vPos[3] = { (float3) 0.f, (float3) 0.f, (float3) 0.f };
-
-    if (0 == id.x % 2)
-    {
-        // 아래쪽 삼각형        
-        // 2
-        // | \
-        // 0--1        
-        vPos[0].x = id.x / 2;
-        vPos[0].z = id.y;
-
-        vPos[1].x = vPos[0].x + 1;
-        vPos[1].z = id.y;
-
-        vPos[2].x = vPos[0].x;
-        vPos[2].z = id.y + 1;
+        int whileNum2 = BUFFER_LEN % whileNum1;
     }
     else
     {
-        // 윗쪽 삼각형
-        // 1--0
-        //  \ |
-        //    2  
-        vPos[0].x = (id.x / 2) + 1;
-        vPos[0].z = id.y + 1;
-
-        vPos[1].x = vPos[0].x - 1;
-        vPos[1].z = id.y + 1;
-
-        vPos[2].x = vPos[0].x;
-        vPos[2].z = id.y;
+        //3단위로 안나뉘어질경우 예외처리 해주기.
+        //지금은 3단위로 나뉘어 떨어져서 내버려둠
     }
-
-    for (int i = 0; i < 3; ++i)
+    
+    //쓰레드가 담당하는 범위를 넘어가면 그냥 return;
+    if (id.x * whileNum1 > BUFFER_LEN)
     {
-        float2 uv = float2(saturate(vPos[i].x / (float) FACE_X), saturate(1.f - vPos[i].z / (float) FACE_Z));
-        //vPos[i].y = HEIGHT_MAP.SampleLevel(g_sam_0, uv, 0).x;
+        return;
     }
-
-    float3 vCrossPoint = (float3) 0.f;
-    float fDist = 0.f;
-
-    if (IntersectsLay(vPos, CAM_POS.xyz, CAM_DIR.xyz, vCrossPoint, fDist))
+    
+    for (int i = (id.x * whileNum1); i < (whileNum1 * (id.x + 1)); i += 3)
     {
-        OUTPUT[0].vUV = float2(saturate(vCrossPoint.x / (float) FACE_X), saturate(1.f - vCrossPoint.z / (float) FACE_Z));
-        OUTPUT[0].fDist = fDist;
-        OUTPUT[0].success = 1;
+        float3 vPos[3] = { (float3) 0.f, (float3) 0.f, (float3) 0.f };
+    
+        vPos[0].x = g_arrVtx[i].x;
+        vPos[0].z = g_arrVtx[i].y;
+    
+        vPos[1].x = g_arrVtx[i + 1].x;
+        vPos[1].z = g_arrVtx[i + 1].y;
+    
+        vPos[2].x = g_arrVtx[i + 2].x;
+        vPos[2].z = g_arrVtx[i + 2].y;
+
+        float3 vCrossPoint = (float3) 0.f;
+        float fDist = 0.f;
+    
+        if (IntersectsLay(vPos, CAM_POS.xyz, CAM_DIR.xyz, vCrossPoint, fDist))
+        {
+            //OUTPUT[0].vUV = float2(saturate(vCrossPoint.x / (float) FACE_X), saturate(1.f - vCrossPoint.z / (float) FACE_Z));
+            OUTPUT[0].vUV = float2(vCrossPoint.x, vCrossPoint.z);
+            OUTPUT[0].vUV.x = vPos[0].x;
+            OUTPUT[0].vUV.y = vPos[0].z;
+            OUTPUT[0].fDist = fDist;
+            OUTPUT[0].success = 1;
+        }
     }
 }
 

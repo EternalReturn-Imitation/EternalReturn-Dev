@@ -148,7 +148,7 @@ void CreateTestLevel()
 	 	CGameObject* pObj = nullptr;
 	// 	 
 	// 	 pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
-		 pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Navi_Mesh01.mdat");
+		 pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Navi_Mesh02.mdat");
 	// 	 for (int i = 0; i < 10; ++i)
 	// 	 {
 	 	 	pObj = pMeshData->Instantiate();
@@ -156,8 +156,9 @@ void CreateTestLevel()
 			Vec3 rot = pObj->Transform()->GetRelativeRot();
 			rot.x = -1.5708f;
 			pObj->Transform()->SetRelativeRot(rot);
+			//pObj->Transform()->SetRelativeScale(5.0f, 5.0f, 5.0f);
+			SpawnGameObject(pObj, Vec3(0.f,0.f,0.f), 2);
 			pObj->AddComponent(new CNaviMap);
-			SpawnGameObject(pObj, Vec3(0.f,-50.f,-100.f), 2);
 	// 	 	SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 2);
 	// 	 }
 	// 
@@ -180,20 +181,20 @@ void CreateTestLevel()
 	// pObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 
 
-	// LandScape Object
-	 CGameObject* pLandScape = new CGameObject;
-	 pLandScape->SetName(L"LandScape");
-	 
-	 pLandScape->AddComponent(new CTransform);
-	 pLandScape->AddComponent(new CLandScape);
-	 
-	 pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
-	 
-	 pLandScape->LandScape()->SetFace(64, 64);
-	 pLandScape->LandScape()->SetFrustumCheck(false);
-	 //pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
-	 
-	 SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
+	//// LandScape Object
+	//CGameObject* pLandScape = new CGameObject;
+	//pLandScape->SetName(L"LandScape");
+	//
+	//pLandScape->AddComponent(new CTransform);
+	//pLandScape->AddComponent(new CLandScape);
+	//
+	//pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
+	//
+	//pLandScape->LandScape()->SetFace(16, 16);
+	//pLandScape->LandScape()->SetFrustumCheck(false);
+	////pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
+	//
+	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 충돌 시킬 레이어 짝 지정
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");

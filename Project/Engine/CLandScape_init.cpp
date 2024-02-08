@@ -77,6 +77,10 @@ void CLandScape::CreateMesh()
 
 	// Mesh 재설정하고 나면 재질이 날라가기 때문에 다시 설정
 	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
+
+	Vtx* vertices = pMesh->GetVtxSysMem();
+	UINT i = pMesh->GetIdxInfo()[0].iIdxCount;
+	int a = 0;
 }
 
 void CLandScape::CreateComputeShader()
