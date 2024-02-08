@@ -191,6 +191,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEventMgr.h" />
     <ClInclude Include="CFBXLoader.h" />
+    <ClInclude Include="CFindPath.h" />
     <ClInclude Include="CFontMgr.h" />
     <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CGameObject.h" />
@@ -213,6 +214,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="components.h" />
     <ClInclude Include="CParticleSystem.h" />
     <ClInclude Include="CParticleUpdateShader.h" />
+    <ClInclude Include="CPathFindMgr.h" />
     <ClInclude Include="CPathMgr.h" />
     <ClInclude Include="CPrefab.h" />
     <ClInclude Include="CLandScapeRaycastShader.h" />
@@ -235,6 +237,15 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CWeightMapShader.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="Detour\DetourAlloc.h" />
+    <ClInclude Include="Detour\DetourAssert.h" />
+    <ClInclude Include="Detour\DetourCommon.h" />
+    <ClInclude Include="Detour\DetourMath.h" />
+    <ClInclude Include="Detour\DetourNavMesh.h" />
+    <ClInclude Include="Detour\DetourNavMeshBuilder.h" />
+    <ClInclude Include="Detour\DetourNavMeshQuery.h" />
+    <ClInclude Include="Detour\DetourNode.h" />
+    <ClInclude Include="Detour\DetourStatus.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
@@ -269,6 +280,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEventMgr.cpp" />
     <ClCompile Include="CFBXLoader.cpp" />
+    <ClCompile Include="CFindPath.cpp" />
     <ClCompile Include="CFontMgr.cpp" />
     <ClCompile Include="CFrustum.cpp" />
     <ClCompile Include="CGameObject.cpp" />
@@ -291,6 +303,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CNaviMap.cpp" />
     <ClCompile Include="CParticleSystem.cpp" />
     <ClCompile Include="CParticleUpdateShader.cpp" />
+    <ClCompile Include="CPathFindMgr.cpp" />
     <ClCompile Include="CPathMgr.cpp" />
     <ClCompile Include="CPrefab.cpp" />
     <ClCompile Include="CLandScapeRaycastShader.cpp" />
@@ -313,6 +326,13 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CTimeMgr.cpp" />
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="CWeightMapShader.cpp" />
+    <ClCompile Include="Detour\DetourAlloc.cpp" />
+    <ClCompile Include="Detour\DetourAssert.cpp" />
+    <ClCompile Include="Detour\DetourCommon.cpp" />
+    <ClCompile Include="Detour\DetourNavMesh.cpp" />
+    <ClCompile Include="Detour\DetourNavMeshBuilder.cpp" />
+    <ClCompile Include="Detour\DetourNavMeshQuery.cpp" />
+    <ClCompile Include="Detour\DetourNode.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="extern.cpp" />
     <ClCompile Include="func.cpp" />

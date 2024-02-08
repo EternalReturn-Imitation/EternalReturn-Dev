@@ -60,7 +60,7 @@ void CRenderComponent::render_shadowmap()
 		Animator3D()->ClearData();
 	}
 
-	GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
+	//GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
 }
 
 

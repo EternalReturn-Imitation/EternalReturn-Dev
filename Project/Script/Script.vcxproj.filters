@@ -45,6 +45,9 @@
     <ClInclude Include="CCloudScript.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="CFindPathScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp">
@@ -78,6 +81,9 @@
       <Filter>Script</Filter>
     </ClCompile>
     <ClCompile Include="CCloudScript.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CFindPathScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>

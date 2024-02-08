@@ -21,6 +21,10 @@
 
 #include "CEditorObjMgr.h"
 
+#include <Script/CFindPathScript.h>
+#include <Engine/CFindPath.h>
+#include <Engine/CPathFindMgr.h>
+
 
 void CreateTestLevel()
 {
@@ -115,7 +119,20 @@ void CreateTestLevel()
 
 	// SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
 
-	
+	CGameObject* pObject = new CGameObject;
+	pObject->SetName(L"Plane");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CFindPath);
+
+	pObject->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+
+
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
 	
 	//// ============
 	//// FBX Loading
@@ -157,9 +174,9 @@ void CreateTestLevel()
 			rot.x = -1.5708f;
 			pObj->Transform()->SetRelativeRot(rot);
 			//pObj->Transform()->SetRelativeScale(5.0f, 5.0f, 5.0f);
-			SpawnGameObject(pObj, Vec3(0.f,0.f,0.f), 2);
 			pObj->AddComponent(new CNaviMap);
-	// 	 	SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 2);
+			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+			SpawnGameObject(pObj, Vec3(0.f,0.f,0.f), 0);
 	// 	 }
 	// 
 	// 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");
@@ -190,7 +207,7 @@ void CreateTestLevel()
 	//
 	//pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
 	//
-	//pLandScape->LandScape()->SetFace(16, 16);
+	//pLandScape->LandScape()->SetFace(1, 1);
 	//pLandScape->LandScape()->SetFrustumCheck(false);
 	////pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
 	//

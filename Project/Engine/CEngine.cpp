@@ -13,6 +13,7 @@
 #include "CFontMgr.h"
 #include "CSQLMgr.h"
 #include "CInstancingBuffer.h"
+#include "CPathFindMgr.h"
 
 CEngine::CEngine()
 	: m_hWnd(nullptr)
@@ -64,6 +65,7 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 
 	CInstancingBuffer::GetInst()->init();
 
+	CPathFindMgr::GetInst()->init();
 
 	return S_OK;
 }

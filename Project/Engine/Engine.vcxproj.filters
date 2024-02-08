@@ -221,6 +221,39 @@
     <ClInclude Include="CRaycastShader.h">
       <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClInclude>
+    <ClInclude Include="Detour\DetourStatus.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourAlloc.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourAssert.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourCommon.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourMath.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNavMesh.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNavMeshBuilder.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNavMeshQuery.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNode.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CPathFindMgr.h">
+      <Filter>Source\03. Manager\13. PathFindMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="CFindPath.h">
+      <Filter>Source\06. Component\10. FindPath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -429,6 +462,33 @@
     </ClCompile>
     <ClCompile Include="CRaycastShader.cpp">
       <Filter>Source\08. ShaderCode\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourAlloc.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourAssert.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourCommon.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNavMesh.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNavMeshBuilder.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNavMeshQuery.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNode.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CPathFindMgr.cpp">
+      <Filter>Source\03. Manager\13. PathFindMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CFindPath.cpp">
+      <Filter>Source\06. Component\10. FindPath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -653,6 +713,15 @@
     </Filter>
     <Filter Include="Source\08. ShaderCode\Compute\NaviMap">
       <UniqueIdentifier>{5031d0ca-7e57-4455-b01a-3b411e02a580}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NaviMesh">
+      <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\13. PathFindMgr">
+      <UniqueIdentifier>{96d812ea-6676-4ea1-90de-90fc6de37f86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\10. FindPath">
+      <UniqueIdentifier>{09225021-bcc6-49c2-ab03-7eb99d32f80c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -115,22 +115,20 @@ void CNaviMap::finaltick()
 					zMax = vVtx[i + 2].z;
 			}
 		}
+		m_fMinMaxArr[0] = xMin;
+		m_fMinMaxArr[1] = xMax;
+		m_fMinMaxArr[2] = yMin;
+		m_fMinMaxArr[3] = yMax;
+		m_fMinMaxArr[4] = zMin;
+		m_fMinMaxArr[5] = zMax;
 
 		m_pCSRaycast->SetMinMax(xMin, xMax, yMin, yMax);
 		m_pCSRaycast->SetVtx(vVtx);
 
-	for (auto& indexInfo : GetOwner()->GetRenderComponent()->GetMesh()->GetIdxInfo()) {
-			UINT* indices = (UINT*)indexInfo.pIdxSysMem; // 인덱스 데이터 접근
-			vVtx.resize(indexInfo.iIdxCount);
-			for (UINT i = 0; i < indexInfo.iIdxCount; i += 3) {
-				// 삼각형 구성
-				vertices[indices[i]].vPos.x += abs(xMin), vertices[indices[i]].vPos.y = abs(yMin), vertices[indices[i]].vPos.z = abs(zMin);
-				vertices[indices[i + 1]].vPos.x += abs(xMin), vertices[indices[i + 1]].vPos.y = abs(yMin), vertices[indices[i + 1]].vPos.z = abs(zMin);
-				vertices[indices[i + 2]].vPos.x += abs(xMin), vertices[indices[i + 2]].vPos.y = abs(yMin), vertices[indices[i + 2]].vPos.z = abs(zMin);
-			}
-		}
-
 		m_bTrigger = false;
+
+		GetOwner()->Transform()->SetOffsetRelativePos(Vec3(-xMin, 0.f, yMax));
+		GetOwner()->Transform()->SetOffsetTrigger(true);
 	}
 
 	if (KEY_PRESSED(KEY::LBTN))
@@ -159,13 +157,23 @@ void CNaviMap::Raycasting()
 	tRaycastOut out = { Vec2(0.f, 0.f), (float)0x7fffffff, 0 };
 	m_pCrossBuffer->SetData(&out, 1);
 
-	m_pCSRaycast->SetCameraRay(CamRay);
+	CCamera* camera = CRenderMgr::GetInst()->GetMainCam();
+	m_pCSRaycast->SetCameraRay(camera->CalRay());
 	m_pCSRaycast->SetOuputBuffer(m_pCrossBuffer);
 
 	m_pCSRaycast->Execute();
 
 	m_pCrossBuffer->GetData(&out);
-	int a = 0;
+
+	if (out.bSuccess) {
+		m_sResultPos.resultPos.x = (abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1]))*out.vUV.x;
+		m_sResultPos.resultPos.y = (abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * 0.f;
+		m_sResultPos.resultPos.z = (abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5]))*out.vUV.y;
+		m_sResultPos.bSuccess = true;
+	}
+	else {
+		m_sResultPos.bSuccess = false;
+	}
 }
 
 void CNaviMap::SaveToLevelFile(FILE* _File)

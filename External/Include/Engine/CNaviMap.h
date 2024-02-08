@@ -16,6 +16,10 @@ private:
 
     bool                m_bTrigger;
 
+    tNaviResult         m_sResultPos;
+
+    float               m_fMinMaxArr[6];//차례대로 xMin, xMax, yMin, yMax, zMin, zMax값이 들어가있음.
+
 public:
     CNaviMap();
     ~CNaviMap();
@@ -26,6 +30,9 @@ public:
     virtual void finaltick();
 
     void Raycasting();
+    
+public:
+    tNaviResult GetRayResultPos() { return m_sResultPos; }
 
 public:
     virtual void SaveToLevelFile(FILE* _File);

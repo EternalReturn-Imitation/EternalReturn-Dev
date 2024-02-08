@@ -16,6 +16,7 @@ CLandScape::CLandScape()
 	, m_iFaceZ(1)
 	, m_vBrushScale(Vec2(0.2f, 0.2f))
 	, m_iWeightIdx(2)
+	, m_eMod(LANDSCAPE_MOD::SPLAT)
 {
 	init();	
 }

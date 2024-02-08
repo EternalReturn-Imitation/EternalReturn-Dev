@@ -5,8 +5,8 @@
 #include "CStructuredBuffer.h"
 
 CRaycastShader::CRaycastShader(UINT _iGroupPerThreadX, UINT _iGroupPerThreadY, UINT _iGroupPerThreadZ)
-	: m_iXFace(32)
-	, m_iZFace(32)
+	: m_iXFace(128)
+	, m_iZFace(128)
 	, m_ray{}
 	, m_pOutput(nullptr)
 {

@@ -85,6 +85,10 @@ void CGameObject::begin()
 
 void CGameObject::tick()
 {
+	if (GetName() == L"NaviMap")
+		int a = 0;
+	if (GetName() == L"Plane")
+		int a = 0;
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
 		if (nullptr != m_arrCom[i])

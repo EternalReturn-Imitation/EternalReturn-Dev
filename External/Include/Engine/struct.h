@@ -187,6 +187,21 @@ struct tRaycastOut
 	int		bSuccess;
 };
 
+// Raycast 결과를 받을 구조체
+struct tRaycastOutV3
+{
+	Vec2	vUV;
+	float	fDist;
+	int		bSuccess;
+};
+
+// Navi 결과를 받을 구조체
+struct tNaviResult
+{
+	Vector3 resultPos;
+	bool	bSuccess;
+};
+
 // ============
 // Animation 3D
 // ============

@@ -37,6 +37,9 @@ public:
 		m_xMin = _xMin, m_xMax = _xMax, m_yMin = _yMin, m_yMax = _yMax;
 	}
 
+	tRay GetRayInfo() { return m_ray; }
+	vector<Vector4> GetVertex() { return m_vVtx; }
+
 protected:
 
 	virtual void UpdateData();

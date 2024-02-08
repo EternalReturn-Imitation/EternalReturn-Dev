@@ -94,7 +94,7 @@ void CCamera::finaltick()
 	CalRay();
 }
 
-void CCamera::CalRay()
+tRay CCamera::CalRay()
 {
 	// 마우스 방향을 향하는 Ray 구하기
 	// SwapChain 타겟의 ViewPort 정보
@@ -115,6 +115,8 @@ void CCamera::CalRay()
 	// world space 에서의 방향
 	m_ray.vDir = XMVector3TransformNormal(m_ray.vDir, m_matViewInv);
 	m_ray.vDir.Normalize();
+
+	return m_ray;
 }
 
 void CCamera::CalcViewMat()
@@ -238,6 +240,64 @@ void CCamera::MatrixUpdate()
 
 	g_transform.matProj = m_matProj;
 	g_transform.matProjInv = m_matProjInv;
+}
+
+tRaycastOutV3 CCamera::Raycasting(Vec3* _vertices, tRay _ray)
+{
+	tRaycastOutV3 result;
+	result.vUV = Vec3(0.f, 0.f, 0.f);
+	result.bSuccess = false;
+
+	Vec3 edge[2] = { Vec3(), Vec3() };
+	edge[0] = _vertices[1] - _vertices[0];
+	edge[1] = _vertices[2] - _vertices[0];
+
+	Vec3 normal = (edge[0].Cross(edge[1])).Normalize();
+	float b = normal.Dot(_ray.vDir);
+
+
+	Vec3 w0 = _ray.vStart - _vertices[0];
+	float a = -(normal.Dot(w0));
+	float t = a / b;
+
+	result.fDist = t;
+
+	Vec3 p = _ray.vStart + t * _ray.vDir;
+
+	result.vUV = p;
+
+	float uu, uv, vv, wu, wv, inverseD;
+	uu = edge[0].Dot(edge[0]);
+	uv = edge[0].Dot(edge[1]);
+	vv = edge[1].Dot(edge[1]);
+
+	Vec3 w = p - _vertices[0];
+	wu = w.Dot(edge[0]);
+	wv = w.Dot(edge[1]);
+
+	inverseD = uv * uv - uu * vv;
+	inverseD = 1.0f / inverseD;
+
+	float u = (uv * wv - vv * wu) * inverseD;
+	if (u < 0.0f || u > 1.0f)
+	{
+		result.vUV = Vec3();
+		result.fDist = 0.0f;
+		result.bSuccess = false;
+		return result;
+	}
+
+	float v = (uv * wu - uu * wv) * inverseD;
+	if (v < 0.0f || v > 1.0f)
+	{
+		result.vUV = Vec3();
+		result.fDist = 0.0f;
+		result.bSuccess = false;
+		return result;
+	}
+
+	result.bSuccess = true;
+	return result;
 }
 
 void CCamera::SortObject()

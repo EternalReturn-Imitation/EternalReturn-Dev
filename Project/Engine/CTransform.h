@@ -9,6 +9,8 @@ private:
     Vec3    m_vRelativeScale;
     Vec3    m_vRelativeRot;
 
+    Vec3    m_vOffsetRelativePos;//오프셋을 입력한 상대 포즈
+
     bool    m_bAbsolute;    // 상대 이동, 크기를 절대값으로 지정    
 
     Vec3    m_vRelativeDir[3];
@@ -18,6 +20,9 @@ private:
     Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
+    Matrix  m_matOffsetWorld; //오프셋이 반영된 매트릭스
+    Matrix  m_matOffsetWorldInv; //오프셋이 반영된 매트릭스의 역행렬
+
     Matrix  m_matWorldForGizmo; // 기즈모용 월드매트릭스
 
     float   m_fBoundingRadius;       // 최대 반경 반지름
@@ -25,6 +30,9 @@ private:
     Matrix  m_matWorldBoundingBox;    // 최대 반경 행렬
 
     bool    b_GizmoOnSet;
+
+    //오프셋 트리거
+    bool    OffsetTrigger;
 
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
@@ -37,6 +45,10 @@ public:
 
     // 상대 이동, 크기를 절대값으로 지정  
     void SetAbsolute(bool _Set) { m_bAbsolute = _Set; }    
+
+    // 오프셋 위치를 지정
+    void SetOffsetRelativePos(Vec3 _vPos) { m_vOffsetRelativePos = _vPos; }
+    void SetOffsetTrigger(bool _trigger) { OffsetTrigger = _trigger; }
 
     Vec3 GetRelativePos() const { return m_vRelativePos; }
     Vec3 GetRelativeScale() const { return m_vRelativeScale; }
