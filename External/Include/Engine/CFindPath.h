@@ -3,6 +3,9 @@
 class CFindPath :
     public CComponent
 {
+private:
+    bool LaycastResultTrigger;
+
 public:
     CFindPath();
     ~CFindPath();

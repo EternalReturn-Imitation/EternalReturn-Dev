@@ -10,10 +10,12 @@
 #include "CRenderMgr.h"
 #include "CTransform.h"
 #include "CRenderComponent.h"
+#include "CPathFindMgr.h"
 
 CNaviMap::CNaviMap()
 	:CComponent(COMPONENT_TYPE::NAVIMAP)
 	, m_bTrigger(true)
+	, m_sResultPos{}
 {
 	begin();
 }
@@ -167,11 +169,15 @@ void CNaviMap::Raycasting()
 
 	if (out.bSuccess) {
 		m_sResultPos.resultPos.x = (abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1]))*out.vUV.x;
-		m_sResultPos.resultPos.y = (abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * 0.f;
-		m_sResultPos.resultPos.z = (abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5]))*out.vUV.y;
+		m_sResultPos.resultPos.y = (abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f;
+		m_sResultPos.resultPos.z = (abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3]))*out.vUV.y;
 		m_sResultPos.bSuccess = true;
+		CPathFindMgr::GetInst()->SetNaviResult(m_sResultPos);
 	}
 	else {
+		m_sResultPos.resultPos.x = 0.f;
+		m_sResultPos.resultPos.y = 0.f;
+		m_sResultPos.resultPos.z = 0.f;
 		m_sResultPos.bSuccess = false;
 	}
 }

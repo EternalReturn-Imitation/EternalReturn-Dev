@@ -125,7 +125,7 @@ void CreateTestLevel()
 	pObject->AddComponent(new CMeshRender);
 	pObject->AddComponent(new CFindPath);
 
-	pObject->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
+	pObject->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
@@ -176,7 +176,7 @@ void CreateTestLevel()
 			//pObj->Transform()->SetRelativeScale(5.0f, 5.0f, 5.0f);
 			pObj->AddComponent(new CNaviMap);
 			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
-			SpawnGameObject(pObj, Vec3(0.f,0.f,0.f), 0);
+			SpawnGameObject(pObj, Vec3(0.f,0.f,-1.f), 0);
 	// 	 }
 	// 
 	// 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");

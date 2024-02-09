@@ -6,9 +6,11 @@
 #include "CGameObject.h"
 #include "CKeyMgr.h"
 #include "CPathFindMgr.h"
+#include "CTransform.h"
 
 CFindPath::CFindPath()
 	:CComponent(COMPONENT_TYPE::FINDPATH)
+	, LaycastResultTrigger(false)
 {
 }
 
@@ -28,11 +30,18 @@ void CFindPath::finaltick()
 {
 	if (KEY_PRESSED(KEY::LBTN))
 	{
-		CNaviMap* naviMap = (CNaviMap*)(CPathFindMgr::GetInst()->GetNaviMapObject());
-		if (naviMap == nullptr)
-			assert(false);
-		tNaviResult naviResult = naviMap->GetRayResultPos();
+		LaycastResultTrigger = true;
+
+		tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
 		int a = 0;
+		Vec3 curPos = GetOwner()->Transform()->GetRelativePos();
+		GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
+	}
+
+	//여기에 naviResult변수를 만들면 한 틱 느리게 값을 받음.
+	if (LaycastResultTrigger) {
+
+		LaycastResultTrigger = false;
 	}
 }
 

@@ -39,6 +39,9 @@ private:
     dtNavMesh*              m_NavMesh;
     dtNavMeshQuery*         m_NavQuery;
     CGameObject*            m_Object;
+
+private:
+    tNaviResult         m_sResultPos;
    
 private:
     bool LoadNavMeshFromFile(const char* path);
@@ -55,6 +58,9 @@ public:
 
 public:
     void SetNaviMapObject(CGameObject* _object) { m_Object = _object; }
+    void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }
+
     CGameObject* GetNaviMapObject() { return m_Object; }
+    tNaviResult GetNaviResult() { return m_sResultPos; }
 };
 
