@@ -22,10 +22,7 @@ private:
 	// 교점위치 출력 버퍼
 	CStructuredBuffer* m_pOutput;
 
-	float m_xMin;
-	float m_xMax;
-	float m_yMin;
-	float m_yMax;
+	Vector3 m_vMaxScale;
 
 public:
 	void SetVtx(vector<Vector4> _vtx);
@@ -33,9 +30,7 @@ public:
 	void SetCameraRay(const tRay& _ray) { m_ray = _ray; }
 	void SetOuputBuffer(CStructuredBuffer* _pOutputBuffer) { m_pOutput = _pOutputBuffer; }
 
-	void SetMinMax(float _xMin, float _xMax, float _yMin, float _yMax) {
-		m_xMin = _xMin, m_xMax = _xMax, m_yMin = _yMin, m_yMax = _yMax;
-	}
+	void SetMaxScale(Vec3 _scale) { m_vMaxScale = _scale; }
 
 	tRay GetRayInfo() { return m_ray; }
 	vector<Vector4> GetVertex() { return m_vVtx; }

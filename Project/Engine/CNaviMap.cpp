@@ -124,10 +124,13 @@ void CNaviMap::finaltick()
 		m_fMinMaxArr[4] = zMin;
 		m_fMinMaxArr[5] = zMax;
 
-		m_pCSRaycast->SetMinMax(xMin, xMax, yMin, yMax);
+		m_pCSRaycast->SetMaxScale(GetOwner()->Transform()->GetRelativeScale());
 		m_pCSRaycast->SetVtx(vVtx);
 
 		m_bTrigger = false;
+		
+		xMin = CTruncate(xMin, 8);
+		yMax = CTruncate(yMax, 8);
 
 		GetOwner()->Transform()->SetOffsetRelativePos(Vec3(-xMin, 0.f, yMax));
 		GetOwner()->Transform()->SetOffsetTrigger(true);

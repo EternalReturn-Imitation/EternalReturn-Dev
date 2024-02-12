@@ -36,18 +36,36 @@ private:
 
 public:
     void SetRelativePos(Vec3 _vPos) { m_vRelativePos = _vPos; }
-    void SetRelativeScale(Vec3 _vScale) { m_vRelativeScale = _vScale; }
+    void SetRelativeScale(Vec3 _vScale) { 
+        m_vRelativeScale = _vScale;/*
+        m_vOffsetRelativePos.x *= m_vRelativeScale.x;
+        m_vOffsetRelativePos.y *= m_vRelativeScale.y;
+        m_vOffsetRelativePos.z *= m_vRelativeScale.z;*/
+    }
     void SetRelativeRot(Vec3 _vRot) { m_vRelativeRot = _vRot; }
 
     void SetRelativePos(float _x, float _y, float _z) { m_vRelativePos = Vec3(_x, _y, _z); }
-    void SetRelativeScale(float _x, float _y, float _z) { m_vRelativeScale = Vec3(_x, _y, _z); }
+    void SetRelativeScale(float _x, float _y, float _z) { 
+        m_vRelativeScale = Vec3(_x, _y, _z);/*
+        m_vOffsetRelativePos.x *= m_vRelativeScale.x;
+        m_vOffsetRelativePos.y *= m_vRelativeScale.y;
+        m_vOffsetRelativePos.z *= m_vRelativeScale.z;*/
+    }
     void SetRelativeRot(float _x, float _y, float _z) { m_vRelativeRot = Vec3(_x, _y, _z);  }
 
     // 상대 이동, 크기를 절대값으로 지정  
     void SetAbsolute(bool _Set) { m_bAbsolute = _Set; }    
 
     // 오프셋 위치를 지정
-    void SetOffsetRelativePos(Vec3 _vPos) { m_vOffsetRelativePos = _vPos; }
+    void SetOffsetRelativePos(Vec3 _vPos) { 
+        m_vOffsetRelativePos = _vPos;
+        m_vOffsetRelativePos.x *= m_vRelativeScale.x;
+        if(m_vOffsetRelativePos.y == 0.f)
+            m_vOffsetRelativePos.y *= 1.f;
+        else
+            m_vOffsetRelativePos.y *= m_vRelativeScale.y;
+        m_vOffsetRelativePos.z *= m_vRelativeScale.z;
+    }
     void SetOffsetTrigger(bool _trigger) { OffsetTrigger = _trigger; }
 
     Vec3 GetRelativePos() const { return m_vRelativePos; }
