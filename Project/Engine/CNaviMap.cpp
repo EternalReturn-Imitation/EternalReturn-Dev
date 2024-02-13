@@ -45,6 +45,10 @@ void CNaviMap::begin()
 	// 레이캐스팅 결과 받는 버퍼
 	m_pCrossBuffer = new CStructuredBuffer;
 	m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);	
+
+	//네비맵 텍스트 세팅
+	m_pNaviTex = CResMgr::GetInst()->FindRes<CTexture>(L"naviTex.png");
+	m_pCSRaycast->SetNaviMapTex(m_pNaviTex);
 }
 
 void CNaviMap::tick()
@@ -159,7 +163,7 @@ void CNaviMap::Raycasting()
 	CamRay.vDir.Normalize();
 
 	// 지형과 카메라 Ray 의 교점을 구함
-	tRaycastOut out = { Vec2(0.f, 0.f), (float)0x7fffffff, 0 };
+	tRaycastOut out = { Vec2(0.f, 0.f), (float)0x7fffffff, 0, Vec4(0.f,0.f,0.f,0.f)};
 	m_pCrossBuffer->SetData(&out, 1);
 
 	CCamera* camera = CRenderMgr::GetInst()->GetMainCam();

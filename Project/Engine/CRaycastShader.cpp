@@ -51,6 +51,8 @@ void CRaycastShader::UpdateData()
 
 	//ÀÎÇ² ¹öÆÛ(t20)
 	m_pVtx->UpdateData_CS(25, true);
+
+	m_pNaviTex->UpdateData_CS(1, true);
 }
 
 void CRaycastShader::Clear()

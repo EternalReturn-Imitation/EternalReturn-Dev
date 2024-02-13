@@ -20,6 +20,9 @@ private:
 
     float               m_fMinMaxArr[6];//차례대로 xMin, xMax, yMin, yMax, zMin, zMax값이 들어가있음.
 
+    //네비 맵 텍스트
+    Ptr<CTexture>       m_pNaviTex;
+
 public:
     CNaviMap();
     ~CNaviMap();

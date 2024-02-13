@@ -1,6 +1,10 @@
 #pragma once
 #include "CComputeShader.h"
 
+#include "ptr.h"
+#include "CTexture.h"
+#include "CRaycastShader.h"
+
 class CStructuredBuffer;
 
 class CRaycastShader
@@ -24,13 +28,16 @@ private:
 
 	Vector3 m_vMaxScale;
 
+	//네비 맵 텍스트
+	Ptr<CTexture>       m_pNaviTex;
+
 public:
 	void SetVtx(vector<Vector4> _vtx);
 	void SetFaceCount(UINT _x, UINT _z) { m_iXFace = _x; m_iZFace = _z; }
 	void SetCameraRay(const tRay& _ray) { m_ray = _ray; }
 	void SetOuputBuffer(CStructuredBuffer* _pOutputBuffer) { m_pOutput = _pOutputBuffer; }
-
 	void SetMaxScale(Vec3 _scale) { m_vMaxScale = _scale; }
+	void SetNaviMapTex(Ptr<CTexture> _tex) { m_pNaviTex = _tex; }
 
 	tRay GetRayInfo() { return m_ray; }
 	vector<Vector4> GetVertex() { return m_vVtx; }

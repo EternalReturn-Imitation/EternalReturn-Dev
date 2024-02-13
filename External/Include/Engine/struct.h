@@ -185,6 +185,7 @@ struct tRaycastOut
 	Vec2	vUV;
 	float	fDist;
 	int		bSuccess;
+	Vec4	vRGB;
 };
 
 // Raycast 결과를 받을 구조체

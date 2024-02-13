@@ -9,6 +9,8 @@ RWStructuredBuffer<tRaycastOut> OUTPUT : register(u0);
 // Laycast Vertex Pos Buffer
 StructuredBuffer<float4> g_arrVtx : register(t25);
 
+Texture2D g_naviTex : register(t1);
+
 #define CAM_POS         g_vec4_0
 #define CAM_DIR         g_vec4_1
 
@@ -73,11 +75,24 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
         if ((vCrossPoint.x / (float) FACE_X) > MAX_X_UV)
             vCrossPoint.x = MAX_X_UV * (float) FACE_X;
         if ((vCrossPoint.z / (float) FACE_Z) > MAX_Z_UV)
-            vCrossPoint.z = MAX_Z_UV * (float) FACE_Z;
+            vCrossPoint.z = MAX_Z_UV * (float) FACE_Z;        
+
         OUTPUT[0].vUV = float2(vCrossPoint.x / (float) FACE_X, vCrossPoint.z / (float) FACE_Z);
         OUTPUT[0].fDist = fDist;
         OUTPUT[0].success = 1;
     }
+    
+    if (OUTPUT[0].success)
+    {
+        float2 vUV = float2(vCrossPoint.x / (float) FACE_X, MAX_Z_UV - vCrossPoint.z / (float) FACE_Z);
+        vUV.y = vUV.y / (float) MAX_Z_UV;
+        
+        float4 color = g_naviTex.SampleLevel(g_sam_0, vUV,0);
+        OUTPUT[0].vRGB = color;
+        if (color.a == 0.f)
+            OUTPUT[0].success = 0;
+    }
+        
 }
 
 #endif
