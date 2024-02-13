@@ -121,6 +121,7 @@ struct tRaycastOut
     float2 vUV;
     float fDist;
     int success;
+    float4 vRGB;
 };
 
 #endif

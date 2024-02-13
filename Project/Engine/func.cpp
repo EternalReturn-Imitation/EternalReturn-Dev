@@ -597,3 +597,10 @@ std::vector<int> WStringToIntArray(const std::wstring& str)
 	}
 	return intArray;
 }
+
+
+
+float CTruncate(float value, int decimalPlaces) {
+	float factor = std::pow(10.0, decimalPlaces);
+	return std::floor(value * factor) / factor;
+}

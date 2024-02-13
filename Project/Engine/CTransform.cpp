@@ -7,12 +7,14 @@
 CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
 	, m_vRelativeScale(Vec3(1.f, 1.f, 1.f))
+	, m_vOffsetRelativePos(Vec3(0.f,0.f,0.f))
 	, m_bAbsolute(false)	
 	, m_vRelativeDir{
 		  Vec3(1.f, 0.f, 0.f)
 		, Vec3(0.f, 1.f, 0.f)
 		, Vec3(0.f, 0.f, 1.f)}	
 	, b_GizmoOnSet(true)
+	, OffsetTrigger(false)
 {
 	SetName(L"Transform");
 }
@@ -42,12 +44,20 @@ void CTransform::finaltick()
 	matRot *= XMMatrixRotationY(m_vRelativeRot.y);
 	matRot *= XMMatrixRotationZ(m_vRelativeRot.z);
 
-	Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
-
-	
-	m_matWorld = m_matWorldScale * matRot * matTranslation;
-	m_matWorldForGizmo = m_matWorld;
-	m_matWorldBoundingBox = m_matWorldBoundingScale * matRot * matTranslation;
+	if (OffsetTrigger) {
+		Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
+		Matrix matTranslationOffset = XMMatrixTranslation(m_vRelativePos.x+ m_vOffsetRelativePos.x, m_vRelativePos.y+m_vOffsetRelativePos.y, m_vRelativePos.z+ m_vOffsetRelativePos.z);
+		m_matOffsetWorld = m_matWorldScale * matRot * matTranslationOffset;
+		m_matWorld = m_matWorldScale * matRot * matTranslation;
+		m_matWorldForGizmo = m_matWorld;
+		m_matWorldBoundingBox = m_matWorldBoundingScale * matRot * matTranslation;
+	}
+	else {
+		Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
+		m_matWorld = m_matWorldScale * matRot * matTranslation;
+		m_matWorldForGizmo = m_matWorld;
+		m_matWorldBoundingBox = m_matWorldBoundingScale * matRot * matTranslation;
+	}
 
 	Vec3 vDefaultDir[3] = {
 		  Vec3(1.f, 0.f, 0.f)
@@ -103,7 +113,9 @@ void CTransform::finaltick()
 	}
 
 	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
-	
+	if (OffsetTrigger) {
+		m_matOffsetWorldInv = XMMatrixInverse(nullptr, m_matOffsetWorld);
+	}
 }
 
 void CTransform::UpdateData()
@@ -111,10 +123,17 @@ void CTransform::UpdateData()
 	// 위치값을 상수버퍼에 전달 및 바인딩		
 	CConstBuffer* pTransformBuffer = CDevice::GetInst()->GetConstBuffer(CB_TYPE::TRANSFORM);
 
-	g_transform.matWorld = m_matWorld;
-	g_transform.matWorldInv = m_matWorldInv;
-	g_transform.matWV = g_transform.matWorld * g_transform.matView;
-	g_transform.matWVP = g_transform.matWV * g_transform.matProj;
+	if (OffsetTrigger) {
+		g_transform.matWorld = m_matOffsetWorld;
+		g_transform.matWorldInv = m_matOffsetWorldInv;
+		g_transform.matWV = g_transform.matWorld * g_transform.matView;
+		g_transform.matWVP = g_transform.matWV * g_transform.matProj;
+	}else{
+		g_transform.matWorld = m_matWorld;
+		g_transform.matWorldInv = m_matWorldInv;
+		g_transform.matWV = g_transform.matWorld * g_transform.matView;
+		g_transform.matWVP = g_transform.matWV * g_transform.matProj;
+	}
 
 
 	pTransformBuffer->SetData(&g_transform);

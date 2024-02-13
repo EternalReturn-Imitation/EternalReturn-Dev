@@ -115,6 +115,9 @@ public:
     void MatrixUpdate();
 
 public:
+    tRaycastOutV3 Raycasting(Vec3* _vertices, tRay _ray);
+
+public:
     void SortObject();
     void SortObject(CCamera* _MainCamera);
     void SortObject_Shadow();
@@ -126,8 +129,8 @@ public:
     virtual void begin() override;
     virtual void finaltick() override;
 
-protected:
-    void CalRay();  // 마우스 방향으로 광선 연산
+public:
+    tRay CalRay();  // 마우스 방향으로 광선 연산
 
 private:
     void clear();

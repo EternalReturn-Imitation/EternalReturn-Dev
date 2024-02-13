@@ -14,6 +14,7 @@ CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 	, m_fBoundingBoxScale(0.f)
 	, m_fBoundingBoxOffsetScale(0.f)
 {
+	
 }
 
 CRenderComponent::~CRenderComponent()
@@ -58,6 +59,8 @@ void CRenderComponent::render_shadowmap()
 		Animator3D()->GetFinalBoneMat()->Clear();
 		Animator3D()->ClearData();
 	}
+
+	//GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
 }
 
 
