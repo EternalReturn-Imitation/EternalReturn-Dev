@@ -213,6 +213,39 @@ void CreateTestLevel()
 	//
 	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Roof.mdat");
+	//pObj = pMeshData->Instantiate();
+	//pObj->SetName(L"Archery_Roof");
+	//rot = pObj->Transform()->GetRelativeRot();
+	//rot.x = -1.5708f;
+	////pObj->Transform()->SetRelativeRot(rot);
+	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	//pObj->AddComponent(new CNaviMap);
+	//CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
+	//
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Building.mdat");
+	//pObj = pMeshData->Instantiate();
+	//pObj->SetName(L"Archery_Building");
+	//rot = pObj->Transform()->GetRelativeRot();
+	//rot.x = -1.5708f;
+	////pObj->Transform()->SetRelativeRot(rot);
+	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	//pObj->AddComponent(new CNaviMap);
+	//CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Base.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Archery_Base");
+	rot = pObj->Transform()->GetRelativeRot();
+	rot.x = -1.5708f;
+	//pObj->Transform()->SetRelativeRot(rot);
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->AddComponent(new CNaviMap);
+	CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), 0);	
+
 	// 충돌 시킬 레이어 짝 지정
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }
