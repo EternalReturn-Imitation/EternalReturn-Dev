@@ -27,7 +27,7 @@ void GenerateUVForMesh(FbxMesh* pMesh) {
 		for (int vertIndex = 0; vertIndex < polySize; ++vertIndex) {
 			// 임시로 UV 좌표를 생성 (예시로서 단순화된 계산)
 			FbxVector2 uv(static_cast<double>(vertIndex % 3), static_cast<double>((vertIndex / 3) % 3));
-	
+
 			// UV 세트에 UV 좌표 추가
 			lUVElem->GetDirectArray().Add(uv);
 		}
@@ -478,8 +478,10 @@ void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iVtxId, in
 	// UV 레이어의 수 확인
 	int uvLayerCount = _pMesh->GetElementUVCount();
 
-	if (uvLayerCount == 0)
+	if (uvLayerCount == 0) {
 		GenerateUVForMesh(_pMesh);
+		//assert(false);
+	}
 
 	FbxGeometryElementUV* pUV = _pMesh->GetElementUV();
 	FbxGeometryElement::EMappingMode MappingMode = pUV->GetMappingMode();
@@ -520,6 +522,7 @@ void CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iVtxId, in
 	FbxVector2 vUV = pUV->GetDirectArray().GetAt(iUVIdx);
 	_pContainer->vecUV[_iIdx].x = (float)vUV.mData[0];
 	_pContainer->vecUV[_iIdx].y = 1.f - (float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
+	//_pContainer->vecUV[_iIdx].y = (float)vUV.mData[1]; // fbx uv 좌표계는 좌하단이 0,0
 }
 
 Vec4 CFBXLoader::GetMtrlData(FbxSurfaceMaterial* _pSurface

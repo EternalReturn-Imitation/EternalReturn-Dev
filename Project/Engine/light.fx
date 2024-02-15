@@ -231,6 +231,11 @@ float4 PS_MergeShader(VS_OUT _in) : SV_Target
     vOutColor.xyz = vColor.xyz * vDiffuse.xyz * (1.f - fShadowPow)
                     + (vSpecular.xyz * vColor.a) * (1.f - fShadowPow)
                     + vEmissive.xyz;
+    
+    //vOutColor.xyz = vColor.xyz * 1.f * (1.f - fShadowPow)
+    //                + (1.f * vColor.a) * (1.f - fShadowPow)
+    //                + vEmissive.xyz;
+    
     vOutColor.a = 1.f;
     
     return vOutColor;
