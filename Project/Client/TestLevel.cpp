@@ -231,6 +231,7 @@ void CreateTestLevel()
 	//
 	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
+#pragma region Archery
 	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Roof.mdat");
 	//pObj = pMeshData->Instantiate();
 	//pObj->SetName(L"Archery_Roof");
@@ -263,6 +264,45 @@ void CreateTestLevel()
 	//pObj->AddComponent(new CNaviMap);
 	//CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
 	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
+#pragma endregion
+
+#pragma region Forest
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Forest");
+	rot = pObj->Transform()->GetRelativeRot();
+	rot.x = -1.5708f;
+	//pObj->Transform()->SetRelativeRot(rot);
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->AddComponent(new CNaviMap);
+	CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
+
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Building.mdat");
+	//pObj = pMeshData->Instantiate();
+	//pObj->SetName(L"Forest_Building");
+	//rot = pObj->Transform()->GetRelativeRot();
+	//rot.x = -1.5708f;
+	////pObj->Transform()->SetRelativeRot(rot);
+	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	//pObj->AddComponent(new CNaviMap);
+	//CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
+	//
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Base.mdat");
+	//pObj = pMeshData->Instantiate();
+	//pObj->SetName(L"Forest_Base");
+	//rot = pObj->Transform()->GetRelativeRot();
+	//rot.x = -1.5708f;
+	////pObj->Transform()->SetRelativeRot(rot);
+	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	//pObj->AddComponent(new CNaviMap);
+	//CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
+
+
+#pragma endregion
 
 	// 충돌 시킬 레이어 짝 지정
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
