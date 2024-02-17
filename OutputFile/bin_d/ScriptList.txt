@@ -1,10 +1,6 @@
 CCameraMoveScript
-CCircularMotionScript
-CCloudScript
 CFindPathScript
-CGravityScript
 CMissileScript
 CMonsterScript
 CPlanetScript
 CPlayerScript
-CTestScript

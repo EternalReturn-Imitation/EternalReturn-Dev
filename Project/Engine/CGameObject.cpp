@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CGameObject.h"
 
+#include "CRenderMgr.h"
+
 #include "CComponent.h"
 #include "CMeshRender.h"
 
@@ -59,6 +61,10 @@ CGameObject::CGameObject(const CGameObject& _Other)
 
 CGameObject::~CGameObject()
 {
+	// GizumoTarget ÃÊ±âÈ­
+	if (CRenderMgr::GetInst()->GetGizmoTarget() == this)
+		CRenderMgr::GetInst()->SetGizmoTarget(nullptr);
+
 	Safe_Del_Array(m_arrCom);
 	Safe_Del_Vec(m_vecScript);
 	Safe_Del_Vec(m_vecChild);
