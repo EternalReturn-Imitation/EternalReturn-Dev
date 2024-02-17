@@ -191,7 +191,7 @@ void ImGuiMgr::CreateUI()
 
     // AnimEditUI
     pUI = new AnimEditUI;
-    pUI->SetActive(true);
+    pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
 
