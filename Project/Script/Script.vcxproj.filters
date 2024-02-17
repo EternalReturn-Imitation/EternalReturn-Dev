@@ -33,16 +33,7 @@
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CGravityScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CTestScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="CPlanetScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CCloudScript.h">
       <Filter>Script</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,16 +59,7 @@
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CGravityScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CTestScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="CPlanetScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CCloudScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>
