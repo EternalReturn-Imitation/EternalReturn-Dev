@@ -39,6 +39,8 @@ enum class COMPONENT_TYPE
 	CAMERA,			// Camera
 
 	BEHAVIORTREE,
+	NAVIMAP,
+	FINDPATH,
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링

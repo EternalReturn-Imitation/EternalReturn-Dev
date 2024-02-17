@@ -2,6 +2,7 @@
 #include "CScriptMgr.h"
 
 #include "CCameraMoveScript.h"
+#include "CFindPathScript.h"
 #include "CMissileScript.h"
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
@@ -10,6 +11,7 @@
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
 	_vec.push_back(L"CCameraMoveScript");
+	_vec.push_back(L"CFindPathScript");
 	_vec.push_back(L"CMissileScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
@@ -20,6 +22,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
 	if (L"CCameraMoveScript" == _strScriptName)
 		return new CCameraMoveScript;
+	if (L"CFindPathScript" == _strScriptName)
+		return new CFindPathScript;
 	if (L"CMissileScript" == _strScriptName)
 		return new CMissileScript;
 	if (L"CMonsterScript" == _strScriptName)
@@ -37,6 +41,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	{
 	case (UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return new CCameraMoveScript;
+		break;
+	case (UINT)SCRIPT_TYPE::FINDPATHSCRIPT:
+		return new CFindPathScript;
 		break;
 	case (UINT)SCRIPT_TYPE::MISSILESCRIPT:
 		return new CMissileScript;
@@ -60,6 +67,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 	{
 	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return L"CCameraMoveScript";
+		break;
+
+	case SCRIPT_TYPE::FINDPATHSCRIPT:
+		return L"CFindPathScript";
 		break;
 
 	case SCRIPT_TYPE::MISSILESCRIPT:

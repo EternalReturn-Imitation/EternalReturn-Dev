@@ -10,6 +10,30 @@
 #include <experimental/filesystem>
 using std::experimental::filesystem::path;
 
+void GenerateUVForMesh(FbxMesh* pMesh) {
+	// 메쉬에서 최초의 폴리곤을 대상으로 UV 레이어 생성
+	FbxGeometryElementUV* lUVElem = pMesh->CreateElementUV("UVSet_01");
+
+	// 데이터 매핑 모드 설정: 폴리곤-정점(Polygon Vertex) 매핑
+	lUVElem->SetMappingMode(FbxGeometryElement::eByControlPoint);
+
+	// 데이터 참조 모드 설정: 직접 참조
+	lUVElem->SetReferenceMode(FbxGeometryElement::eDirect);
+
+	// 폴리곤 개수와 각 폴리곤을 구성하는 정점의 개수를 기반으로 UV 좌표 생성
+	for (int polyIndex = 0; polyIndex < pMesh->GetPolygonCount(); ++polyIndex) {
+		int polySize = pMesh->GetPolygonSize(polyIndex);
+	
+		for (int vertIndex = 0; vertIndex < polySize; ++vertIndex) {
+			// 임시로 UV 좌표를 생성 (예시로서 단순화된 계산)
+			FbxVector2 uv(static_cast<double>(vertIndex % 3), static_cast<double>((vertIndex / 3) % 3));
+	
+			// UV 세트에 UV 좌표 추가
+			lUVElem->GetDirectArray().Add(uv);
+		}
+	}
+}
+
 CFBXLoader::CFBXLoader()
 	: m_pManager(NULL)
 	, m_pScene(NULL)
@@ -381,36 +405,46 @@ Vec3 CFBXLoader::GetTangent(FbxMesh* _pMesh
 	, int _iVtxOrder /*폴리곤 단위로 접근하는 순서*/)
 {
 	int iTangentCnt = _pMesh->GetElementTangentCount();
-	if (1 != iTangentCnt)
-		assert(NULL); // 정점 1개가 포함하는 탄젠트 정보가 2개 이상이다.
-
-	// 탄젠트 data 의 시작 주소
-	FbxGeometryElementTangent* pTangent = _pMesh->GetElementTangent();
-	UINT iTangentIdx = 0;
-
-	if (pTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-	{
-		if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iTangentIdx = _iVtxOrder;
-		else
-			iTangentIdx = pTangent->GetIndexArray().GetAt(_iVtxOrder);
-	}
-	else if (pTangent->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-	{
-		if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
-			iTangentIdx = _iIdx;
-		else
-			iTangentIdx = pTangent->GetIndexArray().GetAt(_iIdx);
-	}
-
-	FbxVector4 vTangent = pTangent->GetDirectArray().GetAt(iTangentIdx);
 	
-	if (_pContainer)
-	{
-		_pContainer->vecTangent[_iIdx].x = (float)vTangent.mData[0];
-		_pContainer->vecTangent[_iIdx].y = (float)vTangent.mData[2];
-		_pContainer->vecTangent[_iIdx].z = (float)vTangent.mData[1];
+	//if (1 != iTangentCnt)
+	//	assert(NULL); // 정점 1개가 포함하는 탄젠트 정보가 2개 이상이다.
+
+	FbxVector4 avgTangent(0, 0, 0, 0);
+	for (int i = 0; i < iTangentCnt; ++i) {
+		// 탄젠트 data 의 시작 주소
+		FbxGeometryElementTangent* pTangent = _pMesh->GetElementTangent();
+		UINT iTangentIdx = 0;
+
+		if (pTangent->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
+				iTangentIdx = _iVtxOrder;
+			else
+				iTangentIdx = pTangent->GetIndexArray().GetAt(_iVtxOrder);
+		}
+		else if (pTangent->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (pTangent->GetReferenceMode() == FbxGeometryElement::eDirect)
+				iTangentIdx = _iIdx;
+			else
+				iTangentIdx = pTangent->GetIndexArray().GetAt(_iIdx);
+		}
+		FbxVector4 vTangent = pTangent->GetDirectArray().GetAt(iTangentIdx);
+		avgTangent += vTangent;
 	}
+
+	// 탄젠트 평균 계산
+	if (iTangentCnt > 0) {
+		avgTangent /= static_cast<double>(iTangentCnt);
+	}
+
+	// 정규화
+	avgTangent.Normalize();
+
+	// 컨테이너에 저장
+	_pContainer->vecTangent[_iIdx].x = static_cast<float>(avgTangent.mData[0]);
+	_pContainer->vecTangent[_iIdx].y = static_cast<float>(avgTangent.mData[1]);
+	_pContainer->vecTangent[_iIdx].z = static_cast<float>(avgTangent.mData[2]);
 
 	return Vec3((float)vTangent.mData[0], (float)vTangent.mData[2], (float)vTangent.mData[1]);
 }
@@ -508,6 +542,12 @@ Vec3 CFBXLoader::GetNormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, 
 
 Vec2 CFBXLoader::GetUV(FbxMesh* _pMesh, tContainer* _pContainer, int _iVtxId, int _iVtxCnt, int _iIdx)
 {
+	// UV 레이어의 수 확인
+	int uvLayerCount = _pMesh->GetElementUVCount();
+
+	if (uvLayerCount == 0)
+		GenerateUVForMesh(_pMesh);
+
 	FbxGeometryElementUV* pUV = _pMesh->GetElementUV();
 	FbxGeometryElement::EMappingMode MappingMode = pUV->GetMappingMode();
 	FbxGeometryElement::EReferenceMode RefMode = FbxGeometryElement::eDirect;

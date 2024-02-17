@@ -37,6 +37,11 @@ CGameObject* CMeshData::Instantiate()
 		pNewObj->AddComponent(new CMeshRender);
 		pNewObj->MeshRender()->SetMesh(m_vecMeshData[0]->m_pMesh);
 
+		//vector<tIndexInfo> idxInfos = pNewObj->MeshRender()->GetMesh()->GetIdxInfo();
+		//idxInfos[0].iIdxCount /= 3;
+		//
+		//pNewObj->MeshRender()->GetMesh()->SetIdxInfo(idxInfos);
+
 		for (UINT i = 0; i < m_vecMeshData[0]->m_vecMtrl.size(); ++i)
 		{
 			pNewObj->MeshRender()->SetMaterial(m_vecMeshData[0]->m_vecMtrl[i], i);

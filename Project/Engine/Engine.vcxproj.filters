@@ -190,7 +190,7 @@
     <ClInclude Include="CLandScape.h">
       <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
     </ClInclude>
-    <ClInclude Include="CRaycastShader.h">
+    <ClInclude Include="CLandScapeRaycastShader.h">
       <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
     </ClInclude>
     <ClInclude Include="CHeightMapShader.h">
@@ -213,6 +213,46 @@
     </ClInclude>
     <ClInclude Include="CBone.h">
       <Filter>Source\07. Resource\8. Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="CNaviMap.h">
+      <Filter>Source\06. Component\9. NaviMap</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="CRaycastShader.h">
+      <Filter>Source\08. ShaderCode\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourStatus.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourAlloc.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourAssert.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourCommon.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourMath.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNavMesh.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNavMeshBuilder.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNavMeshQuery.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Detour\DetourNode.h">
+      <Filter>NaviMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CPathFindMgr.h">
+      <Filter>Source\03. Manager\13. PathFindMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="CFindPath.h">
+      <Filter>Source\06. Component\10. FindPath</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -390,7 +430,7 @@
     <ClCompile Include="CLandScape.cpp">
       <Filter>Source\06. Component\RenderComponent\5. Landscape</Filter>
     </ClCompile>
-    <ClCompile Include="CRaycastShader.cpp">
+    <ClCompile Include="CLandScapeRaycastShader.cpp">
       <Filter>Source\08. ShaderCode\Compute\LandScape\Raycast</Filter>
     </ClCompile>
     <ClCompile Include="CLandScape_init.cpp">
@@ -416,6 +456,39 @@
     </ClCompile>
     <ClCompile Include="CBone.cpp">
       <Filter>Source\07. Resource\8. Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="CNaviMap.cpp">
+      <Filter>Source\06. Component\9. NaviMap</Filter>
+    </ClCompile>
+    <ClCompile Include="CRaycastShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourAlloc.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourAssert.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourCommon.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNavMesh.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNavMeshBuilder.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNavMeshQuery.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Detour\DetourNode.cpp">
+      <Filter>NaviMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CPathFindMgr.cpp">
+      <Filter>Source\03. Manager\13. PathFindMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CFindPath.cpp">
+      <Filter>Source\06. Component\10. FindPath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -635,6 +708,21 @@
     <Filter Include="Source\07. Resource\8. Bone">
       <UniqueIdentifier>{42ead4ff-48ef-486e-a638-2997be65c251}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\06. Component\9. NaviMap">
+      <UniqueIdentifier>{f18188a7-9ba7-4214-af4e-42fb77adb30d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\NaviMap">
+      <UniqueIdentifier>{5031d0ca-7e57-4455-b01a-3b411e02a580}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NaviMesh">
+      <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\13. PathFindMgr">
+      <UniqueIdentifier>{96d812ea-6676-4ea1-90de-90fc6de37f86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\10. FindPath">
+      <UniqueIdentifier>{09225021-bcc6-49c2-ab03-7eb99d32f80c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -742,5 +830,11 @@
     <FxCompile Include="animedit3d.fx">
       <Filter>Source\08. ShaderCode\Render\3D</Filter>
     </FxCompile>
+    <FxCompile Include="RaycastBase.fx">
+      <Filter>Source\08. ShaderCode\Compute</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
 </Project>

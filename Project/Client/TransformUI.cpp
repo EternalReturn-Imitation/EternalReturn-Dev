@@ -220,10 +220,6 @@ void TransformUI::RenderGizmo()
 
 	if (GizTarget)
 	{
-		Vec3 Rot = GizTarget->Transform()->GetRelativeRot();
-		Vec3 Pos = GizTarget->Transform()->GetRelativePos();
-		Vec3 Scale = GizTarget->Transform()->GetRelativeScale();
-
 		////ImGuizmo::SetRect(100.f, 100.f, 100.f);
 		//ImGuizmo::Manipulate(ViewMatArray, ProjMatArray, ImGuizmo::TRANSLATE, ImGuizmo::WORLD, WorldMatArray);
 		Matrix WorldMat = GizTarget->Transform()->GetWorldMatForGizmo();

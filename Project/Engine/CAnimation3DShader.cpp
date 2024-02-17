@@ -34,7 +34,7 @@ void CAnimation3DShader::UpdateData()
 
 	m_pOutputBuffer->UpdateData_CS(0, false);   // u0
 
-	m_iGroupX = (m_Const.arrInt[0] / m_iGroupPerThreadX) + 1;
+	m_iGroupX = (m_Const.arrInt[0] / m_iGroupPerThreadX) + 1; 
 	m_iGroupY = 1;
 	m_iGroupZ = 1;
 }

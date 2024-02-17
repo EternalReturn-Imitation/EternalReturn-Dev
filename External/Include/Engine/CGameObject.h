@@ -19,6 +19,7 @@ class CDecal;
 class CLandScape;
 class CScript;
 class CBehaviorTree;
+class CNaviMap;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -75,6 +76,7 @@ public:
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
     GET_COMPONENT(LandScape, LANDSCAPE);
+    GET_COMPONENT(NaviMap, NAVIMAP);
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
 

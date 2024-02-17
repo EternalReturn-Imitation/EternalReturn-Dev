@@ -21,6 +21,10 @@
 
 #include "CEditorObjMgr.h"
 
+#include <Script/CFindPathScript.h>
+#include <Engine/CFindPath.h>
+#include <Engine/CPathFindMgr.h>
+
 
 void CreateTestLevel()
 {
@@ -115,7 +119,20 @@ void CreateTestLevel()
 
 	// SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
 
-	
+	CGameObject* pObject = new CGameObject;
+	pObject->SetName(L"Plane");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	pObject->AddComponent(new CFindPath);
+
+	pObject->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 5.f));
+	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+
+
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
 	
 	//// ============
 	//// FBX Loading
@@ -144,15 +161,22 @@ void CreateTestLevel()
 	// ============	
 	// {
 	// 	// 인스턴싱 테스트		
-	// 	Ptr<CMeshData> pMeshData = nullptr;
-	// 	CGameObject* pObj = nullptr;
+	 	Ptr<CMeshData> pMeshData = nullptr;
+	 	CGameObject* pObj = nullptr;
 	// 	 
 	// 	 pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
+		 pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Navi_Mesh02.mdat");
 	// 	 for (int i = 0; i < 10; ++i)
 	// 	 {
-	// 	 	pObj = pMeshData->Instantiate();
-	// 	 	pObj->SetName(L"House");
-	// 	 	SpawnGameObject(pObj, Vec3((i + 1) * 300.f, 200.f, 500.f), 2);
+	 	 	pObj = pMeshData->Instantiate();
+	 	 	pObj->SetName(L"NaviMap");
+			Vec3 rot = pObj->Transform()->GetRelativeRot();
+			rot.x = -1.5708f;
+			pObj->Transform()->SetRelativeRot(rot);
+			pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+			pObj->AddComponent(new CNaviMap);
+			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+			SpawnGameObject(pObj, Vec3(0.f,0.f,-1.f), 0);
 	// 	 }
 	// 
 	// 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");
@@ -174,20 +198,20 @@ void CreateTestLevel()
 	// pObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
 
 
-	// LandScape Object
-	// CGameObject* pLandScape = new CGameObject;
-	// pLandScape->SetName(L"LandScape");
-	// 
-	// pLandScape->AddComponent(new CTransform);
-	// pLandScape->AddComponent(new CLandScape);
-	// 
-	// pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
-	// 
-	// pLandScape->LandScape()->SetFace(64, 64);
-	// pLandScape->LandScape()->SetFrustumCheck(false);
-	// //pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
-	// 
-	// SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
+	//// LandScape Object
+	//CGameObject* pLandScape = new CGameObject;
+	//pLandScape->SetName(L"LandScape");
+	//
+	//pLandScape->AddComponent(new CTransform);
+	//pLandScape->AddComponent(new CLandScape);
+	//
+	//pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
+	//
+	//pLandScape->LandScape()->SetFace(1, 1);
+	//pLandScape->LandScape()->SetFrustumCheck(false);
+	////pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
+	//
+	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 충돌 시킬 레이어 짝 지정
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");

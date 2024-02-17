@@ -185,6 +185,22 @@ struct tRaycastOut
 	Vec2	vUV;
 	float	fDist;
 	int		bSuccess;
+	Vec4	vRGB;
+};
+
+// Raycast 결과를 받을 구조체
+struct tRaycastOutV3
+{
+	Vec2	vUV;
+	float	fDist;
+	int		bSuccess;
+};
+
+// Navi 결과를 받을 구조체
+struct tNaviResult
+{
+	Vector3 resultPos;
+	bool	bSuccess;
 };
 
 // ============
