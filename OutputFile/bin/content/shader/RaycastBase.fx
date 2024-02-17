@@ -86,11 +86,10 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
     {
         float2 vUV = float2(vCrossPoint.x / (float) FACE_X, MAX_Z_UV - vCrossPoint.z / (float) FACE_Z);
         vUV.y = vUV.y / (float) MAX_Z_UV;
-        vUV.x = vUV.x / (float) MAX_X_UV;
         
         float4 color = g_naviTex.SampleLevel(g_sam_0, vUV,0);
         OUTPUT[0].vRGB = color;
-        if (color.a <= 0.5f)
+        if (color.a == 0.f)
             OUTPUT[0].success = 0;
     }
         

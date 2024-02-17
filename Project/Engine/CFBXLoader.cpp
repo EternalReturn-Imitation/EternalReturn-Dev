@@ -446,7 +446,7 @@ Vec3 CFBXLoader::GetTangent(FbxMesh* _pMesh
 	_pContainer->vecTangent[_iIdx].y = static_cast<float>(avgTangent.mData[1]);
 	_pContainer->vecTangent[_iIdx].z = static_cast<float>(avgTangent.mData[2]);
 
-	return Vec3((float)vTangent.mData[0], (float)vTangent.mData[2], (float)vTangent.mData[1]);
+	return Vec3((float)avgTangent.mData[0], (float)avgTangent.mData[2], (float)avgTangent.mData[1]);
 }
 
 Vec3 CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx, int _iVtxOrder)
