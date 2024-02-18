@@ -299,6 +299,10 @@ void CreateTestLevel()
 #pragma region School
 
 #pragma endregion
+
+#pragma region Uptown
+
+#pragma endregion
 	// 충돌 시킬 레이어 짝 지정
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }
