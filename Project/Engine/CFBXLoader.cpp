@@ -441,10 +441,12 @@ Vec3 CFBXLoader::GetTangent(FbxMesh* _pMesh
 	// 정규화
 	avgTangent.Normalize();
 
-	// 컨테이너에 저장
-	_pContainer->vecTangent[_iIdx].x = static_cast<float>(avgTangent.mData[0]);
-	_pContainer->vecTangent[_iIdx].y = static_cast<float>(avgTangent.mData[1]);
-	_pContainer->vecTangent[_iIdx].z = static_cast<float>(avgTangent.mData[2]);
+	if (_pContainer) {
+		// 컨테이너에 저장
+		_pContainer->vecTangent[_iIdx].x = static_cast<float>(avgTangent.mData[0]);
+		_pContainer->vecTangent[_iIdx].y = static_cast<float>(avgTangent.mData[1]);
+		_pContainer->vecTangent[_iIdx].z = static_cast<float>(avgTangent.mData[2]);
+	}	
 
 	return Vec3((float)avgTangent.mData[0], (float)avgTangent.mData[2], (float)avgTangent.mData[1]);
 }
@@ -453,21 +455,50 @@ Vec3 CFBXLoader::GetBinormal(FbxMesh* _pMesh, tContainer* _pContainer, int _iIdx
 {
 	int iBinormalCnt = _pMesh->GetElementBinormalCount();
 	if (1 != iBinormalCnt)
-	{
+	{		
 		if (_pContainer)
 		{
 			DirectX::XMVECTOR tangentVec = _pContainer->vecTangent[_iIdx];
 			DirectX::XMVECTOR normalVec = _pContainer->vecNormal[_iIdx];
 
 			DirectX::XMVECTOR binormalVec = DirectX::XMVector3Cross(tangentVec, normalVec);
-
 			DirectX::XMStoreFloat3(&_pContainer->vecBinormal[_iIdx], binormalVec);
+			return Vec3();
 		}
-		else
-			assert(nullptr);
-		
-		return Vec3();
-		// assert(NULL); // 정점 1개가 포함하는 종법선 정보가 2개 이상이다.
+		else {
+			int iBinormalCnt = _pMesh->GetElementBinormalCount();
+			FbxGeometryElementBinormal* pBinormal = _pMesh->GetElementBinormal();
+			DirectX::XMVECTOR binormalSum = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+			UINT iBinormalIdx = 0;
+
+			for (int i = 0; i < iBinormalCnt; ++i)
+			{
+				// 인덱스 결정 로직
+				if (pBinormal->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+				{
+					if (pBinormal->GetReferenceMode() == FbxGeometryElement::eDirect)
+						iBinormalIdx = _iVtxOrder;
+					else
+						iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iVtxOrder);
+				}
+				else if (pBinormal->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+				{
+					if (pBinormal->GetReferenceMode() == FbxGeometryElement::eDirect)
+						iBinormalIdx = _iIdx;
+					else
+						iBinormalIdx = pBinormal->GetIndexArray().GetAt(_iIdx);
+				}
+
+				FbxVector4 vBinormal = pBinormal->GetDirectArray().GetAt(iBinormalIdx);
+				DirectX::XMVECTOR currentBinormal = DirectX::XMVectorSet((float)vBinormal.mData[0], (float)vBinormal.mData[1], (float)vBinormal.mData[2], 0.0f);
+				binormalSum = DirectX::XMVectorAdd(binormalSum, currentBinormal);
+			}
+			// 평균 계산
+			binormalSum = DirectX::XMVectorScale(binormalSum, 1.0f / iBinormalCnt);
+			DirectX::XMFLOAT3 result;
+			DirectX::XMStoreFloat3(&result, binormalSum);
+			return Vec3(result.x, result.y, result.z);
+		}
 	}
 
 	// 종법선 data 의 시작 주소

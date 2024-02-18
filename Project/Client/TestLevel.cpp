@@ -99,21 +99,6 @@ void CreateTestLevel()
 	//SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	SpawnGameObject(pLightObj, Vec3(0.f, 5000.f, 0.f), 0);
 
-	pLightObj = new CGameObject;
-	pLightObj->SetName(L"Directional Light");
-
-	pLightObj->AddComponent(new CTransform);
-	pLightObj->AddComponent(new CLight3D);
-
-	pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-	pLightObj->Light3D()->SetRadius(500.f);
-	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
-	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
-
-	//SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
-	SpawnGameObject(pLightObj, Vec3(0.f, 6000.f, 0.f), 0);
-
 	// 오브젝트 생성
 	// CGameObject* pObject = new CGameObject;
 	// pObject->SetName(L"Particle");
@@ -268,16 +253,16 @@ void CreateTestLevel()
 
 #pragma region Forest
 
-	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest.mdat");
-	pObj = pMeshData->Instantiate();
-	pObj->SetName(L"Forest");
-	rot = pObj->Transform()->GetRelativeRot();
-	rot.x = -1.5708f;
-	//pObj->Transform()->SetRelativeRot(rot);
-	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-	pObj->AddComponent(new CNaviMap);
-	CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
-	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest.mdat");
+	//pObj = pMeshData->Instantiate();
+	//pObj->SetName(L"Forest");
+	//rot = pObj->Transform()->GetRelativeRot();
+	//rot.x = -1.5708f;
+	////pObj->Transform()->SetRelativeRot(rot);
+	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	//pObj->AddComponent(new CNaviMap);
+	//CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
 
 	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Building.mdat");
 	//pObj = pMeshData->Instantiate();
@@ -301,9 +286,19 @@ void CreateTestLevel()
 	//CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
 	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
 
+#pragma endregion
+
+#pragma region Hotel
 
 #pragma endregion
 
+#pragma region SandyBeach
+
+#pragma endregion
+
+#pragma region School
+
+#pragma endregion
 	// 충돌 시킬 레이어 짝 지정
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }
