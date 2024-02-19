@@ -306,6 +306,9 @@ void CreateTestLevel()
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Roof.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"School_Roof");
+	rot = pObj->Transform()->GetRelativeRot();
+	rot.y = -1.5708f;
+	pObj->Transform()->SetRelativeRot(rot);
 	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
 	SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
 #pragma endregion
@@ -324,5 +327,15 @@ void CreateTestLevel()
 	SpawnGameObject(pObj, Vec3(19628.f, 68.f, -9652.f), L"Building");
 #pragma endregion
 	// 충돌 시킬 레이어 짝 지정
+
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Origin.mdat");
+	//pObj = pMeshData->Instantiate();
+	//pObj->SetName(L"Origin");
+	//rot = pObj->Transform()->GetRelativeRot();
+	//rot.x = -1.5708f;
+	//pObj->Transform()->SetRelativeRot(rot);
+	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	//SpawnGameObject(pObj, Vec3(21120.f, -144.f, -7965.f), L"Base");
+
 	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }
