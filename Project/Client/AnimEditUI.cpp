@@ -50,7 +50,6 @@ AnimEditUI::~AnimEditUI()
 
 void AnimEditUI::tick()
 {
-    SetActive(false);
     if (m_pCurAnimator && KEY_TAP(KEY::SPACE))
     {
         if (m_bPlay)
@@ -76,7 +75,6 @@ void AnimEditUI::finaltick()
 
 int AnimEditUI::render_update()
 {
-
     render_menubar();
 
     ImGui::BeginGroup();
@@ -405,7 +403,7 @@ void AnimEditUI::render_infowindow()
 
         print_intElement(" FrameLength ", Modify_FrameLength);
 
-        print_doubleElement(" Start  Time ", Origin_StartTime);
+        print_doubleElement(" Start  Time ", Modify_StartTime);
 
         // ImGui::Button(" Start  Time ");
         // ImGui::SameLine();
@@ -415,7 +413,7 @@ void AnimEditUI::render_infowindow()
         //     Modify_startFrm = Modify_StartTime * Modify_FrameLength / Modify_TimeLength;
         // }
 
-        print_doubleElement("  End   Time ", Origin_EndTime);
+        print_doubleElement("  End   Time ", Modify_EndTime);
 
         // ImGui::Button("  End   Time ");
         // ImGui::SameLine();
@@ -662,6 +660,8 @@ void AnimEditUI::SelectMeshData(DWORD_PTR _data)
             m_pCurAnimator = m_pRenderObj->GetAnimator3D();
 
             CEditorObjMgr::GetInst()->SetTexRender(m_pRenderObj);
+            if(m_pCurAnimator->GetCurAnim())
+                m_tTempAnimclip = m_pCurAnimator->GetCurAnim()->GetAnimClip();
         }
     }
     else

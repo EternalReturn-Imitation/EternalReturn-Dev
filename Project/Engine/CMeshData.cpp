@@ -91,16 +91,54 @@ CGameObject* CMeshData::Instantiate()
 	}
 
 	// Animation 파트 추가
-	// if (false == m_pMesh->IsAnimMesh())
-	// 	return pNewObj;
+	InstantiateAnimation(pNewObj);
 
-	// CAnimator3D* pAnimator = new CAnimator3D;
-	// pNewObj->AddComponent(pAnimator);
-	// 
-	// pAnimator->SetBones(m_pMesh->GetBones());
-	// pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
 
 	return pNewObj;
+}
+
+void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
+{
+	wstring strMeshName = path(GetKey()).stem();
+
+	
+	int AnimClipCnt = 0;
+
+	map<wstring, Ptr<CRes>> mapBone = CResMgr::GetInst()->GetResources(RES_TYPE::BONE);
+	map<wstring, Ptr<CRes>>::iterator iter = mapBone.begin();
+
+	if (iter == mapBone.end())
+		return;
+
+	CAnimator3D* pAnimator = new CAnimator3D;
+	_NewObj->AddComponent(pAnimator);
+
+	int KeyLen = strMeshName.length();
+
+	for (; iter != mapBone.end(); ++iter)
+	{
+		wstring strBoneKey = iter->first.substr(0, KeyLen);
+
+		if (strMeshName == strBoneKey)
+		{
+			Ptr<CBone> pBone = (CBone*)iter->second.Get();
+			pAnimator->AddAnim(pBone);
+			AnimClipCnt++;
+		}
+	}
+
+	if (0 < AnimClipCnt)
+	{
+		wstring errMsg = L"Load Compleate Animation : " + std::to_wstring(AnimClipCnt);
+		MessageBox(nullptr, errMsg.c_str(), L"Success!", MB_OK);
+		return;
+	}
+	else
+	{
+		wstring errMsg = L"Anim Load Fail.";
+		MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+		return;
+	}
 }
 
 CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, int singleMeshData)
