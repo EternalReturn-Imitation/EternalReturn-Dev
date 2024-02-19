@@ -50,7 +50,6 @@ AnimEditUI::~AnimEditUI()
 
 void AnimEditUI::tick()
 {
-    SetActive(false);
     if (m_pCurAnimator && KEY_TAP(KEY::SPACE))
     {
         if (m_bPlay)

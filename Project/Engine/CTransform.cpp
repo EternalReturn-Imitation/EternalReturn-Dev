@@ -3,6 +3,7 @@
 
 #include "CDevice.h"
 #include "CConstBuffer.h"
+#include "CRenderComponent.h"
 
 CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
@@ -46,7 +47,7 @@ void CTransform::finaltick()
 
 	if (OffsetTrigger) {
 		Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
-		Matrix matTranslationOffset = XMMatrixTranslation(m_vRelativePos.x+ m_vOffsetRelativePos.x, m_vRelativePos.y+m_vOffsetRelativePos.y, m_vRelativePos.z+ m_vOffsetRelativePos.z);
+		Matrix matTranslationOffset = XMMatrixTranslation(m_vRelativePos.x - m_vOffsetRelativePos.x, m_vRelativePos.y - m_vOffsetRelativePos.y, m_vRelativePos.z - m_vOffsetRelativePos.z);
 		m_matOffsetWorld = m_matWorldScale * matRot * matTranslationOffset;
 		m_matWorld = m_matWorldScale * matRot * matTranslation;
 		m_matWorldForGizmo = m_matWorld;
@@ -138,6 +139,74 @@ void CTransform::UpdateData()
 
 	pTransformBuffer->SetData(&g_transform);
 	pTransformBuffer->UpdateData();
+}
+
+void CTransform::SetOriginAlignment()
+{
+	Vtx* vertices = GetOwner()->GetRenderComponent()->GetMesh()->GetVtxSysMem();
+
+	vector<Vector4> vVtx;
+
+	float xMin = 99999.f;
+	float xMax = -99999.f;
+	float yMin = 99999.f;
+	float yMax = -99999.f;
+	float zMin = 99999.f;
+	float zMax = -99999.f;
+
+	for (auto& indexInfo : GetOwner()->GetRenderComponent()->GetMesh()->GetIdxInfo()) {
+		UINT* indices = (UINT*)indexInfo.pIdxSysMem; // 인덱스 데이터 접근
+		vVtx.resize(indexInfo.iIdxCount);
+		for (UINT i = 0; i < indexInfo.iIdxCount; i += 3) {
+			// 삼각형 구성
+			Vtx v1 = vertices[indices[i]];
+			Vtx v2 = vertices[indices[i + 1]];
+			Vtx v3 = vertices[indices[i + 2]];
+			vVtx[i] = v1.vPos;
+			if (vVtx[i].x < xMin)
+				xMin = vVtx[i].x;
+			if (vVtx[i].x > xMax)
+				xMax = vVtx[i].x;
+			if (vVtx[i].y < yMin)
+				yMin = vVtx[i].y;
+			if (vVtx[i].y > yMax)
+				yMax = vVtx[i].y;
+			if (vVtx[i].z < zMin)
+				zMin = vVtx[i].z;
+			if (vVtx[i].z > zMax)
+				zMax = vVtx[i].z;
+
+			vVtx[i + 1] = v2.vPos;
+			if (vVtx[i + 1].x < xMin)
+				xMin = vVtx[i + 1].x;
+			if (vVtx[i + 1].x > xMax)
+				xMax = vVtx[i].x;
+			if (vVtx[i + 1].y < yMin)
+				yMin = vVtx[i + 1].y;
+			if (vVtx[i + 1].y > yMax)
+				yMax = vVtx[i + 1].y;
+			if (vVtx[i + 1].z < zMin)
+				zMin = vVtx[i + 1].z;
+			if (vVtx[i + 1].z > zMax)
+				zMax = vVtx[i + 1].z;
+
+			vVtx[i + 2] = v3.vPos;
+			if (vVtx[i + 2].x < xMin)
+				xMin = vVtx[i + 2].x;
+			if (vVtx[i + 2].x > xMax)
+				xMax = vVtx[i + 2].x;
+			if (vVtx[i + 2].y < yMin)
+				yMin = vVtx[i + 2].y;
+			if (vVtx[i + 2].y > yMax)
+				yMax = vVtx[i + 2].y;
+			if (vVtx[i + 2].z < zMin)
+				zMin = vVtx[i + 2].z;
+			if (vVtx[i + 2].z > zMax)
+				zMax = vVtx[i + 2].z;
+		}
+	}
+	SetOffsetRelativePos(Vec3(xMin, yMin, zMin));
+	SetOffsetTrigger(true);
 }
 
 void CTransform::SaveToLevelFile(FILE* _File)
