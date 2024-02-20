@@ -1,2 +1,2 @@
-# EldenRing-Dev
-EldenRing Imitation Developing Repository
+# EternalReturn-Dev
+EternalReturn Imitation Developing Repository
