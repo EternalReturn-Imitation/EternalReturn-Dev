@@ -16,7 +16,6 @@
 
 #include "CLevelSaveLoad.h"
 
-
 #include <Engine/CSetColorShader.h>
 
 #include "CEditorObjMgr.h"
@@ -122,20 +121,29 @@ void CreateTestLevel()
 
 	// SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
 
-	CGameObject* pObject = new CGameObject;
-	pObject->SetName(L"Plane");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CMeshRender);
-	pObject->AddComponent(new CFindPath);
+	// CGameObject* pObject = new CGameObject;
+	// pObject->SetName(L"Plane");
+	// pObject->AddComponent(new CTransform);
+	// pObject->AddComponent(new CMeshRender);
+	// pObject->AddComponent(new CFindPath);
+	// 
+	// pObject->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 5.f));
+	// pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	// 
+	// pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	// pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+	// 
+	// 
+	// SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
 
-	pObject->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 5.f));
-	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-
-
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
+	// Ptr<CMeshData> pMeshData = nullptr;
+	// pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Rio.mdat");
+	// 
+	// CGameObject* pObject = pMeshData->Instantiate();
+	// pObject->SetName(L"Rio");
+	// pObject->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
+	// 
+	// SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Default");
 	
 	//// ============
 	//// FBX Loading
@@ -191,9 +199,6 @@ void CreateTestLevel()
 	// 		pObj->Transform()->SetRelativeScale(Vec3(100.f , 100.f, 100.f));
 	// 	}
 	// }
-	// CGameObject* pObj = nullptr;
-	// Ptr<CMeshData> pMeshData = nullptr;
-	// 
 	// pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_STR_Base.mdat");
 	// pObj = pMeshData->Instantiate();
 	// pObj->SetName(L"World");
@@ -307,7 +312,12 @@ void CreateTestLevel()
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"School_Roof");
 	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-	SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
+	rot = pObj->Transform()->GetRelativeRot();
+	rot.y = -1.5708f;
+	pObj->Transform()->SetRelativeRot(rot);
+	// SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
+	SpawnGameObject(pObj, Vec3(9996.f, 396.f, 5022.112f), L"Roof");
+	
 #pragma endregion
 
 #pragma region Uptown
