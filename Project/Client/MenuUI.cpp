@@ -10,8 +10,6 @@
 
 #include <Script\CScriptMgr.h>
 
-
-
 #include "ImGuiMgr.h"
 #include "OutlinerUI.h"
 #include "InspectorUI.h"
@@ -222,6 +220,11 @@ int MenuUI::render_update()
             if (ImGui::MenuItem("Load Bone from FBX.."))
             {
                 LoadFBX_Bone();
+            }
+
+            if (ImGui::MenuItem("Load All Bone from 'FBX'Floder.."))
+            {
+                LoadAllFBX_Bone();
             }
 
             ImGui::EndMenu();
@@ -484,5 +487,45 @@ void MenuUI::LoadFBX_Bone()
         wstring errMsg = L"Bone Data Load from FBX Compleat.\nBone File Created.\n";
         MessageBox(nullptr, errMsg.c_str(), L"SUCCESS", MB_OK);
         return;
+    }
+}
+
+void MenuUI::LoadAllFBX_Bone()
+{
+    std::vector<wstring> vecResPath;
+    wstring strContentPath = CPathMgr::GetInst()->GetContentPath();
+    strContentPath += L"\\fbx\\";
+
+    WIN32_FIND_DATA FindData = {};
+    wstring FolderPath = strContentPath + L"*.fbx";
+
+    HANDLE hFindHandle = FindFirstFile(FolderPath.c_str(), &FindData);
+
+    int LoadFbxCnt = 0;
+
+    while (FindNextFile(hFindHandle, &FindData))
+    {
+        if (FindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        {
+            if (!wcscmp(FindData.cFileName, L".."))
+                continue;
+        }
+
+        wstring strFilePath = L"fbx\\";
+        strFilePath += FindData.cFileName;
+        if (nullptr != CResMgr::GetInst()->LoadFBXBone(strFilePath.c_str()))
+            LoadFbxCnt++;
+    }
+
+    if (0 <LoadFbxCnt)
+    {
+        wstring errMsg = L"Fbx Bone Load Complete : " + std::to_wstring(LoadFbxCnt);
+        MessageBox(nullptr, errMsg.c_str(), L"Success!", MB_OK);
+        return;
+    }
+    else
+    {
+        wstring errMsg = L"Have No Bones.";
+        MessageBox(nullptr, errMsg.c_str(), L"Fail!", MB_OK);
     }
 }

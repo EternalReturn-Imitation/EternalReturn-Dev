@@ -101,19 +101,18 @@ void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
 {
 	wstring strMeshName = path(GetKey()).stem();
 
-	
 	int AnimClipCnt = 0;
 
 	map<wstring, Ptr<CRes>> mapBone = CResMgr::GetInst()->GetResources(RES_TYPE::BONE);
 	map<wstring, Ptr<CRes>>::iterator iter = mapBone.begin();
 
-	if (iter == mapBone.end())
-		return;
+	vector<Ptr<CBone>> vectorBone;
 
-	CAnimator3D* pAnimator = new CAnimator3D;
-	_NewObj->AddComponent(pAnimator);
 
 	int KeyLen = strMeshName.length();
+
+	if (iter == mapBone.end())
+		return;
 
 	for (; iter != mapBone.end(); ++iter)
 	{
@@ -121,22 +120,23 @@ void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
 
 		if (strMeshName == strBoneKey)
 		{
-			Ptr<CBone> pBone = (CBone*)iter->second.Get();
-			pAnimator->AddAnim(pBone);
+			vectorBone.emplace_back((CBone*)iter->second.Get());
 			AnimClipCnt++;
 		}
 	}
 
 	if (0 < AnimClipCnt)
 	{
+		CAnimator3D* pAnimator = new CAnimator3D;
+		_NewObj->AddComponent(pAnimator);
+
+		vector<Ptr<CBone>>::iterator iter = vectorBone.begin();
+		while(iter != vectorBone.end())
+			pAnimator->AddAnim(*iter++);
+		
 		wstring errMsg = L"Load Compleate Animation : " + std::to_wstring(AnimClipCnt);
 		MessageBox(nullptr, errMsg.c_str(), L"Success!", MB_OK);
-		return;
-	}
-	else
-	{
-		wstring errMsg = L"Anim Load Fail.";
-		MessageBox(nullptr, errMsg.c_str(), L"FAIL", MB_OK);
+			
 		return;
 	}
 }

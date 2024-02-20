@@ -205,9 +205,6 @@
     <ClInclude Include="CameraUI.h">
       <Filter>UI\InspectorUI\ComponentUI\03. CameraUI</Filter>
     </ClInclude>
-    <ClInclude Include="Animator2DUI.h">
-      <Filter>UI\InspectorUI\ComponentUI\06. Animator2DUI</Filter>
-    </ClInclude>
     <ClInclude Include="Light2DUI.h">
       <Filter>UI\InspectorUI\ComponentUI\08. Light2DUI</Filter>
     </ClInclude>
@@ -311,6 +308,9 @@
     <ClInclude Include="BoneUI.h">
       <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
     </ClInclude>
+    <ClInclude Include="Animator3DUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\07. Animator3DUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -379,9 +379,6 @@
     </ClCompile>
     <ClCompile Include="CameraUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\03. CameraUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator2DUI.cpp">
-      <Filter>UI\InspectorUI\ComponentUI\06. Animator2DUI</Filter>
     </ClCompile>
     <ClCompile Include="Light2DUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\08. Light2DUI</Filter>
@@ -483,6 +480,9 @@
     </ClCompile>
     <ClCompile Include="BoneUI.cpp">
       <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator3DUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\07. Animator3DUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
