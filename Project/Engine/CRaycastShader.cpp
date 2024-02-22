@@ -41,6 +41,7 @@ void CRaycastShader::UpdateData()
 	m_Const.arrFloat[0] = m_vMaxScale.x;
 	m_Const.arrFloat[1] = m_vMaxScale.y;
 
+
 	// 출력 버퍼	(UAV)
 	m_pOutput->UpdateData_CS(0, false);
 

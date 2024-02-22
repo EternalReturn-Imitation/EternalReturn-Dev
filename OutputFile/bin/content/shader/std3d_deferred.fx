@@ -59,6 +59,7 @@ struct VTX_IN_INST
 // Blend State          : Default
 
 // Parameter
+#define     nav         g_int_2
 #define     SpecCoeff   g_float_0
 // ===============
 
@@ -70,15 +71,22 @@ VS_OUT VS_Std3D_Deferred(VS_IN _in)
     {
         Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, 0);
     }
-        
+    
     // 로컬에서의 Normal 방향을 월드로 이동      
     output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);
     
     output.vViewNormal = normalize(mul(float4(_in.vNormal, 0.f), g_matWV)).xyz;
     output.vViewTangent = normalize(mul(float4(_in.vTangent, 0.f), g_matWV)).xyz;
     output.vViewBinormal = normalize(mul(float4(_in.vBinormal, 0.f), g_matWV)).xyz;
-               
-    output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
+    
+    if (g_int_2 == 0)
+    {
+        output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
+    }
+    else
+    {
+        output.vPosition = mul(float4(_in.vPos, 1.f), g_matWorld);
+    }
     output.vUV = _in.vUV;
       
     return output;

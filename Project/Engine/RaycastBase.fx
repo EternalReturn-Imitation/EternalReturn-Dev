@@ -20,6 +20,7 @@ Texture2D g_naviTex : register(t1);
 #define MAX_X_UV        g_float_0
 #define MAX_Z_UV        g_float_1
 
+
 [numthreads(32, 32, 1)]
 void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
 {
@@ -75,7 +76,7 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
         if ((vCrossPoint.x / (float) FACE_X) > MAX_X_UV)
             vCrossPoint.x = MAX_X_UV * (float) FACE_X;
         if ((vCrossPoint.z / (float) FACE_Z) > MAX_Z_UV)
-            vCrossPoint.z = MAX_Z_UV * (float) FACE_Z;        
+            vCrossPoint.z = MAX_Z_UV * (float) FACE_Z;
 
         OUTPUT[0].vUV = float2(vCrossPoint.x / (float) FACE_X, vCrossPoint.z / (float) FACE_Z);
         OUTPUT[0].fDist = fDist;
@@ -84,12 +85,17 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
     
     if (OUTPUT[0].success)
     {
-        float2 vUV = float2(vCrossPoint.x / (float) FACE_X, MAX_Z_UV - vCrossPoint.z / (float) FACE_Z);
+        float2 vUV = float2(vCrossPoint.x / (float) FACE_X, MAX_Z_UV - (vCrossPoint.z / (float) FACE_Z));
+        vUV.x = vUV.x / (float) MAX_X_UV;
         vUV.y = vUV.y / (float) MAX_Z_UV;
+        vUV.x += (0.002 * MAX_X_UV);
+        vUV.y -= (0.0005 * MAX_Z_UV);
+        
+        //OUTPUT[0].vUV = float2(vCrossPoint.x, vCrossPoint.z);
         
         float4 color = g_naviTex.SampleLevel(g_sam_0, vUV,0);
         OUTPUT[0].vRGB = color;
-        if (color.a == 0.f)
+        if (color.a <0.9f)
             OUTPUT[0].success = 0;
     }
         
