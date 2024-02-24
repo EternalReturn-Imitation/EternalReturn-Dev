@@ -311,6 +311,7 @@
     <ClInclude Include="BoneUI.h">
       <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
     </ClInclude>
+    <ClInclude Include="asd.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -484,5 +485,6 @@
     <ClCompile Include="BoneUI.cpp">
       <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
     </ClCompile>
+    <ClCompile Include="asd.cpp" />
   </ItemGroup>
 </Project>

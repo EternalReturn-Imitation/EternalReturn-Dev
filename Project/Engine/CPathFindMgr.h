@@ -42,6 +42,9 @@ private:
 
 private:
     tNaviResult         m_sResultPos;
+
+private:
+    vector<Vec4>            m_vNaviVtx;
    
 private:
     bool LoadNavMeshFromFile(const char* path);
@@ -59,8 +62,10 @@ public:
 public:
     void SetNaviMapObject(CGameObject* _object) { m_Object = _object; }
     void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }
+    void SetNaviVtx(vector<Vec4> _naviVtx) { m_vNaviVtx = _naviVtx; }
 
     CGameObject* GetNaviMapObject() { return m_Object; }
     tNaviResult GetNaviResult() { return m_sResultPos; }
+    const vector<Vec4> GetNaviVtx() { return m_vNaviVtx; }
 };
 

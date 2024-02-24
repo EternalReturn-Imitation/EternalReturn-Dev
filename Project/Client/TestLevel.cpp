@@ -129,6 +129,7 @@ void CreateTestLevel()
 	pObject->AddComponent(new CFindPath);
 	
 	pObject->Transform()->SetRelativeScale(Vec3(5.f, 10.f, 5.f));
+	pObject->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 30.f));
 	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
 	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
@@ -178,7 +179,7 @@ void CreateTestLevel()
 			//rot.z = +1.5708f;
 			pObj->Transform()->SetRelativeRot(rot);
 			pObj->Transform()->SetRelativeScale(2.0f, 2.0f, 2.0f);
-			pObj->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
+			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
 			pObj->AddComponent(new CNaviMap);
 			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
 

@@ -87,6 +87,7 @@ public:
     const float& GetBoundingRadius() { return m_fBoundingRadius; }
     const Matrix& GetWorldBoundingMat() { return m_matWorldBoundingBox; }
 
+    Vec3 GetOffsetRelativePos() { return m_vOffsetRelativePos; }
 
     //기즈모가 세팅되어 있는 오브젝트인지
     void SetGizmoOnSet(bool _IsNoGizmoObj) { b_GizmoOnSet = _IsNoGizmoObj; }

@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animator2DUI.h" />
+    <ClInclude Include="asd.h" />
     <ClInclude Include="BlackBoardListUI.h" />
     <ClInclude Include="BoneUI.h" />
     <ClInclude Include="CameraUI.h" />
@@ -209,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator2DUI.cpp" />
+    <ClCompile Include="asd.cpp" />
     <ClCompile Include="BlackBoardListUI.cpp" />
     <ClCompile Include="BoneUI.cpp" />
     <ClCompile Include="CameraUI.cpp" />
