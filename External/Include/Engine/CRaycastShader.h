@@ -27,12 +27,10 @@ private:
 	CStructuredBuffer* m_pOutput;
 
 	Vector3 m_vMaxScale;
+	Vector3 m_vPos;
 
 	//네비 맵 텍스트
 	Ptr<CTexture>       m_pNaviTex;
-
-	//오브젝트의 실제 크기
-	Vector3 m_vScale;
 
 public:
 	void SetVtx(vector<Vector4> _vtx);
@@ -41,7 +39,7 @@ public:
 	void SetOuputBuffer(CStructuredBuffer* _pOutputBuffer) { m_pOutput = _pOutputBuffer; }
 	void SetMaxScale(Vec3 _scale) { m_vMaxScale = _scale; }
 	void SetNaviMapTex(Ptr<CTexture> _tex) { m_pNaviTex = _tex; }
-	void SetScale(Vec3 _scale) { m_vScale = _scale; }
+	void SetPos(Vec3 _pos) { m_vPos = _pos; }
 
 	tRay GetRayInfo() { return m_ray; }
 	vector<Vector4> GetVertex() { return m_vVtx; }

@@ -38,9 +38,10 @@ void CRaycastShader::UpdateData()
 	m_Const.arrV4[0] = m_ray.vStart;
 	m_Const.arrV4[1] = m_ray.vDir;
 
+	m_Const.arrV4[2] = Vec4(m_vPos.x, m_vPos.y, m_vPos.z, 0.f);
+
 	m_Const.arrFloat[0] = m_vMaxScale.x;
 	m_Const.arrFloat[1] = m_vMaxScale.y;
-
 
 	// 출력 버퍼	(UAV)
 	m_pOutput->UpdateData_CS(0, false);

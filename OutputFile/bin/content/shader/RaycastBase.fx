@@ -14,6 +14,8 @@ Texture2D g_naviTex : register(t1);
 #define CAM_POS         g_vec4_0
 #define CAM_DIR         g_vec4_1
 
+#define POS             g_vec4_2
+
 #define FACE_X          g_int_0
 #define FACE_Z          g_int_1
 
@@ -68,7 +70,9 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
 
     if (IntersectsLay(vPos, CAM_POS.xyz, CAM_DIR.xyz, vCrossPoint, fDist))
     {
-        //OUTPUT[0].vUV = float2(saturate(vCrossPoint.x / (float) FACE_X), saturate(vCrossPoint.z / (float) FACE_Z));
+        vCrossPoint.x -= g_vec4_2.x;
+        vCrossPoint.z -= g_vec4_2.z;
+        
         if ((vCrossPoint.x / (float) FACE_X) < 0.f)
             vCrossPoint.x = 0.f;
         if ((vCrossPoint.z / (float) FACE_Z) < 0.f)
@@ -79,6 +83,7 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
             vCrossPoint.z = MAX_Z_UV * (float) FACE_Z;
 
         OUTPUT[0].vUV = float2(vCrossPoint.x / (float) FACE_X, vCrossPoint.z / (float) FACE_Z);
+        
         OUTPUT[0].fDist = fDist;
         OUTPUT[0].success = 1;
     }
@@ -90,8 +95,6 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
         vUV.y = vUV.y / (float) MAX_Z_UV;
         vUV.x += (0.002 * MAX_X_UV);
         vUV.y -= (0.0005 * MAX_Z_UV);
-        
-        //OUTPUT[0].vUV = float2(vCrossPoint.x, vCrossPoint.z);
         
         float4 color = g_naviTex.SampleLevel(g_sam_0, vUV,0);
         OUTPUT[0].vRGB = color;

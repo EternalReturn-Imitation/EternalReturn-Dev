@@ -177,15 +177,15 @@ void CreateTestLevel()
 			//rot.y = -1.5708f;
 			//rot.z = +1.5708f;
 			pObj->Transform()->SetRelativeRot(rot);
-			pObj->Transform()->SetRelativeScale(10.f, 10.f, 10.f);
-			pObj->Transform()->SetRelativeScale(2.f, 2.f, 2.f);
+			pObj->Transform()->SetRelativeScale(2.0f, 2.0f, 2.0f);
+			pObj->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
 			pObj->AddComponent(new CNaviMap);
 			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
 
 			int a = 1;
 			//pObj->MeshRender()->GetMaterial(0)->SetScalarParam(INT_2, &a);
 
-			//SpawnGameObject(pObj, Vec3(-0.4f, -0.4f, 1.f), 0);
+			//SpawnGameObject(pObj, Vec3(200.f, 0.f, 200.f), 0);
 			SpawnGameObject(pObj, Vec3(0.f,0.f,0.f), 0);
 	// 	 }
 	// 

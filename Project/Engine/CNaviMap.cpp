@@ -142,6 +142,8 @@ void CNaviMap::finaltick()
 		GetOwner()->Transform()->SetOffsetTrigger(true);		
 	}
 
+	m_pCSRaycast->SetPos(GetOwner()->Transform()->GetRelativePos());
+
 	if (KEY_PRESSED(KEY::LBTN))
 	{
 		Raycasting();
@@ -188,10 +190,12 @@ void CNaviMap::Raycasting()
 	m_pCrossBuffer->GetData(&out);
 
 	if (out.bSuccess) {
-		m_sResultPos.resultPos.x = (abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1])) * out.vUV.x;
-		m_sResultPos.resultPos.y = (abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f;
-		m_sResultPos.resultPos.z = (abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * out.vUV.y;
+		Vec3 pos = GetOwner()->Transform()->GetRelativePos();
+		m_sResultPos.resultPos.x = ((abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1])) * out.vUV.x) + pos.x;
+		m_sResultPos.resultPos.y = ((abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f) + pos.y;
+		m_sResultPos.resultPos.z = ((abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * out.vUV.y) + pos.z;
 		m_sResultPos.bSuccess = true;
+
 		CPathFindMgr::GetInst()->SetNaviResult(m_sResultPos);
 	}
 	else {
