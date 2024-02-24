@@ -121,6 +121,7 @@
       <MinFilesInUnityFile>10</MinFilesInUnityFile>
       <MaxFilesInUnityFile>20</MaxFilesInUnityFile>
       <UnityFilesDirectory>$(ProjectDir)</UnityFilesDirectory>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,7 +150,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Animator3DUI.h" />
+    <ClInclude Include="Animator2DUI.h" />
+    <ClInclude Include="asd.h" />
     <ClInclude Include="BlackBoardListUI.h" />
     <ClInclude Include="BoneUI.h" />
     <ClInclude Include="CameraUI.h" />
@@ -163,6 +165,8 @@
     <ClInclude Include="ComponentUI.h" />
     <ClInclude Include="ComputeShaderUI.h" />
     <ClInclude Include="ContentUI.h" />
+    <ClInclude Include="ER_GameSystem.h" />
+    <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphicsShaderUI.h" />
     <ClInclude Include="ImGuiMgr.h" />
@@ -207,7 +211,8 @@
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Animator3DUI.cpp" />
+    <ClCompile Include="Animator2DUI.cpp" />
+    <ClCompile Include="asd.cpp" />
     <ClCompile Include="BlackBoardListUI.cpp" />
     <ClCompile Include="BoneUI.cpp" />
     <ClCompile Include="CameraUI.cpp" />
@@ -220,6 +225,8 @@
     <ClCompile Include="ComponentUI.cpp" />
     <ClCompile Include="ComputeShaderUI.cpp" />
     <ClCompile Include="ContentUI.cpp" />
+    <ClCompile Include="ER_GameSystem.cpp" />
+    <ClCompile Include="ER_ItemMgr.cpp" />
     <ClCompile Include="GraphicsShaderUI.cpp" />
     <ClCompile Include="ImGuiMgr.cpp" />
     <ClCompile Include="ImGui\GraphEditor.cpp" />
