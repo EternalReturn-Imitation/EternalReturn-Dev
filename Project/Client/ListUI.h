@@ -8,8 +8,11 @@ private:
     vector<string>          m_vecStrData; 
     int                     m_iSelectedIdx;
 
+    DWORD_PTR               m_pTargetObj;
+
     UI*                     m_SelectInst;
     UI_DELEGATE_1           m_SelectDelegate;
+    UI_DELEGATE_2           m_SelectDelegateWithTarget;
 
 
 
@@ -26,6 +29,16 @@ public:
     {
         m_SelectInst = _Inst;
         m_SelectDelegate = _Func;
+        m_SelectDelegateWithTarget = nullptr;
+        m_pTargetObj = 0;
+    }
+
+    void AddDynamic_Select_with_target(UI* _Inst, UI_DELEGATE_2 _Func, DWORD_PTR _Target)
+    {
+        m_SelectInst = _Inst;
+        m_SelectDelegate = nullptr;
+        m_SelectDelegateWithTarget = _Func;
+        m_pTargetObj = _Target;
     }
 
 
