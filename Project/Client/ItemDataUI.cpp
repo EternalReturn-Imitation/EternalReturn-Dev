@@ -23,6 +23,8 @@ ItemDataUI::ItemDataUI()
     , m_bOpenTab{ true,true }
     , m_pCurItem(nullptr)
     , m_pCurStatsEditItem(nullptr)
+    , m_iDragItemIdx(0)
+    , m_iDropItemIdx(0)
 {
     SetName("ItemDataUI");
 
@@ -41,8 +43,8 @@ ItemDataUI::ItemDataUI()
         ImGuiTableFlags_Reorderable |       // 순서 변경
         //ImGuiTableFlags_Sortable |           // Item 정렬
         ImGuiTableFlags_Borders |
-        ImGuiTableFlags_ScrollX |
-        ImGuiSliderFlags_NoInput;
+        ImGuiTableFlags_ScrollX;
+
 
     m_vecItem = &ER_ItemMgr::GetInst()->m_vecItem;
     m_umapRecipe = &ER_ItemMgr::GetInst()->m_umapRecipe;
@@ -69,6 +71,33 @@ void ItemDataUI::init()
 
 void ItemDataUI::tick()
 {
+    /*
+    if (ImGui::TreeNode("Drag to reorder items (simple)"))
+    {
+        // Simple reordering
+        HelpMarker(
+            "We don't use the drag and drop api at all here! "
+            "Instead we query when the item is held but not hovered, and order items accordingly.");
+        static const char* item_names[] = { "Item One", "Item Two", "Item Three", "Item Four", "Item Five" };
+        for (int n = 0; n < IM_ARRAYSIZE(item_names); n++)
+        {
+            const char* item = item_names[n];
+            ImGui::Selectable(item);
+
+            if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+            {
+                int n_next = n + (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+                if (n_next >= 0 && n_next < IM_ARRAYSIZE(item_names))
+                {
+                    item_names[n] = item_names[n_next];
+                    item_names[n_next] = item;
+                    ImGui::ResetMouseDragDelta();
+                }
+            }
+        }
+        ImGui::TreePop();
+    }
+    */
 }
 
 void ItemDataUI::finaltick()
@@ -101,7 +130,7 @@ int ItemDataUI::render_update()
 
     render_Tabs();
 
-    
+    SwapItem();
 
     return 0;
 }
@@ -159,11 +188,14 @@ void ItemDataUI::render_Tabs()
 
 void ItemDataUI::render_ItemInfoTable()
 {
+
+    static ImVector<int> selection;
+    float rowHeight = 41.f;
     
 
     if (ImGui::BeginTable("##ItemDataList", 8, ItemDataUIFlags, ImVec2(0, 0)))
     {
-        ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_NoReorder, 20.f, ItemDataListColumnID_ID);
+        ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_NoReorder, 20.f, ItemDataListColumnID_ID);
         ImGui::TableSetupColumn("Texture", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_NoReorder, 68.f, ItemDataListColumnID_Texture);
         ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoReorder, 100.f, ItemDataListColumnID_Name);
         ImGui::TableSetupColumn("Grade", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_Grade);
@@ -187,38 +219,71 @@ void ItemDataUI::render_ItemInfoTable()
             for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
                 // Without clipper
             {
-
                 m_pCurItem = (*m_vecItem)[row_n];
 
-                ImGui::PushID(m_pCurItem->GetCode());
+                int ID = m_pCurItem->GetCode();
+
+                ImGui::PushID(ID);
                 ImGui::TableNextRow(ImGuiTableRowFlags_None, 0.0f);
-                
+
                 int ItemGrade = m_pCurItem->GetGrade();
                 ImVec4 RowColor = {};
                 switch (ItemGrade)
                 {
-                    case 0:
-                    RowColor = { 0.1, 0.1, 0.1, 0.6 };
+                case 0:
+                    RowColor = { 0.1f, 0.1f, 0.1f, 0.6f };  // 일반
                     break;
-                    case 1:
-                    RowColor = { 0.1, 0.9, 0.1, 0.6 };
+                case 1:
+                    RowColor = { 0.1f, 0.7f, 0.1f, 0.4f };  // 고급
                     break;
-                    case 2:
-                    RowColor = { 0.1, 0.1, 0.9, 0.6 };
+                case 2:
+                    RowColor = { 0.1f, 0.1f, 0.7f, 0.4f };  // 희귀
                     break;
-                    case 3:
-                    RowColor = { 0.7, 0.0, 0.7, 0.6 };
+                case 3:
+                    RowColor = { 0.7f, 0.0f, 0.7f, 0.4f };  // 영웅
                     break;
                 }
 
                 ImU32 row_bg_color = ImGui::GetColorU32(RowColor);
                 ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color);
 
+
+
                 // For the demo purpose we can select among different type of items submitted in the first column
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_ID);
                 ImGui::PushItemWidth(-FLT_MIN);
-                int CurItemCode = m_pCurItem->GetCode();
-                ImGui::Text("%d", CurItemCode);
+                char id[5] = {};
+                sprintf(id, "%03d", ID);
+                
+                const bool item_is_selected = false;
+                
+                ImGui::Selectable(id, &item_is_selected, 0, ImVec2(0, rowHeight));
+
+                if (ImGui::BeginDragDropSource())
+                {
+                    ImGui::SetDragDropPayload("##ItemSwapPayload", this, sizeof(ER_Item*));
+                    ImGui::Text("%d", row_n);
+
+                    m_DragItem = m_pCurItem;
+                    m_iDragItemIdx = row_n;
+
+                    ImGui::EndDragDropSource();
+                }
+
+
+                // 드래그 시작 후, 드랍의 후보인 경우
+                if (ImGui::BeginDragDropTarget())
+                {
+                    // 해당 노드에서 마우스 뗀 경우, 지정한 PayLoad 키값이 일치한 경우
+                    const ImGuiPayload* pPayLoad = ImGui::AcceptDragDropPayload("##ItemSwapPayload");
+                    if (pPayLoad)
+                    {
+                        m_DropItem = m_pCurItem;
+                        m_iDropItemIdx = row_n;
+                    }
+
+                    ImGui::EndDragDropTarget();
+                }
 
                 // Item Icon
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Texture);
@@ -506,13 +571,37 @@ void ItemDataUI::Print_Stats(const ER_tStats& _stats)
     if (0 != _stats.iMaxSPPerLevel) ImGui::Text(u8"레벨당 스테미너 : + %d", _stats.iMaxSPPerLevel);
     if (0 != _stats.fSPRegen) ImGui::Text(u8"스테미나 재생 : + %d %%", _stats.fSPRegen * 100);
     if (0 != _stats.iDefense) ImGui::Text(u8"방어력 : + %d", _stats.iDefense);
-    if (0 != _stats.fAttackSpeed) ImGui::Text(u8"공격 속도 : + %d %%", _stats.fAttackSpeed * 100);
+    if (0 != _stats.fAttackSpeed) ImGui::Text(u8"공격 속도 : + %.0f %%", _stats.fAttackSpeed * 100);
     if (0 != _stats.fCriticalStrikeChance) ImGui::Text(u8"치명타 확률 : + %.0f %%", _stats.fCriticalStrikeChance * 100);
     if (0 != _stats.fCriticalStrikeDamage) ImGui::Text(u8"치명타 추가 데미지 : + %d", _stats.fCriticalStrikeDamage);
     if (0 != _stats.fMovementSpeed) ImGui::Text(u8"이동 속도 : + %.2f", _stats.fMovementSpeed);
     if (0 != _stats.fVisionRange) ImGui::Text(u8"시야 : + %.1f", _stats.fVisionRange);
     if (0 != _stats.fCooldownReduction) ImGui::Text(u8"쿨타임 감소 : + %.0f %%", _stats.fCooldownReduction * 100);
     if (0 != _stats.fOmnisyphon) ImGui::Text(u8"모든 피해 흡혈 : + %.0f %%", _stats.fOmnisyphon * 100);
+}
+
+void ItemDataUI::SwapItem()
+{
+    if ((m_DragItem && m_DropItem) || (m_DragItem && ImGui::IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Left)))
+    {
+        //  스왑
+
+        (*m_vecItem)[m_iDragItemIdx] = m_DropItem;
+        (*m_vecItem)[m_iDropItemIdx] = m_DragItem;
+
+        UINT ItemCode = m_DragItem->m_eItemCode;
+        m_DragItem->m_eItemCode = m_DropItem->m_eItemCode;
+        m_DropItem->m_eItemCode = ItemCode;
+
+        m_DragItem = nullptr;
+        m_DropItem = nullptr;
+
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        size_t ItemCnt = (*m_vecItem).size();
+
+        for (size_t i = 0; i < ItemCnt; ++i)
+            m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
+    }
 }
 
 void ItemDataUI::SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target)
