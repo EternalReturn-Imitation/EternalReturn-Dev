@@ -29,6 +29,9 @@ private:
     ER_Item*        m_pCurStatsEditItem;
     Ptr<CTexture>   m_pEmptyItemSlotTex;
 
+    bool           m_bItemPopup;
+    int            m_iDeleteItemIdx;
+
     ER_Item*       m_DragItem;
     ER_Item*       m_DropItem;
     int            m_iDragItemIdx;
@@ -52,6 +55,7 @@ private:
     void Print_Stats(const ER_tStats& _stats);
 
     void SwapItem();
+    void ItemPopUp();
     void SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target);
 
 public:

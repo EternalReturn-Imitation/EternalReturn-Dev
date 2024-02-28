@@ -25,6 +25,8 @@ ItemDataUI::ItemDataUI()
     , m_pCurStatsEditItem(nullptr)
     , m_iDragItemIdx(0)
     , m_iDropItemIdx(0)
+    , m_bItemPopup(false)
+    , m_iDeleteItemIdx(0)
 {
     SetName("ItemDataUI");
 
@@ -132,6 +134,8 @@ int ItemDataUI::render_update()
 
     SwapItem();
 
+    ItemPopUp();
+
     return 0;
 }
 
@@ -153,6 +157,21 @@ void ItemDataUI::render_menubar()
 
             ImGui::EndMenu();
         }
+
+        if (ImGui::BeginMenu("Edit"))
+        {
+            if (ImGui::MenuItem("Add NewItem.."))
+            {
+                ER_Item* NewItem = new ER_Item;
+                NewItem->m_eItemCode = (*m_vecItem).size();
+                (*m_vecItem).push_back(NewItem);
+
+                m_vecItemName.push_back(string());
+            }
+
+            ImGui::EndMenu();
+        }
+
         ImGui::EndMenuBar();
     }
 }
@@ -258,6 +277,18 @@ void ItemDataUI::render_ItemInfoTable()
                 const bool item_is_selected = false;
                 
                 ImGui::Selectable(id, &item_is_selected, 0, ImVec2(0, rowHeight));
+
+                if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right))
+                {
+                    m_iDeleteItemIdx = row_n;
+                }
+                else if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Right))
+                {
+                    if (m_iDeleteItemIdx == row_n)
+                        m_bItemPopup = true;
+                    else
+                        m_bItemPopup = false;
+                }
 
                 if (ImGui::BeginDragDropSource())
                 {
@@ -584,7 +615,12 @@ void ItemDataUI::SwapItem()
 {
     if ((m_DragItem && m_DropItem) || (m_DragItem && ImGui::IsMouseReleased(ImGuiMouseButton_::ImGuiMouseButton_Left)))
     {
-        //  스왑
+        if (!m_DragItem || !m_DropItem)
+        {
+            m_DragItem = nullptr;
+            m_DropItem = nullptr;
+            return;
+        }
 
         (*m_vecItem)[m_iDragItemIdx] = m_DropItem;
         (*m_vecItem)[m_iDropItemIdx] = m_DragItem;
@@ -601,6 +637,52 @@ void ItemDataUI::SwapItem()
 
         for (size_t i = 0; i < ItemCnt; ++i)
             m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
+    }
+}
+
+void ItemDataUI::ItemPopUp()
+{
+    if (m_bItemPopup)
+        ImGui::OpenPopup("##OutLinerObjMenu");
+
+    if (ImGui::BeginPopup("##OutLinerObjMenu"))
+    {
+        m_bItemPopup = false;
+        ImGui::Text("menu");
+        ImGui::Separator();
+
+        if (ImGui::MenuItem("Delete..##GameObjDelete"))
+        {
+            // 아이템 제거
+            delete (*m_vecItem)[m_iDeleteItemIdx];
+            (*m_vecItem).erase((*m_vecItem).begin() + m_iDeleteItemIdx);
+            (*m_vecItem).shrink_to_fit();
+
+            // 아이템 코드 갱신
+            size_t ItemCnt = (*m_vecItem).size();
+            for (size_t i = 0; i < ItemCnt; ++i)
+            {
+                (*m_vecItem)[i]->m_eItemCode = i;
+            }
+
+            // utf-8 아이템 이름 갱신
+            m_vecItemName.erase(m_vecItemName.begin() + m_iDeleteItemIdx);
+            m_vecItemName.shrink_to_fit();
+
+            std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+            for (size_t i = 0; i < ItemCnt; ++i)
+                m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
+
+            m_bItemPopup = false;
+            ImGui::CloseCurrentPopup();
+        }
+
+        if (ImGui::MenuItem("Close##CloseObjMenu"))
+        {
+            ImGui::CloseCurrentPopup();
+        }
+
+        ImGui::EndPopup();
     }
 }
 
