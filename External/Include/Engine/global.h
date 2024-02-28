@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <random>
 #include <sstream>
-#include <atlstr.h>
 
 using std::vector;
 using std::list;

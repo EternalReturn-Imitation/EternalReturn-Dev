@@ -24,6 +24,9 @@ private:
     ImGuiTableFlags ItemDataUIFlags;
 
     ER_Item*        m_pCurItem;
+
+    bool            m_bItemStatsEditWin;
+    ER_Item*        m_pCurStatsEditItem;
     Ptr<CTexture>   m_pEmptyItemSlotTex;
 
     vector<string> m_vecItemName;
@@ -39,6 +42,10 @@ private:
     void render_Tabs();
     void render_ItemInfoTable();
     void render_ItemRecipeTable();
+    void render_ItemStatEdit();
+
+    void Print_Stats(const ER_tStats& _stats);
+
     void SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target);
 
 public:

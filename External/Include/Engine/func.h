@@ -165,18 +165,6 @@ void Safe_Del_Map(map<T1, T2>& _map)
 	_map.clear();
 }
 
-template<typename T1, typename T2>
-void Safe_Del_UnorderedMap(unordered_map<T1, T2>& _unordered_map)
-{
-	for (const auto& pair : _unordered_map)
-	{
-		if (nullptr != pair.second)
-			delete pair.second;
-	}
-
-	_unordered_map.clear();
-}
-
 
 // math
 float Rad2Deg(float _radian); 
