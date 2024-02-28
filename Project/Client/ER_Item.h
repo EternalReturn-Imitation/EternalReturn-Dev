@@ -57,6 +57,9 @@ private:
 	void SetItemGrade(UINT _grade) { m_eGrade = _grade; }
 	void SetItemType(UINT _type) { m_eType = _type; }
 	void SetItemSlot(UINT _slot) { m_eSlot = _slot; }
+	void SetItemIngr_1(UINT _ingr_1) { m_uniRecipe.ingredient_1 = _ingr_1; }
+	void SetItemIngr_2(UINT _ingr_2) { m_uniRecipe.ingredient_2 = _ingr_2; }
+	void SetItemRecipe(ER_RECIPE _recipe) { m_uniRecipe = _recipe; }
 
 	void GetRecipe(ER_RECIPE _recipe) { m_uniRecipe = _recipe; }
 	void SetItemStats(ER_tStats& _stats) { m_tItemStats = _stats; }

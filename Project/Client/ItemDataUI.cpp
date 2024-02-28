@@ -14,6 +14,7 @@ enum MyItemColumnID
     ItemDataListColumnID_Grade,
     ItemDataListColumnID_Type,
     ItemDataListColumnID_Slot,
+    ItemDataListColumnID_Recipe,
     ItemDataListColumnID_Stats
 };
 
@@ -55,6 +56,14 @@ ItemDataUI::~ItemDataUI()
 void ItemDataUI::init()
 {
     m_pEmptyItemSlotTex = CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_Empty.png");
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    
+    size_t ItemCnt = (*m_vecItem).size();
+    m_vecItemName.resize(ItemCnt);
+
+    for (size_t i = 0; i < ItemCnt; ++i)
+        m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
 }
 
 void ItemDataUI::tick()
@@ -147,17 +156,18 @@ void ItemDataUI::render_Tabs()
 
 void ItemDataUI::render_ItemInfoTable()
 {
-    static ImVector<int> selection;
+    
 
-    if (ImGui::BeginTable("##ItemDataList", 7, ItemDataUIFlags, ImVec2(0, 0)))
+    if (ImGui::BeginTable("##ItemDataList", 8, ItemDataUIFlags, ImVec2(0, 0)))
     {
-        ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoHide | ImGuiTableColumnFlags_NoReorder, 0.0f, ItemDataListColumnID_ID);
-        ImGui::TableSetupColumn("Texture", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoReorder, 0.0f, ItemDataListColumnID_Texture);
-        ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoReorder, 0.0f, ItemDataListColumnID_Name);
-        ImGui::TableSetupColumn("Grade", ImGuiTableColumnFlags_None | ImGuiTableColumnFlags_WidthFixed, 0.0f, ItemDataListColumnID_Grade);
-        ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_None | ImGuiTableColumnFlags_WidthFixed, 0.0f, ItemDataListColumnID_Type);
-        ImGui::TableSetupColumn("Slot", ImGuiTableColumnFlags_None | ImGuiTableColumnFlags_WidthFixed, 0.0f, ItemDataListColumnID_Slot);
-        ImGui::TableSetupColumn("Stats", ImGuiTableColumnFlags_None | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 0.0f, ItemDataListColumnID_Stats);
+        ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_NoReorder, 20.f, ItemDataListColumnID_ID);
+        ImGui::TableSetupColumn("Texture", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_NoReorder, 68.f, ItemDataListColumnID_Texture);
+        ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoReorder, 100.f, ItemDataListColumnID_Name);
+        ImGui::TableSetupColumn("Grade", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_Grade);
+        ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_Type);
+        ImGui::TableSetupColumn("Slot", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_Slot);
+        ImGui::TableSetupColumn("Recipe", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 250.f, ItemDataListColumnID_Recipe);
+        ImGui::TableSetupColumn("Stats", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoSort, 100.f, ItemDataListColumnID_Stats);
         ImGui::TableSetupScrollFreeze(1, 1);
 
         ImGui::TableHeadersRow();
@@ -177,9 +187,29 @@ void ItemDataUI::render_ItemInfoTable()
 
                 m_pCurItem = (*m_vecItem)[row_n];
 
-                const bool item_is_selected = selection.contains(m_pCurItem->GetCode());
                 ImGui::PushID(m_pCurItem->GetCode());
                 ImGui::TableNextRow(ImGuiTableRowFlags_None, 0.0f);
+                
+                int ItemGrade = m_pCurItem->GetGrade();
+                ImVec4 RowColor = {};
+                switch (ItemGrade)
+                {
+                    case 0:
+                    RowColor = { 0.1, 0.1, 0.1, 0.6 };
+                    break;
+                    case 1:
+                    RowColor = { 0.1, 0.9, 0.1, 0.6 };
+                    break;
+                    case 2:
+                    RowColor = { 0.1, 0.1, 0.9, 0.6 };
+                    break;
+                    case 3:
+                    RowColor = { 0.7, 0.0, 0.7, 0.6 };
+                    break;
+                }
+
+                ImU32 row_bg_color = ImGui::GetColorU32(RowColor);
+                ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color);
 
                 // For the demo purpose we can select among different type of items submitted in the first column
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_ID);
@@ -230,42 +260,82 @@ void ItemDataUI::render_ItemInfoTable()
 
                 // wchar_t -> UTF-8
                 std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-                char szbuffer[64] = {};
-                strcpy(szbuffer, converter.to_bytes(m_pCurItem->GetItemName()).c_str());
+                char szbuffer[32] = {};
+                strcpy(szbuffer, m_vecItemName[row_n].c_str());
 
                 ImGui::InputText("##ItemName", szbuffer, sizeof(szbuffer));
+
+                float NameSlotWidth = ImGui::GetItemRectSize().x;
 
                 // UTF-8 ->wchar_t
                 std::string utf8String = szbuffer;
                 std::wstring ItemName = converter.from_bytes(utf8String);
 
-                if (m_pCurItem->GetItemName() != ItemName)
+                if (m_vecItemName[row_n].c_str() != ItemName)
+                {
                     m_pCurItem->SetItemName(ItemName);
+                    m_vecItemName[row_n] = utf8String;
+                }
 
                 // Item Grade
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Grade);
                 ImGui::PushItemWidth(-FLT_MIN);
-                const char* Grade[] = { u8"¹ÌÁöÁ¤",u8"ÀÏ¹Ý",u8"°í±Þ",u8"Èñ±Í",u8"¿µ¿õ" };
+                const char* Grade[] = { u8"ÀÏ¹Ý",u8"°í±Þ",u8"Èñ±Í",u8"¿µ¿õ" };
                 int CurItemGrade = m_pCurItem->GetGrade();
-                ImGui::Combo("##ItemGrade", &CurItemGrade, Grade, 5);
+                ImGui::Combo("##ItemGrade", &CurItemGrade, Grade, 4);
                 m_pCurItem->SetItemGrade(CurItemGrade);
 
                 // Item Type
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Type);
                 ImGui::PushItemWidth(-FLT_MIN);
-                const char* Types[] = { u8"¹ÌÁöÁ¤",u8"Àåºñ",u8"¼Òºñ",u8"Àç·á" };
+                const char* Types[] = { u8"Àåºñ",u8"¼Òºñ",u8"Àç·á" };
                 int CurItemType = m_pCurItem->GetType();
-                ImGui::Combo("##ItemType", &CurItemType, Types, 4);
+                ImGui::Combo("##ItemType", &CurItemType, Types, 3);
                 m_pCurItem->SetItemType(CurItemType);
 
                 // Item Slot
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Slot);
                 ImGui::PushItemWidth(-FLT_MIN);
                 ImGui::BeginDisabled((UINT)ER_ITEM_TYPE::EQUIPMENT != CurItemType);
-                const char* Slots[] = { u8"ÀåÂøºÒ°¡",u8"¹«±â",u8"¸Ó¸®",u8"¿Ê",u8"ÆÈ",u8"´Ù¸®",u8"¹ÌÁöÁ¤" };
+                const char* Slots[] = { u8"ÀåÂøºÒ°¡",u8"¹«±â",u8"¸Ó¸®",u8"¿Ê",u8"ÆÈ",u8"´Ù¸®"};
                 int CurItemSlot = m_pCurItem->GetSlot();
-                ImGui::Combo("##ItemSlot", &CurItemSlot, Slots, 7);
+                ImGui::Combo("##ItemSlot", &CurItemSlot, Slots, 6);
                 m_pCurItem->SetItemSlot(CurItemSlot);
+                ImGui::EndDisabled();
+
+                // Item Recipe
+                ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Recipe);
+                ImGui::SetNextItemWidth(NameSlotWidth);
+                ImGui::BeginDisabled((UINT)ER_ITEM_GRADE::COMMON == CurItemGrade);
+                ER_RECIPE CurItemRecipe = m_pCurItem->GetRecipe();
+                int Ingr1 = CurItemRecipe.ingredient_1;
+                int Ingr2 = CurItemRecipe.ingredient_2;
+
+                if (ImGui::BeginCombo("##CurItemIngr1", m_vecItemName[Ingr1].c_str(), 0))
+                {
+                    for (int n = 0; n < m_vecItemName.size(); n++)
+                    {
+                        const bool is_selected = (Ingr1 == n);
+                        if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
+                            m_pCurItem->m_uniRecipe.ingredient_1 = n;
+                    }
+                    ImGui::EndCombo();
+                }
+                
+                ImGui::SameLine();
+
+                ImGui::SetNextItemWidth(NameSlotWidth);
+                if (ImGui::BeginCombo("##CurItemIngr2", m_vecItemName[Ingr2].c_str(), 0))
+                {
+                    for (int n = 0; n < m_vecItemName.size(); n++)
+                    {
+                        const bool is_selected = (Ingr2 == n);
+                        if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
+                            m_pCurItem->m_uniRecipe.ingredient_2 = n;
+                    }
+                    ImGui::EndCombo();
+                }
+
                 ImGui::EndDisabled();
 
                 // if(ImGuiSetColumnIndex((UINT)ItemDataListColumnID_Stats))

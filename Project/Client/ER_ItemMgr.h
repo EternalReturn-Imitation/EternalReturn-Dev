@@ -12,10 +12,6 @@ private:
 	unordered_map<DWORD_PTR, UINT> m_umapRecipe;	// 조합식 목록
 
 private:
-	void RegistItem();
-	void RegistRecipe();
-
-private:
 	int Save();
 	int Load();
 

@@ -115,7 +115,6 @@ enum class ER_ITEM_CODE
 
 enum class ER_ITEM_GRADE
 {
-	NONE,
 	COMMON,		// ¿œπ›
 	UNCOMMONE,	// ∞Ì±ﬁ
 	RARE,		// »Ò±Õ
@@ -124,7 +123,6 @@ enum class ER_ITEM_GRADE
 
 enum class ER_ITEM_TYPE
 {
-	NONE,
 	EQUIPMENT,			// ¿Â∫Ò
 	CONSUMABLES,		// º“∫Ò
 	INGREDIENT,			// ¿Á∑·
@@ -138,8 +136,6 @@ enum class ER_ITEM_SLOT
 	CHEST,				// ø 
 	ARM,				// ∆»
 	LEG,				// ¥Ÿ∏Æ
-	END
-
 };
 
 

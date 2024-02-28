@@ -26,6 +26,8 @@ private:
     ER_Item*        m_pCurItem;
     Ptr<CTexture>   m_pEmptyItemSlotTex;
 
+    vector<string> m_vecItemName;
+
 public:
     virtual void init() override;
     virtual void tick() override;

@@ -12,10 +12,7 @@ ER_ItemMgr::~ER_ItemMgr()
 
 void ER_ItemMgr::init()
 {
-	if (S_FALSE == Load())
-	{
-		RegistItem();
-	}
+	Load();
 }
 
 void ER_ItemMgr::Update()
