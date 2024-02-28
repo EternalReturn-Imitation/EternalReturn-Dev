@@ -29,6 +29,10 @@ private:
 	Vector3 m_vMaxScale;
 	Vector3 m_vPos;
 
+	Vector2 m_vXMinMax;
+	Vector2 m_vYMinMax;
+	Vector2 m_vZMinMax;
+
 	//네비 맵 텍스트
 	Ptr<CTexture>       m_pNaviTex;
 
@@ -40,6 +44,9 @@ public:
 	void SetMaxScale(Vec3 _scale) { m_vMaxScale = _scale; }
 	void SetNaviMapTex(Ptr<CTexture> _tex) { m_pNaviTex = _tex; }
 	void SetPos(Vec3 _pos) { m_vPos = _pos; }
+	void SetXMinMax(Vec2 _xMinMax) { m_vXMinMax = _xMinMax; }
+	void SetYMinMax(Vec2 _yMinMax) { m_vYMinMax = _yMinMax; }
+	void SetZMinMax(Vec2 _zMinMax) { m_vZMinMax = _zMinMax; }
 
 	tRay GetRayInfo() { return m_ray; }
 	vector<Vector4> GetVertex() { return m_vVtx; }

@@ -129,7 +129,7 @@ void CreateTestLevel()
 	pObject->AddComponent(new CFindPath);
 	
 	pObject->Transform()->SetRelativeScale(Vec3(5.f, 10.f, 5.f));
-	pObject->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 30.f));
+	pObject->Transform()->SetRelativeScale(Vec3(5.f, 5.f, 1000.f));
 	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
 	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
@@ -178,8 +178,8 @@ void CreateTestLevel()
 			//rot.y = -1.5708f;
 			//rot.z = +1.5708f;
 			pObj->Transform()->SetRelativeRot(rot);
-			pObj->Transform()->SetRelativeScale(2.0f, 2.0f, 2.0f);
 			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
+			pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
 			pObj->AddComponent(new CNaviMap);
 			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
 
@@ -187,7 +187,7 @@ void CreateTestLevel()
 			//pObj->MeshRender()->GetMaterial(0)->SetScalarParam(INT_2, &a);
 
 			//SpawnGameObject(pObj, Vec3(200.f, 0.f, 200.f), 0);
-			SpawnGameObject(pObj, Vec3(0.f,0.f,0.f), 0);
+			SpawnGameObject(pObj, Vec3(0.f,0.f, 0.f), 0);
 	// 	 }
 	// 
 	// 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");
@@ -304,13 +304,15 @@ void CreateTestLevel()
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"School_Base");
 	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-	SpawnGameObject(pObj, Vec3(10055.f, 105.f, 4190.f), L"Base");
+	//SpawnGameObject(pObj, Vec3(10055.f, 105.f, 4190.f), L"Base");
+	SpawnGameObject(pObj, Vec3(6497.f, -330.f, 15534.f), L"Base");
 
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Building.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"School_Building");
 	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-	SpawnGameObject(pObj, Vec3(11240.f, 385.f, 545.f), L"Building");
+	//SpawnGameObject(pObj, Vec3(11240.f, 385.f, 545.f), L"Building");
+	SpawnGameObject(pObj, Vec3(7882.f, -50.f, 11889.f), L"Building");
 
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Roof.mdat");
 	pObj = pMeshData->Instantiate();
@@ -319,7 +321,8 @@ void CreateTestLevel()
 	rot.y = -1.5708f;
 	pObj->Transform()->SetRelativeRot(rot);
 	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-	SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
+	//SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
+	SpawnGameObject(pObj, Vec3(6437.f, -40.f, 16374.f), L"Roof");
 #pragma endregion
 
 #pragma region Uptown

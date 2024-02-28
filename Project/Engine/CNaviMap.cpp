@@ -129,6 +129,10 @@ void CNaviMap::finaltick()
 		m_fMinMaxArr[4] = zMin;
 		m_fMinMaxArr[5] = zMax;
 
+		m_pCSRaycast->SetXMinMax(Vec2(xMin, xMax));
+		m_pCSRaycast->SetYMinMax(Vec2(yMin, yMax));
+		m_pCSRaycast->SetZMinMax(Vec2(zMin, zMax));
+
 		m_pCSRaycast->SetMaxScale(GetOwner()->Transform()->GetRelativeScale());
 		m_pCSRaycast->SetVtx(vVtx);
 
