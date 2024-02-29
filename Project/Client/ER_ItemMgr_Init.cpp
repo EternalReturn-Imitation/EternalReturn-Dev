@@ -3,6 +3,9 @@
 
 #include <Engine\CPathMgr.h>
 
+#include <Engine\CResMgr.h>
+#include <Engine\CTexture.h>
+
 int ER_ItemMgr::Save()
 {
 	path path_content = CPathMgr::GetInst()->GetContentPath();
@@ -94,7 +97,7 @@ int ER_ItemMgr::SaveItemData(ER_Item* _Item, FILE* _File)
 		fwrite(&_Item->m_uniRecipe, sizeof(DWORD_PTR), 1, _File);
 
 	// ItemStat
-	if ((UINT)ER_ITEM_SLOT::NONE == _Item->m_eSlot)
+	if ((UINT)ER_ITEM_SLOT::NONE == _Item->m_eSlot && (UINT)ER_ITEM_TYPE::CONSUMABLES != _Item->m_eType)
 	{
 		ER_tStats tmp = {};
 		fwrite(&tmp, sizeof(ER_tStats), 1, _File);

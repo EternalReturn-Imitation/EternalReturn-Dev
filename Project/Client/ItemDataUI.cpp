@@ -46,10 +46,6 @@ ItemDataUI::ItemDataUI()
         //ImGuiTableFlags_Sortable |           // Item 정렬
         ImGuiTableFlags_Borders |
         ImGuiTableFlags_ScrollX;
-
-
-    m_vecItem = &ER_ItemMgr::GetInst()->m_vecItem;
-    m_umapRecipe = &ER_ItemMgr::GetInst()->m_umapRecipe;
 }
 
 ItemDataUI::~ItemDataUI()
@@ -60,46 +56,11 @@ ItemDataUI::~ItemDataUI()
 
 void ItemDataUI::init()
 {
-    m_pEmptyItemSlotTex = CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_Empty.png");
-
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     
-    size_t ItemCnt = (*m_vecItem).size();
-    m_vecItemName.resize(ItemCnt);
-
-    for (size_t i = 0; i < ItemCnt; ++i)
-        m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
 }
 
 void ItemDataUI::tick()
 {
-    /*
-    if (ImGui::TreeNode("Drag to reorder items (simple)"))
-    {
-        // Simple reordering
-        HelpMarker(
-            "We don't use the drag and drop api at all here! "
-            "Instead we query when the item is held but not hovered, and order items accordingly.");
-        static const char* item_names[] = { "Item One", "Item Two", "Item Three", "Item Four", "Item Five" };
-        for (int n = 0; n < IM_ARRAYSIZE(item_names); n++)
-        {
-            const char* item = item_names[n];
-            ImGui::Selectable(item);
-
-            if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
-            {
-                int n_next = n + (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
-                if (n_next >= 0 && n_next < IM_ARRAYSIZE(item_names))
-                {
-                    item_names[n] = item_names[n_next];
-                    item_names[n_next] = item;
-                    ImGui::ResetMouseDragDelta();
-                }
-            }
-        }
-        ImGui::TreePop();
-    }
-    */
 }
 
 void ItemDataUI::finaltick()
@@ -128,6 +89,9 @@ void ItemDataUI::finaltick()
 
 int ItemDataUI::render_update()
 {
+    if (!m_vecItem || !m_umapRecipe)
+        return 0;
+
     render_menubar();
 
     render_Tabs();
@@ -137,6 +101,22 @@ int ItemDataUI::render_update()
     ItemPopUp();
 
     return 0;
+}
+
+void ItemDataUI::RegistItemMgr()
+{
+    m_vecItem = &ER_ItemMgr::GetInst()->m_vecItem;
+    m_umapRecipe = &ER_ItemMgr::GetInst()->m_umapRecipe;
+
+    m_pEmptyItemSlotTex = CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_Empty.png");
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+
+    size_t ItemCnt = (*m_vecItem).size();
+    m_vecItemName.resize(ItemCnt);
+
+    for (size_t i = 0; i < ItemCnt; ++i)
+        m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
 }
 
 void ItemDataUI::render_menubar()
@@ -208,7 +188,7 @@ void ItemDataUI::render_Tabs()
 void ItemDataUI::render_ItemInfoTable()
 {
 
-    static ImVector<int> selection;
+    static ImVector<float> ItemHeight;
     float rowHeight = 41.f;
     
 
@@ -229,10 +209,13 @@ void ItemDataUI::render_ItemInfoTable()
         ImGui::PushButtonRepeat(true);
 
         // Show data
-
         // Demonstrate using clipper for large vertical lists
         ImGuiListClipper clipper;
         clipper.Begin((*m_vecItem).size());
+        
+        if(ItemHeight.size() < (*m_vecItem).size())
+            ItemHeight.resize((*m_vecItem).size());
+
         while (clipper.Step())
         {
             for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
@@ -273,10 +256,9 @@ void ItemDataUI::render_ItemInfoTable()
                 ImGui::PushItemWidth(-FLT_MIN);
                 char id[5] = {};
                 sprintf(id, "%03d", ID);
-                
+        
                 const bool item_is_selected = false;
-                
-                ImGui::Selectable(id, &item_is_selected, 0, ImVec2(0, rowHeight));
+                ImGui::Selectable(id, &item_is_selected, 0, ImVec2(0.f, ItemHeight[row_n]));
 
                 if (ImGui::IsItemHovered() && ImGui::IsMouseDown(ImGuiMouseButton_::ImGuiMouseButton_Right))
                 {
@@ -336,7 +318,7 @@ void ItemDataUI::render_ItemInfoTable()
 
                 if (ImGui::ImageButton("##ItemTexIcon", TextureID, size, uv_min, uv_max, border_col, tint_col))
                 {
-                    const map<wstring, Ptr<CRes>>& mapMesh = CResMgr::GetInst()->GetResources(RES_TYPE::TEXTURE);
+                    const map<wstring, Ptr<CRes>>& mapTex = CResMgr::GetInst()->GetResources(RES_TYPE::TEXTURE);
 
                     ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
                     pListUI->Reset("ItemIcon List", ImVec2(300.f, 500.f));
@@ -344,7 +326,7 @@ void ItemDataUI::render_ItemInfoTable()
                     wstring KeyItemIcon = L"ItemIcon";
                     int KeyLen = KeyItemIcon.length();
 
-                    for (const auto& pair : mapMesh)
+                    for (const auto& pair : mapTex)
                     {
                         if(KeyItemIcon == pair.first.substr(0, KeyLen))
                             pListUI->AddItem(ToString(pair.first));
@@ -416,7 +398,15 @@ void ItemDataUI::render_ItemInfoTable()
                     {
                         const bool is_selected = (Ingr1 == n);
                         if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
-                            m_pCurItem->m_uniRecipe.ingredient_1 = n;
+                        {
+                            if (Ingr2 < n)
+                            {
+                                m_pCurItem->m_uniRecipe.ingredient_1 = Ingr2;
+                                m_pCurItem->m_uniRecipe.ingredient_2 = n;
+                            }
+                            else
+                                m_pCurItem->m_uniRecipe.ingredient_1 = n;
+                        }
                     }
                     ImGui::EndCombo();
                 }
@@ -430,15 +420,24 @@ void ItemDataUI::render_ItemInfoTable()
                     {
                         const bool is_selected = (Ingr2 == n);
                         if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
-                            m_pCurItem->m_uniRecipe.ingredient_2 = n;
+                        {
+                            if (n < Ingr1)
+                            {
+                                m_pCurItem->m_uniRecipe.ingredient_1 = n;
+                                m_pCurItem->m_uniRecipe.ingredient_1 = Ingr1;
+                            }
+                            else
+                                m_pCurItem->m_uniRecipe.ingredient_2 = n;
+                        }
                     }
                     ImGui::EndCombo();
                 }
 
                 ImGui::EndDisabled();
 
+                // stats
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Stats);
-                ImGui::BeginDisabled((UINT)ER_ITEM_TYPE::EQUIPMENT != CurItemType);
+                ImGui::BeginDisabled((UINT)ER_ITEM_TYPE::INGREDIENT == CurItemType);
                 if (ImGui::Button("Edit##ItemStatsEditButton"))
                 {
                     m_pCurStatsEditItem = m_pCurItem;
@@ -452,7 +451,8 @@ void ItemDataUI::render_ItemInfoTable()
                 Print_Stats(m_pCurItem->m_tItemStats);
                 ImGui::EndGroup();
 
-
+                float NextItemSize = ImGui::GetItemRectSize().y;
+                ItemHeight[row_n] = NextItemSize <= rowHeight ? rowHeight : NextItemSize;
 
                 ImGui::PopID();
             }
@@ -529,7 +529,7 @@ void ItemDataUI::render_ItemStatEdit()
     ImGui::Text(u8"체력 재생 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##HPRegen", &m_pCurStatsEditItem->m_tItemStats.fHPRegen);
+    ImGui::InputFloat("##HPRegen", &m_pCurStatsEditItem->m_tItemStats.fHPRegen, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"스테미너 ");
     ImGui::SameLine();
@@ -544,7 +544,7 @@ void ItemDataUI::render_ItemStatEdit()
     ImGui::Text(u8"스테미나 재생 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##SPRegen", &m_pCurStatsEditItem->m_tItemStats.fSPRegen);
+    ImGui::InputFloat("##SPRegen", &m_pCurStatsEditItem->m_tItemStats.fSPRegen, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"방어력 ");
     ImGui::SameLine();
@@ -554,12 +554,12 @@ void ItemDataUI::render_ItemStatEdit()
     ImGui::Text(u8"공격 속도 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##AttackSpeed", &m_pCurStatsEditItem->m_tItemStats.fAttackSpeed);
+    ImGui::InputFloat("##AttackSpeed", &m_pCurStatsEditItem->m_tItemStats.fAttackSpeed, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"치명타 확률 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##CriticalStrikeChance", &m_pCurStatsEditItem->m_tItemStats.fCriticalStrikeChance);
+    ImGui::InputFloat("##CriticalStrikeChance", &m_pCurStatsEditItem->m_tItemStats.fCriticalStrikeChance, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"치명타 추가 데미지 ");
     ImGui::SameLine();
@@ -569,22 +569,22 @@ void ItemDataUI::render_ItemStatEdit()
     ImGui::Text(u8"이동 속도 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##MovementSpeed", &m_pCurStatsEditItem->m_tItemStats.fMovementSpeed);
+    ImGui::InputFloat("##MovementSpeed", &m_pCurStatsEditItem->m_tItemStats.fMovementSpeed, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"시야 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##VisionRange", &m_pCurStatsEditItem->m_tItemStats.fVisionRange);
+    ImGui::InputFloat("##VisionRange", &m_pCurStatsEditItem->m_tItemStats.fVisionRange, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"쿨타임 감소 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##CooldownReduction", &m_pCurStatsEditItem->m_tItemStats.fCooldownReduction);
+    ImGui::InputFloat("##CooldownReduction", &m_pCurStatsEditItem->m_tItemStats.fCooldownReduction, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"모든 피해 흡혈 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##Omnisyphon", &m_pCurStatsEditItem->m_tItemStats.fOmnisyphon);
+    ImGui::InputFloat("##Omnisyphon", &m_pCurStatsEditItem->m_tItemStats.fOmnisyphon, 0.f, 0.f, "%.2f");
 
     ImGui::End();
 }
@@ -600,7 +600,7 @@ void ItemDataUI::Print_Stats(const ER_tStats& _stats)
     if (0 != _stats.fHPRegen) ImGui::Text(u8"체력 재생 : + %.0f %%", _stats.fHPRegen * 100);
     if (0 != _stats.iMaxSP) ImGui::Text(u8"스테미너 : + %d", _stats.iMaxSP);
     if (0 != _stats.iMaxSPPerLevel) ImGui::Text(u8"레벨당 스테미너 : + %d", _stats.iMaxSPPerLevel);
-    if (0 != _stats.fSPRegen) ImGui::Text(u8"스테미나 재생 : + %d %%", _stats.fSPRegen * 100);
+    if (0 != _stats.fSPRegen) ImGui::Text(u8"스테미나 재생 : + %.0f %%", _stats.fSPRegen * 100);
     if (0 != _stats.iDefense) ImGui::Text(u8"방어력 : + %d", _stats.iDefense);
     if (0 != _stats.fAttackSpeed) ImGui::Text(u8"공격 속도 : + %.0f %%", _stats.fAttackSpeed * 100);
     if (0 != _stats.fCriticalStrikeChance) ImGui::Text(u8"치명타 확률 : + %.0f %%", _stats.fCriticalStrikeChance * 100);
@@ -693,5 +693,5 @@ void ItemDataUI::SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target)
 
     Ptr<CTexture> tex = CResMgr::GetInst()->FindRes<CTexture>(ToWString(strKey));
  
-    target->SetItemTex(tex);
+    target->SetItemTex((CTexture*)tex.Get());
 }

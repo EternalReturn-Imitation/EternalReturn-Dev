@@ -45,6 +45,8 @@ public:
     virtual void finaltick() override;
     virtual int render_update() override;
 
+    void RegistItemMgr();
+
 private:
     void render_menubar();
     void render_Tabs();
