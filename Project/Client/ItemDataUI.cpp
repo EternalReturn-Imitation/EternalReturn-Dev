@@ -45,7 +45,9 @@ ItemDataUI::ItemDataUI()
         ImGuiTableFlags_Reorderable |       // 순서 변경
         //ImGuiTableFlags_Sortable |           // Item 정렬
         ImGuiTableFlags_Borders |
-        ImGuiTableFlags_ScrollX;
+        ImGuiTableFlags_ScrollX |
+        ImGuiTableFlags_ScrollY |
+        ImGuiTableFlags_SizingFixedFit;
 }
 
 ItemDataUI::~ItemDataUI()
@@ -210,23 +212,24 @@ void ItemDataUI::render_ItemInfoTable()
 
         // Show data
         // Demonstrate using clipper for large vertical lists
-        ImGuiListClipper clipper;
-        clipper.Begin((*m_vecItem).size());
+        // ImGuiListClipper clipper;
+        // clipper.Begin((*m_vecItem).size());
         
         if(ItemHeight.size() < (*m_vecItem).size())
             ItemHeight.resize((*m_vecItem).size());
 
-        while (clipper.Step())
+        // while (clipper.Step())
+        // {
+        //    for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
+        //        // Without clipper
+        //    {
+        for (int row_n = 0; row_n < (*m_vecItem).size(); ++row_n)
         {
-            for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
-                // Without clipper
-            {
                 m_pCurItem = (*m_vecItem)[row_n];
 
                 int ID = m_pCurItem->GetCode();
-
                 ImGui::PushID(ID);
-                ImGui::TableNextRow(ImGuiTableRowFlags_None, 0.0f);
+                ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 0.0f);
 
                 int ItemGrade = m_pCurItem->GetGrade();
                 ImVec4 RowColor = {};
@@ -456,7 +459,6 @@ void ItemDataUI::render_ItemInfoTable()
 
                 ImGui::PopID();
             }
-        }
 
         ImGui::PopButtonRepeat();
 
@@ -564,7 +566,7 @@ void ItemDataUI::render_ItemStatEdit()
     ImGui::Text(u8"치명타 추가 데미지 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##CriticalStrikeDamage", &m_pCurStatsEditItem->m_tItemStats.fCriticalStrikeDamage);
+    ImGui::InputFloat("##CriticalStrikeDamage", &m_pCurStatsEditItem->m_tItemStats.fCriticalStrikeDamage, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"이동 속도 ");
     ImGui::SameLine();
@@ -604,7 +606,7 @@ void ItemDataUI::Print_Stats(const ER_tStats& _stats)
     if (0 != _stats.iDefense) ImGui::Text(u8"방어력 : + %d", _stats.iDefense);
     if (0 != _stats.fAttackSpeed) ImGui::Text(u8"공격 속도 : + %.0f %%", _stats.fAttackSpeed * 100);
     if (0 != _stats.fCriticalStrikeChance) ImGui::Text(u8"치명타 확률 : + %.0f %%", _stats.fCriticalStrikeChance * 100);
-    if (0 != _stats.fCriticalStrikeDamage) ImGui::Text(u8"치명타 추가 데미지 : + %d", _stats.fCriticalStrikeDamage);
+    if (0 != _stats.fCriticalStrikeDamage) ImGui::Text(u8"치명타 추가 데미지 : + %0.f %%", _stats.fCriticalStrikeDamage * 100);
     if (0 != _stats.fMovementSpeed) ImGui::Text(u8"이동 속도 : + %.2f", _stats.fMovementSpeed);
     if (0 != _stats.fVisionRange) ImGui::Text(u8"시야 : + %.1f", _stats.fVisionRange);
     if (0 != _stats.fCooldownReduction) ImGui::Text(u8"쿨타임 감소 : + %.0f %%", _stats.fCooldownReduction * 100);
