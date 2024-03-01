@@ -89,15 +89,6 @@
     <Filter Include="Manager\LevelSaveLoad">
       <UniqueIdentifier>{bd45bcb0-5b2d-4b83-a548-af8817de8f6a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\BehaviorTreeUI">
-      <UniqueIdentifier>{24e2bcc7-4061-4a37-a48c-f4aded1b1455}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\BehaviorTreeUI\NodeInfoUI">
-      <UniqueIdentifier>{0717bc42-0298-4386-9236-c0b130e24664}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\BehaviorTreeUI\BlackBoardList">
-      <UniqueIdentifier>{3aea27f2-766c-4319-ad9c-f949919a3e38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\InspectorUI\ComponentUI\04. Collider2DUI">
       <UniqueIdentifier>{fea9eec1-6d0a-4370-865e-d7872a2047a1}</UniqueIdentifier>
     </Filter>
@@ -134,14 +125,38 @@
     <Filter Include="ImGui\ImGuizmo">
       <UniqueIdentifier>{1afe48c2-ba8f-4ebb-adf6-d053082044e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\AnimationEditUI">
-      <UniqueIdentifier>{45cd07e6-1e11-4332-ab80-536d4c5b963e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager\AnimEditObj">
       <UniqueIdentifier>{ddf01b6b-65d5-4c33-968b-3ad04a7a162c}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\InspectorUI\ResUI\BoneUI">
       <UniqueIdentifier>{d53cf3f4-ffd3-4d0b-9058-4e85673ac35c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate">
+      <UniqueIdentifier>{bbd96702-f0b6-4da2-9d34-a2db854516ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\AnimationEditUI">
+      <UniqueIdentifier>{45cd07e6-1e11-4332-ab80-536d4c5b963e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\BehaviorTreeUI">
+      <UniqueIdentifier>{24e2bcc7-4061-4a37-a48c-f4aded1b1455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\BehaviorTreeUI\NodeInfoUI">
+      <UniqueIdentifier>{0717bc42-0298-4386-9236-c0b130e24664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\BehaviorTreeUI\BlackBoardList">
+      <UniqueIdentifier>{3aea27f2-766c-4319-ad9c-f949919a3e38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\ItemDataUI">
+      <UniqueIdentifier>{b9dfbe2b-23af-42c4-97a3-bf42e4e02529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem">
+      <UniqueIdentifier>{b278fda9-6ce4-4dd3-9de2-50f44941978b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\ItemMgr">
+      <UniqueIdentifier>{e8ebe481-6abe-4ce4-bb1b-a8ad339ac620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\ItemMgr\Item">
+      <UniqueIdentifier>{13d5fb7a-8b73-43d6-889f-8cc270fbe118}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +220,9 @@
     <ClInclude Include="CameraUI.h">
       <Filter>UI\InspectorUI\ComponentUI\03. CameraUI</Filter>
     </ClInclude>
+    <ClInclude Include="Animator2DUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\06. Animator2DUI</Filter>
+    </ClInclude>
     <ClInclude Include="Light2DUI.h">
       <Filter>UI\InspectorUI\ComponentUI\08. Light2DUI</Filter>
     </ClInclude>
@@ -264,13 +282,13 @@
       <Filter>Manager\LevelSaveLoad</Filter>
     </ClInclude>
     <ClInclude Include="BehaviorTreeListUI.h">
-      <Filter>UI\BehaviorTreeUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI</Filter>
     </ClInclude>
     <ClInclude Include="NodeInfoUI.h">
-      <Filter>UI\BehaviorTreeUI\NodeInfoUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\NodeInfoUI</Filter>
     </ClInclude>
     <ClInclude Include="BlackBoardListUI.h">
-      <Filter>UI\BehaviorTreeUI\BlackBoardList</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\BlackBoardList</Filter>
     </ClInclude>
     <ClInclude Include="Light3DUI.h">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>
@@ -300,7 +318,7 @@
       <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
     </ClInclude>
     <ClInclude Include="AnimEditUI.h">
-      <Filter>UI\AnimationEditUI</Filter>
+      <Filter>UI\UITemplate\AnimationEditUI</Filter>
     </ClInclude>
     <ClInclude Include="CAnimEditObj.h">
       <Filter>Manager\AnimEditObj</Filter>
@@ -308,8 +326,20 @@
     <ClInclude Include="BoneUI.h">
       <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
     </ClInclude>
-    <ClInclude Include="Animator3DUI.h">
-      <Filter>UI\InspectorUI\ComponentUI\07. Animator3DUI</Filter>
+    <ClInclude Include="ER_GameSystem.h">
+      <Filter>GameSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ItemMgr.h">
+      <Filter>GameSystem\ItemMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemDataUI.h">
+      <Filter>UI\UITemplate\ItemDataUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_Item.h">
+      <Filter>GameSystem\ItemMgr\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_define.h">
+      <Filter>Default</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +410,9 @@
     <ClCompile Include="CameraUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\03. CameraUI</Filter>
     </ClCompile>
+    <ClCompile Include="Animator2DUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\06. Animator2DUI</Filter>
+    </ClCompile>
     <ClCompile Include="Light2DUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\08. Light2DUI</Filter>
     </ClCompile>
@@ -440,13 +473,13 @@
       <Filter>Manager\LevelSaveLoad</Filter>
     </ClCompile>
     <ClCompile Include="BehaviorTreeListUI.cpp">
-      <Filter>UI\BehaviorTreeUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI</Filter>
     </ClCompile>
     <ClCompile Include="NodeInfoUI.cpp">
-      <Filter>UI\BehaviorTreeUI\NodeInfoUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\NodeInfoUI</Filter>
     </ClCompile>
     <ClCompile Include="BlackBoardListUI.cpp">
-      <Filter>UI\BehaviorTreeUI\BlackBoardList</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\BlackBoardList</Filter>
     </ClCompile>
     <ClCompile Include="Light3DUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>
@@ -473,7 +506,7 @@
       <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
     </ClCompile>
     <ClCompile Include="AnimEditUI.cpp">
-      <Filter>UI\AnimationEditUI</Filter>
+      <Filter>UI\UITemplate\AnimationEditUI</Filter>
     </ClCompile>
     <ClCompile Include="CAnimEditObj.cpp">
       <Filter>Manager\AnimEditObj</Filter>
@@ -481,8 +514,20 @@
     <ClCompile Include="BoneUI.cpp">
       <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
     </ClCompile>
-    <ClCompile Include="Animator3DUI.cpp">
-      <Filter>UI\InspectorUI\ComponentUI\07. Animator3DUI</Filter>
+    <ClCompile Include="ER_GameSystem.cpp">
+      <Filter>GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ItemMgr.cpp">
+      <Filter>GameSystem\ItemMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ItemMgr_Init.cpp">
+      <Filter>GameSystem\ItemMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemDataUI.cpp">
+      <Filter>UI\UITemplate\ItemDataUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_Item.cpp">
+      <Filter>GameSystem\ItemMgr\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

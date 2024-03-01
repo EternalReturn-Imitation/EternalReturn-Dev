@@ -78,6 +78,10 @@ void CEditorObjMgr::init()
 	pEditorCamObj->Camera()->SetMainCamera();
 
 	m_vecEditorObj.push_back(pEditorCamObj);
+	//Vec3 pos = pEditorCamObj->Transform()->GetRelativePos();
+	//Vec3 rot = pEditorCamObj->Transform()->GetRelativePos();
+	//rot.y = rot.y = -1.5708f;
+	//pEditorCamObj->Transform()->SetRelativeRot(rot);
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
 }
 

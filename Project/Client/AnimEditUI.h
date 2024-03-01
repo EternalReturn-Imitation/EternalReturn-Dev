@@ -51,4 +51,3 @@ public:
     AnimEditUI();
     virtual ~AnimEditUI();
 };
-

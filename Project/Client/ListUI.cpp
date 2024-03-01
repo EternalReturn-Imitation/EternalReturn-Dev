@@ -56,6 +56,11 @@ int ListUI::render_update()
                 {
                     (m_SelectInst->*m_SelectDelegate)((DWORD_PTR)m_vecStrData[i].c_str());
                 }
+
+                else if (m_SelectInst && m_SelectDelegateWithTarget)
+                {
+                    (m_SelectInst->*m_SelectDelegateWithTarget)((DWORD_PTR)m_vecStrData[i].c_str(), m_pTargetObj);
+                }
             }
 
             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)

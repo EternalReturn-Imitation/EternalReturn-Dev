@@ -1,9 +1,11 @@
 #pragma once
+#include "UI.h"
 
 #include <Engine\ptr.h>
 #include <Engine\CTexture.h>
 
 class ParamUI
+	: public UI
 {
 private:
 	static UINT		g_NextId;	// 파라미터 UI 들의 ID

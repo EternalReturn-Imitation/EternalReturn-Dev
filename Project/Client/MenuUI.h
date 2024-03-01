@@ -25,7 +25,6 @@ private:
 
     void LoadFBX(int _MeshCnt = 0);
     void LoadFBX_Bone();
-    void LoadAllFBX_Bone();
 
 public:
     MenuUI();
