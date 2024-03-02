@@ -19,7 +19,6 @@ private:
     string m_bTabName[(UINT)ItemDataUItab::END];
     
     vector<ER_Item*>* m_vecItem;						// 아이템 리스트
-    unordered_map<DWORD_PTR, UINT>* m_umapRecipe;
 
     ImGuiTableFlags ItemDataUIFlags;
 
@@ -31,6 +30,8 @@ private:
 
     bool           m_bItemPopup;
     int            m_iDeleteItemIdx;
+
+    bool           m_bRecipePopup;
 
     ER_Item*       m_DragItem;
     ER_Item*       m_DropItem;
@@ -49,15 +50,14 @@ public:
 
 private:
     void render_menubar();
-    void render_Tabs();
     void render_ItemInfoTable();
-    void render_ItemRecipeTable();
     void render_ItemStatEdit();
 
     void Print_Stats(const ER_tStats& _stats);
 
     void SwapItem();
     void ItemPopUp();
+    void render_RecipeSearch();
     void SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target);
 
 public:

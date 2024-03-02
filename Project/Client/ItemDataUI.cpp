@@ -26,6 +26,7 @@ ItemDataUI::ItemDataUI()
     , m_iDragItemIdx(0)
     , m_iDropItemIdx(0)
     , m_bItemPopup(false)
+    , m_bRecipePopup(false)
     , m_iDeleteItemIdx(0)
 {
     SetName("ItemDataUI");
@@ -53,7 +54,6 @@ ItemDataUI::ItemDataUI()
 ItemDataUI::~ItemDataUI()
 {
     m_vecItem = nullptr;
-    m_umapRecipe = nullptr;
 }
 
 void ItemDataUI::init()
@@ -91,16 +91,18 @@ void ItemDataUI::finaltick()
 
 int ItemDataUI::render_update()
 {
-    if (!m_vecItem || !m_umapRecipe)
+    if (!m_vecItem)
         return 0;
 
     render_menubar();
 
-    render_Tabs();
+    render_ItemInfoTable();
 
     SwapItem();
 
     ItemPopUp();
+
+    render_RecipeSearch();
 
     return 0;
 }
@@ -108,7 +110,6 @@ int ItemDataUI::render_update()
 void ItemDataUI::RegistItemMgr()
 {
     m_vecItem = &ER_ItemMgr::GetInst()->m_vecItem;
-    m_umapRecipe = &ER_ItemMgr::GetInst()->m_umapRecipe;
 
     m_pEmptyItemSlotTex = CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_Empty.png");
 
@@ -154,36 +155,18 @@ void ItemDataUI::render_menubar()
             ImGui::EndMenu();
         }
 
-        ImGui::EndMenuBar();
-    }
-}
-
-void ItemDataUI::render_Tabs()
-{
-    if (ImGui::BeginTabBar("##ItemDatatabs", ImGuiTabBarFlags_FittingPolicyDefault_))
-    {
-        for (int tab_n = 0; tab_n < (UINT)ItemDataUItab::END; ++tab_n)
+        if (ImGui::BeginMenu("Check Data"))
         {
-            // Submit Tabs
-
-            bool visible = ImGui::BeginTabItem(m_bTabName[tab_n].c_str(), &m_bOpenTab[tab_n], 0);
-
-            // Cancel attempt to close when unsaved add to save queue so we can display a popup.
-
-            if ((UINT)ItemDataUItab::ITEMDATA == tab_n && visible)
+            if (ImGui::MenuItem("Find Recipe.."))
             {
-                render_ItemInfoTable();
-            }
-            else if ((UINT)ItemDataUItab::RECIPE == tab_n && visible)
-            {
-                render_ItemRecipeTable();
+                m_bRecipePopup = true;
+                ER_ItemMgr::GetInst()->RecipeUpdate();
             }
             
-            if(visible)
-                ImGui::EndTabItem();
+            ImGui::EndMenu();
         }
 
-        ImGui::EndTabBar();
+        ImGui::EndMenuBar();
     }
 }
 
@@ -427,7 +410,7 @@ void ItemDataUI::render_ItemInfoTable()
                             if (n < Ingr1)
                             {
                                 m_pCurItem->m_uniRecipe.ingredient_1 = n;
-                                m_pCurItem->m_uniRecipe.ingredient_1 = Ingr1;
+                                m_pCurItem->m_uniRecipe.ingredient_2 = Ingr1;
                             }
                             else
                                 m_pCurItem->m_uniRecipe.ingredient_2 = n;
@@ -468,11 +451,6 @@ void ItemDataUI::render_ItemInfoTable()
     }
    
     render_ItemStatEdit();
-}
-
-void ItemDataUI::render_ItemRecipeTable()
-{
-    ImGui::Text("Recipe");
 }
 
 void ItemDataUI::render_ItemStatEdit()
@@ -686,6 +664,164 @@ void ItemDataUI::ItemPopUp()
 
         ImGui::EndPopup();
     }
+}
+
+void ItemDataUI::render_RecipeSearch()
+{
+    if (!m_bRecipePopup)
+        return;
+
+    ImGui::SetNextWindowSize(ImVec2(600.f, 500.f));
+
+    if (!ImGui::Begin("Recipe Search", &m_bRecipePopup, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::End();
+        return;
+    }
+
+    // 15개중에 있는것 
+
+    static ImVector<int> ItemSlot;
+    static ImVector<bool> bActive;
+    
+    vector<UINT> ActiveSlot;                 // 활성화 슬롯
+    map<UINT, ER_CMB_SLOT> CombinationList;     // 조립품
+    
+    if (ItemSlot.empty())
+    {
+        ItemSlot.resize(15);
+        bActive.resize(15);
+        
+        for (int i = 0; i < 15; ++i)
+        {
+            ItemSlot[i] = -1;
+            bActive[i] = true;
+        }
+    }
+
+    ImGui::BeginGroup();
+
+    for (int i = 0; i < 15; ++i)
+    {
+        char SlotTitle[32] = {};
+        sprintf(SlotTitle, u8"슬롯 %02d", i);
+        ImGui::Text(SlotTitle);
+
+        ImGui::SameLine();
+
+        string slot = "##Slot";
+        slot += std::to_string(i);
+
+        ImGui::SameLine();
+
+        if (ImGui::Checkbox(slot.c_str(), &bActive[i]))
+        {
+            if (bActive[i])
+                ItemSlot[i] = -1;
+            else
+                ItemSlot[i] = 0;
+        }
+
+        ImGui::SameLine();
+
+        slot += "Combo";
+
+        ImGui::BeginDisabled(bActive[i]);
+
+        if (!bActive[i])
+        {
+            ImGui::SetNextItemWidth(100.f);
+
+            if (ImGui::BeginCombo(slot.c_str(), m_vecItemName[ItemSlot[i]].c_str(), 0))
+            {
+                for (int n = 0; n < m_vecItemName.size(); n++)
+                {
+                    const bool is_selected = (ItemSlot[i] == n);
+                    if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
+                    {
+                        ItemSlot[i] = n;
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            ActiveSlot.push_back(i);
+        }
+        else
+            ImGui::Text("NoItem");
+
+        ImGui::EndDisabled();
+    }
+    ImGui::EndGroup();
+
+
+    
+    // 조합 가능 아이템 업데이트
+    if (1 < ActiveSlot.size())
+    {
+        for (int Litem = 0; Litem < ActiveSlot.size() - 1; ++Litem)
+        {
+            for (int Ritem = Litem + 1; Ritem < ActiveSlot.size(); ++Ritem)
+            {
+                int tmp = -1;
+                if (S_OK == ER_ItemMgr::GetInst()->SearchRecipe(ItemSlot[ActiveSlot[Litem]], ItemSlot[ActiveSlot[Ritem]], tmp))
+                {
+                    map<UINT, ER_CMB_SLOT>::iterator iter = CombinationList.find(tmp);
+
+                    if (iter == CombinationList.end())
+                    {
+                        ER_CMB_SLOT newcomb = { ActiveSlot[Litem],ActiveSlot[Ritem],tmp };
+                        CombinationList.insert(make_pair(tmp, newcomb));
+                    }
+                }
+            }
+        }
+    }
+
+    ImGui::SameLine();
+
+    ImGui::BeginGroup();
+
+    map<UINT, ER_CMB_SLOT>::iterator iter = CombinationList.begin();
+    
+    if (CombinationList.empty())
+        ImGui::Text("No Combination");
+    else
+        while (iter != CombinationList.end())
+        {
+            ImGui::BeginGroup();
+
+            Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[iter->first]->GetItemTex().Get();
+
+            int width = (int)pTex->Width();
+            int height = (int)pTex->Height();
+
+            ImVec2 size = ImVec2(66, 41);
+            ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+            ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+            ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+            ImVec4 border_col = ImVec4(0.0f, 0.0f, 0.0f, 0.5f); // 50% opaque white
+
+            ImGui::Image((ImTextureID)pTex->GetSRV().Get(), size, uv_min, uv_max, tint_col, border_col);
+
+            ImGui::EndGroup();
+            
+            ImGui::SameLine();
+            
+            ImGui::BeginGroup();
+
+            ImGui::Text(m_vecItemName[iter->first].c_str());
+            ImGui::Text(u8"슬롯 : %d/%d", iter->second.iSlot1, iter->second.iSlot2);
+            ImGui::Text(u8"재료 : %s/%s", m_vecItemName[ItemSlot[iter->second.iSlot1]].c_str(), m_vecItemName[ItemSlot[iter->second.iSlot2]].c_str());
+
+            ImGui::EndGroup();
+
+            iter++;
+        }
+
+    ImGui::EndGroup();
+
+    ImGui::End();
 }
 
 void ItemDataUI::SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target)

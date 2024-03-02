@@ -56,10 +56,6 @@ int ER_ItemMgr::Load()
 	for (size_t i = 0; i < iItemCnt; ++i)
 	{
 		m_vecItem[i] = (LoadItemData(pFile));
-		
-		// recipe가 있는 경우
-		if (0 != m_vecItem[(UINT)i]->m_uniRecipe.recipe)
-			AddRecipe(m_vecItem[(UINT)i]->m_uniRecipe.recipe, (UINT)i);
 	}
 	
 	fclose(pFile);
@@ -141,9 +137,47 @@ ER_Item* ER_ItemMgr::LoadItemData(FILE* _File)
 	return pItem;
 }
 
-int ER_ItemMgr::AddRecipe(DWORD_PTR _recipe, UINT _ItemCode)
+void ER_ItemMgr::RecipeUpdate()
 {
-	m_umapRecipe.insert(make_pair(_recipe, _ItemCode));
+	// 기존 레시피 컨테이너 클리어
+	if(!m_umapRecipe.empty())
+		m_umapRecipe.clear();
 	
-	return 0;
+	UINT iItemCnt = m_vecItem.size();
+
+	for (int i = 0; i < iItemCnt; ++i)
+	{
+		ER_Item* item = m_vecItem[i];
+
+		if (0 != item->m_uniRecipe.recipe)
+			m_umapRecipe.insert(make_pair(item->m_uniRecipe.recipe, i));
+	};
+}
+
+int ER_ItemMgr::SearchRecipe(UINT _ingr_1, UINT _ingr_2, int& _res)
+{
+	// DWORD_PTR 생성
+	UINT Litem = _ingr_1;
+	UINT Ritem = _ingr_2;
+	
+	if (Ritem < Litem)
+	{
+		Litem = _ingr_2;
+		Ritem = _ingr_1;
+	}
+	else if (Litem == Ritem)
+		return S_FALSE;
+
+	ER_RECIPE res = {};
+	res.ingredient_1 = Litem;
+	res.ingredient_2 = Ritem;
+
+	unordered_map<DWORD_PTR, UINT>::iterator iter = m_umapRecipe.find(res.recipe);
+	
+	if (m_umapRecipe.end() == iter)
+		return S_FALSE;
+
+	_res = iter->second;
+
+	return S_OK;
 }

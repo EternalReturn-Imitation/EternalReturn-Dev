@@ -15,7 +15,11 @@ ER_ItemMgr::~ER_ItemMgr()
 
 void ER_ItemMgr::init()
 {
+	// 아이템 데이터 로딩
 	Load();
+
+	// 레시피 업데이트
+	RecipeUpdate();
 	((ItemDataUI*)ImGuiMgr::GetInst()->FindUI("##ItemDataUI"))->RegistItemMgr();
 }
 
