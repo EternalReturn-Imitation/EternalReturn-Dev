@@ -36,3 +36,10 @@ typedef union item_combination_pair
 
 	DWORD_PTR recipe;
 }ER_RECIPE;
+
+typedef struct item_combination_slot
+{
+	UINT iSlot1;
+	UINT iSlot2;
+	UINT iAssemblyItem;
+}ER_CMB_SLOT;

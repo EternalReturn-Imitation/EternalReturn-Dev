@@ -671,7 +671,7 @@ void ItemDataUI::render_RecipeSearch()
     if (!m_bRecipePopup)
         return;
 
-    ImGui::SetNextWindowSize(ImVec2(300.f, 200.f));
+    ImGui::SetNextWindowSize(ImVec2(600.f, 500.f));
 
     if (!ImGui::Begin("Recipe Search", &m_bRecipePopup, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize))
     {
@@ -679,69 +679,147 @@ void ItemDataUI::render_RecipeSearch()
         return;
     }
 
-    // Select Recipe
-    static int searchIngr1 = 0;
-    static int searchIngr2 = 0;
-    int CompositionItem = -1;
+    // 15개중에 있는것 
 
-    ImGui::Text(u8"재료1 : ");
-    ImGui::SameLine();
-    ImGui::PushItemWidth(-FLT_MIN);
-    if (ImGui::BeginCombo("##SearchItemIngr1", m_vecItemName[searchIngr1].c_str(), 0))
-    {
-        for (int n = 0; n < m_vecItemName.size(); n++)
-        {
-            const bool is_selected = (searchIngr1 == n);
-            if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
-            {
-                searchIngr1 = n;
-            }
-        }
-        ImGui::EndCombo();
-    }
+    static ImVector<int> ItemSlot;
+    static ImVector<bool> bActive;
     
-    ImGui::Text(u8"재료2 : ");
-    ImGui::SameLine();
-    ImGui::PushItemWidth(-FLT_MIN);
-    if (ImGui::BeginCombo("##SearchItemIngr2", m_vecItemName[searchIngr2].c_str(), 0))
+    vector<UINT> ActiveSlot;                 // 활성화 슬롯
+    map<UINT, ER_CMB_SLOT> CombinationList;     // 조립품
+    
+    if (ItemSlot.empty())
     {
-        for (int n = 0; n < m_vecItemName.size(); n++)
+        ItemSlot.resize(15);
+        bActive.resize(15);
+        
+        for (int i = 0; i < 15; ++i)
         {
-            const bool is_selected = (searchIngr2 == n);
-            if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
+            ItemSlot[i] = -1;
+            bActive[i] = true;
+        }
+    }
+
+    ImGui::BeginGroup();
+
+    for (int i = 0; i < 15; ++i)
+    {
+        char SlotTitle[32] = {};
+        sprintf(SlotTitle, u8"슬롯 %02d", i);
+        ImGui::Text(SlotTitle);
+
+        ImGui::SameLine();
+
+        string slot = "##Slot";
+        slot += std::to_string(i);
+
+        ImGui::SameLine();
+
+        if (ImGui::Checkbox(slot.c_str(), &bActive[i]))
+        {
+            if (bActive[i])
+                ItemSlot[i] = -1;
+            else
+                ItemSlot[i] = 0;
+        }
+
+        ImGui::SameLine();
+
+        slot += "Combo";
+
+        ImGui::BeginDisabled(bActive[i]);
+
+        if (!bActive[i])
+        {
+            ImGui::SetNextItemWidth(100.f);
+
+            if (ImGui::BeginCombo(slot.c_str(), m_vecItemName[ItemSlot[i]].c_str(), 0))
             {
-                searchIngr2 = n;
+                for (int n = 0; n < m_vecItemName.size(); n++)
+                {
+                    const bool is_selected = (ItemSlot[i] == n);
+                    if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
+                    {
+                        ItemSlot[i] = n;
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            ActiveSlot.push_back(i);
+        }
+        else
+            ImGui::Text("NoItem");
+
+        ImGui::EndDisabled();
+    }
+    ImGui::EndGroup();
+
+
+    
+    // 조합 가능 아이템 업데이트
+    if (1 < ActiveSlot.size())
+    {
+        for (int Litem = 0; Litem < ActiveSlot.size() - 1; ++Litem)
+        {
+            for (int Ritem = Litem + 1; Ritem < ActiveSlot.size(); ++Ritem)
+            {
+                int tmp = -1;
+                if (S_OK == ER_ItemMgr::GetInst()->SearchRecipe(ItemSlot[ActiveSlot[Litem]], ItemSlot[ActiveSlot[Ritem]], tmp))
+                {
+                    map<UINT, ER_CMB_SLOT>::iterator iter = CombinationList.find(tmp);
+
+                    if (iter == CombinationList.end())
+                    {
+                        ER_CMB_SLOT newcomb = { ActiveSlot[Litem],ActiveSlot[Ritem],tmp };
+                        CombinationList.insert(make_pair(tmp, newcomb));
+                    }
+                }
             }
         }
-        ImGui::EndCombo();
     }
 
-    ER_ItemMgr::GetInst()->SearchRecipe(searchIngr1, searchIngr2, CompositionItem);
-
-    ImGui::Text(u8"결과 : ");
     ImGui::SameLine();
-    if (-1 == CompositionItem)
-    {
-        ImGui::Text(u8"데이터 없음");
-        ImGui::Text("No Image..");
-    }
+
+    ImGui::BeginGroup();
+
+    map<UINT, ER_CMB_SLOT>::iterator iter = CombinationList.begin();
+    
+    if (CombinationList.empty())
+        ImGui::Text("No Combination");
     else
-    {
-        ImGui::Text(m_vecItemName[CompositionItem].c_str());
+        while (iter != CombinationList.end())
+        {
+            ImGui::BeginGroup();
 
-        Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[CompositionItem]->GetItemTex().Get();
+            Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[iter->first]->GetItemTex().Get();
 
-        int width = (int)pTex->Width();
-        int height = (int)pTex->Height();
+            int width = (int)pTex->Width();
+            int height = (int)pTex->Height();
 
-        ImVec2 size = ImVec2(66, 41);
-        ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
-        ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
-        ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
-        ImVec4 border_col = ImVec4(0.0f, 0.0f, 0.0f, 0.5f); // 50% opaque white
+            ImVec2 size = ImVec2(66, 41);
+            ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+            ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+            ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+            ImVec4 border_col = ImVec4(0.0f, 0.0f, 0.0f, 0.5f); // 50% opaque white
 
-        ImGui::Image((ImTextureID)pTex->GetSRV().Get(), size, uv_min, uv_max, tint_col, border_col);
-    }
+            ImGui::Image((ImTextureID)pTex->GetSRV().Get(), size, uv_min, uv_max, tint_col, border_col);
+
+            ImGui::EndGroup();
+            
+            ImGui::SameLine();
+            
+            ImGui::BeginGroup();
+
+            ImGui::Text(m_vecItemName[iter->first].c_str());
+            ImGui::Text(u8"슬롯 : %d/%d", iter->second.iSlot1, iter->second.iSlot2);
+            ImGui::Text(u8"재료 : %s/%s", m_vecItemName[ItemSlot[iter->second.iSlot1]].c_str(), m_vecItemName[ItemSlot[iter->second.iSlot2]].c_str());
+
+            ImGui::EndGroup();
+
+            iter++;
+        }
+
+    ImGui::EndGroup();
 
     ImGui::End();
 }
