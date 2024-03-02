@@ -10,6 +10,7 @@ class ER_ItemMgr
 private:
 	vector<ER_Item*> m_vecItem;						// 아이템 리스트
 	unordered_map<DWORD_PTR, UINT> m_umapRecipe;	// 조합식 목록
+	
 
 private:
 	int Save();
@@ -18,7 +19,10 @@ private:
 	int SaveItemData(ER_Item* _Item, FILE* _File);
 	ER_Item* LoadItemData(FILE* _File);
 
-	int AddRecipe(DWORD_PTR _recipe, UINT _ItemCode);
+	void RecipeUpdate();
+
+public:
+	int SearchRecipe(UINT _ingr_1, UINT _ingr_2, int& _res);
 
 public:
 	void init();

@@ -26,6 +26,7 @@ ItemDataUI::ItemDataUI()
     , m_iDragItemIdx(0)
     , m_iDropItemIdx(0)
     , m_bItemPopup(false)
+    , m_bRecipePopup(false)
     , m_iDeleteItemIdx(0)
 {
     SetName("ItemDataUI");
@@ -53,7 +54,6 @@ ItemDataUI::ItemDataUI()
 ItemDataUI::~ItemDataUI()
 {
     m_vecItem = nullptr;
-    m_umapRecipe = nullptr;
 }
 
 void ItemDataUI::init()
@@ -91,16 +91,18 @@ void ItemDataUI::finaltick()
 
 int ItemDataUI::render_update()
 {
-    if (!m_vecItem || !m_umapRecipe)
+    if (!m_vecItem)
         return 0;
 
     render_menubar();
 
-    render_Tabs();
+    render_ItemInfoTable();
 
     SwapItem();
 
     ItemPopUp();
+
+    render_RecipeSearch();
 
     return 0;
 }
@@ -108,7 +110,6 @@ int ItemDataUI::render_update()
 void ItemDataUI::RegistItemMgr()
 {
     m_vecItem = &ER_ItemMgr::GetInst()->m_vecItem;
-    m_umapRecipe = &ER_ItemMgr::GetInst()->m_umapRecipe;
 
     m_pEmptyItemSlotTex = CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_Empty.png");
 
@@ -154,36 +155,18 @@ void ItemDataUI::render_menubar()
             ImGui::EndMenu();
         }
 
-        ImGui::EndMenuBar();
-    }
-}
-
-void ItemDataUI::render_Tabs()
-{
-    if (ImGui::BeginTabBar("##ItemDatatabs", ImGuiTabBarFlags_FittingPolicyDefault_))
-    {
-        for (int tab_n = 0; tab_n < (UINT)ItemDataUItab::END; ++tab_n)
+        if (ImGui::BeginMenu("Check Data"))
         {
-            // Submit Tabs
-
-            bool visible = ImGui::BeginTabItem(m_bTabName[tab_n].c_str(), &m_bOpenTab[tab_n], 0);
-
-            // Cancel attempt to close when unsaved add to save queue so we can display a popup.
-
-            if ((UINT)ItemDataUItab::ITEMDATA == tab_n && visible)
+            if (ImGui::MenuItem("Find Recipe.."))
             {
-                render_ItemInfoTable();
-            }
-            else if ((UINT)ItemDataUItab::RECIPE == tab_n && visible)
-            {
-                render_ItemRecipeTable();
+                m_bRecipePopup = true;
+                ER_ItemMgr::GetInst()->RecipeUpdate();
             }
             
-            if(visible)
-                ImGui::EndTabItem();
+            ImGui::EndMenu();
         }
 
-        ImGui::EndTabBar();
+        ImGui::EndMenuBar();
     }
 }
 
@@ -427,7 +410,7 @@ void ItemDataUI::render_ItemInfoTable()
                             if (n < Ingr1)
                             {
                                 m_pCurItem->m_uniRecipe.ingredient_1 = n;
-                                m_pCurItem->m_uniRecipe.ingredient_1 = Ingr1;
+                                m_pCurItem->m_uniRecipe.ingredient_2 = Ingr1;
                             }
                             else
                                 m_pCurItem->m_uniRecipe.ingredient_2 = n;
@@ -468,11 +451,6 @@ void ItemDataUI::render_ItemInfoTable()
     }
    
     render_ItemStatEdit();
-}
-
-void ItemDataUI::render_ItemRecipeTable()
-{
-    ImGui::Text("Recipe");
 }
 
 void ItemDataUI::render_ItemStatEdit()
@@ -686,6 +664,86 @@ void ItemDataUI::ItemPopUp()
 
         ImGui::EndPopup();
     }
+}
+
+void ItemDataUI::render_RecipeSearch()
+{
+    if (!m_bRecipePopup)
+        return;
+
+    ImGui::SetNextWindowSize(ImVec2(300.f, 200.f));
+
+    if (!ImGui::Begin("Recipe Search", &m_bRecipePopup, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::End();
+        return;
+    }
+
+    // Select Recipe
+    static int searchIngr1 = 0;
+    static int searchIngr2 = 0;
+    int CompositionItem = -1;
+
+    ImGui::Text(u8"재료1 : ");
+    ImGui::SameLine();
+    ImGui::PushItemWidth(-FLT_MIN);
+    if (ImGui::BeginCombo("##SearchItemIngr1", m_vecItemName[searchIngr1].c_str(), 0))
+    {
+        for (int n = 0; n < m_vecItemName.size(); n++)
+        {
+            const bool is_selected = (searchIngr1 == n);
+            if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
+            {
+                searchIngr1 = n;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    
+    ImGui::Text(u8"재료2 : ");
+    ImGui::SameLine();
+    ImGui::PushItemWidth(-FLT_MIN);
+    if (ImGui::BeginCombo("##SearchItemIngr2", m_vecItemName[searchIngr2].c_str(), 0))
+    {
+        for (int n = 0; n < m_vecItemName.size(); n++)
+        {
+            const bool is_selected = (searchIngr2 == n);
+            if (ImGui::Selectable(m_vecItemName[n].c_str(), is_selected))
+            {
+                searchIngr2 = n;
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    ER_ItemMgr::GetInst()->SearchRecipe(searchIngr1, searchIngr2, CompositionItem);
+
+    ImGui::Text(u8"결과 : ");
+    ImGui::SameLine();
+    if (-1 == CompositionItem)
+    {
+        ImGui::Text(u8"데이터 없음");
+        ImGui::Text("No Image..");
+    }
+    else
+    {
+        ImGui::Text(m_vecItemName[CompositionItem].c_str());
+
+        Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[CompositionItem]->GetItemTex().Get();
+
+        int width = (int)pTex->Width();
+        int height = (int)pTex->Height();
+
+        ImVec2 size = ImVec2(66, 41);
+        ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+        ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+        ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+        ImVec4 border_col = ImVec4(0.0f, 0.0f, 0.0f, 0.5f); // 50% opaque white
+
+        ImGui::Image((ImTextureID)pTex->GetSRV().Get(), size, uv_min, uv_max, tint_col, border_col);
+    }
+
+    ImGui::End();
 }
 
 void ItemDataUI::SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target)
