@@ -170,3 +170,50 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 
 	return vecPath;
 }
+
+float CPathFindMgr::FindYPos(Vec2 _xzPos)
+{
+	int truncatedX = int(_xzPos.x / m_vNavMeshScale.x);
+	int truncatedZ = int(_xzPos.y / m_vNavMeshScale.z);
+
+	pair<int, int> fPair = make_pair(truncatedX, truncatedZ);
+
+	int aArray[8] = { 1,0,-1,0,1,-1,1,-1 };
+	int bArray[8] = {0,1,0,-1,-1,1,1,-1};
+
+	auto findResult = m_mNaviMap.find(fPair);
+	float zSum = 0;
+	int count = 0;
+	if (findResult == m_mNaviMap.end()) {
+		for (UINT i = 0; i < 8; ++i) {
+			int nextX = fPair.first + aArray[i];
+			int nextY = fPair.second + bArray[i];
+
+			findResult = m_mNaviMap.find(make_pair(nextX, nextY));
+			if (findResult == m_mNaviMap.end())
+				continue;
+			zSum += findResult->second;
+			count++;
+		}
+
+		m_mNaviMap.insert(make_pair(fPair, zSum / 8.f));
+
+		return zSum / count * m_vNavMeshScale.y;
+	}
+
+	return findResult->second * m_vNavMeshScale.y;
+}
+
+void CPathFindMgr::SetNaviVtx(vector<Vec4> _naviVtx)
+{
+	m_vNaviVtx = _naviVtx;
+
+	for (UINT i = 0; i < _naviVtx.size(); ++i) {
+		int truncatedX = int(_naviVtx[i].x);
+		int truncatedY = int(_naviVtx[i].y);
+		pair<int, int> fPair= make_pair(truncatedX, truncatedY);
+		m_mNaviMap.insert(make_pair(fPair, _naviVtx[i].z));
+	}
+
+	int a = 0;
+}

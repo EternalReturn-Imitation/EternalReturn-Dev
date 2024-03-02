@@ -4,6 +4,8 @@
 #include "Detour/DetourNavMesh.h"
 #include "Detour/DetourNavMeshQuery.h"
 
+using namespace std;
+
 class dtNavMesh;
 class dtNavMeshQuery;
 //class dtPolyRef;
@@ -44,7 +46,12 @@ private:
     tNaviResult         m_sResultPos;
 
 private:
-    vector<Vec4>            m_vNaviVtx;
+    vector<Vec4>                    m_vNaviVtx;
+    map<pair<float, float>, float>  m_mNaviMap;
+
+private:
+    Vec3 m_vNavMeshScale; //현재 네비메쉬의 크기
+
    
 private:
     bool LoadNavMeshFromFile(const char* path);
@@ -58,11 +65,13 @@ public:
 
 public:
     vector<Vec3> FindPath(const Vec3& startPos, const Vec3& endPos);
+    float FindYPos(Vec2 _xzPos);
 
 public:
     void SetNaviMapObject(CGameObject* _object) { m_Object = _object; }
     void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }
-    void SetNaviVtx(vector<Vec4> _naviVtx) { m_vNaviVtx = _naviVtx; }
+    void SetNaviVtx(vector<Vec4> _naviVtx);
+    void SetNavMeshScale(Vec3 _scale) { m_vNavMeshScale = _scale; }
 
     CGameObject* GetNaviMapObject() { return m_Object; }
     tNaviResult GetNaviResult() { return m_sResultPos; }

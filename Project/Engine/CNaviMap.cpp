@@ -137,6 +137,7 @@ void CNaviMap::finaltick()
 		m_pCSRaycast->SetVtx(vVtx);
 
 		CPathFindMgr::GetInst()->SetNaviVtx(vVtx);
+		CPathFindMgr::GetInst()->SetNavMeshScale(GetOwner()->Transform()->GetRelativeScale());
 
 		m_bTrigger = false;
 
@@ -202,7 +203,7 @@ void CNaviMap::Raycasting()
 		m_sResultPos.resultPos.y = ((abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f) + pos.y;
 		m_sResultPos.resultPos.z = ((abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * out.vUV.y) + pos.z;
 		m_sResultPos.bSuccess = true;
-
+		
 		CPathFindMgr::GetInst()->SetNaviResult(m_sResultPos);
 	}
 	else {
