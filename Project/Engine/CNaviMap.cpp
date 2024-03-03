@@ -136,7 +136,6 @@ void CNaviMap::finaltick()
 		m_pCSRaycast->SetMaxScale(GetOwner()->Transform()->GetRelativeScale());
 		m_pCSRaycast->SetVtx(vVtx);
 
-		CPathFindMgr::GetInst()->SetNaviVtx(vVtx);
 		CPathFindMgr::GetInst()->SetNavMeshScale(GetOwner()->Transform()->GetRelativeScale());
 
 		m_bTrigger = false;
@@ -199,9 +198,12 @@ void CNaviMap::Raycasting()
 	if (out.bSuccess) {
 		Vec3 pos = GetOwner()->Transform()->GetRelativePos();
 		Vec3 posA = GetOwner()->Transform()->GetOffsetRelativePos();
-		m_sResultPos.resultPos.x = ((abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1])) * out.vUV.x) + pos.x;
-		m_sResultPos.resultPos.y = ((abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f) + pos.y;
-		m_sResultPos.resultPos.z = ((abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * out.vUV.y) + pos.z;
+		//m_sResultPos.resultPos.x = ((abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1])) * out.vUV.x) + pos.x;
+		//m_sResultPos.resultPos.y = ((abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f) + pos.y;
+		//m_sResultPos.resultPos.z = ((abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * out.vUV.y) + pos.z;
+		m_sResultPos.resultPos.x = out.vUV.x;
+		m_sResultPos.resultPos.y = 0.f;
+		m_sResultPos.resultPos.z = out.vUV.y;
 		m_sResultPos.bSuccess = true;
 		
 		CPathFindMgr::GetInst()->SetNaviResult(m_sResultPos);

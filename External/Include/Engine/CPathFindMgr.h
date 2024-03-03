@@ -65,12 +65,10 @@ public:
 
 public:
     vector<Vec3> FindPath(const Vec3& startPos, const Vec3& endPos);
-    float FindYPos(Vec2 _xzPos);
 
 public:
     void SetNaviMapObject(CGameObject* _object) { m_Object = _object; }
     void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }
-    void SetNaviVtx(vector<Vec4> _naviVtx);
     void SetNavMeshScale(Vec3 _scale) { m_vNavMeshScale = _scale; }
 
     CGameObject* GetNaviMapObject() { return m_Object; }

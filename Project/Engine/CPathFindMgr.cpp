@@ -9,6 +9,9 @@
 #include "CLevel.h"
 #include "CEventMgr.h"
 
+#include "CResMgr.h"
+#include "CMesh.h"
+
 #include "Detour/DetourNavMesh.h"
 #include "Detour/DetourNavMeshQuery.h"
 
@@ -118,6 +121,55 @@ bool CPathFindMgr::LoadNavMeshFromFile(const char* path)
 	}
 	m_NavQuery->init(m_NavMesh, 2048);
 
+	vector<Vtx> vVtx;
+	vector<UINT> vIdx;
+
+	// 버텍스 ID를 관리하기 위한 맵 (버텍스 위치 -> 전역 버텍스 리스트 내의 인덱스)
+	std::map<tuple<float,float,float>, int> vertexIdMap;
+	int nextVertexId = 0;
+
+	// 타일과 폴리곤을 순회
+	for (int i = 0; i < m_NavMesh->getMaxTiles(); ++i) {
+		const dtMeshTile* tile = m_NavMesh->getTileAt(i,0,0);
+		if (!tile->header) continue;
+
+		// 각 타일 내의 폴리곤 순회
+		for (int j = 0; j < tile->header->polyCount; ++j) {
+			const dtPoly* poly = &tile->polys[j];
+
+			// 폴리곤이 폐쇄된 경계를 형성하는지 확인 (옵션)
+			if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION) continue;
+
+			// 각 폴리곤의 버텍스 인덱스 순회
+			for (int k = 0; k < 3; ++k) {
+				// 폴리곤의 버텍스 인덱스를 사용하여 실제 버텍스 좌표를 타일의 버텍스 배열에서 찾음
+				const float* v = &tile->verts[poly->verts[k] * 3];
+				
+				tuple<float, float, float> vertexKey(v[0], v[1], v[2]);
+
+				Vtx vtx1;
+				vtx1.vPos = Vec3(v[0], v[1], v[2]);
+				vtx1.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+				vtx1.vUV = Vec2(0.f, 0.f);
+				vtx1.vNormal = Vec3(0.f, 1.f, 0.f);
+
+				if (vertexIdMap.find(vertexKey) == vertexIdMap.end()) {
+					vVtx.push_back(vtx1);
+					vertexIdMap.insert(make_pair(vertexKey, nextVertexId));
+					vIdx.push_back(nextVertexId);
+					nextVertexId++;
+				}
+				else {
+					vIdx.push_back(vertexIdMap.find(vertexKey)->second);
+				}
+			}
+		}
+	}
+
+	CMesh* mesh = new CMesh(true);
+	mesh->Create(vVtx.data(), (UINT)vVtx.size(), vIdx.data(), (UINT)vIdx.size());
+	CResMgr::GetInst()->AddRes<CMesh>(L"NavMesh", mesh);
+
 	return true;
 }
 
@@ -128,7 +180,8 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 	float endpos[3] = { endPos.x, endPos.y, -endPos.z }; // 끝 위치
 
 	dtPolyRef startRef, endRef;
-	float polyPickExt[3] = { 6000,6000,6000 }; // 범위를 제한하기 위한 벡터
+	//float polyPickExt[3] = { 6000,6000,6000 }; // 범위를 제한하기 위한 벡터
+	float polyPickExt[3] = { 22000,22000,22000 }; // 범위를 제한하기 위한 벡터
 
 	dtQueryFilter filter;
 	filter.setIncludeFlags(0xFFFF); // 모든 폴리곤 참조
@@ -140,13 +193,13 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 	//filter.setAreaCost(3, FLT_MAX); // Set infinite cost for wall area.
 
 	// 가까운 폴리곤 검색
-	m_NavQuery->findNearestPoly(startpos, polyPickExt, &filter, &startRef, 0);
-	m_NavQuery->findNearestPoly(endpos, polyPickExt, &filter, &endRef, 0);
+	dtStatus status01 = m_NavQuery->findNearestPoly(startpos, polyPickExt, &filter, &startRef, 0);
+	dtStatus status02 = m_NavQuery->findNearestPoly(endpos, polyPickExt, &filter, &endRef, 0);
 
 	// 시작과 끝 위치를 찾습니다.
 	float nearestStartPos[3], nearestEndPos[3];
-	m_NavQuery->closestPointOnPoly(startRef, startpos, nearestStartPos, 0);
-	m_NavQuery->closestPointOnPoly(endRef, endpos, nearestEndPos, 0);
+	status01 = m_NavQuery->closestPointOnPoly(startRef, startpos, nearestStartPos, 0);
+	status02 = m_NavQuery->closestPointOnPoly(endRef, endpos, nearestEndPos, 0);
 
 	// 경로를 계획합니다.
 	dtPolyRef path[MAX_POLY];
@@ -154,7 +207,6 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 	m_NavQuery->findPath(startRef, endRef, nearestStartPos, nearestEndPos, &filter, path, &pathCount, 256);
 
 	// 경로를 따라 실제 이동 경로를 생성합니다.
-
 	float* actualPath = new float[3 * MAX_POLY];
 	int actualPathCount;
 	m_NavQuery->findStraightPath(nearestStartPos, nearestEndPos, path, pathCount, actualPath, 0, 0, &actualPathCount, MAX_POLY);
@@ -169,51 +221,4 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 	delete[] actualPath; // 더이상 필요없는 calcPath를 삭제합니다.
 
 	return vecPath;
-}
-
-float CPathFindMgr::FindYPos(Vec2 _xzPos)
-{
-	int truncatedX = int(_xzPos.x / m_vNavMeshScale.x);
-	int truncatedZ = int(_xzPos.y / m_vNavMeshScale.z);
-
-	pair<int, int> fPair = make_pair(truncatedX, truncatedZ);
-
-	int aArray[8] = { 1,0,-1,0,1,-1,1,-1 };
-	int bArray[8] = {0,1,0,-1,-1,1,1,-1};
-
-	auto findResult = m_mNaviMap.find(fPair);
-	float zSum = 0;
-	int count = 0;
-	if (findResult == m_mNaviMap.end()) {
-		for (UINT i = 0; i < 8; ++i) {
-			int nextX = fPair.first + aArray[i];
-			int nextY = fPair.second + bArray[i];
-
-			findResult = m_mNaviMap.find(make_pair(nextX, nextY));
-			if (findResult == m_mNaviMap.end())
-				continue;
-			zSum += findResult->second;
-			count++;
-		}
-
-		m_mNaviMap.insert(make_pair(fPair, zSum / 8.f));
-
-		return zSum / count * m_vNavMeshScale.y;
-	}
-
-	return findResult->second * m_vNavMeshScale.y;
-}
-
-void CPathFindMgr::SetNaviVtx(vector<Vec4> _naviVtx)
-{
-	m_vNaviVtx = _naviVtx;
-
-	for (UINT i = 0; i < _naviVtx.size(); ++i) {
-		int truncatedX = int(_naviVtx[i].x);
-		int truncatedY = int(_naviVtx[i].y);
-		pair<int, int> fPair= make_pair(truncatedX, truncatedY);
-		m_mNaviMap.insert(make_pair(fPair, _naviVtx[i].z));
-	}
-
-	int a = 0;
 }

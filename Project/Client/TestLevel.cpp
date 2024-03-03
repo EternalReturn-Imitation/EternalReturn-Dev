@@ -126,16 +126,33 @@ void CreateTestLevel()
 	pObject->SetName(L"Plane");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CMeshRender);
-	//pObject->AddComponent(new CFindPath);
+	pObject->AddComponent(new CFindPath);
 	
-	pObject->Transform()->SetRelativeScale(Vec3(5.f, 10.f, 5.f));
 	pObject->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 500.f));
+	pObject->Transform()->SetRelativeScale(Vec3(5.f, 10.f, 5.f));
 	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
 	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
 
-	SpawnGameObject(pObject, Vec3(7000.f, 0.f, 6500.f), L"Monster");
+	//SpawnGameObject(pObject, Vec3(7000.f, 0.f, 6500.f), L"Monster");
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
+
+	pObject = new CGameObject;
+	pObject->SetName(L"NavTestMesh");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CMeshRender);
+	//pObject->AddComponent(new CFindPath);
+
+	pObject->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 500.f));
+	pObject->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
+	//pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+
+	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"NavMesh"));
+	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+
+	//SpawnGameObject(pObject, Vec3(7000.f, 0.f, 6500.f), L"Monster");
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
 	
 	//// ============
 	//// FBX Loading
@@ -178,8 +195,8 @@ void CreateTestLevel()
 			//rot.y = -1.5708f;
 			//rot.z = +1.5708f;
 			pObj->Transform()->SetRelativeRot(rot);
-			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
 			pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
+			pObj->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
 			pObj->AddComponent(new CNaviMap);
 			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
 

@@ -12,6 +12,7 @@
 CFindPath::CFindPath()
 	:CComponent(COMPONENT_TYPE::FINDPATH)
 	, LaycastResultTrigger(false)
+	, m_vNextPos(Vec3(NaN, NaN, NaN))
 {
 }
 
@@ -50,8 +51,10 @@ void CFindPath::finaltick()
 
 	if (KEY_PRESSED(KEY::LBTN)) {
 		tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
-		GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
+		//GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
+		FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.y, naviResult.resultPos.z));
 	}
+	PathMove(50.0f, false);
 }
 
 void CFindPath::FindPath(Vec3 endPos)
@@ -100,12 +103,18 @@ bool CFindPath::PathMove(float _fSpeed, bool _IsRotation)
 		return true;
 
 	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();
+	Vec3 Dir = (NextPos - curPos).Normalize();
 
 	float speed = _fSpeed;
 
-	Vec3 newPos = curPos + (speed * DT);
+	Vec3 newPos = curPos + (speed* Dir * DT);
 
 	GetOwner()->Transform()->SetRelativePos(newPos);
+
+	if ((newPos - NextPos).Length() < _fSpeed * DT) {
+		FindNextPath();
+	}
+	return true;
 }
 
 void CFindPath::ClearPath()

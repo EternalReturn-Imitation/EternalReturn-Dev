@@ -87,27 +87,28 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
             vCrossPoint.z = MAX_Z_UV * (float) FACE_Z;
         
         OUTPUT[0].vUV = float2(vCrossPoint.x / (float) FACE_X, vCrossPoint.z / (float) FACE_Z);
+        OUTPUT[0].vUV = float2(vCrossPoint.x , vCrossPoint.z);
         
         OUTPUT[0].fDist = fDist;
         OUTPUT[0].success = 1;
     }
     
-    if (OUTPUT[0].success)
-    {
-        float2 vUV = float2(vCrossPoint.x / (float) FACE_X, MAX_Z_UV - (vCrossPoint.z / (float) FACE_Z));
-        vUV.x = vUV.x / (float) MAX_X_UV;
-        vUV.y = vUV.y / (float) MAX_Z_UV;
-        //vUV.x += (0.001 * MAX_X_UV);
-        //vUV.y -= (0.0002 * MAX_Z_UV);
-        
-        float4 color = g_naviTex.SampleLevel(g_sam_0, vUV,0);
-        if (color.a == 0.f)
-            OUTPUT[0].success = 0;
-        
-        OUTPUT[0].vRGB.r = (abs(X_MIN_MAX.x) + abs(X_MIN_MAX.y)) * vUV.x;
-        OUTPUT[0].vRGB.g = (abs(Z_MIN_MAX.x) + abs(Z_MIN_MAX.y)) * 0.f;
-        OUTPUT[0].vRGB.b = (abs(Y_MIN_MAX.x) + abs(Y_MIN_MAX.y)) * vUV.y;
-    }
+    //if (OUTPUT[0].success)
+    //{
+    //    float2 vUV = float2(vCrossPoint.x / (float) FACE_X, MAX_Z_UV - (vCrossPoint.z / (float) FACE_Z));
+    //    vUV.x = vUV.x / (float) MAX_X_UV;
+    //    vUV.y = vUV.y / (float) MAX_Z_UV;
+    //    //vUV.x += (0.001 * MAX_X_UV);
+    //    //vUV.y -= (0.0002 * MAX_Z_UV);
+    //    
+    //    float4 color = g_naviTex.SampleLevel(g_sam_0, vUV,0);
+    //    if (color.a == 0.f)
+    //        OUTPUT[0].success = 0;
+    //    
+    //    OUTPUT[0].vRGB.r = (abs(X_MIN_MAX.x) + abs(X_MIN_MAX.y)) * vUV.x;
+    //    OUTPUT[0].vRGB.g = (abs(Z_MIN_MAX.x) + abs(Z_MIN_MAX.y)) * 0.f;
+    //    OUTPUT[0].vRGB.b = (abs(Y_MIN_MAX.x) + abs(Y_MIN_MAX.y)) * vUV.y;
+    //}
         
 }
 
