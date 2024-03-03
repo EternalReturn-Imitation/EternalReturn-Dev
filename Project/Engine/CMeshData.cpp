@@ -91,16 +91,54 @@ CGameObject* CMeshData::Instantiate()
 	}
 
 	// Animation 파트 추가
-	// if (false == m_pMesh->IsAnimMesh())
-	// 	return pNewObj;
+	InstantiateAnimation(pNewObj);
 
-	// CAnimator3D* pAnimator = new CAnimator3D;
-	// pNewObj->AddComponent(pAnimator);
-	// 
-	// pAnimator->SetBones(m_pMesh->GetBones());
-	// pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
 
 	return pNewObj;
+}
+
+void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
+{
+	wstring strMeshName = path(GetKey()).stem();
+
+	int AnimClipCnt = 0;
+
+	map<wstring, Ptr<CRes>> mapBone = CResMgr::GetInst()->GetResources(RES_TYPE::BONE);
+	map<wstring, Ptr<CRes>>::iterator iter = mapBone.begin();
+
+	vector<Ptr<CBone>> vectorBone;
+
+
+	int KeyLen = strMeshName.length();
+
+	if (iter == mapBone.end())
+		return;
+
+	for (; iter != mapBone.end(); ++iter)
+	{
+		wstring strBoneKey = iter->first.substr(0, KeyLen);
+
+		if (strMeshName == strBoneKey)
+		{
+			vectorBone.emplace_back((CBone*)iter->second.Get());
+			AnimClipCnt++;
+		}
+	}
+
+	if (0 < AnimClipCnt)
+	{
+		CAnimator3D* pAnimator = new CAnimator3D;
+		_NewObj->AddComponent(pAnimator);
+
+		vector<Ptr<CBone>>::iterator iter = vectorBone.begin();
+		while(iter != vectorBone.end())
+			pAnimator->AddAnim(*iter++);
+		
+		wstring errMsg = L"Load Compleate Animation : " + std::to_wstring(AnimClipCnt);
+		MessageBox(nullptr, errMsg.c_str(), L"Success!", MB_OK);
+			
+		return;
+	}
 }
 
 CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath, int singleMeshData)

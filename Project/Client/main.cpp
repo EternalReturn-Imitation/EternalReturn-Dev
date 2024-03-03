@@ -5,6 +5,7 @@
 #include "Client.h"
 
 #include <Engine\CDevice.h>
+#include "ER_GameSystem.h"
 #include "CEditorObjMgr.h"
 
 // ImGui
@@ -44,11 +45,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return 0;
     }
 
+
     // Editor 초기화
     CEditorObjMgr::GetInst()->init();
-       
+    
+
     // ImGui 초기화
     ImGuiMgr::GetInst()->init(g_hWnd);
+    
+    // GameSystem 초기화
+    ER_GameSystem::GetInst()->init();
 
     // 테스트 용 레벨 생성
     CreateTestLevel();

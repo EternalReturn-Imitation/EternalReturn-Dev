@@ -24,6 +24,9 @@ class CMeshData :
 	// single Mesh
 	vector<tMeshData*>		m_vecMeshData;
 
+private:
+	void InstantiateAnimation(CGameObject* _NewObj);
+
 public:
 	static CMeshData* LoadFromFBX(const wstring& _strFilePath, int singleMeshData = 0);
 	
