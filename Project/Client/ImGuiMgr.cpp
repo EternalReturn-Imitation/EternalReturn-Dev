@@ -52,9 +52,6 @@ void ImGuiMgr::init(HWND _hWnd)
     //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;     // FIXME-DPI: Experimental. THIS CURRENTLY DOESN'T WORK AS EXPECTED. DON'T USE IN USER APP!
     //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports; // FIXME-DPI: Experimental.
 
-    // 한글 폰트 입력
-    io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18, NULL, io.Fonts->GetGlyphRangesKorean());
-
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
@@ -154,7 +151,6 @@ void ImGuiMgr::render()
 
 #include "BehaviorTreeListUI.h"
 #include "AnimEditUI.h"
-#include "ItemDataUI.h"
 
 void ImGuiMgr::CreateUI()
 {
@@ -198,10 +194,6 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
-    // ItemDataUI
-    pUI = new ItemDataUI;
-    pUI->SetActive(false);
-    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
 
     for (const auto& pair : m_mapUI)

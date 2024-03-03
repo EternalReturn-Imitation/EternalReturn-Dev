@@ -41,12 +41,8 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 {
 	tParticleModule mParticle = GetTarget()->ParticleSystem()->GetParticleData();
 	
-	if (!ImGui::Begin("Particle_Editor", &m_bParticleInfoUI, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDocking))
+	if (ImGui::Begin("Particle_Editor", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDocking))
 	{
-		ImGui::End();
-		return;
-	}
-
 		render_TabBar(ImGuiTabBarFlags_None);
 
 		ImGui::BeginGroup();
@@ -262,7 +258,7 @@ void ParticleSystemUI::render_ParticleInfoWindow()
 		}
 
 		ImGui::End();
-	
+	}
 }
 
 void ParticleSystemUI::render_TabBar(ImGuiTabBarFlags _flags)

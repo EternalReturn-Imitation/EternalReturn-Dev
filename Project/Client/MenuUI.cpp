@@ -19,7 +19,6 @@
 #include "CLevelSaveLoad.h"
 
 #include "AnimEditUI.h"
-#include "ItemDataUI.h"
 #include "ListUI.h"
 
 #include <Commdlg.h>
@@ -228,41 +227,26 @@ int MenuUI::render_update()
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginMenu("Editor"))
+        if (ImGui::BeginMenu("AnimationEditor"))
         {
-            if (ImGui::BeginMenu("AnimationEditor"))
+            if (ImGui::MenuItem("Init"))
             {
-                if (ImGui::MenuItem("Init"))
-                {
-                    AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
-                }
-
-                if (ImGui::MenuItem("Open"))
-                {
-                    AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
-                    animedit->SetActive(true);
-                }
-
-                if (ImGui::MenuItem("Close"))
-                {
-                    AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
-                    animedit->SetActive(false);
-                }
-
-
-                ImGui::EndMenu();
+                AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
             }
 
-            if (ImGui::BeginMenu("ItemDataEditor"))
+            if (ImGui::MenuItem("Open"))
             {
-                if (ImGui::MenuItem("Open"))
-                {
-                    ItemDataUI* itemdataUI = (ItemDataUI*)ImGuiMgr::GetInst()->FindUI("##ItemDataUI");
-                    itemdataUI->SetActive(true);
-                }
-
-                ImGui::EndMenu();
+                AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
+                animedit->SetActive(true);
             }
+
+            if (ImGui::MenuItem("Close"))
+            {
+                AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
+                animedit->SetActive(false);
+            }
+
+
             ImGui::EndMenu();
         }
 
