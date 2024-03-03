@@ -1,6 +1,8 @@
 #pragma once
 #include "ComponentUI.h"
 
+class CCamera;
+
 class Light3DUI :
     public ComponentUI
 {

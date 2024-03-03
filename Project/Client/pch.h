@@ -6,6 +6,8 @@
 #include <Engine\global.h>
 #include <Engine\CEngine.h>
 
+#include "ER_define.h"
+
 
 // Engine Library
 #ifdef _DEBUG

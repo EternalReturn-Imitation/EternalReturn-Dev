@@ -122,6 +122,7 @@
       <MaxFilesInUnityFile>20</MaxFilesInUnityFile>
       <UnityFilesDirectory>$(ProjectDir)</UnityFilesDirectory>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>26495</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,6 +166,10 @@
     <ClInclude Include="ComponentUI.h" />
     <ClInclude Include="ComputeShaderUI.h" />
     <ClInclude Include="ContentUI.h" />
+    <ClInclude Include="ER_define.h" />
+    <ClInclude Include="ER_GameSystem.h" />
+    <ClInclude Include="ER_Item.h" />
+    <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphicsShaderUI.h" />
     <ClInclude Include="ImGuiMgr.h" />
@@ -180,6 +185,7 @@
     <ClInclude Include="ImGui\ImSequencer.h" />
     <ClInclude Include="ImGui\ImZoomSlider.h" />
     <ClInclude Include="InspectorUI.h" />
+    <ClInclude Include="ItemDataUI.h" />
     <ClInclude Include="Light2DUI.h" />
     <ClInclude Include="Light3DUI.h" />
     <ClInclude Include="ListUI.h" />
@@ -223,6 +229,10 @@
     <ClCompile Include="ComponentUI.cpp" />
     <ClCompile Include="ComputeShaderUI.cpp" />
     <ClCompile Include="ContentUI.cpp" />
+    <ClCompile Include="ER_GameSystem.cpp" />
+    <ClCompile Include="ER_Item.cpp" />
+    <ClCompile Include="ER_ItemMgr.cpp" />
+    <ClCompile Include="ER_ItemMgr_Init.cpp" />
     <ClCompile Include="GraphicsShaderUI.cpp" />
     <ClCompile Include="ImGuiMgr.cpp" />
     <ClCompile Include="ImGui\GraphEditor.cpp" />
@@ -238,6 +248,7 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="ImGui\ImSequencer.cpp" />
     <ClCompile Include="InspectorUI.cpp" />
+    <ClCompile Include="ItemDataUI.cpp" />
     <ClCompile Include="Light2DUI.cpp" />
     <ClCompile Include="Light3DUI.cpp" />
     <ClCompile Include="ListUI.cpp" />

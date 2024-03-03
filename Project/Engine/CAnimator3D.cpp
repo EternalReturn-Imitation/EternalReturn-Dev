@@ -246,6 +246,9 @@ CAnim3D* CAnimator3D::AddAnim(Ptr<CBone> _pBone)
 	pAnim = CAnim3D::CreateAnimation(_pBone);
 	pAnim->SetOwner(this);
 	m_mapAnim.insert(make_pair(_pBone->GetKey(), pAnim));
+	pAnim->SetName(_pBone->GetKey());
+
+	SelectAnimation(_pBone->GetKey());
 
 	return pAnim;
 }

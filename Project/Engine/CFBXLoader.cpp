@@ -248,6 +248,7 @@ void CFBXLoader::LoadMesh(FbxMesh* _pFbxMesh)
 	}
 	else
 	{
+		Container.Resize(iVtxCnt);
 		for (int i = 0; i < iVtxCnt; ++i)
 			Container.vecPos[i] = VtxElement[i];
 	}

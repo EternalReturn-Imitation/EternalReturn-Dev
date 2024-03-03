@@ -128,7 +128,7 @@ Ptr<CBone> CResMgr::LoadFBXBone(const wstring& _strPath)
 		
 		m_arrRes[(UINT)RES_TYPE::BONE].insert(make_pair(strKey, pBone.Get()));
 
-		// meshdata 를 실제파일로 저장
+		// Bone 를 실제파일로 저장
 		pBone->Save(strKey);
 	}
 
