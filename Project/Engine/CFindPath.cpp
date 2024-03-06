@@ -49,10 +49,13 @@ void CFindPath::finaltick()
 	//	LaycastResultTrigger = false;
 	//}
 
-	if (KEY_PRESSED(KEY::LBTN)) {
+	//if (KEY_PRESSED(KEY::LBTN)) {
+	if (CPathFindMgr::GetInst()->GetRayResultTrigger()) {
 		tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
 		//GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
-		FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.y, naviResult.resultPos.z));
+		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.y, naviResult.resultPos.z));
+		FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.z, naviResult.resultPos.y));
+		CPathFindMgr::GetInst()->SetRayResultTrigger(false);
 	}
 	PathMove(50.0f, false);
 }

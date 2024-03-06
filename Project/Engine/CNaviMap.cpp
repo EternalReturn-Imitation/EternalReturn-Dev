@@ -143,8 +143,7 @@ void CNaviMap::finaltick()
 		xMin = CTruncate(xMin, 8);
 		yMax = CTruncate(yMax, 8);
 
-		GetOwner()->Transform()->SetOffsetRelativePos(Vec3(-xMin, 0.f, yMax));
-		GetOwner()->Transform()->SetOffsetRelativePos(Vec3(xMin, 0.f, yMin));
+		//GetOwner()->Transform()->SetOffsetRelativePos(Vec3(xMin, 0.f, yMin));
 		GetOwner()->Transform()->SetOffsetTrigger(true);		
 	}
 
@@ -153,6 +152,7 @@ void CNaviMap::finaltick()
 	if (KEY_PRESSED(KEY::LBTN))
 	{
 		Raycasting();
+		CPathFindMgr::GetInst()->SetRayResultTrigger(true);
 	}
 
 	//if (KEY_TAP(KEY::LCTRL)) {

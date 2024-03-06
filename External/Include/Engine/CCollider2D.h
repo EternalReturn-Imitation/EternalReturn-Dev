@@ -7,6 +7,8 @@ class CCollider2D :
 private:
     Vec3            m_vOffsetPos;
     Vec3            m_vOffsetScale;
+    Vec3            m_vOffsetRot;
+
     bool            m_bAbsolute;
     COLLIDER2D_TYPE m_Shape;
     Matrix          m_matCollider2D;    // Collider 의 월드행렬
@@ -18,8 +20,9 @@ public:
     virtual void finaltick() override;
 
 public:
-    void SetOffsetPos(Vec2 _vOffsetPos){ m_vOffsetPos = Vec3(_vOffsetPos.x, _vOffsetPos.y, 0.f); }
+    void SetOffsetPos(Vec3 _vOffsetPos) { m_vOffsetPos = Vec3(_vOffsetPos.x, _vOffsetPos.y, _vOffsetPos.z); }
     void SetOffsetScale(Vec2 _vOffsetScale) { m_vOffsetScale = Vec3(_vOffsetScale.x, _vOffsetScale.y, 1.f); }
+    void SetOffsetRot(Vec3 _vOffsetRot) { m_vOffsetRot = _vOffsetRot; }
     void SetAbsolute(bool _bSet) { m_bAbsolute = _bSet; }
     void SetCollider2DType(COLLIDER2D_TYPE _Type) { m_Shape = _Type; }
 

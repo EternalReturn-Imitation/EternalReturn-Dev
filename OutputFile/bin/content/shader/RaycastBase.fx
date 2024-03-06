@@ -65,9 +65,9 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
         vPos[2].z = id.y;
     }
     
-    vPos[0].xyz *= 10;
-    vPos[1].xyz *= 10;
-    vPos[2].xyz *= 10;
+    //vPos[0].xyz *= 10;
+    //vPos[1].xyz *= 10;
+    //vPos[2].xyz *= 10;
 
     float3 vCrossPoint = (float3) 0.f;
     float fDist = 0.f;
@@ -91,6 +91,11 @@ void CS_Raycast(int3 _iThreadID : SV_DispatchThreadID)
         
         OUTPUT[0].fDist = fDist;
         OUTPUT[0].success = 1;
+    }
+    else
+    {
+        OUTPUT[0].vRGB.rgb = float3(1.0f, 1.0f, 1.0f);
+
     }
     
     //if (OUTPUT[0].success)

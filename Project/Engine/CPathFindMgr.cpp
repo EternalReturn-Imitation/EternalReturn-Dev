@@ -18,6 +18,7 @@
 CPathFindMgr::CPathFindMgr()
 	: m_NavMesh(nullptr)
 	, m_NavQuery(nullptr)
+	, RayResultTrigger(false)
 {
 }
 
@@ -37,7 +38,7 @@ CPathFindMgr::~CPathFindMgr()
 
 void CPathFindMgr::init()
 {
-	LoadNavMeshFromFile("navmesh\\solo_navmesh.bin");
+	LoadNavMeshFromFile("navmesh\\solo_navmesh02.bin");
 }
 
 void CPathFindMgr::tick()
@@ -119,7 +120,9 @@ bool CPathFindMgr::LoadNavMeshFromFile(const char* path)
 		fclose(fp);
 		return false;
 	}
-	m_NavQuery->init(m_NavMesh, 2048);
+	if (dtStatusFailed(m_NavQuery->init(m_NavMesh, 2048))) {
+		assert(false);
+	}
 
 	vector<Vtx> vVtx;
 	vector<UINT> vIdx;
@@ -180,8 +183,8 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 	float endpos[3] = { endPos.x, endPos.y, -endPos.z }; // 끝 위치
 
 	dtPolyRef startRef, endRef;
-	//float polyPickExt[3] = { 6000,6000,6000 }; // 범위를 제한하기 위한 벡터
-	float polyPickExt[3] = { 22000,22000,22000 }; // 범위를 제한하기 위한 벡터
+	float polyPickExt[3] = { 6000,6000,6000 }; // 범위를 제한하기 위한 벡터
+	//float polyPickExt[3] = { 22000,22000,22000 }; // 범위를 제한하기 위한 벡터
 
 	dtQueryFilter filter;
 	filter.setIncludeFlags(0xFFFF); // 모든 폴리곤 참조
