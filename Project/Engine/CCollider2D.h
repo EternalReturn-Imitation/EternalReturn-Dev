@@ -27,6 +27,7 @@ public:
     void SetCollider2DType(COLLIDER2D_TYPE _Type) { m_Shape = _Type; }
 
     const Matrix& GetColliderWorldMat() { return m_matCollider2D; }
+    COLLIDER2D_TYPE GetCollider2DType() { return m_Shape; }
 
 
 public:

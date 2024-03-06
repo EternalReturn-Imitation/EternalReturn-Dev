@@ -8,6 +8,9 @@
 #include "CPathFindMgr.h"
 #include "CTransform.h"
 #include "CTimeMgr.h"
+#include "CLevel.h"
+#include "CRenderMgr.h"
+#include "CCamera.h"
 
 CFindPath::CFindPath()
 	:CComponent(COMPONENT_TYPE::FINDPATH)
@@ -49,13 +52,20 @@ void CFindPath::finaltick()
 	//	LaycastResultTrigger = false;
 	//}
 
-	//if (KEY_PRESSED(KEY::LBTN)) {
-	if (CPathFindMgr::GetInst()->GetRayResultTrigger()) {
-		tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
+	if (KEY_PRESSED(KEY::LBTN)) {
+	//if (CPathFindMgr::GetInst()->GetRayResultTrigger()) {
+		//tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
 		//GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
 		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.y, naviResult.resultPos.z));
-		FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.z, naviResult.resultPos.y));
-		CPathFindMgr::GetInst()->SetRayResultTrigger(false);
+		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.z, naviResult.resultPos.y));
+		//CPathFindMgr::GetInst()->SetRayResultTrigger(false);
+
+		CGameObject* Map = CPathFindMgr::GetInst()->GetMapCollider();
+		CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
+		tRay ray = mainCam->GetRay();
+		IntersectResult result = mainCam->IsCollidingBtwRayRect(ray, Map);
+		Vec3 TargetPos = result.vCrossPoint;
+		FindPath(TargetPos);
 	}
 	PathMove(50.0f, false);
 }

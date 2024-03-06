@@ -146,9 +146,10 @@ void CreateTestLevel()
 	pObject->AddComponent(new CCollider2D);
 	pObject->Collider2D()->SetOffsetRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
 	pObject->Collider2D()->SetOffsetScale(Vec2(2700.f, 2700.f));
-	pObject->Collider2D()->SetOffsetPos(Vec3(1125.f, 0.f, 1200.f));
+	pObject->Collider2D()->SetOffsetPos(Vec3(1125.f, 16.f, 1200.f));
 	//pObject->Collider2D()->SetDrawCollision(false);
 	//pObject->Transform()->SetGizmoObjExcept(true);
+	CPathFindMgr::GetInst()->SetMapCollider(pObject);
 	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
 
 	//pObject = new CGameObject;
