@@ -38,7 +38,7 @@ CPathFindMgr::~CPathFindMgr()
 
 void CPathFindMgr::init()
 {
-	LoadNavMeshFromFile("navmesh\\solo_navmesh.bin");
+	LoadNavMeshFromFile("navmesh\\solo_navmesh_map.bin");
 }
 
 void CPathFindMgr::tick()
