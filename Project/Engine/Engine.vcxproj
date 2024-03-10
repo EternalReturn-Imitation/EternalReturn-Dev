@@ -236,6 +236,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CTimeMgr.h" />
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CWeightMapShader.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="Detour\DetourAlloc.h" />
     <ClInclude Include="Detour\DetourAssert.h" />
@@ -326,6 +327,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CTimeMgr.cpp" />
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="CWeightMapShader.cpp" />
+    <ClCompile Include="debug.cpp" />
     <ClCompile Include="Detour\DetourAlloc.cpp" />
     <ClCompile Include="Detour\DetourAssert.cpp" />
     <ClCompile Include="Detour\DetourCommon.cpp" />

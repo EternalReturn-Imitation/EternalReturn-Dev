@@ -25,6 +25,15 @@ enum class ER_ITEM_SLOT
 	LEG,				// 다리
 };
 
+enum class ER_WEAPON_TYPE
+{
+	NONE,				// 미설정
+	AXE,				// 도끼
+	SWORD,				// 검
+	PISTOL,				// 권총
+	GLOVE,				// 글러브
+	BOW					// 활
+};
 
 typedef union item_combination_pair
 {

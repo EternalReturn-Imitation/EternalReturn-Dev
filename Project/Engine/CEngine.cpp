@@ -15,6 +15,8 @@
 #include "CInstancingBuffer.h"
 #include "CPathFindMgr.h"
 
+#include "debug.h"
+
 CEngine::CEngine()
 	: m_hWnd(nullptr)
 {
@@ -66,6 +68,8 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 	CInstancingBuffer::GetInst()->init();
 
 	CPathFindMgr::GetInst()->init();
+
+	DebugContext::GetInst();
 
 	return S_OK;
 }

@@ -126,23 +126,42 @@ void AnimEditUI::render_menubar()
 {
     if (ImGui::BeginMenuBar())
     {
-        if (ImGui::MenuItem("Play"))
+        if (ImGui::BeginMenu("File"))
         {
-            if (m_pCurAnimator)
+            if (ImGui::MenuItem("Save.."))
             {
-                m_pCurAnimator->Play();
+                //  ER_ItemMgr::GetInst()->Save();
             }
-            m_bPlay = true;
+
+            if (ImGui::MenuItem("Exit"))
+                SetActive(false);
+
+            ImGui::EndMenu();
         }
 
-        if (ImGui::MenuItem("Stop"))
+        if (ImGui::BeginMenu("Control"))
         {
-            if (m_pCurAnimator)
+            if (ImGui::MenuItem("Play"))
             {
-                m_pCurAnimator->Stop();
+                if (m_pCurAnimator)
+                {
+                    m_pCurAnimator->Play();
+                }
+                m_bPlay = true;
             }
+
+            if (ImGui::MenuItem("Stop"))
+            {
+                if (m_pCurAnimator)
+                {
+                    m_pCurAnimator->Stop();
+                }
                 m_bPlay = false;
+            }
+
+            ImGui::EndMenu();
         }
+        
 
         if (ImGui::BeginMenu("Set.."))
         {

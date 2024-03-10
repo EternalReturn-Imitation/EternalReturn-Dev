@@ -14,6 +14,7 @@ enum MyItemColumnID
     ItemDataListColumnID_Grade,
     ItemDataListColumnID_Type,
     ItemDataListColumnID_Slot,
+    ItemDataListColumnID_WPType,
     ItemDataListColumnID_Recipe,
     ItemDataListColumnID_Stats
 };
@@ -58,7 +59,6 @@ ItemDataUI::~ItemDataUI()
 
 void ItemDataUI::init()
 {
-    
 }
 
 void ItemDataUI::tick()
@@ -136,7 +136,10 @@ void ItemDataUI::render_menubar()
             }
 
             if (ImGui::MenuItem("Exit") && Active)
+            {
                 SetActive(false);
+                DEBUG_LOG_INPUT("ItemDataUI", "render_menubar", u8"종료버튼");
+            }
 
             ImGui::EndMenu();
         }
@@ -146,7 +149,7 @@ void ItemDataUI::render_menubar()
             if (ImGui::MenuItem("Add NewItem.."))
             {
                 ER_Item* NewItem = new ER_Item;
-                NewItem->m_eItemCode = (*m_vecItem).size();
+                NewItem->m_eItemCode = (UINT)(*m_vecItem).size();
                 (*m_vecItem).push_back(NewItem);
 
                 m_vecItemName.push_back(string());
@@ -177,7 +180,7 @@ void ItemDataUI::render_ItemInfoTable()
     float rowHeight = 41.f;
     
 
-    if (ImGui::BeginTable("##ItemDataList", 8, ItemDataUIFlags, ImVec2(0, 0)))
+    if (ImGui::BeginTable("##ItemDataList", 9, ItemDataUIFlags, ImVec2(0, 0)))
     {
         ImGui::TableSetupColumn("ID", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_NoReorder, 20.f, ItemDataListColumnID_ID);
         ImGui::TableSetupColumn("Texture", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_NoReorder, 68.f, ItemDataListColumnID_Texture);
@@ -185,6 +188,7 @@ void ItemDataUI::render_ItemInfoTable()
         ImGui::TableSetupColumn("Grade", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_Grade);
         ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_Type);
         ImGui::TableSetupColumn("Slot", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_Slot);
+        ImGui::TableSetupColumn("WPType", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 100.f, ItemDataListColumnID_WPType);
         ImGui::TableSetupColumn("Recipe", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthFixed, 250.f, ItemDataListColumnID_Recipe);
         ImGui::TableSetupColumn("Stats", ImGuiTableColumnFlags_NoResize | ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_NoSort, 100.f, ItemDataListColumnID_Stats);
         ImGui::TableSetupScrollFreeze(1, 1);
@@ -199,7 +203,7 @@ void ItemDataUI::render_ItemInfoTable()
         // clipper.Begin((*m_vecItem).size());
         
         if(ItemHeight.size() < (*m_vecItem).size())
-            ItemHeight.resize((*m_vecItem).size());
+            ItemHeight.resize((UINT)(*m_vecItem).size());
 
         // while (clipper.Step())
         // {
@@ -310,7 +314,7 @@ void ItemDataUI::render_ItemInfoTable()
                     pListUI->Reset("ItemIcon List", ImVec2(300.f, 500.f));
                     
                     wstring KeyItemIcon = L"ItemIcon";
-                    int KeyLen = KeyItemIcon.length();
+                    int KeyLen = (UINT)KeyItemIcon.length();
 
                     for (const auto& pair : mapTex)
                     {
@@ -368,6 +372,16 @@ void ItemDataUI::render_ItemInfoTable()
                 int CurItemSlot = m_pCurItem->GetSlot();
                 ImGui::Combo("##ItemSlot", &CurItemSlot, Slots, 6);
                 m_pCurItem->SetItemSlot(CurItemSlot);
+                ImGui::EndDisabled();
+
+                // Item WPType
+                ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_WPType);
+                ImGui::PushItemWidth(-FLT_MIN);
+                ImGui::BeginDisabled((UINT)ER_ITEM_SLOT::WEAPONS != CurItemSlot);
+                const char* WPTypes[] = { u8"미지정",u8"도끼",u8"양손검",u8"권총",u8"글러브",u8"활" };
+                int CurWeaponType = m_pCurItem->GetWPType();
+                ImGui::Combo("##WPTypes", &CurWeaponType, WPTypes, 6);
+                m_pCurItem->SetWPType(CurWeaponType);
                 ImGui::EndDisabled();
 
                 // Item Recipe
@@ -569,7 +583,7 @@ void ItemDataUI::render_ItemStatEdit()
     ImGui::End();
 }
 
-void ItemDataUI::Print_Stats(const ER_tStats& _stats)
+void ItemDataUI::Print_Stats(const ER_ItemStats& _stats)
 {
     if (0 != _stats.iAttackPower) ImGui::Text(u8"공격력 : + %d", _stats.iAttackPower);
     if (0 != _stats.iAttackPowerPerLevel) ImGui::Text(u8"레벨당 공격력 : + %d", _stats.iAttackPowerPerLevel);
@@ -642,7 +656,7 @@ void ItemDataUI::ItemPopUp()
             size_t ItemCnt = (*m_vecItem).size();
             for (size_t i = 0; i < ItemCnt; ++i)
             {
-                (*m_vecItem)[i]->m_eItemCode = i;
+                (*m_vecItem)[i]->m_eItemCode = (UINT)i;
             }
 
             // utf-8 아이템 이름 갱신
@@ -770,8 +784,8 @@ void ItemDataUI::render_RecipeSearch()
 
                     if (iter == CombinationList.end())
                     {
-                        ER_CMB_SLOT newcomb = { ActiveSlot[Litem],ActiveSlot[Ritem],tmp };
-                        CombinationList.insert(make_pair(tmp, newcomb));
+                        ER_CMB_SLOT newcomb = { ActiveSlot[Litem],ActiveSlot[Ritem],(UINT)tmp };
+                        CombinationList.insert(make_pair((UINT)tmp, newcomb));
                     }
                 }
             }

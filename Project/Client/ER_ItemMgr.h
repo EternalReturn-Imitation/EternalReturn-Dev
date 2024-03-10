@@ -10,7 +10,6 @@ class ER_ItemMgr
 private:
 	vector<ER_Item*> m_vecItem;						// 아이템 리스트
 	unordered_map<DWORD_PTR, UINT> m_umapRecipe;	// 조합식 목록
-	
 
 private:
 	int Save();
@@ -29,5 +28,4 @@ public:
 	void Update();
 
 	friend class ItemDataUI;
-
 };

@@ -10,8 +10,6 @@
 
 #include <Script\CScriptMgr.h>
 
-
-
 #include "ImGuiMgr.h"
 #include "OutlinerUI.h"
 #include "InspectorUI.h"
@@ -20,6 +18,8 @@
 
 #include "AnimEditUI.h"
 #include "ItemDataUI.h"
+#include "CharacterDataUI.h"
+#include "DebugLogUI.h"
 #include "ListUI.h"
 
 #include <Commdlg.h>
@@ -230,39 +230,45 @@ int MenuUI::render_update()
 
         if (ImGui::BeginMenu("Editor"))
         {
-            if (ImGui::BeginMenu("AnimationEditor"))
+            AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
+            ItemDataUI* itemdataUI = (ItemDataUI*)ImGuiMgr::GetInst()->FindUI("##ItemDataUI");
+            CharacterDataUI* characterdataUI = (CharacterDataUI*)ImGuiMgr::GetInst()->FindUI("##CharacterDataUI");
+
+            if (ImGui::MenuItem("AnimationEditor"))
             {
-                if (ImGui::MenuItem("Init"))
-                {
-                    AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
-                }
-
-                if (ImGui::MenuItem("Open"))
-                {
-                    AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
-                    animedit->SetActive(true);
-                }
-
-                if (ImGui::MenuItem("Close"))
-                {
-                    AnimEditUI* animedit = (AnimEditUI*)ImGuiMgr::GetInst()->FindUI("##AnimEditUI");
-                    animedit->SetActive(false);
-                }
-
-
-                ImGui::EndMenu();
+                animedit->SetActive(true);
+                itemdataUI->SetActive(false);
+                characterdataUI->SetActive(false);
             }
 
-            if (ImGui::BeginMenu("ItemDataEditor"))
-            {
-                if (ImGui::MenuItem("Open"))
-                {
-                    ItemDataUI* itemdataUI = (ItemDataUI*)ImGuiMgr::GetInst()->FindUI("##ItemDataUI");
-                    itemdataUI->SetActive(true);
-                }
 
-                ImGui::EndMenu();
+            if (ImGui::MenuItem("ItemDataEditor"))
+            {
+                animedit->SetActive(false);
+                itemdataUI->SetActive(true);
+                characterdataUI->SetActive(false);
             }
+
+
+            if (ImGui::MenuItem("CharacterDataEditor"))
+            {
+                animedit->SetActive(false);
+                itemdataUI->SetActive(false);
+                characterdataUI->SetActive(true);
+            }
+
+            ImGui::EndMenu();
+        }
+
+        if (ImGui::BeginMenu("Debug"))
+        {
+            if (ImGui::MenuItem("DebugWindow"))
+            {
+                DebugLogUI* dbglogUI = (DebugLogUI*)ImGuiMgr::GetInst()->FindUI("##DebugLogUI");
+
+                dbglogUI->SetActive(true);
+            }
+
             ImGui::EndMenu();
         }
 

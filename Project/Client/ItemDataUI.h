@@ -28,15 +28,15 @@ private:
     ER_Item*        m_pCurStatsEditItem;
     Ptr<CTexture>   m_pEmptyItemSlotTex;
 
-    bool           m_bItemPopup;
-    int            m_iDeleteItemIdx;
+    bool            m_bItemPopup;
+    int             m_iDeleteItemIdx;
 
-    bool           m_bRecipePopup;
+    bool            m_bRecipePopup;
 
-    ER_Item*       m_DragItem;
-    ER_Item*       m_DropItem;
-    int            m_iDragItemIdx;
-    int            m_iDropItemIdx;
+    ER_Item*        m_DragItem;
+    ER_Item*        m_DropItem;
+    int             m_iDragItemIdx;
+    int             m_iDropItemIdx;
 
     vector<string> m_vecItemName;
 
@@ -53,7 +53,7 @@ private:
     void render_ItemInfoTable();
     void render_ItemStatEdit();
 
-    void Print_Stats(const ER_tStats& _stats);
+    void Print_Stats(const ER_ItemStats& _stats);
 
     void SwapItem();
     void ItemPopUp();

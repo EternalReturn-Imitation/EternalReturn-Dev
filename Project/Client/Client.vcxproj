@@ -159,12 +159,16 @@
     <ClInclude Include="CAnimEditObj.h" />
     <ClInclude Include="CEditorObjMgr.h" />
     <ClInclude Include="CGameObjectEx.h" />
+    <ClInclude Include="CharacterDataUI.h" />
     <ClInclude Include="CLevelSaveLoad.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Collider2DUI.h" />
     <ClInclude Include="ComponentUI.h" />
     <ClInclude Include="ComputeShaderUI.h" />
     <ClInclude Include="ContentUI.h" />
+    <ClInclude Include="DebugLogUI.h" />
+    <ClInclude Include="ER_Character.h" />
+    <ClInclude Include="ER_CharacterMgr.h" />
     <ClInclude Include="ER_define.h" />
     <ClInclude Include="ER_GameSystem.h" />
     <ClInclude Include="ER_Item.h" />
@@ -212,6 +216,7 @@
     <ClInclude Include="TransformUI.h" />
     <ClInclude Include="TreeUI.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="ER_struct.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator2DUI.cpp" />
@@ -222,11 +227,16 @@
     <ClCompile Include="CAnimEditObj.cpp" />
     <ClCompile Include="CEditorObjMgr.cpp" />
     <ClCompile Include="CGameObjectEx.cpp" />
+    <ClCompile Include="CharacterDataUI.cpp" />
     <ClCompile Include="CLevelSaveLoad.cpp" />
     <ClCompile Include="Collider2DUI.cpp" />
     <ClCompile Include="ComponentUI.cpp" />
     <ClCompile Include="ComputeShaderUI.cpp" />
     <ClCompile Include="ContentUI.cpp" />
+    <ClCompile Include="DebugLogUI.cpp" />
+    <ClCompile Include="ER_Character.cpp" />
+    <ClCompile Include="ER_CharacterMgr.cpp" />
+    <ClCompile Include="ER_CharacterMgr_Init.cpp" />
     <ClCompile Include="ER_GameSystem.cpp" />
     <ClCompile Include="ER_Item.cpp" />
     <ClCompile Include="ER_ItemMgr.cpp" />

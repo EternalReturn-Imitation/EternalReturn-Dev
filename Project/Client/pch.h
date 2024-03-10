@@ -6,7 +6,10 @@
 #include <Engine\global.h>
 #include <Engine\CEngine.h>
 
+#include <Engine\debug.h>
+
 #include "ER_define.h"
+#include "ER_struct.h"
 
 
 // Engine Library

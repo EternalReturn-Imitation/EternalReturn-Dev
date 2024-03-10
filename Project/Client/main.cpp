@@ -86,6 +86,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             // =======
             // 1 Frame
             // =======
+            ER_GameSystem::GetInst()->progress();
             CEngine::GetInst()->progress();
             CEditorObjMgr::GetInst()->progress();       
 

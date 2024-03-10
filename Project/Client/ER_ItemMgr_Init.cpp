@@ -83,6 +83,9 @@ int ER_ItemMgr::SaveItemData(ER_Item* _Item, FILE* _File)
 	// ItemSlot
 	fwrite(&_Item->m_eSlot, sizeof(UINT), 1, _File);
 
+	// Weapontype
+	fwrite(&_Item->m_eWeapon_type, sizeof(UINT), 1, _File);
+
 	// ItemRecipe
 	if ((UINT)ER_ITEM_GRADE::COMMON == _Item->m_eGrade)
 	{	
@@ -95,11 +98,11 @@ int ER_ItemMgr::SaveItemData(ER_Item* _Item, FILE* _File)
 	// ItemStat
 	if ((UINT)ER_ITEM_SLOT::NONE == _Item->m_eSlot && (UINT)ER_ITEM_TYPE::CONSUMABLES != _Item->m_eType)
 	{
-		ER_tStats tmp = {};
-		fwrite(&tmp, sizeof(ER_tStats), 1, _File);
+		ER_ItemStats tmp = {};
+		fwrite(&tmp, sizeof(ER_ItemStats), 1, _File);
 	}
 	else
-		fwrite(&_Item->m_tItemStats, sizeof(ER_tStats), 1, _File);
+		fwrite(&_Item->m_tItemStats, sizeof(ER_ItemStats), 1, _File);
 
 	return 0;
 }
@@ -128,11 +131,14 @@ ER_Item* ER_ItemMgr::LoadItemData(FILE* _File)
 	// ItemSlot
 	fread(&pItem->m_eSlot, sizeof(UINT), 1, _File);
 
+	// Weapontype
+	fread(&pItem->m_eWeapon_type, sizeof(UINT), 1, _File);
+
 	// Item Recipe
 	fread(&pItem->m_uniRecipe, sizeof(DWORD_PTR), 1, _File);
 
 	// ItemStat
-	fread(&pItem->m_tItemStats, sizeof(ER_tStats), 1, _File);
+	fread(&pItem->m_tItemStats, sizeof(ER_ItemStats), 1, _File);
 
 	return pItem;
 }
@@ -143,9 +149,9 @@ void ER_ItemMgr::RecipeUpdate()
 	if(!m_umapRecipe.empty())
 		m_umapRecipe.clear();
 	
-	UINT iItemCnt = m_vecItem.size();
+	UINT iItemCnt = (UINT)m_vecItem.size();
 
-	for (int i = 0; i < iItemCnt; ++i)
+	for (UINT i = 0; i < iItemCnt; ++i)
 	{
 		ER_Item* item = m_vecItem[i];
 
