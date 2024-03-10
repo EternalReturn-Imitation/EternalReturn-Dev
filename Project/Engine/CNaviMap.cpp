@@ -11,6 +11,7 @@
 #include "CTransform.h"
 #include "CRenderComponent.h"
 #include "CPathFindMgr.h"
+#include "CTexture.h"
 
 CNaviMap::CNaviMap()
 	:CComponent(COMPONENT_TYPE::NAVIMAP)
@@ -44,10 +45,10 @@ void CNaviMap::begin()
 
 	// 레이캐스팅 결과 받는 버퍼
 	m_pCrossBuffer = new CStructuredBuffer;
-	m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);	
+	m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);
 
 	//네비맵 텍스트 세팅
-	m_pNaviTex = CResMgr::GetInst()->FindRes<CTexture>(L"naviTex.png");
+	m_pNaviTex = CResMgr::GetInst()->FindRes<CTexture>(L"NaviMap_Result.png");
 	m_pCSRaycast->SetNaviMapTex(m_pNaviTex);
 }
 
@@ -128,22 +129,42 @@ void CNaviMap::finaltick()
 		m_fMinMaxArr[4] = zMin;
 		m_fMinMaxArr[5] = zMax;
 
+		m_pCSRaycast->SetXMinMax(Vec2(xMin, xMax));
+		m_pCSRaycast->SetYMinMax(Vec2(yMin, yMax));
+		m_pCSRaycast->SetZMinMax(Vec2(zMin, zMax));
+
 		m_pCSRaycast->SetMaxScale(GetOwner()->Transform()->GetRelativeScale());
 		m_pCSRaycast->SetVtx(vVtx);
 
+		CPathFindMgr::GetInst()->SetNavMeshScale(GetOwner()->Transform()->GetRelativeScale());
+
 		m_bTrigger = false;
-		
+
 		xMin = CTruncate(xMin, 8);
 		yMax = CTruncate(yMax, 8);
 
-		GetOwner()->Transform()->SetOffsetRelativePos(Vec3(-xMin, 0.f, yMax));
-		GetOwner()->Transform()->SetOffsetTrigger(true);
+		//GetOwner()->Transform()->SetOffsetRelativePos(Vec3(xMin, 0.f, yMin));
+		GetOwner()->Transform()->SetOffsetTrigger(true);		
 	}
+
+	m_pCSRaycast->SetPos(GetOwner()->Transform()->GetRelativePos());
 
 	if (KEY_PRESSED(KEY::LBTN))
 	{
 		Raycasting();
+		CPathFindMgr::GetInst()->SetRayResultTrigger(true);
 	}
+
+	//if (KEY_TAP(KEY::LCTRL)) {
+	//	Ptr<CTexture> tex = CResMgr::GetInst()->FindRes<CTexture>(L"DataTargetTex");
+	//	int a = tex->Save(L"texture\\navimap_fault");
+	//
+	//	int b = 0;
+	//}
+
+	//if (KEY_TAP(KEY::LCTRL) && KEY_TAP(KEY::P)) {
+	//	Ptr<CTexture> tex = CResMgr::GetInst()->Load
+	//}
 }
 
 void CNaviMap::Raycasting()
@@ -163,7 +184,7 @@ void CNaviMap::Raycasting()
 	CamRay.vDir.Normalize();
 
 	// 지형과 카메라 Ray 의 교점을 구함
-	tRaycastOut out = { Vec2(0.f, 0.f), (float)0x7fffffff, 0, Vec4(0.f,0.f,0.f,0.f)};
+	tRaycastOut out = { Vec2(0.f, 0.f), (float)0x7fffffff, 0, Vec4(0.f,0.f,0.f,0.f) };
 	m_pCrossBuffer->SetData(&out, 1);
 
 	CCamera* camera = CRenderMgr::GetInst()->GetMainCam();
@@ -175,10 +196,16 @@ void CNaviMap::Raycasting()
 	m_pCrossBuffer->GetData(&out);
 
 	if (out.bSuccess) {
-		m_sResultPos.resultPos.x = (abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1]))*out.vUV.x;
-		m_sResultPos.resultPos.y = (abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f;
-		m_sResultPos.resultPos.z = (abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3]))*out.vUV.y;
+		Vec3 pos = GetOwner()->Transform()->GetRelativePos();
+		Vec3 posA = GetOwner()->Transform()->GetOffsetRelativePos();
+		//m_sResultPos.resultPos.x = ((abs(m_fMinMaxArr[0]) + abs(m_fMinMaxArr[1])) * out.vUV.x) + pos.x;
+		//m_sResultPos.resultPos.y = ((abs(m_fMinMaxArr[4]) + abs(m_fMinMaxArr[5])) * 0.f) + pos.y;
+		//m_sResultPos.resultPos.z = ((abs(m_fMinMaxArr[2]) + abs(m_fMinMaxArr[3])) * out.vUV.y) + pos.z;
+		m_sResultPos.resultPos.x = out.vUV.x;
+		m_sResultPos.resultPos.y = 0.f;
+		m_sResultPos.resultPos.z = out.vUV.y;
 		m_sResultPos.bSuccess = true;
+		
 		CPathFindMgr::GetInst()->SetNaviResult(m_sResultPos);
 	}
 	else {

@@ -4,6 +4,8 @@
 #include "Detour/DetourNavMesh.h"
 #include "Detour/DetourNavMeshQuery.h"
 
+using namespace std;
+
 class dtNavMesh;
 class dtNavMeshQuery;
 //class dtPolyRef;
@@ -39,9 +41,20 @@ private:
     dtNavMesh*              m_NavMesh;
     dtNavMeshQuery*         m_NavQuery;
     CGameObject*            m_Object;
+    CGameObject*            m_MapCollider;
 
 private:
     tNaviResult         m_sResultPos;
+
+private:
+    vector<Vec4>                    m_vNaviVtx;
+    map<pair<float, float>, float>  m_mNaviMap;
+
+private:
+    Vec3 m_vNavMeshScale; //현재 네비메쉬의 크기
+
+    bool RayResultTrigger;
+
    
 private:
     bool LoadNavMeshFromFile(const char* path);
@@ -59,8 +72,14 @@ public:
 public:
     void SetNaviMapObject(CGameObject* _object) { m_Object = _object; }
     void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }
+    void SetNavMeshScale(Vec3 _scale) { m_vNavMeshScale = _scale; }
+    void SetRayResultTrigger(bool _trigger) { RayResultTrigger = _trigger; }
+    void SetMapCollider(CGameObject* _object) { m_MapCollider = _object; }
 
     CGameObject* GetNaviMapObject() { return m_Object; }
     tNaviResult GetNaviResult() { return m_sResultPos; }
+    const vector<Vec4> GetNaviVtx() { return m_vNaviVtx; }
+    bool GetRayResultTrigger() { return RayResultTrigger; }
+    CGameObject* GetMapCollider() { return m_MapCollider; }
 };
 

@@ -116,6 +116,8 @@ public:
 
 public:
     tRaycastOutV3 Raycasting(Vec3* _vertices, tRay _ray);
+    IntersectResult IntersectsLay(Vec3* _vertices, tRay _ray);
+    IntersectResult IsCollidingBtwRayRect(tRay& _ray, CGameObject* _Object);
 
 public:
     void SortObject();

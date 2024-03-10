@@ -25,6 +25,9 @@ void CCollider2D::finaltick()
 	assert(0 <= m_iCollisionCount);
 
 	m_matCollider2D = XMMatrixScaling(m_vOffsetScale.x, m_vOffsetScale.y, m_vOffsetScale.z);
+
+	m_matCollider2D *= XMMatrixRotationX(m_vOffsetRot.x) * XMMatrixRotationY(m_vOffsetRot.y) * XMMatrixRotationZ(m_vOffsetRot.z);
+
 	m_matCollider2D *= XMMatrixTranslation(m_vOffsetPos.x, m_vOffsetPos.y, m_vOffsetPos.z);
 
 	const Matrix& matWorld = Transform()->GetWorldMat();
