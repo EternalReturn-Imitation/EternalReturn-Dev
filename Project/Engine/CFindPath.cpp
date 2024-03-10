@@ -52,7 +52,7 @@ void CFindPath::finaltick()
 	//	LaycastResultTrigger = false;
 	//}
 
-	if (KEY_PRESSED(KEY::LBTN)) {
+	if (KEY_PRESSED(KEY::LBTN) && KEY_PRESSED(KEY::LCTRL)) {
 	//if (CPathFindMgr::GetInst()->GetRayResultTrigger()) {
 		//tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
 		//GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
