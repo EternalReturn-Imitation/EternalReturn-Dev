@@ -18,6 +18,8 @@
 #define MAX_LAYER	32
 #define MAX_MIP		8
 
+#define NaN std::numeric_limits<float>::quiet_NaN()
+
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 
 

@@ -196,6 +196,14 @@ struct tRaycastOutV3
 	int		bSuccess;
 };
 
+// Intersect 결과 받을 구조체 CPU용
+struct IntersectResult
+{
+	Vec3  vCrossPoint;
+	float fResult;
+	bool  bResult;
+};
+
 // Navi 결과를 받을 구조체
 struct tNaviResult
 {
