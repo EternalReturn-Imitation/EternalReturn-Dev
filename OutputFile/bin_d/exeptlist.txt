@@ -3,3 +3,5 @@ stdafx.h
 CScriptMgr.h
 targetver.h
 CSceneSaveLoad.h
+ER_define.h
+ER_struct.h

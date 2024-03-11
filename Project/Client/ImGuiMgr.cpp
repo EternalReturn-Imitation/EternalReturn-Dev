@@ -16,7 +16,6 @@ ImGuiMgr::ImGuiMgr()
     : m_hMainHwnd(nullptr)
     , m_hObserver(nullptr)
 {
-
 }
 
 ImGuiMgr::~ImGuiMgr()
@@ -73,6 +72,7 @@ void ImGuiMgr::init(HWND _hWnd)
 
     // Tool 용 UI 생성
     CreateUI();
+
 
     // Content 폴더 감시
     wstring strContentPath = CPathMgr::GetInst()->GetContentPath();
@@ -155,6 +155,8 @@ void ImGuiMgr::render()
 #include "BehaviorTreeListUI.h"
 #include "AnimEditUI.h"
 #include "ItemDataUI.h"
+#include "CharacterDataUI.h"
+#include "DebugLogUI.h"
 
 void ImGuiMgr::CreateUI()
 {
@@ -200,6 +202,16 @@ void ImGuiMgr::CreateUI()
 
     // ItemDataUI
     pUI = new ItemDataUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    // CharacterUI
+    pUI = new CharacterDataUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    // DebugLogUI
+    pUI = new DebugLogUI;
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 

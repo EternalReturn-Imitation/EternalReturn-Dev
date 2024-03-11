@@ -181,6 +181,10 @@ call CodeGen.exe</Command>
     <ClInclude Include="CPlanetScript.h" />
     <ClInclude Include="CPlayerScript.h" />
     <ClInclude Include="CScriptMgr.h" />
+    <ClInclude Include="ER_Data_CharacterScript.h" />
+    <ClInclude Include="ER_Data_ItemScript.h" />
+    <ClInclude Include="ER_define.h" />
+    <ClInclude Include="ER_struct.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
@@ -192,6 +196,8 @@ call CodeGen.exe</Command>
     <ClCompile Include="CPlanetScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
+    <ClCompile Include="ER_Data_CharacterScript.cpp" />
+    <ClCompile Include="ER_Data_ItemScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

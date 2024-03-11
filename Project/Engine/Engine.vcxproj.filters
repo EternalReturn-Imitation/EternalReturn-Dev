@@ -257,6 +257,13 @@
     <ClInclude Include="CCollider3D.h">
       <Filter>Source\06. Component\11. Collider3D</Filter>
     </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Source\03. Manager\14. Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="FSM.h">
+      <Filter>Source\09. Module\FSM</Filter>
+    </ClInclude>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -496,6 +503,12 @@
     <ClCompile Include="CCollider3D.cpp">
       <Filter>Source\06. Component\11. Collider3D</Filter>
     </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>Source\03. Manager\14. Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="FSM.cpp">
+      <Filter>Source\09. Module\FSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -731,6 +744,12 @@
     </Filter>
     <Filter Include="Source\06. Component\11. Collider3D">
       <UniqueIdentifier>{9134b812-6184-459c-bbba-748c8bb417c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\14. Debug">
+      <UniqueIdentifier>{816921f8-d8a6-4c07-9176-0a979561e9fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\09. Module\FSM">
+      <UniqueIdentifier>{09ba7341-2cb3-4d3d-a4c9-ff4291930efa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

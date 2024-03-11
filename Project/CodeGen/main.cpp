@@ -120,9 +120,21 @@ int main()
 	for (UINT i = 0; i < g_vecName.size(); ++i)
 	{
 		wstring strScriptUpperName = L"";
-		for (UINT j = 1; j < g_vecName[i].size(); ++j)
+
+		// FileName Header is "C"
+		if ((const wchar_t)toupper(g_vecName[i][0]) == L'C')
 		{
-			strScriptUpperName += toupper(g_vecName[i][j]);
+			for (UINT j = 1; j < g_vecName[i].size(); ++j)
+			{
+				strScriptUpperName += toupper(g_vecName[i][j]);
+			}
+		}
+		else
+		{
+			for (UINT j = 0; j < g_vecName[i].size(); ++j)
+			{
+				strScriptUpperName += toupper(g_vecName[i][j]);
+			}
 		}
 
 		fwprintf_s(pFile, L"\t");
@@ -195,9 +207,21 @@ int main()
 	for (UINT i = 0; i < g_vecName.size(); ++i)
 	{
 		wstring strScriptUpperName = L"";
-		for (UINT j = 1; j < g_vecName[i].size(); ++j)
+		
+		// FileName Header is "C"
+		if ((const wchar_t)toupper(g_vecName[i][0]) == L'C')
 		{
-			strScriptUpperName += toupper(g_vecName[i][j]);
+			for (UINT j = 1; j < g_vecName[i].size(); ++j)
+			{
+				strScriptUpperName += toupper(g_vecName[i][j]);
+			}
+		}
+		else
+		{
+			for (UINT j = 0; j < g_vecName[i].size(); ++j)
+			{
+				strScriptUpperName += toupper(g_vecName[i][j]);
+			}
 		}
 
 		fwprintf_s(pFile, L"\tcase (UINT)SCRIPT_TYPE::");
@@ -221,9 +245,21 @@ int main()
 		fwprintf_s(pFile, L"\tcase SCRIPT_TYPE::");
 
 		wstring strScriptUpperName = L"";
-		for (UINT j = 1; j < g_vecName[i].size(); ++j)
+		
+		// FileName Header is "C"
+		if ((const wchar_t)toupper(g_vecName[i][0]) == L'C')
 		{
-			strScriptUpperName += toupper(g_vecName[i][j]);
+			for (UINT j = 1; j < g_vecName[i].size(); ++j)
+			{
+				strScriptUpperName += toupper(g_vecName[i][j]);
+			}
+		}
+		else
+		{
+			for (UINT j = 0; j < g_vecName[i].size(); ++j)
+			{
+				strScriptUpperName += toupper(g_vecName[i][j]);
+			}
 		}
 
 		fwprintf_s(pFile, strScriptUpperName.c_str());

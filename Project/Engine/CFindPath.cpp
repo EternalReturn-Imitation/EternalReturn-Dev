@@ -52,19 +52,22 @@ void CFindPath::finaltick()
 	//	LaycastResultTrigger = false;
 	//}
 
-	if (KEY_PRESSED(KEY::LBTN) && KEY_PRESSED(KEY::LCTRL)) {
+	if (KEY_TAP(KEY::RBTN)) {
 	//if (CPathFindMgr::GetInst()->GetRayResultTrigger()) {
 		//tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
 		//GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
 		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.y, naviResult.resultPos.z));
 		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.z, naviResult.resultPos.y));
 		//CPathFindMgr::GetInst()->SetRayResultTrigger(false);
+		
+		DEBUG_LOG_INPUT(ToString(GetOwner()->GetName()).c_str(), "MovePoint", "RBTN");
 
 		CGameObject* Map = CPathFindMgr::GetInst()->GetMapCollider();
 		CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
 		tRay ray = mainCam->GetRay();
 		IntersectResult result = mainCam->IsCollidingBtwRayRect(ray, Map);
 		Vec3 TargetPos = result.vCrossPoint;
+
 		FindPath(TargetPos);
 	}
 	PathMove(50.0f, false);
@@ -100,11 +103,18 @@ void CFindPath::FindNextPath()
 	if (m_iCurPathIdx != -1 && m_iCurPathIdx < m_iPathCount)
 	{
 		m_vNextPos = Vec3(m_vecPath[m_iCurPathIdx].x, m_vecPath[m_iCurPathIdx].y, m_vecPath[m_iCurPathIdx].z);
+		
+		string nextpos = u8"다음좌표 : ";
+		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].x) + ",";
+		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].y) + ",";
+		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].z);
+		DEBUG_LOG_PROCESS(ToString(GetOwner()->GetName()).c_str(), "FindNextPath", nextpos.c_str());
 	}
 	// 다음 경로가 없다면 갈 수 없는 위치 반환
 	else
 	{
 		m_vNextPos = Vec3(NaN, NaN, NaN);
+		DEBUG_LOG_PROCESS(ToString(GetOwner()->GetName()).c_str(), "FindNextPath", u8"도착");
 	}
 }
 

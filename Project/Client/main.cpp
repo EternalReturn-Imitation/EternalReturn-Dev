@@ -28,8 +28,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
-    // _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    // _CrtSetBreakAlloc(118);
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+    _CrtDumpMemoryLeaks();
+    // _CrtSetBreakAlloc(488);
    
     MyRegisterClass(hInstance);
 
@@ -86,6 +87,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             // =======
             // 1 Frame
             // =======
+            ER_GameSystem::GetInst()->progress();
             CEngine::GetInst()->progress();
             CEditorObjMgr::GetInst()->progress();       
 

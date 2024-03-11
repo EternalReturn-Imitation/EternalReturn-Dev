@@ -1,8 +1,9 @@
 #pragma once
 #include "UI.h"
 
-#include "ER_Item.h"
-#include "ER_ItemMgr.h"
+#include <Script\ER_Data_ItemScript.h>
+#include <Script\ER_define.h>
+#include <Script\ER_struct.h>
 
 enum class ItemDataUItab
 {
@@ -18,27 +19,27 @@ private:
     bool m_bOpenTab[(UINT)ItemDataUItab::END];
     string m_bTabName[(UINT)ItemDataUItab::END];
     
-    vector<ER_Item*>* m_vecItem;						// 아이템 리스트
+    vector<CGameObject*>* m_vecItem;						// 아이템 리스트
 
-    ImGuiTableFlags ItemDataUIFlags;
+    ImGuiTableFlags     ItemDataUIFlags;
 
-    ER_Item*        m_pCurItem;
+    CGameObject*        m_pCurItem;
 
-    bool            m_bItemStatsEditWin;
-    ER_Item*        m_pCurStatsEditItem;
-    Ptr<CTexture>   m_pEmptyItemSlotTex;
+    bool                m_bItemStatsEditWin;
+    CGameObject*        m_pCurStatsEditItem;
+    Ptr<CTexture>       m_pEmptyItemSlotTex;
 
-    bool           m_bItemPopup;
-    int            m_iDeleteItemIdx;
+    bool                m_bItemPopup;
+    int                 m_iDeleteItemIdx;
 
-    bool           m_bRecipePopup;
+    bool                m_bRecipePopup;
 
-    ER_Item*       m_DragItem;
-    ER_Item*       m_DropItem;
-    int            m_iDragItemIdx;
-    int            m_iDropItemIdx;
+    CGameObject*        m_DragItem;
+    CGameObject*        m_DropItem;
+    int                 m_iDragItemIdx;
+    int                 m_iDropItemIdx;
 
-    vector<string> m_vecItemName;
+    vector<string>      m_vecItemName;
 
 public:
     virtual void init() override;
@@ -53,7 +54,7 @@ private:
     void render_ItemInfoTable();
     void render_ItemStatEdit();
 
-    void Print_Stats(const ER_tStats& _stats);
+    void Print_Stats(const ER_ItemStats& _stats);
 
     void SwapItem();
     void ItemPopUp();
