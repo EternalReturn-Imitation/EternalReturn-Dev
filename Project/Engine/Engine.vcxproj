@@ -249,6 +249,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Detour\DetourNode.h" />
     <ClInclude Include="Detour\DetourStatus.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="FSM.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="pch.h" />
@@ -338,6 +339,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Detour\DetourNode.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="extern.cpp" />
+    <ClCompile Include="FSM.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

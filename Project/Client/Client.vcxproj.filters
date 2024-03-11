@@ -155,17 +155,11 @@
     <Filter Include="GameSystem\ItemMgr">
       <UniqueIdentifier>{e8ebe481-6abe-4ce4-bb1b-a8ad339ac620}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameSystem\ItemMgr\Item">
-      <UniqueIdentifier>{13d5fb7a-8b73-43d6-889f-8cc270fbe118}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameSystem\CharacterMgr">
       <UniqueIdentifier>{f7f12ce6-1186-4f41-9e4b-6332ecce619c}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameSystem\PlayerMgr">
       <UniqueIdentifier>{ed015eae-fbf9-4a78-91a7-8c21db11fd6e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="GameSystem\CharacterMgr\Character">
-      <UniqueIdentifier>{245d042f-e91e-4287-ac20-9bfdbda56a82}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\UITemplate\CharacterDataUI">
       <UniqueIdentifier>{e67530a1-c3f9-4dd7-b0e8-f0c013cec7f4}</UniqueIdentifier>
@@ -350,20 +344,8 @@
     <ClInclude Include="ItemDataUI.h">
       <Filter>UI\UITemplate\ItemDataUI</Filter>
     </ClInclude>
-    <ClInclude Include="ER_Item.h">
-      <Filter>GameSystem\ItemMgr\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_define.h">
-      <Filter>Default</Filter>
-    </ClInclude>
     <ClInclude Include="ER_CharacterMgr.h">
       <Filter>GameSystem\CharacterMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_Character.h">
-      <Filter>GameSystem\CharacterMgr\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_struct.h">
-      <Filter>Default</Filter>
     </ClInclude>
     <ClInclude Include="CharacterDataUI.h">
       <Filter>UI\UITemplate\CharacterDataUI</Filter>
@@ -556,14 +538,8 @@
     <ClCompile Include="ItemDataUI.cpp">
       <Filter>UI\UITemplate\ItemDataUI</Filter>
     </ClCompile>
-    <ClCompile Include="ER_Item.cpp">
-      <Filter>GameSystem\ItemMgr\Item</Filter>
-    </ClCompile>
     <ClCompile Include="ER_CharacterMgr.cpp">
       <Filter>GameSystem\CharacterMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_Character.cpp">
-      <Filter>GameSystem\CharacterMgr\Character</Filter>
     </ClCompile>
     <ClCompile Include="CharacterDataUI.cpp">
       <Filter>UI\UITemplate\CharacterDataUI</Filter>

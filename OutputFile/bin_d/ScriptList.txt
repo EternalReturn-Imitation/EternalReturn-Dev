@@ -4,3 +4,5 @@ CMissileScript
 CMonsterScript
 CPlanetScript
 CPlayerScript
+ER_Data_CharacterScript
+ER_Data_ItemScript

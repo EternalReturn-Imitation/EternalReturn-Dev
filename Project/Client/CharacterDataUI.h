@@ -1,16 +1,13 @@
 #pragma once
 #include "UI.h"
 
-#include "ER_Character.h"
-#include "ER_CharacterMgr.h"
-
 class CharacterDataUI :
     public UI
 {
 private:
-    map<wstring, ER_Character*>* m_pCharacters;
+//    map<wstring, ER_Character*>* m_pCharacters;
     
-    ER_Character* m_pSelectedCharacter;
+//    ER_Character* m_pSelectedCharacter;
 
 public:
     void RegistCharacters();

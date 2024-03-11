@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "ItemDataUI.h"
-
-#include <Engine/CResMgr.h>
-#include <Engine/CTexture.h>
+#include "ER_ItemMgr.h"
 
 #include "ListUI.h"
 
@@ -119,7 +117,7 @@ void ItemDataUI::RegistItemMgr()
     m_vecItemName.resize(ItemCnt);
 
     for (size_t i = 0; i < ItemCnt; ++i)
-        m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
+        m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->GetItemName()).c_str();
 }
 
 void ItemDataUI::render_menubar()
@@ -138,7 +136,6 @@ void ItemDataUI::render_menubar()
             if (ImGui::MenuItem("Exit") && Active)
             {
                 SetActive(false);
-                DEBUG_LOG_INPUT("ItemDataUI", "render_menubar", u8"종료버튼");
             }
 
             ImGui::EndMenu();
@@ -148,8 +145,9 @@ void ItemDataUI::render_menubar()
         {
             if (ImGui::MenuItem("Add NewItem.."))
             {
-                ER_Item* NewItem = new ER_Item;
-                NewItem->m_eItemCode = (UINT)(*m_vecItem).size();
+                CGameObject* NewItem = new CGameObject;
+                NewItem->AddComponent(new ER_Data_ItemScript());
+                NewItem->GetScript<ER_Data_ItemScript>()->m_eItemCode = (UINT)(*m_vecItem).size();
                 (*m_vecItem).push_back(NewItem);
 
                 m_vecItemName.push_back(string());
@@ -213,12 +211,13 @@ void ItemDataUI::render_ItemInfoTable()
         for (int row_n = 0; row_n < (*m_vecItem).size(); ++row_n)
         {
                 m_pCurItem = (*m_vecItem)[row_n];
+                ER_Data_ItemScript* itemcontext = m_pCurItem->GetScript<ER_Data_ItemScript>();
 
-                int ID = m_pCurItem->GetCode();
+                int ID = itemcontext->GetCode();
                 ImGui::PushID(ID);
                 ImGui::TableNextRow(ImGuiTableRowFlags_Headers, 0.0f);
 
-                int ItemGrade = m_pCurItem->GetGrade();
+                int ItemGrade = itemcontext->GetGrade();
                 ImVec4 RowColor = {};
                 switch (ItemGrade)
                 {
@@ -264,7 +263,7 @@ void ItemDataUI::render_ItemInfoTable()
 
                 if (ImGui::BeginDragDropSource())
                 {
-                    ImGui::SetDragDropPayload("##ItemSwapPayload", this, sizeof(ER_Item*));
+                    ImGui::SetDragDropPayload("##ItemSwapPayload", this, sizeof(CGameObject*));
                     ImGui::Text("%d", row_n);
 
                     m_DragItem = m_pCurItem;
@@ -291,7 +290,7 @@ void ItemDataUI::render_ItemInfoTable()
                 // Item Icon
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Texture);
                 ImGui::PushItemWidth(-FLT_MIN);
-                Ptr<CTexture> pTex = (CTexture*)m_pCurItem->GetItemTex().Get();
+                Ptr<CTexture> pTex = (CTexture*)itemcontext->GetItemTex().Get();
                 
                 ImVec2 size = ImVec2(66, 41);
                 ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
@@ -322,7 +321,7 @@ void ItemDataUI::render_ItemInfoTable()
                             pListUI->AddItem(ToString(pair.first));
                     }
 
-                    pListUI->AddDynamic_Select_with_target(this, (UI_DELEGATE_2)&ItemDataUI::SelectItemIcon,(DWORD_PTR)m_pCurItem);
+                    pListUI->AddDynamic_Select_with_target(this, (UI_DELEGATE_2)&ItemDataUI::SelectItemIcon,(DWORD_PTR)itemcontext);
                 }
 
                 // Item Name
@@ -344,7 +343,7 @@ void ItemDataUI::render_ItemInfoTable()
 
                 if (m_vecItemName[row_n].c_str() != ItemName)
                 {
-                    m_pCurItem->SetItemName(ItemName);
+                    itemcontext->SetItemName(ItemName);
                     m_vecItemName[row_n] = utf8String;
                 }
 
@@ -352,26 +351,26 @@ void ItemDataUI::render_ItemInfoTable()
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Grade);
                 ImGui::PushItemWidth(-FLT_MIN);
                 const char* Grade[] = { u8"일반",u8"고급",u8"희귀",u8"영웅" };
-                int CurItemGrade = m_pCurItem->GetGrade();
+                int CurItemGrade = itemcontext->GetGrade();
                 ImGui::Combo("##ItemGrade", &CurItemGrade, Grade, 4);
-                m_pCurItem->SetItemGrade(CurItemGrade);
+                itemcontext->SetItemGrade(CurItemGrade);
 
                 // Item Type
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Type);
                 ImGui::PushItemWidth(-FLT_MIN);
                 const char* Types[] = { u8"장비",u8"소비",u8"재료" };
-                int CurItemType = m_pCurItem->GetType();
+                int CurItemType = itemcontext->GetType();
                 ImGui::Combo("##ItemType", &CurItemType, Types, 3);
-                m_pCurItem->SetItemType(CurItemType);
+                itemcontext->SetItemType(CurItemType);
 
                 // Item Slot
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Slot);
                 ImGui::PushItemWidth(-FLT_MIN);
                 ImGui::BeginDisabled((UINT)ER_ITEM_TYPE::EQUIPMENT != CurItemType);
                 const char* Slots[] = { u8"장착불가",u8"무기",u8"머리",u8"옷",u8"팔",u8"다리"};
-                int CurItemSlot = m_pCurItem->GetSlot();
+                int CurItemSlot = itemcontext->GetSlot();
                 ImGui::Combo("##ItemSlot", &CurItemSlot, Slots, 6);
-                m_pCurItem->SetItemSlot(CurItemSlot);
+                itemcontext->SetItemSlot(CurItemSlot);
                 ImGui::EndDisabled();
 
                 // Item WPType
@@ -379,16 +378,16 @@ void ItemDataUI::render_ItemInfoTable()
                 ImGui::PushItemWidth(-FLT_MIN);
                 ImGui::BeginDisabled((UINT)ER_ITEM_SLOT::WEAPONS != CurItemSlot);
                 const char* WPTypes[] = { u8"미지정",u8"도끼",u8"양손검",u8"권총",u8"글러브",u8"활" };
-                int CurWeaponType = m_pCurItem->GetWPType();
+                int CurWeaponType = itemcontext->GetWPType();
                 ImGui::Combo("##WPTypes", &CurWeaponType, WPTypes, 6);
-                m_pCurItem->SetWPType(CurWeaponType);
+                itemcontext->SetWPType(CurWeaponType);
                 ImGui::EndDisabled();
 
                 // Item Recipe
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Recipe);
                 ImGui::SetNextItemWidth(NameSlotWidth);
                 ImGui::BeginDisabled((UINT)ER_ITEM_GRADE::COMMON == CurItemGrade);
-                ER_RECIPE CurItemRecipe = m_pCurItem->GetRecipe();
+                ER_RECIPE CurItemRecipe = itemcontext->GetRecipe();
                 int Ingr1 = CurItemRecipe.ingredient_1;
                 int Ingr2 = CurItemRecipe.ingredient_2;
 
@@ -401,11 +400,11 @@ void ItemDataUI::render_ItemInfoTable()
                         {
                             if (Ingr2 < n)
                             {
-                                m_pCurItem->m_uniRecipe.ingredient_1 = Ingr2;
-                                m_pCurItem->m_uniRecipe.ingredient_2 = n;
+                                itemcontext->m_uniRecipe.ingredient_1 = Ingr2;
+                                itemcontext->m_uniRecipe.ingredient_2 = n;
                             }
                             else
-                                m_pCurItem->m_uniRecipe.ingredient_1 = n;
+                                itemcontext->m_uniRecipe.ingredient_1 = n;
                         }
                     }
                     ImGui::EndCombo();
@@ -423,11 +422,11 @@ void ItemDataUI::render_ItemInfoTable()
                         {
                             if (n < Ingr1)
                             {
-                                m_pCurItem->m_uniRecipe.ingredient_1 = n;
-                                m_pCurItem->m_uniRecipe.ingredient_2 = Ingr1;
+                                itemcontext->m_uniRecipe.ingredient_1 = n;
+                                itemcontext->m_uniRecipe.ingredient_2 = Ingr1;
                             }
                             else
-                                m_pCurItem->m_uniRecipe.ingredient_2 = n;
+                                itemcontext->m_uniRecipe.ingredient_2 = n;
                         }
                     }
                     ImGui::EndCombo();
@@ -448,7 +447,7 @@ void ItemDataUI::render_ItemInfoTable()
                 ImGui::SameLine();
                 
                 ImGui::BeginGroup();
-                Print_Stats(m_pCurItem->m_tItemStats);
+                Print_Stats(itemcontext->m_tItemStats);
                 ImGui::EndGroup();
 
                 float NextItemSize = ImGui::GetItemRectSize().y;
@@ -475,8 +474,10 @@ void ItemDataUI::render_ItemStatEdit()
         return;
     }
 
+    ER_Data_ItemScript* itemcontext = m_pCurStatsEditItem->GetScript<ER_Data_ItemScript>();
+
     string id = "Number";
-    id += std::to_string(m_pCurStatsEditItem->GetCode());
+    id += std::to_string(itemcontext->GetCode());
     id += "_Stats_Edit";
 
     ImGui::SetNextWindowSize(ImVec2(220.f, 300.f));
@@ -493,92 +494,92 @@ void ItemDataUI::render_ItemStatEdit()
     ImGui::Text(u8"공격력 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##AttackPower", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iAttackPower);
+    ImGui::InputScalar("##AttackPower", ImGuiDataType_S16, &itemcontext->m_tItemStats.iAttackPower);
 
     ImGui::Text(u8"레벨당 공격력 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##AttackPowerPerLevel", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iAttackPowerPerLevel);
+    ImGui::InputScalar("##AttackPowerPerLevel", ImGuiDataType_S16, &itemcontext->m_tItemStats.iAttackPowerPerLevel);
 
     ImGui::Text(u8"스킬 증폭 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##SkillAmplification", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iSkillAmplification);
+    ImGui::InputScalar("##SkillAmplification", ImGuiDataType_S16, &itemcontext->m_tItemStats.iSkillAmplification);
 
     ImGui::Text(u8"레벨당 스킬 증폭 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##SkillAmplificationPerLevel", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iSkillAmplificationPerLevel);
+    ImGui::InputScalar("##SkillAmplificationPerLevel", ImGuiDataType_S16, &itemcontext->m_tItemStats.iSkillAmplificationPerLevel);
 
     ImGui::Text(u8"체력 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##MaxHP", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iMaxHP);
+    ImGui::InputScalar("##MaxHP", ImGuiDataType_S16, &itemcontext->m_tItemStats.iMaxHP);
 
     ImGui::Text(u8"레벨당 체력 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##MaxHPPerLevel", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iMaxHPPerLevel);
+    ImGui::InputScalar("##MaxHPPerLevel", ImGuiDataType_S16, &itemcontext->m_tItemStats.iMaxHPPerLevel);
 
     ImGui::Text(u8"체력 재생 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##HPRegen", &m_pCurStatsEditItem->m_tItemStats.fHPRegen, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##HPRegen", &itemcontext->m_tItemStats.fHPRegen, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"스테미너 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##MaxSP", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iMaxSP);
+    ImGui::InputScalar("##MaxSP", ImGuiDataType_S16, &itemcontext->m_tItemStats.iMaxSP);
 
     ImGui::Text(u8"레벨당 스테미너 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##MaxSPPerLevel", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iMaxSPPerLevel);
+    ImGui::InputScalar("##MaxSPPerLevel", ImGuiDataType_S16, &itemcontext->m_tItemStats.iMaxSPPerLevel);
 
     ImGui::Text(u8"스테미나 재생 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##SPRegen", &m_pCurStatsEditItem->m_tItemStats.fSPRegen, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##SPRegen", &itemcontext->m_tItemStats.fSPRegen, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"방어력 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputScalar("##Defense", ImGuiDataType_S16, &m_pCurStatsEditItem->m_tItemStats.iDefense);
+    ImGui::InputScalar("##Defense", ImGuiDataType_S16, &itemcontext->m_tItemStats.iDefense);
 
     ImGui::Text(u8"공격 속도 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##AttackSpeed", &m_pCurStatsEditItem->m_tItemStats.fAttackSpeed, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##AttackSpeed", &itemcontext->m_tItemStats.fAttackSpeed, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"치명타 확률 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##CriticalStrikeChance", &m_pCurStatsEditItem->m_tItemStats.fCriticalStrikeChance, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##CriticalStrikeChance", &itemcontext->m_tItemStats.fCriticalStrikeChance, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"치명타 추가 데미지 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##CriticalStrikeDamage", &m_pCurStatsEditItem->m_tItemStats.fCriticalStrikeDamage, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##CriticalStrikeDamage", &itemcontext->m_tItemStats.fCriticalStrikeDamage, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"이동 속도 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##MovementSpeed", &m_pCurStatsEditItem->m_tItemStats.fMovementSpeed, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##MovementSpeed", &itemcontext->m_tItemStats.fMovementSpeed, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"시야 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##VisionRange", &m_pCurStatsEditItem->m_tItemStats.fVisionRange, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##VisionRange", &itemcontext->m_tItemStats.fVisionRange, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"쿨타임 감소 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##CooldownReduction", &m_pCurStatsEditItem->m_tItemStats.fCooldownReduction, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##CooldownReduction", &itemcontext->m_tItemStats.fCooldownReduction, 0.f, 0.f, "%.2f");
 
     ImGui::Text(u8"모든 피해 흡혈 ");
     ImGui::SameLine();
     ImGui::SetCursorPosX(windowWidth - InputSlotWidth);
-    ImGui::InputFloat("##Omnisyphon", &m_pCurStatsEditItem->m_tItemStats.fOmnisyphon, 0.f, 0.f, "%.2f");
+    ImGui::InputFloat("##Omnisyphon", &itemcontext->m_tItemStats.fOmnisyphon, 0.f, 0.f, "%.2f");
 
     ImGui::End();
 }
@@ -619,9 +620,9 @@ void ItemDataUI::SwapItem()
         (*m_vecItem)[m_iDragItemIdx] = m_DropItem;
         (*m_vecItem)[m_iDropItemIdx] = m_DragItem;
 
-        UINT ItemCode = m_DragItem->m_eItemCode;
-        m_DragItem->m_eItemCode = m_DropItem->m_eItemCode;
-        m_DropItem->m_eItemCode = ItemCode;
+        UINT ItemCode = m_DragItem->GetScript<ER_Data_ItemScript>()->m_eItemCode;
+        m_DragItem->GetScript<ER_Data_ItemScript>()->m_eItemCode = m_DropItem->GetScript<ER_Data_ItemScript>()->m_eItemCode;
+        m_DropItem->GetScript<ER_Data_ItemScript>()->m_eItemCode = ItemCode;
 
         m_DragItem = nullptr;
         m_DropItem = nullptr;
@@ -630,7 +631,7 @@ void ItemDataUI::SwapItem()
         size_t ItemCnt = (*m_vecItem).size();
 
         for (size_t i = 0; i < ItemCnt; ++i)
-            m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
+            m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->GetItemName()).c_str();
     }
 }
 
@@ -656,7 +657,7 @@ void ItemDataUI::ItemPopUp()
             size_t ItemCnt = (*m_vecItem).size();
             for (size_t i = 0; i < ItemCnt; ++i)
             {
-                (*m_vecItem)[i]->m_eItemCode = (UINT)i;
+                (*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->m_eItemCode = (UINT)i;
             }
 
             // utf-8 아이템 이름 갱신
@@ -665,7 +666,7 @@ void ItemDataUI::ItemPopUp()
 
             std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
             for (size_t i = 0; i < ItemCnt; ++i)
-                m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetItemName()).c_str();
+                m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->GetItemName()).c_str();
 
             m_bItemPopup = false;
             ImGui::CloseCurrentPopup();
@@ -805,7 +806,7 @@ void ItemDataUI::render_RecipeSearch()
         {
             ImGui::BeginGroup();
 
-            Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[iter->first]->GetItemTex().Get();
+            Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[iter->first]->GetScript<ER_Data_ItemScript>()->GetItemTex().Get();
 
             int width = (int)pTex->Width();
             int height = (int)pTex->Height();
@@ -841,7 +842,7 @@ void ItemDataUI::render_RecipeSearch()
 void ItemDataUI::SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target)
 {
     string strKey = (char*)_data;
-    ER_Item* target = (ER_Item*)_target;
+    ER_Data_ItemScript* target = (ER_Data_ItemScript*)_target;
 
     Ptr<CTexture> tex = CResMgr::GetInst()->FindRes<CTexture>(ToWString(strKey));
  

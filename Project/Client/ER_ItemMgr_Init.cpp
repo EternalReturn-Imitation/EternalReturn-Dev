@@ -6,6 +6,8 @@
 #include <Engine\CResMgr.h>
 #include <Engine\CTexture.h>
 
+#include <Script/ER_Data_ItemScript.h>
+
 int ER_ItemMgr::Save()
 {
 	path path_content = CPathMgr::GetInst()->GetContentPath();
@@ -63,82 +65,86 @@ int ER_ItemMgr::Load()
 	return S_OK;
 }
 
-int ER_ItemMgr::SaveItemData(ER_Item* _Item, FILE* _File)
+int ER_ItemMgr::SaveItemData(CGameObject* _Item, FILE* _File)
 {
+	ER_Data_ItemScript* ItemContext = _Item->GetScript<ER_Data_ItemScript>();
 	// ItemName
-	SaveWString(_Item->m_strItemName, _File);
+	SaveWString(ItemContext->m_strItemName, _File);
 
 	// Texture
-	SaveResRef(_Item->m_ItemIcon.Get(), _File);
+	SaveResRef(ItemContext->m_ItemIcon.Get(), _File);
 
 	// ItemCode
-	fwrite(&_Item->m_eItemCode, sizeof(UINT), 1, _File);
+	fwrite(&ItemContext->m_eItemCode, sizeof(UINT), 1, _File);
 
 	// ItemGrade
-	fwrite(&_Item->m_eGrade, sizeof(UINT), 1, _File);
+	fwrite(&ItemContext->m_eGrade, sizeof(UINT), 1, _File);
 
 	// ItemType
-	fwrite(&_Item->m_eType, sizeof(UINT), 1, _File);
+	fwrite(&ItemContext->m_eType, sizeof(UINT), 1, _File);
 
 	// ItemSlot
-	fwrite(&_Item->m_eSlot, sizeof(UINT), 1, _File);
+	fwrite(&ItemContext->m_eSlot, sizeof(UINT), 1, _File);
 
 	// Weapontype
-	fwrite(&_Item->m_eWeapon_type, sizeof(UINT), 1, _File);
+	fwrite(&ItemContext->m_eWeapon_type, sizeof(UINT), 1, _File);
 
 	// ItemRecipe
-	if ((UINT)ER_ITEM_GRADE::COMMON == _Item->m_eGrade)
+	if ((UINT)ER_ITEM_GRADE::COMMON == ItemContext->m_eGrade)
 	{	
 		DWORD_PTR tmp = 0;
 		fwrite(&tmp, sizeof(DWORD_PTR), 1, _File);
 	}
 	else
-		fwrite(&_Item->m_uniRecipe, sizeof(DWORD_PTR), 1, _File);
+		fwrite(&ItemContext->m_uniRecipe, sizeof(DWORD_PTR), 1, _File);
 
 	// ItemStat
-	if ((UINT)ER_ITEM_SLOT::NONE == _Item->m_eSlot && (UINT)ER_ITEM_TYPE::CONSUMABLES != _Item->m_eType)
+	if ((UINT)ER_ITEM_SLOT::NONE == ItemContext->m_eSlot && (UINT)ER_ITEM_TYPE::CONSUMABLES != ItemContext->m_eType)
 	{
 		ER_ItemStats tmp = {};
 		fwrite(&tmp, sizeof(ER_ItemStats), 1, _File);
 	}
 	else
-		fwrite(&_Item->m_tItemStats, sizeof(ER_ItemStats), 1, _File);
+		fwrite(&ItemContext->m_tItemStats, sizeof(ER_ItemStats), 1, _File);
 
 	return 0;
 }
 
-ER_Item* ER_ItemMgr::LoadItemData(FILE* _File)
+CGameObject* ER_ItemMgr::LoadItemData(FILE* _File)
 {
-	ER_Item* pItem = new ER_Item;
+	CGameObject* pItem = new CGameObject;
+	pItem->AddComponent(new ER_Data_ItemScript());
+
+	ER_Data_ItemScript* ItemContext = pItem->GetScript<ER_Data_ItemScript>();
 
 	// Item Name
 	wstring strName;
 	LoadWString(strName, _File);
-	pItem->SetItemName(strName.c_str());
+	ItemContext->SetItemName(strName.c_str());
 
 	// Texture
-	LoadResRef(pItem->m_ItemIcon, _File);
+	LoadResRef(ItemContext->m_ItemIcon, _File);
 
 	// ItemCode
-	fread(&pItem->m_eItemCode, sizeof(UINT), 1, _File);
+	fread(&ItemContext->m_eItemCode, sizeof(UINT), 1, _File);
 
 	// ItemGrade
-	fread(&pItem->m_eGrade, sizeof(UINT), 1, _File);
+	fread(&ItemContext->m_eGrade, sizeof(UINT), 1, _File);
 
 	// ItemType
-	fread(&pItem->m_eType, sizeof(UINT), 1, _File);
+	fread(&ItemContext->m_eType, sizeof(UINT), 1, _File);
 
 	// ItemSlot
-	fread(&pItem->m_eSlot, sizeof(UINT), 1, _File);
+	fread(&ItemContext->m_eSlot, sizeof(UINT), 1, _File);
 
 	// Weapontype
-	fread(&pItem->m_eWeapon_type, sizeof(UINT), 1, _File);
+	fread(&ItemContext->m_eWeapon_type, sizeof(UINT), 1, _File);
 
 	// Item Recipe
-	fread(&pItem->m_uniRecipe, sizeof(DWORD_PTR), 1, _File);
+	fread(&ItemContext->m_uniRecipe, sizeof(DWORD_PTR), 1, _File);
 
 	// ItemStat
-	fread(&pItem->m_tItemStats, sizeof(ER_ItemStats), 1, _File);
+	fread(&ItemContext->m_tItemStats, sizeof(ER_ItemStats), 1, _File);
 
 	return pItem;
 }
@@ -153,10 +159,10 @@ void ER_ItemMgr::RecipeUpdate()
 
 	for (UINT i = 0; i < iItemCnt; ++i)
 	{
-		ER_Item* item = m_vecItem[i];
+		ER_Data_ItemScript* ItemContext = m_vecItem[i]->GetScript<ER_Data_ItemScript>();
 
-		if (0 != item->m_uniRecipe.recipe)
-			m_umapRecipe.insert(make_pair(item->m_uniRecipe.recipe, i));
+		if (0 != ItemContext->m_uniRecipe.recipe)
+			m_umapRecipe.insert(make_pair(ItemContext->m_uniRecipe.recipe, i));
 	};
 }
 

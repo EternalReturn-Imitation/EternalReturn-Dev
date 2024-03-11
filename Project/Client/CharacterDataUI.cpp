@@ -3,7 +3,7 @@
 
 CharacterDataUI::CharacterDataUI()
     : UI("##CharacterDataUI")
-    , m_pSelectedCharacter(nullptr)
+//   , m_pSelectedCharacter(nullptr)
 {
     SetName("CharacterDataUI");
 
@@ -21,7 +21,7 @@ CharacterDataUI::~CharacterDataUI()
 
 void CharacterDataUI::RegistCharacters()
 {
-    m_pCharacters = &ER_CharacterMgr::GetInst()->m_mapCharacters;
+//    m_pCharacters = &ER_CharacterMgr::GetInst()->m_mapCharacters;
 }
 
 void CharacterDataUI::init()
@@ -89,7 +89,7 @@ void CharacterDataUI::render_CharacterList()
     ImGui::Button("CharacterList", ImVec2(300.f, 0.f));
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
 
-    int CharacterCnt = (UINT)m_pCharacters->size();
+    int CharacterCnt = 0;// (UINT)m_pCharacters->size();
     int CharacterIdx = 0;
     static int SelectedIdx = 0;
 
@@ -99,30 +99,28 @@ void CharacterDataUI::render_CharacterList()
 
     string strFinalName;
 
-    map<wstring, ER_Character*>::iterator iter = m_pCharacters->begin();
-
-    while (iter != m_pCharacters->end())
-    {
-        CharacterIdx++;
-        
-        const bool is_selected = (SelectedIdx == CharacterIdx);
-
-        if (ImGui::Selectable(ToString(iter->first).c_str(), is_selected))
-        {
-            if (SelectedIdx != CharacterIdx)
-            {
-                SelectedIdx = CharacterIdx;
-
-                m_pSelectedCharacter = iter->second;
-            }
-        }
-
-        iter++;
-    }
+    // map<wstring, ER_Character*>::iterator iter = m_pCharacters->begin();
+    // 
+    // while (iter != m_pCharacters->end())
+    // {
+    //     CharacterIdx++;
+    //     
+    //     const bool is_selected = (SelectedIdx == CharacterIdx);
+    // 
+    //     if (ImGui::Selectable(ToString(iter->first).c_str(), is_selected))
+    //     {
+    //         if (SelectedIdx != CharacterIdx)
+    //         {
+    //             SelectedIdx = CharacterIdx;
+    // 
+    //             m_pSelectedCharacter = iter->second;
+    //         }
+    //     }
+    // 
+    //     iter++;
+    // }
 
     ImGui::EndChild();
-
-
 }
 
 void CharacterDataUI::render_CharacterInfoData()

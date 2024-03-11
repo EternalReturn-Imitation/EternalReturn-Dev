@@ -10,20 +10,41 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER">
+      <UniqueIdentifier>{3f35b2cd-9c75-4326-bd26-dd2c73829ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript">
+      <UniqueIdentifier>{d278ac5e-11e4-4f19-980d-cf2c22789fef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript">
+      <UniqueIdentifier>{1a97d08e-0c7e-42b5-8448-f40bbb060bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Monster">
+      <UniqueIdentifier>{9dbf146f-05e4-4aff-b19b-65b87366c08c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Character">
+      <UniqueIdentifier>{fc5a4c72-94e7-46c8-9fcc-582bc8fc268f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Monster">
+      <UniqueIdentifier>{ae309b0e-d922-4ca0-b403-665033c9fcc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character">
+      <UniqueIdentifier>{763f25b3-339f-44f0-b3ec-69654adf3bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\PlayerScript">
+      <UniqueIdentifier>{d1f4aa95-6b71-4309-b84d-f5bf1a2357cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Default">
+      <UniqueIdentifier>{d16ac6e3-a8e0-4754-91db-6e96261beb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Item">
+      <UniqueIdentifier>{da0d90e9-f334-4e62-9413-f648d0b19058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Default\ER_header">
+      <UniqueIdentifier>{ab7cb09f-7a29-440c-94a5-7cc14bfb4d66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCameraMoveScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CMissileScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CMonsterScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Default</Filter>
     </ClInclude>
@@ -33,26 +54,38 @@
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CPlanetScript.h">
-      <Filter>Script</Filter>
+    <ClInclude Include="CPlayerScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CCameraMoveScript.h">
+      <Filter>Script\Default</Filter>
     </ClInclude>
     <ClInclude Include="CFindPathScript.h">
-      <Filter>Script</Filter>
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CMissileScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CMonsterScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlanetScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_Data_CharacterScript.h">
+      <Filter>Script\ER\DataScript\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_define.h">
+      <Filter>Default\ER_header</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_struct.h">
+      <Filter>Default\ER_header</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_Data_ItemScript.h">
+      <Filter>Script\ER\DataScript\Item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CCameraMoveScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CMissileScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CMonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Default</Filter>
     </ClCompile>
@@ -62,11 +95,29 @@
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CPlanetScript.cpp">
-      <Filter>Script</Filter>
+    <ClCompile Include="CCameraMoveScript.cpp">
+      <Filter>Script\Default</Filter>
     </ClCompile>
     <ClCompile Include="CFindPathScript.cpp">
-      <Filter>Script</Filter>
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CMissileScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CMonsterScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlanetScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_Data_CharacterScript.cpp">
+      <Filter>Script\ER\DataScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_Data_ItemScript.cpp">
+      <Filter>Script\ER\DataScript\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

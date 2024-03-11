@@ -14,5 +14,8 @@
 
 #include "CScriptMgr.h"
 
+#include "ER_define.h"
+#include "ER_struct.h"
+
 
 #endif //PCH_H

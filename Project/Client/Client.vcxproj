@@ -152,7 +152,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animator2DUI.h" />
-    <ClInclude Include="asd.h" />
     <ClInclude Include="BlackBoardListUI.h" />
     <ClInclude Include="BoneUI.h" />
     <ClInclude Include="CameraUI.h" />
@@ -168,11 +167,8 @@
     <ClInclude Include="ComputeShaderUI.h" />
     <ClInclude Include="ContentUI.h" />
     <ClInclude Include="DebugLogUI.h" />
-    <ClInclude Include="ER_Character.h" />
     <ClInclude Include="ER_CharacterMgr.h" />
-    <ClInclude Include="ER_define.h" />
     <ClInclude Include="ER_GameSystem.h" />
-    <ClInclude Include="ER_Item.h" />
     <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphicsShaderUI.h" />
@@ -217,11 +213,9 @@
     <ClInclude Include="TransformUI.h" />
     <ClInclude Include="TreeUI.h" />
     <ClInclude Include="UI.h" />
-    <ClInclude Include="ER_struct.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator2DUI.cpp" />
-    <ClCompile Include="asd.cpp" />
     <ClCompile Include="BlackBoardListUI.cpp" />
     <ClCompile Include="BoneUI.cpp" />
     <ClCompile Include="CameraUI.cpp" />
@@ -236,11 +230,9 @@
     <ClCompile Include="ComputeShaderUI.cpp" />
     <ClCompile Include="ContentUI.cpp" />
     <ClCompile Include="DebugLogUI.cpp" />
-    <ClCompile Include="ER_Character.cpp" />
     <ClCompile Include="ER_CharacterMgr.cpp" />
     <ClCompile Include="ER_CharacterMgr_Init.cpp" />
     <ClCompile Include="ER_GameSystem.cpp" />
-    <ClCompile Include="ER_Item.cpp" />
     <ClCompile Include="ER_ItemMgr.cpp" />
     <ClCompile Include="ER_ItemMgr_Init.cpp" />
     <ClCompile Include="GraphicsShaderUI.cpp" />

@@ -115,7 +115,7 @@ void CCameraMoveScript::Camera3DMove()
 
 
 
-	if (KEY_PRESSED(KEY::RBTN))
+	if (KEY_PRESSED(KEY::LSHIFT) && KEY_PRESSED(KEY::RBTN))
 	{
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
 		vRot.y += DT * vMouseDir.x * 5.f;

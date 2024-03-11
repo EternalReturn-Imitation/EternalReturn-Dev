@@ -1,6 +1,6 @@
 #pragma once
 #include <Engine/CSingleton.h>
-#include "ER_Character.h"
+#include <Engine/CGameObject.h>
 
 class ER_CharacterMgr :
     public CSingleton<ER_CharacterMgr>
@@ -8,15 +8,11 @@ class ER_CharacterMgr :
     SINGLE(ER_CharacterMgr);
 
 private:
-    map<wstring, ER_Character*> m_mapCharacters;  // 캐릭터 오브젝트풀
+    map<wstring, CGameObject*> m_mapCharacters;  // 캐릭터 오브젝트풀
 
 private:
     int Save();
     int Load();
-
-    int SaveCharacterData(ER_Character* _Character, FILE* _File);
-    ER_Character* LoadCharacterData(FILE* _File);
-
 
 public:
     void init();

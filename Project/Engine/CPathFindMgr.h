@@ -40,7 +40,7 @@ class CPathFindMgr :
 private:
     dtNavMesh*              m_NavMesh;
     dtNavMeshQuery*         m_NavQuery;
-    CGameObject*            m_Object;
+    CGameObject*            m_pNaviMap;
     CGameObject*            m_MapCollider;
 
 private:
@@ -70,13 +70,13 @@ public:
     vector<Vec3> FindPath(const Vec3& startPos, const Vec3& endPos);
 
 public:
-    void SetNaviMapObject(CGameObject* _object) { m_Object = _object; }
+    void SetNaviMapObject(CGameObject* _object) { m_pNaviMap = _object; }
     void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }
     void SetNavMeshScale(Vec3 _scale) { m_vNavMeshScale = _scale; }
     void SetRayResultTrigger(bool _trigger) { RayResultTrigger = _trigger; }
     void SetMapCollider(CGameObject* _object) { m_MapCollider = _object; }
 
-    CGameObject* GetNaviMapObject() { return m_Object; }
+    CGameObject* GetNaviMapObject() { return m_pNaviMap; }
     tNaviResult GetNaviResult() { return m_sResultPos; }
     const vector<Vec4> GetNaviVtx() { return m_vNaviVtx; }
     bool GetRayResultTrigger() { return RayResultTrigger; }

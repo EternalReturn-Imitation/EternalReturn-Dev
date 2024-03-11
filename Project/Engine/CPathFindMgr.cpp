@@ -19,6 +19,8 @@ CPathFindMgr::CPathFindMgr()
 	: m_NavMesh(nullptr)
 	, m_NavQuery(nullptr)
 	, RayResultTrigger(false)
+	, m_pNaviMap(nullptr)
+	, m_MapCollider(nullptr)
 {
 }
 

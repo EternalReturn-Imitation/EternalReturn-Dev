@@ -6,6 +6,8 @@ DebugLogUI::DebugLogUI()
     , dbgcontext(nullptr)
 {
     SetName("DebugLogUI");
+
+    SetFlags(ImGuiWindowFlags_NoDocking);
 }
 
 DebugLogUI::~DebugLogUI()
@@ -19,8 +21,6 @@ void DebugLogUI::init()
 
 void DebugLogUI::tick()
 {
-    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left, false))
-        DEBUG_LOG_COMMAND("DebugLogUI", "tick", u8"마우스 클릭");
 }
 
 int DebugLogUI::render_update()
