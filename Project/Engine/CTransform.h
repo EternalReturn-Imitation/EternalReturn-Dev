@@ -81,6 +81,7 @@ public:
 
     const Matrix& GetWorldRotMat() { return m_matWorldRot; }
     const Matrix& GetWorldScaleMat() { return m_matWorldScale; }
+    const Matrix& GetWorldPosMat() { return m_matWorldPos; }
     const Matrix& GetWorldMat() const { return m_matWorld; }
     const Matrix& GetWorldInvMat() const { return m_matWorldInv; }
 

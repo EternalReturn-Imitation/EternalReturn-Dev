@@ -81,7 +81,7 @@ void CCollider2D::finaltick()
 
 		// 충돌체 scale update
 		m_matColliderScale *= Transform()->GetWorldScaleMat();
-		//m_matColliderPos *= Transform()->GetWorldPosMat();
+		m_matColliderPos *= Transform()->GetWorldPosMat();
 	}
 
 	// DebugShape 요청

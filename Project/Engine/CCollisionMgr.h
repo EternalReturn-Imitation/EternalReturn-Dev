@@ -2,8 +2,8 @@
 #include "CSingleton.h"
 
 class CLayer;
+class CCollider3D;
 class CCollider2D;
-
 
 union CollisionID
 {
@@ -40,6 +40,8 @@ public:
 private:
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
 	void CollisionBtw2DObject(CGameObject* _LeftObject, CGameObject* _RightObject);
+	void CollisionBtw3DObject(CGameObject* _LeftObject, CGameObject* _RightObject);
 	bool CollisionBtw2DCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
+	bool CollisionBtw3DCollider(CCollider3D* _pLeft, CCollider3D* _pRight);
 };
 

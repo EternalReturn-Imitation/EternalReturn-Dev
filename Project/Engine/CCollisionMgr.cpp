@@ -48,7 +48,8 @@ void CCollisionMgr::CollisionBtwLayer(CLayer* _Left, CLayer* _Right)
 		{
 			for (size_t j = i + 1; j < vecRight.size(); ++j)
 			{
-				CollisionBtw2DObject(vecLeft[i], vecRight[j]);				
+				CollisionBtw2DObject(vecLeft[i], vecRight[j]);
+				CollisionBtw3DObject(vecLeft[i], vecRight[j]);
 			}
 		}
 	}
@@ -58,7 +59,8 @@ void CCollisionMgr::CollisionBtwLayer(CLayer* _Left, CLayer* _Right)
 		{
 			for (size_t j = 0; j < vecRight.size(); ++j)
 			{
-				CollisionBtw2DObject(vecLeft[i], vecRight[j]);				
+				CollisionBtw2DObject(vecLeft[i], vecRight[j]);
+				CollisionBtw3DObject(vecLeft[i], vecRight[j]);
 			}
 		}
 	}
