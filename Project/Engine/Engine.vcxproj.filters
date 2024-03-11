@@ -254,6 +254,9 @@
     <ClInclude Include="CFindPath.h">
       <Filter>Source\06. Component\10. FindPath</Filter>
     </ClInclude>
+    <ClInclude Include="CCollider3D.h">
+      <Filter>Source\06. Component\11. Collider3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -490,6 +493,9 @@
     <ClCompile Include="CFindPath.cpp">
       <Filter>Source\06. Component\10. FindPath</Filter>
     </ClCompile>
+    <ClCompile Include="CCollider3D.cpp">
+      <Filter>Source\06. Component\11. Collider3D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -722,6 +728,9 @@
     </Filter>
     <Filter Include="Source\06. Component\10. FindPath">
       <UniqueIdentifier>{09225021-bcc6-49c2-ab03-7eb99d32f80c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\11. Collider3D">
+      <UniqueIdentifier>{9134b812-6184-459c-bbba-748c8bb417c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

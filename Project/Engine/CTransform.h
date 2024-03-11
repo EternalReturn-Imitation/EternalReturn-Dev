@@ -16,7 +16,10 @@ private:
     Vec3    m_vRelativeDir[3];
     Vec3    m_vWorldDir[3];
 
+    Matrix  m_matWorldRot;      // 월드 회전 행렬
     Matrix  m_matWorldScale;    // 월드 크기 행렬
+    Matrix  m_matWorldPos;      // 월드 위치(이동) 행렬
+
     Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
@@ -76,6 +79,7 @@ public:
     Vec3 GetWorldDir(DIR_TYPE _type) const { { return m_vWorldDir[(UINT)_type]; } }
     Vec3 GetWorldPos() { return m_matWorld.Translation(); }
 
+    const Matrix& GetWorldRotMat() { return m_matWorldRot; }
     const Matrix& GetWorldScaleMat() { return m_matWorldScale; }
     const Matrix& GetWorldMat() const { return m_matWorld; }
     const Matrix& GetWorldInvMat() const { return m_matWorldInv; }

@@ -248,6 +248,12 @@ enum class COLLIDER2D_TYPE
 	END,
 };
 
+enum class COLLIDER3D_TYPE
+{
+	SPHERE,
+	CUBE,
+	END,
+};
 extern const char* COLLIDER2D_TYPE_STR[(UINT)COLLIDER2D_TYPE::END];
 extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COLLIDER2D_TYPE::END];
 

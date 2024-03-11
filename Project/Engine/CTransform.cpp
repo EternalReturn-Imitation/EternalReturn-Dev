@@ -40,24 +40,23 @@ void CTransform::finaltick()
 	m_matWorldBoundingScale = XMMatrixScaling(m_fBoundingRadius, m_fBoundingRadius, m_fBoundingRadius);
 	
 	
-	Matrix matRot = XMMatrixIdentity();
-	matRot = XMMatrixRotationX(m_vRelativeRot.x);
-	matRot *= XMMatrixRotationY(m_vRelativeRot.y);
-	matRot *= XMMatrixRotationZ(m_vRelativeRot.z);
+	m_matWorldRot = XMMatrixIdentity();
+	m_matWorldRot = XMMatrixRotationX(m_vRelativeRot.x);
+	m_matWorldRot *= XMMatrixRotationY(m_vRelativeRot.y);
+	m_matWorldRot *= XMMatrixRotationZ(m_vRelativeRot.z);
 
+	m_matWorldPos = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
 	if (OffsetTrigger) {
-		Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
 		Matrix matTranslationOffset = XMMatrixTranslation(m_vRelativePos.x - m_vOffsetRelativePos.x, m_vRelativePos.y - m_vOffsetRelativePos.y, m_vRelativePos.z - m_vOffsetRelativePos.z);
-		m_matOffsetWorld = m_matWorldScale * matRot * matTranslationOffset;
-		m_matWorld = m_matWorldScale * matRot * matTranslation;
+		m_matOffsetWorld = m_matWorldScale * m_matWorldRot * matTranslationOffset;
+		m_matWorld = m_matWorldScale * m_matWorldRot * m_matWorldPos;
 		m_matWorldForGizmo = m_matWorld;
-		m_matWorldBoundingBox = m_matWorldBoundingScale * matRot * matTranslation;
+		m_matWorldBoundingBox = m_matWorldBoundingScale * m_matWorldRot * m_matWorldPos;
 	}
 	else {
-		Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
-		m_matWorld = m_matWorldScale * matRot * matTranslation;
+		m_matWorld = m_matWorldScale * m_matWorldRot * m_matWorldPos;
 		m_matWorldForGizmo = m_matWorld;
-		m_matWorldBoundingBox = m_matWorldBoundingScale * matRot * matTranslation;
+		m_matWorldBoundingBox = m_matWorldBoundingScale * m_matWorldRot * m_matWorldPos;
 	}
 
 	Vec3 vDefaultDir[3] = {
@@ -68,7 +67,7 @@ void CTransform::finaltick()
 
 	for (int i = 0; i < 3; ++i)
 	{
-		m_vWorldDir[i] = m_vRelativeDir[i] = XMVector3TransformNormal(vDefaultDir[i], matRot);
+		m_vWorldDir[i] = m_vRelativeDir[i] = XMVector3TransformNormal(vDefaultDir[i], m_matWorldRot);
 	}
 	
 	m_fBoundingRadius = m_matWorldBoundingScale._11;

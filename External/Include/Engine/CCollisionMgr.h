@@ -39,7 +39,7 @@ public:
 
 private:
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
-	void CollisionBtwObject(CGameObject* _LeftObject, CGameObject* _RightObject);
-	bool CollisionBtwCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
+	void CollisionBtw2DObject(CGameObject* _LeftObject, CGameObject* _RightObject);
+	bool CollisionBtw2DCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
 };
 

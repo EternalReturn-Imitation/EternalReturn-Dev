@@ -20,6 +20,7 @@ class CLandScape;
 class CScript;
 class CBehaviorTree;
 class CNaviMap;
+class CCollider3D;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -77,6 +78,7 @@ public:
     GET_COMPONENT(Decal, DECAL);
     GET_COMPONENT(LandScape, LANDSCAPE);
     GET_COMPONENT(NaviMap, NAVIMAP);
+    GET_COMPONENT(Collider3D, COLLIDER3D);
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
 
