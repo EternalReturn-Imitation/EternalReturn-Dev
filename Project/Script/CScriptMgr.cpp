@@ -7,6 +7,8 @@
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
 #include "CPlayerScript.h"
+#include "ER_Data_CharacterScript.h"
+#include "ER_Data_ItemScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -16,6 +18,8 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
 	_vec.push_back(L"CPlayerScript");
+	_vec.push_back(L"ER_Data_CharacterScript");
+	_vec.push_back(L"ER_Data_ItemScript");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -32,6 +36,10 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CPlanetScript;
 	if (L"CPlayerScript" == _strScriptName)
 		return new CPlayerScript;
+	if (L"ER_Data_CharacterScript" == _strScriptName)
+		return new ER_Data_CharacterScript;
+	if (L"ER_Data_ItemScript" == _strScriptName)
+		return new ER_Data_ItemScript;
 	return nullptr;
 }
 
@@ -56,6 +64,12 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::PLAYERSCRIPT:
 		return new CPlayerScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_DATA_CHARACTERSCRIPT:
+		return new ER_Data_CharacterScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_DATA_ITEMSCRIPT:
+		return new ER_Data_ItemScript;
 		break;
 	}
 	return nullptr;
@@ -87,6 +101,14 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::PLAYERSCRIPT:
 		return L"CPlayerScript";
+		break;
+
+	case SCRIPT_TYPE::ER_DATA_CHARACTERSCRIPT:
+		return L"ER_Data_CharacterScript";
+		break;
+
+	case SCRIPT_TYPE::ER_DATA_ITEMSCRIPT:
+		return L"ER_Data_ItemScript";
 		break;
 
 	}

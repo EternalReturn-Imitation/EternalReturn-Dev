@@ -19,6 +19,8 @@ CPathFindMgr::CPathFindMgr()
 	: m_NavMesh(nullptr)
 	, m_NavQuery(nullptr)
 	, RayResultTrigger(false)
+	, m_pNaviMap(nullptr)
+	, m_MapCollider(nullptr)
 {
 }
 
@@ -34,6 +36,10 @@ CPathFindMgr::~CPathFindMgr()
 		dtFreeNavMeshQuery(m_NavQuery);
 		m_NavQuery = nullptr;
 	}
+	
+	// 임시 오브젝트 제거
+	if (nullptr != m_pNaviMap)
+		delete m_pNaviMap;
 }
 
 void CPathFindMgr::init()

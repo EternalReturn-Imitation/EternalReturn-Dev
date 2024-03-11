@@ -237,6 +237,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CTimeMgr.h" />
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CWeightMapShader.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
     <ClInclude Include="Detour\DetourAlloc.h" />
     <ClInclude Include="Detour\DetourAssert.h" />
@@ -248,6 +249,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="Detour\DetourNode.h" />
     <ClInclude Include="Detour\DetourStatus.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="FSM.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
     <ClInclude Include="pch.h" />
@@ -327,6 +329,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CTimeMgr.cpp" />
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="CWeightMapShader.cpp" />
+    <ClCompile Include="debug.cpp" />
     <ClCompile Include="Detour\DetourAlloc.cpp" />
     <ClCompile Include="Detour\DetourAssert.cpp" />
     <ClCompile Include="Detour\DetourCommon.cpp" />
@@ -336,6 +339,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="Detour\DetourNode.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="extern.cpp" />
+    <ClCompile Include="FSM.cpp" />
     <ClCompile Include="func.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -254,6 +254,12 @@
     <ClInclude Include="CFindPath.h">
       <Filter>Source\06. Component\10. FindPath</Filter>
     </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Source\03. Manager\14. Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="FSM.h">
+      <Filter>Source\09. Module\FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -490,6 +496,12 @@
     <ClCompile Include="CFindPath.cpp">
       <Filter>Source\06. Component\10. FindPath</Filter>
     </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>Source\03. Manager\14. Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="FSM.cpp">
+      <Filter>Source\09. Module\FSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -722,6 +734,12 @@
     </Filter>
     <Filter Include="Source\06. Component\10. FindPath">
       <UniqueIdentifier>{09225021-bcc6-49c2-ab03-7eb99d32f80c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\14. Debug">
+      <UniqueIdentifier>{816921f8-d8a6-4c07-9176-0a979561e9fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\09. Module\FSM">
+      <UniqueIdentifier>{09ba7341-2cb3-4d3d-a4c9-ff4291930efa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

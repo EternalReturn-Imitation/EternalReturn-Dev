@@ -40,6 +40,7 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(3)->SetName(L"Building");
 	pCurLevel->GetLayer(4)->SetName(L"Roof");
 	pCurLevel->GetLayer(5)->SetName(L"Monster");
+	pCurLevel->GetLayer(30)->SetName(L"NaviMap");
 	//pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 
@@ -54,6 +55,7 @@ void CreateTestLevel()
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
+	pMainCam->Camera()->SetLayerMask(30, false);// UI Layer 는 렌더링하지 않는다.
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
 
 	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
@@ -75,14 +77,14 @@ void CreateTestLevel()
 	//SkyBox 추가11
 	CGameObject* pSkyBox = new CGameObject;
 	pSkyBox->SetName(L"SkyBox");
-	
+
 	pSkyBox->AddComponent(new CTransform);
 	pSkyBox->AddComponent(new CSkyBox);
-	
+
 	pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 	pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::SPHERE);
 	pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Sky01.png"));
-	
+
 	SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), L"SkyBox");
 
 	// 광원 추가
@@ -136,9 +138,9 @@ void CreateTestLevel()
 	
 	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
 	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-
+	
 	//SpawnGameObject(pObject, Vec3(7000.f, 0.f, 6500.f), L"Monster");
-	SpawnGameObject(pObject, Vec3(000.f, 0.f,000.f), L"Monster");
+	SpawnGameObject(pObject, Vec3(000.f, 0.f, 000.f), L"Monster");
 
 	pObject = new CGameObject;
 	pObject->SetName(L"MapCollider");
@@ -150,117 +152,29 @@ void CreateTestLevel()
 	//pObject->Collider2D()->SetDrawCollision(false);
 	//pObject->Transform()->SetGizmoObjExcept(true);
 	CPathFindMgr::GetInst()->SetMapCollider(pObject);
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
+	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"NaviMap");
 
-	//pObject = new CGameObject;
-	//pObject->SetName(L"NavMesh");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CMeshRender);
-	//
-	//pObject->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 500.f));
-	//pObject->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
-	////pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-	//
-	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"NavMesh"));
-	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	//
-	////SpawnGameObject(pObject, Vec3(7000.f, 0.f, 6500.f), L"Monster");
-	//SpawnGameObject(pObject, Vec3(000.f, 0.f, 000.f), L"Monster");
+
+	// NaveMap
+
+	Ptr<CMeshData> pMeshData = nullptr;
+	CGameObject* pObj = nullptr;
 	
-	//// ============
-	//// FBX Loading
-	//// ============	
-	//{
-	//	Ptr<CMeshData> pMeshData = nullptr;
-	//	CGameObject* pObj = nullptr;
-	//
-	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
-	//	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\house.mdat");
-	//	//pObj = pMeshData->Instantiate();
-	//	//pObj->SetName(L"House");
-	//
-	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-	//	//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
-	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-	//	pObj = pMeshData->Instantiate();
-	//	pObj->SetName(L"Monster");
-	//	pObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 10.f));
-	//
-	//	SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
-	//}
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Navi_Mesh02.mdat");
+	
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"NaviMap");
+	Vec3 rot = pObj->Transform()->GetRelativeRot();
+	rot.x = 1.5708f;
+	//rot.y = -1.5708f;
+	//rot.z = +1.5708f;
+	pObj->Transform()->SetRelativeRot(rot);
+	pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
+	pObj->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
+	pObj->AddComponent(new CNaviMap);
+	CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
+	// SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"NaviMap");
 
-	// ============
-	// FBX Loading
-	// ============	
-	// {
-	// 	// 인스턴싱 테스트		
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
-	// 	 
-	// 	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\House.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Navi_Mesh02.mdat");
-	// 	 for (int i = 0; i < 10; ++i)
-	// 	 {
-			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"NaviMap");
-			Vec3 rot = pObj->Transform()->GetRelativeRot();
-			rot.x = 1.5708f;
-			//rot.y = -1.5708f;
-			//rot.z = +1.5708f;
-			pObj->Transform()->SetRelativeRot(rot);
-			pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
-			pObj->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
-			pObj->AddComponent(new CNaviMap);
-			CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
-
-			int a = 1;
-			//pObj->MeshRender()->GetMaterial(0)->SetScalarParam(INT_2, &a);
-
-			//SpawnGameObject(pObj, Vec3(200.f, 0.f, 200.f), 0);
-			//SpawnGameObject(pObj, Vec3(0.f,0.f, 0.f), 0);
-	// 	 }
-	// 
-	// 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Hyunwoo_Craft.mdat");
-	// 	for (int i = 0; i < 10; ++i)
-	// 	{
-	// 		pObj = pMeshData->Instantiate();
-	// 		pObj->SetName(L"HW");
-	// 		SpawnGameObject(pObj, Vec3(50.f, 200.f, 100.f), 0);
-	// 		pObj->Transform()->SetRelativeScale(Vec3(100.f , 100.f, 100.f));
-	// 	}
-	// }
-	// CGameObject* pObj = nullptr;
-	// Ptr<CMeshData> pMeshData = nullptr;
-	// 
-	// pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_STR_Base.mdat");
-	// pObj = pMeshData->Instantiate();
-	// pObj->SetName(L"World");
-	// SpawnGameObject(pObj, Vec3(50.f, 200.f, 100.f), 0);
-	// pObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100.f));
-
-
-	//// LandScape Object
-	//CGameObject* pLandScape = new CGameObject;
-	//pLandScape->SetName(L"LandScape");
-	//
-	//pLandScape->AddComponent(new CTransform);
-	//pLandScape->AddComponent(new CLandScape);
-	//
-	//pLandScape->Transform()->SetRelativeScale(Vec3(500.f, 3000.f, 500.f));
-	//
-	//pLandScape->LandScape()->SetFace(1, 1);
-	//pLandScape->LandScape()->SetFrustumCheck(false);
-	////pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap_01.jpg"));
-	//
-	//SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
-
-
-	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"work3.mdat");
-	//pObj = pMeshData->Instantiate();
-	//pObj->SetName(L"work3");
-	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-	////SpawnGameObject(pObj, Vec3(13341.f, -389.f, -4629.f), L"Base");
-	//SpawnGameObject(pObj, Vec3(0.f, -0.f, 0.f), L"Base");
 			
 #pragma region Archery
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Roof.mdat");
@@ -320,7 +234,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(9070.f, 230.f, 15030.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(5512.f, -205.f, 26374.f), L"Base");
 	SpawnGameObject(pObj, Vec3(-96.4f, -2.32f, 176.4f), L"Base");
-
+	
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Building.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Hotel_Building");
@@ -329,7 +243,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(4606.f, 94.f, -4699.f), L"Building");
 	//SpawnGameObject(pObj, Vec3(1048.f, -341.f, 6645.f), L"Building");
 	SpawnGameObject(pObj, Vec3(-141.f, -3.6f, -21.35f), L"Building");
-
+	
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Roof.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Hotel_Roof");
@@ -349,7 +263,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(10799.f, -669.f, -10157.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(7241.f, -1104.f, 1187.f), L"Base");
 	SpawnGameObject(pObj, Vec3(-79.400f, -11.500f, -75.300f), L"Base");
-
+	
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Building.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"SandyBeach_Building");
@@ -364,6 +278,7 @@ void CreateTestLevel()
 #pragma endregion
 
 #pragma region School
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Base.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"School_Base");
@@ -372,7 +287,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(10055.f, 105.f, 4190.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(6497.f, -330.f, 15534.f), L"Base");
 	SpawnGameObject(pObj, Vec3(-86.656f, -4.100f, 67.850f), L"Base");
-
+	
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Building.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"School_Building");
@@ -381,7 +296,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(11240.f, 385.f, 545.f), L"Building");
 	//SpawnGameObject(pObj, Vec3(7882.f, -50.f, 11889.f), L"Building");
 	SpawnGameObject(pObj, Vec3(-74.800f, -1.380f, 31.400f), L"Building");
-
+	
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Roof.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"School_Roof");
@@ -393,6 +308,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
 	//SpawnGameObject(pObj, Vec3(6437.f, -40.f, 16374.f), L"Roof");
 	SpawnGameObject(pObj, Vec3(-87.150f, -1.280f, 76.150f), L"Roof");
+	
 #pragma endregion
 
 #pragma region Uptown
@@ -404,7 +320,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(21120.f, -144.f, -7965.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(17562.f, -579.f, 3379.f), L"Base");
 	SpawnGameObject(pObj, Vec3(23.820f, -6.250f, -53.350f), L"Base");
-
+	
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_Building.mdat");
 	pObj = pMeshData->Instantiate();
 	pObj->SetName(L"Uptown_Building");
@@ -414,19 +330,4 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(16070.f, -367.f, 1692.f), L"Building");
 	SpawnGameObject(pObj, Vec3(9.f, -5.600f, -70.290f), L"Building");
 #pragma endregion
-
-
-
-	// 충돌 시킬 레이어 짝 지정
-
-	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Origin.mdat");
-	//pObj = pMeshData->Instantiate();
-	//pObj->SetName(L"Origin");
-	//rot = pObj->Transform()->GetRelativeRot();
-	//rot.x = -1.5708f;
-	//pObj->Transform()->SetRelativeRot(rot);
-	//pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-	//SpawnGameObject(pObj, Vec3(21120.f, -144.f, -7965.f), L"Base");
-
-	//CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Monster");
 }
