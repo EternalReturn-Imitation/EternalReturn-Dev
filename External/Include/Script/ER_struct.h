@@ -20,13 +20,10 @@ struct tStandard_Character_Stats
 	float fMovementSpeed;				// 이동 속도
 	float fVisionRange;					// 시야
 
-	// 추가 능력치
-
-
-	UINT eWPType;		// 주무기 타입
-	float fWpAtkSpd;	// 주무기 공격 속도
-	float fWpAtkRange;	// 주무기 사거리
-}typedef ER_Std_Char_Stats;
+	UINT	eWPType;					// 주무기 타입
+	float	fWpAtkSpd;					// 주무기 공격 속도
+	float	fWpAtkRange;				// 주무기 사거리
+}typedef ER_STD_CHAR_STATS;
 
 struct tIngame_Character_Stats
 {

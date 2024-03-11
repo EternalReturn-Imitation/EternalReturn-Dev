@@ -89,10 +89,11 @@ void ItemDataUI::finaltick()
 
 int ItemDataUI::render_update()
 {
+    render_menubar();
+
     if (!m_vecItem)
         return 0;
 
-    render_menubar();
 
     render_ItemInfoTable();
 
@@ -173,7 +174,6 @@ void ItemDataUI::render_menubar()
 
 void ItemDataUI::render_ItemInfoTable()
 {
-
     static ImVector<float> ItemHeight;
     float rowHeight = 41.f;
     

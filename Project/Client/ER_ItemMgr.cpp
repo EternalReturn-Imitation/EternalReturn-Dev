@@ -22,7 +22,3 @@ void ER_ItemMgr::init()
 	RecipeUpdate();
 	((ItemDataUI*)ImGuiMgr::GetInst()->FindUI("##ItemDataUI"))->RegistItemMgr();
 }
-
-void ER_ItemMgr::Update()
-{
-}

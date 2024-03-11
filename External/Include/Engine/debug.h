@@ -34,7 +34,7 @@ public:
 
 void DebugLog(const char* type, const char* obj, const char* func, const char* ex);
 
-#define DEBUG_LOG(type,obj,func,ex)           DebugLog(type,obj,func,ex)
+#define DEBUG_LOG(type,obj,func,ex)      DebugLog(type,obj,func,ex)
 #define DEBUG_LOG_INPUT(obj,func,ex)     do { if (*(DebugContext::GetInst()->GetDebugFlags()) & DebugLogFlags_Input) DEBUG_LOG("Input",obj,func,ex); } while (0)
 #define DEBUG_LOG_COLLISION(obj,func,ex) do { if (*(DebugContext::GetInst()->GetDebugFlags()) & DebugLogFlags_Collision)    DEBUG_LOG("Collision",obj,func,ex); } while (0)
 #define DEBUG_LOG_COMMAND(obj,func,ex)   do { if (*(DebugContext::GetInst()->GetDebugFlags()) & DebugLogFlags_Command)    DEBUG_LOG("Command",obj,func,ex); } while (0)

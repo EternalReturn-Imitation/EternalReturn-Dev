@@ -6,7 +6,7 @@
 #include <Engine\CResMgr.h>
 #include <Engine\CTexture.h>
 
-#include <Script/ER_Data_ItemScript.h>
+#include <Script\ER_Data_ItemScript.h>
 
 int ER_ItemMgr::Save()
 {

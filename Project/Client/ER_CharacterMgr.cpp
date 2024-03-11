@@ -16,15 +16,7 @@ ER_CharacterMgr::~ER_CharacterMgr()
 void ER_CharacterMgr::init()
 {
     // 캐릭터 데이터 로딩
+    Load();
 
     ((CharacterDataUI*)ImGuiMgr::GetInst()->FindUI("##CharacterDataUI"))->RegistCharacters();
-}
-
-void ER_CharacterMgr::tick()
-{
-}
-
-int ER_CharacterMgr::SpawnCharacter(const wstring& _key)
-{
-    return 0;
 }
