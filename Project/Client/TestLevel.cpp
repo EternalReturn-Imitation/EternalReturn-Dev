@@ -173,7 +173,7 @@ void CreateTestLevel()
 	pObj->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
 	pObj->AddComponent(new CNaviMap);
 	CPathFindMgr::GetInst()->SetNaviMapObject(pObj);
-	SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"NaviMap");
+	// SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"NaviMap");
 
 			
 #pragma region Archery

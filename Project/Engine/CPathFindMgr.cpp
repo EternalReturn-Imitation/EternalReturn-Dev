@@ -36,6 +36,10 @@ CPathFindMgr::~CPathFindMgr()
 		dtFreeNavMeshQuery(m_NavQuery);
 		m_NavQuery = nullptr;
 	}
+	
+	// 임시 오브젝트 제거
+	if (nullptr != m_pNaviMap)
+		delete m_pNaviMap;
 }
 
 void CPathFindMgr::init()
