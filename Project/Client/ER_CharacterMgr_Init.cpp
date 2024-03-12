@@ -96,7 +96,15 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
     fread(&CharacterContext->m_STDStats, sizeof(ER_STD_CHAR_STATS), 1, _File);
 
     // CharacterData init
+    pCharacter->SetName(CharacterContext->m_strKey);
     CharacterContext->init();
+
+    // MeshData Set
+    wstring MeshDataKey = CharacterContext->m_strKey + L".mdat";
+    Ptr<CMeshData> meshdata = CResMgr::GetInst()->FindRes<CMeshData>(MeshDataKey);
+    
+    if(meshdata != nullptr)
+        meshdata->Instantiate(pCharacter);
 
     m_mapCharacters.insert(make_pair(CharacterContext->m_strKey, pCharacter));
 

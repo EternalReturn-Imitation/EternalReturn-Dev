@@ -11,8 +11,13 @@ private:
     int                 m_iPathCount;
     int                 m_iCurPathIdx;
 
+    float               m_fPrevDir;
+
     Vec3                m_vNextPos;
     Vec3                m_vPrevEndPos;
+
+private:
+    float GetFrontDir(Vec3 _Direction);
 
 public:
     CFindPath();

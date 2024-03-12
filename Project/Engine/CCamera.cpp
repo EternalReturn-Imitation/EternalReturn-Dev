@@ -696,8 +696,8 @@ void CCamera::render()
 	if (m_bMainCamera)
 	{
 		// 쉐이더 도메인에 따라서 순차적으로 그리기
-	// Deferred MRT 로 변경
-	// Deferred 물체들을 Deferred MRT 에 그리기
+		// Deferred MRT 로 변경
+		// Deferred 물체들을 Deferred MRT 에 그리기
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 		render_deferred();
 

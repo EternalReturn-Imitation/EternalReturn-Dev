@@ -27,6 +27,8 @@
 
 #include <Engine\CCollider2D.h>
 
+#include "ER_CharacterMgr.h"
+
 
 void CreateTestLevel()
 {
@@ -57,7 +59,6 @@ void CreateTestLevel()
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
-	pMainCam->Camera()->SetLayerMask(30, false);// UI Layer 는 렌더링하지 않는다.
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
 
 	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
@@ -99,6 +100,7 @@ void CreateTestLevel()
 	pLightObj->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
 	pLightObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(55.f), 0.f, 0.f));
 	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
+	pLightObj->Light3D()->SetRadius(500.f);
 	pLightObj->Light3D()->GetLightRenderCam()->SetFar(200.f);
 	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoWidth(280.f);
 	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoHeight(240.f);
@@ -131,21 +133,37 @@ void CreateTestLevel()
 
 	// SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
 
-	CGameObject* CubeObj = new CGameObject;
-	CubeObj->SetName(L"CubeObj");
-	CubeObj->AddComponent(new CTransform);
-	CubeObj->AddComponent(new CMeshRender);
-	CubeObj->AddComponent(new CFindPath);
-	
-	CubeObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 500.f));
-	CubeObj->Transform()->SetRelativeScale(Vec3(1.f, 2.f, 1.f));
-	CubeObj->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-	
-	CubeObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-	CubeObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	
-	//SpawnGameObject(pObject, Vec3(7000.f, 0.f, 6500.f), L"Monster");
-	SpawnGameObject(CubeObj, Vec3(000.f, 0.f, 000.f), L"Monster");
+	bool bCube = false;
+	if (bCube)
+	{
+		CGameObject* CubeObj = new CGameObject;
+		CubeObj->SetName(L"CubeObj");
+		CubeObj->AddComponent(new CTransform);
+		CubeObj->AddComponent(new CMeshRender);
+		CubeObj->AddComponent(new CFindPath);
+
+		CubeObj->Transform()->SetRelativeScale(Vec3(1.f, 2.f, 1.f));
+		CubeObj->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+
+		CubeObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+		CubeObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+
+		SpawnGameObject(CubeObj, Vec3(000.f, 0.f, 000.f), L"Monster");
+	}
+	else
+	{
+		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Rio");
+		CharObj->AddComponent(new CFindPath);
+
+		CharObj->Transform()->SetRelativeScale(Vec3(1.3f, 1.3f, 1.3f));
+		CharObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+
+		CharObj->Animator3D()->SelectAnimation(L"Rio_Run");
+
+		SpawnGameObject(CharObj, Vec3(0.f, 0.f, 000.f), L"Monster");
+	}
+
+
 
 	CGameObject* MapCollider = new CGameObject;
 	MapCollider = new CGameObject;
@@ -177,7 +195,6 @@ void CreateTestLevel()
 	NaviMap->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
 	NaviMap->AddComponent(new CNaviMap);
 	CPathFindMgr::GetInst()->SetNaviMapObject(NaviMap);
-
 	
 			
 #pragma region Archery

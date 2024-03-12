@@ -12,10 +12,15 @@
 #include "CRenderMgr.h"
 #include "CCamera.h"
 
+
+
 CFindPath::CFindPath()
 	:CComponent(COMPONENT_TYPE::FINDPATH)
 	, LaycastResultTrigger(false)
 	, m_vNextPos(Vec3(NaN, NaN, NaN))
+	, m_iPathCount(0)
+	, m_iCurPathIdx(0)
+	, m_fPrevDir(0.f)
 {
 }
 
@@ -70,7 +75,7 @@ void CFindPath::finaltick()
 
 		FindPath(TargetPos);
 	}
-	PathMove(50.0f, false);
+	PathMove(5.0f, true);
 }
 
 void CFindPath::FindPath(Vec3 endPos)
@@ -109,13 +114,11 @@ void CFindPath::FindNextPath()
 		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].x) + ",";
 		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].y) + ",";
 		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].z);
-		DEBUG_LOG_PROCESS(ToString(GetOwner()->GetName()).c_str(), "FindNextPath", nextpos.c_str());
 	}
 	// 다음 경로가 없다면 갈 수 없는 위치 반환
 	else
 	{
 		m_vNextPos = Vec3(NaN, NaN, NaN);
-		DEBUG_LOG_PROCESS(ToString(GetOwner()->GetName()).c_str(), "FindNextPath", u8"도착");
 	}
 }
 
@@ -129,15 +132,20 @@ bool CFindPath::PathMove(float _fSpeed, bool _IsRotation)
 	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();
 	Vec3 Dir = (NextPos - curPos).Normalize();
 
+	// SetDir
+	float CurfrontDir = GetFrontDir(Dir);
+
+	m_fPrevDir = CurfrontDir;
+	GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, CurfrontDir, 0.f));
+
 	float speed = _fSpeed;
-
-	Vec3 newPos = curPos + (speed* Dir * DT);
-
+	Vec3 newPos = curPos + (speed * Dir * DT);
 	GetOwner()->Transform()->SetRelativePos(newPos);
 
 	if ((newPos - NextPos).Length() < _fSpeed * DT) {
 		FindNextPath();
 	}
+
 	return true;
 }
 
@@ -160,4 +168,20 @@ void CFindPath::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
 
 void CFindPath::LoadFromDB(int _gameObjectID)
 {
+}
+
+float CFindPath::GetFrontDir(Vec3 _Direction)
+{
+	// Cal Front Dir
+	float yRad = atan2(-DirectX::XMVectorGetX(_Direction),
+		sqrt(DirectX::XMVectorGetY(_Direction) *
+			DirectX::XMVectorGetY(_Direction) +
+			DirectX::XMVectorGetZ(_Direction) *
+			DirectX::XMVectorGetZ(_Direction)));
+
+	// 위를 향하는 경우 radian 구해주기
+	if (_Direction.z > 0.0f)
+		yRad = (DirectX::XM_PI - yRad);
+
+	return yRad;
 }

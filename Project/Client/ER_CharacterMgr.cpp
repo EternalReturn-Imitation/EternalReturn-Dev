@@ -20,3 +20,10 @@ void ER_CharacterMgr::init()
 
     ((CharacterDataUI*)ImGuiMgr::GetInst()->FindUI("##CharacterDataUI"))->RegistCharacters();
 }
+
+CGameObject* ER_CharacterMgr::GetCharacter(const wstring& _key)
+{
+    CGameObject* Character = new CGameObject(*m_mapCharacters.find(_key)->second);
+
+    return Character;
+}

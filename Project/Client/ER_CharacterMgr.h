@@ -20,7 +20,7 @@ private:
 public:
     void init();
 
-    int SpawnCharacter(const wstring& _key) {}
+    CGameObject* GetCharacter(const wstring& _key);
 
     friend class CharacterDataUI;
 };

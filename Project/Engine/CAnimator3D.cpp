@@ -55,6 +55,15 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
+
+	// AnimMap Clone
+	map<wstring,CAnim3D*>::const_iterator iter = _origin.m_mapAnim.begin();
+	
+	while (iter != _origin.m_mapAnim.end())
+	{
+		AddAnim(iter->second->GetBone());
+		iter++;
+	}
 }
 
 CAnimator3D::~CAnimator3D()
@@ -245,10 +254,13 @@ CAnim3D* CAnimator3D::AddAnim(Ptr<CBone> _pBone)
 	CAnim3D* pAnim = new CAnim3D;
 	pAnim = CAnim3D::CreateAnimation(_pBone);
 	pAnim->SetOwner(this);
-	m_mapAnim.insert(make_pair(_pBone->GetKey(), pAnim));
-	pAnim->SetName(_pBone->GetKey());
 
-	SelectAnimation(_pBone->GetKey());
+	wstring AnimKey = path(_pBone->GetKey()).stem().wstring();
+
+	m_mapAnim.insert(make_pair(AnimKey, pAnim));
+	pAnim->SetName(AnimKey);
+
+	SelectAnimation(AnimKey);
 
 	return pAnim;
 }

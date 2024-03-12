@@ -97,6 +97,76 @@ CGameObject* CMeshData::Instantiate()
 	return pNewObj;
 }
 
+void CMeshData::Instantiate(CGameObject* _obj)
+{
+	CGameObject* pNewObj = _obj;
+
+	int iMeshDataCnt = (int)m_vecMeshData.size();
+
+	// 단일메시
+	if (1 == iMeshDataCnt)
+	{
+		pNewObj->AddComponent(new CTransform);
+		pNewObj->AddComponent(new CMeshRender);
+		pNewObj->MeshRender()->SetMesh(m_vecMeshData[0]->m_pMesh);
+
+		//vector<tIndexInfo> idxInfos = pNewObj->MeshRender()->GetMesh()->GetIdxInfo();
+		//idxInfos[0].iIdxCount /= 3;
+		//
+		//pNewObj->MeshRender()->GetMesh()->SetIdxInfo(idxInfos);
+
+		for (UINT i = 0; i < m_vecMeshData[0]->m_vecMtrl.size(); ++i)
+		{
+			pNewObj->MeshRender()->SetMaterial(m_vecMeshData[0]->m_vecMtrl[i], i);
+		}
+	}
+
+	// 복수메시
+	else if (1 < iMeshDataCnt)
+	{
+		vector<CGameObject*> vecObj;
+
+		for (size_t i = 0; i < iMeshDataCnt; ++i)
+		{
+			CGameObject* pNewChildObj = new CGameObject;
+
+			pNewChildObj->SetName(m_vecMeshData[i]->m_strObjName);
+			pNewChildObj->AddComponent(new CTransform);
+			pNewChildObj->Transform()->SetAbsolute(false);
+
+			// 렌더 오브젝트
+			if (!(m_vecMeshData[i]->m_bGroupObj))
+			{
+				pNewChildObj->AddComponent(new CMeshRender);
+				pNewChildObj->MeshRender()->SetMesh(m_vecMeshData[i]->m_pMesh);
+
+				for (UINT j = 0; j < m_vecMeshData[i]->m_vecMtrl.size(); ++j)
+				{
+					pNewChildObj->MeshRender()->SetMaterial(m_vecMeshData[i]->m_vecMtrl[j], j);
+				}
+			}
+
+			Vec3 translation = m_vecMeshData[i]->m_tLocalTransform.translation;
+			Vec3 rotation = m_vecMeshData[i]->m_tLocalTransform.rotation;
+			Vec3 scaling = m_vecMeshData[i]->m_tLocalTransform.scaling;
+
+			pNewChildObj->Transform()->SetRelativePos(translation);
+			pNewChildObj->Transform()->SetRelativeRot(rotation);
+			pNewChildObj->Transform()->SetRelativeScale(scaling);
+
+			if (0 == i) // 가장 첫번째 노드
+				pNewObj = pNewChildObj;
+			else
+				vecObj[m_vecMeshData[i]->m_ParentIdx]->AddChild(pNewChildObj);
+
+			vecObj.emplace_back(pNewChildObj);
+		}
+	}
+
+	// Animation 파트 추가
+	InstantiateAnimation(pNewObj);
+}
+
 void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
 {
 	wstring strMeshName = path(GetKey()).stem();
@@ -134,8 +204,9 @@ void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
 		while(iter != vectorBone.end())
 			pAnimator->AddAnim(*iter++);
 		
-		wstring errMsg = L"Load Compleate Animation : " + std::to_wstring(AnimClipCnt);
-		MessageBox(nullptr, errMsg.c_str(), L"Success!", MB_OK);
+		// Message 
+		// wstring errMsg = L"Load Compleate Animation : " + std::to_wstring(AnimClipCnt);
+		// MessageBox(nullptr, errMsg.c_str(), L"Success!", MB_OK);
 			
 		return;
 	}
