@@ -93,17 +93,17 @@ PS_OUT PS_DirLightShader(VS_OUT _in)
         if (fLightDepth + 0.002f <= fDepth)
         {
             // 그림자
-            fShadowPow = 0.9f;
+            fShadowPow = 0.5f;
         }
     }
     
     // 계산된 최종 광원의 세기를 각 타겟(Diffuse, Specular) 에 출력
-    output.vDiffuse = (LightColor.vDiffuse + LightColor.vAmbient); // * (1.f - fShadowPow);
-    output.vSpecular = g_Light3DBuffer[LightIdx].Color.vDiffuse * fSpecPow; // * (1.f - fShadowPow);
+    output.vDiffuse = (LightColor.vDiffuse + LightColor.vAmbient) * (1.f - fShadowPow);
+    output.vSpecular = g_Light3DBuffer[LightIdx].Color.vDiffuse * (1.f - fShadowPow);
     output.vShadow = fShadowPow;
     
-    output.vDiffuse.a = 1.f;
-    output.vSpecular.a = 1.f;
+    // output.vDiffuse.a = 1.f;
+    // output.vSpecular.a = 1.f;
     
     return output;
 }

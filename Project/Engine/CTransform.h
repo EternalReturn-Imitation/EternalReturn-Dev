@@ -51,7 +51,7 @@ public:
         m_vOffsetRelativePos.y *= m_vRelativeScale.y;
         m_vOffsetRelativePos.z *= m_vRelativeScale.z;*/
     }
-    void SetRelativeRot(float _x, float _y, float _z) { m_vRelativeRot = Vec3(_x, _y, _z);  }
+    void SetRelativeRot(float _x, float _y, float _z) { m_vRelativeRot = Vec3(_x, _y, _z); }
 
     // 상대 이동, 크기를 절대값으로 지정  
     void SetAbsolute(bool _Set) { m_bAbsolute = _Set; }    

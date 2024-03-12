@@ -103,7 +103,8 @@ void CLight3D::SetRadius(float _Radius)
 	m_LightInfo.Radius = _Radius;
 
 	// SphereMesh 의 로컬 반지름이 0.5f 이기 때문에 2배로 적용
-	Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
+	if (m_LightInfo.LightType != (UINT)LIGHT_TYPE::DIRECTIONAL)
+		Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
 }
 
 void CLight3D::SetLightType(LIGHT_TYPE _type)

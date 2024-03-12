@@ -39,7 +39,7 @@ void CTransform::finaltick()
 	m_matWorldBoundingScale = XMMatrixIdentity();
 	m_matWorldBoundingScale = XMMatrixScaling(m_fBoundingRadius, m_fBoundingRadius, m_fBoundingRadius);
 	
-	
+
 	Matrix matRot = XMMatrixIdentity();
 	matRot = XMMatrixRotationX(m_vRelativeRot.x);
 	matRot *= XMMatrixRotationY(m_vRelativeRot.y);
@@ -117,6 +117,7 @@ void CTransform::finaltick()
 	if (OffsetTrigger) {
 		m_matOffsetWorldInv = XMMatrixInverse(nullptr, m_matOffsetWorld);
 	}
+
 }
 
 void CTransform::UpdateData()

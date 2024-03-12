@@ -102,6 +102,7 @@ void CFindPath::FindNextPath()
 	// 다음 경로가 있다면 그 위치를 반환하고, 경로 인덱스 증가시킴
 	if (m_iCurPathIdx != -1 && m_iCurPathIdx < m_iPathCount)
 	{
+		
 		m_vNextPos = Vec3(m_vecPath[m_iCurPathIdx].x, m_vecPath[m_iCurPathIdx].y, m_vecPath[m_iCurPathIdx].z);
 		
 		string nextpos = u8"다음좌표 : ";
