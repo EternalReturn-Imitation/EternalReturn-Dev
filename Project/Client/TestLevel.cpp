@@ -175,160 +175,163 @@ void CreateTestLevel()
 	CPathFindMgr::GetInst()->SetMapCollider(pObject);
 	SpawnGameObject(pObject, Vec3(0.f, 1.f, 0.f), L"Monster");
 
-//#pragma region Archery
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Roof.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Archery_Roof");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(5375.f, 980.f, 1745.f), L"Roof");
-//	SpawnGameObject(pObj, Vec3(-133.18f, 4.660f, 43.730f), L"Roof");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Building.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Archery_Building");
-//	rot = pObj->Transform()->GetRelativeRot();
-//	rot.x = -1.5708f;
-//	pObj->Transform()->SetRelativeRot(rot);
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(18755.f, 410.f, -2590.f), L"Building");
-//	SpawnGameObject(pObj, Vec3(0.2f, -1.f, 0.5f), L"Building");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Base.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Archery_Base");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
-//	SpawnGameObject(pObj, Vec3(-187.f, -5.2f, 26.f), L"Base");
-//#pragma endregion
-//
-//#pragma region Forest
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Base.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Forest_Base");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(13341.f, -389.f, -4629.f), L"Base");
-//	//SpawnGameObject(pObj, Vec3(9783.f, -824.f, 6715.f), L"Base");
-//	SpawnGameObject(pObj, Vec3(-53.680f, -8.500f, -20.202f), L"Base");
-//	 
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Building.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Forest_Building");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(17568.f, 422.f, -4707.f), L"Building");
-//	//SpawnGameObject(pObj, Vec3(14010.f, -13.f, 6637.f), L"Building");
-//	SpawnGameObject(pObj, Vec3(-11.632f, -0.427f, -21.176f), L"Building");
-//#pragma endregion
-//
-//#pragma region Hotel
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Base.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Hotel_Base");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(9070.f, 230.f, 15030.f), L"Base");
-//	//SpawnGameObject(pObj, Vec3(5512.f, -205.f, 26374.f), L"Base");
-//	SpawnGameObject(pObj, Vec3(-96.4f, -2.32f, 176.4f), L"Base");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Building.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Hotel_Building");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(4606.f, 94.f, -4699.f), L"Building");
-//	//SpawnGameObject(pObj, Vec3(1048.f, -341.f, 6645.f), L"Building");
-//	SpawnGameObject(pObj, Vec3(-141.f, -3.6f, -21.35f), L"Building");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Roof.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Hotel_Roof");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(8532.f, 365.f, -4365.f), L"Roof");
-//	//SpawnGameObject(pObj, Vec3(4974.f, -70.f, 6979.f), L"Roof");
-//	SpawnGameObject(pObj, Vec3(-101.72f, -0.910f, -18.075f), L"Roof");
-//#pragma endregion
-//
-//#pragma region SandyBeach
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Base.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"SandyBeach_Base");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(10799.f, -669.f, -10157.f), L"Base");
-//	//SpawnGameObject(pObj, Vec3(7241.f, -1104.f, 1187.f), L"Base");
-//	SpawnGameObject(pObj, Vec3(-79.400f, -11.500f, -75.300f), L"Base");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Building.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"SandyBeach_Building");
-//	rot = pObj->Transform()->GetRelativeRot();
-//	rot.x = -1.5708f;
-//	pObj->Transform()->SetRelativeRot(rot);
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(18869.f, 166.f, -1388.f), L"Building");
-//	//SpawnGameObject(pObj, Vec3(15311.f, -269.f, 9956.f), L"Building");
-//	SpawnGameObject(pObj, Vec3(0.911f, -0.700f, 12.500f), L"Building");
-//#pragma endregion
-//
-//#pragma region School
-//
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Base.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"School_Base");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(10055.f, 105.f, 4190.f), L"Base");
-//	//SpawnGameObject(pObj, Vec3(6497.f, -330.f, 15534.f), L"Base");
-//	SpawnGameObject(pObj, Vec3(-86.656f, -4.100f, 67.850f), L"Base");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Building.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"School_Building");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(11240.f, 385.f, 545.f), L"Building");
-//	//SpawnGameObject(pObj, Vec3(7882.f, -50.f, 11889.f), L"Building");
-//	SpawnGameObject(pObj, Vec3(-74.800f, -1.380f, 31.400f), L"Building");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Roof.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"School_Roof");
-//	rot = pObj->Transform()->GetRelativeRot();
-//	rot.y = -1.5708f;
-//	pObj->Transform()->SetRelativeRot(rot);
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
-//	//SpawnGameObject(pObj, Vec3(6437.f, -40.f, 16374.f), L"Roof");
-//	SpawnGameObject(pObj, Vec3(-87.150f, -1.280f, 76.150f), L"Roof");
-//	
-//#pragma endregion
-//
-//#pragma region Uptown
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_Base.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Uptown_Base");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(21120.f, -144.f, -7965.f), L"Base");
-//	//SpawnGameObject(pObj, Vec3(17562.f, -579.f, 3379.f), L"Base");
-//	SpawnGameObject(pObj, Vec3(23.820f, -6.250f, -53.350f), L"Base");
-//	
-//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_Building.mdat");
-//	pObj = pMeshData->Instantiate();
-//	pObj->SetName(L"Uptown_Building");
-//	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
-//	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-//	//SpawnGameObject(pObj, Vec3(19628.f, 68.f, -9652.f), L"Building");
-//	//SpawnGameObject(pObj, Vec3(16070.f, -367.f, 1692.f), L"Building");
-//	SpawnGameObject(pObj, Vec3(9.f, -5.600f, -70.290f), L"Building");
-//#pragma endregion
+	Ptr<CMeshData> pMeshData = nullptr;
+	CGameObject* pObj = nullptr;
+	Vec3 rot;
+#pragma region Archery
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Roof.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Archery_Roof");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(5375.f, 980.f, 1745.f), L"Roof");
+	SpawnGameObject(pObj, Vec3(-133.18f, 4.660f, 43.730f), L"Roof");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Building.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Archery_Building");
+	rot = pObj->Transform()->GetRelativeRot();
+	rot.x = -1.5708f;
+	pObj->Transform()->SetRelativeRot(rot);
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(18755.f, 410.f, -2590.f), L"Building");
+	SpawnGameObject(pObj, Vec3(0.2f, -1.f, 0.5f), L"Building");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Base.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Archery_Base");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(0.f, 0.f, 0.f), L"Base");
+	SpawnGameObject(pObj, Vec3(-187.f, -5.2f, 26.f), L"Base");
+#pragma endregion
+
+#pragma region Forest
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Base.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Forest_Base");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(13341.f, -389.f, -4629.f), L"Base");
+	//SpawnGameObject(pObj, Vec3(9783.f, -824.f, 6715.f), L"Base");
+	SpawnGameObject(pObj, Vec3(-53.680f, -8.500f, -20.202f), L"Base");
+	 
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Building.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Forest_Building");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(17568.f, 422.f, -4707.f), L"Building");
+	//SpawnGameObject(pObj, Vec3(14010.f, -13.f, 6637.f), L"Building");
+	SpawnGameObject(pObj, Vec3(-11.632f, -0.427f, -21.176f), L"Building");
+#pragma endregion
+
+#pragma region Hotel
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Base.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Hotel_Base");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(9070.f, 230.f, 15030.f), L"Base");
+	//SpawnGameObject(pObj, Vec3(5512.f, -205.f, 26374.f), L"Base");
+	SpawnGameObject(pObj, Vec3(-96.4f, -2.32f, 176.4f), L"Base");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Building.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Hotel_Building");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(4606.f, 94.f, -4699.f), L"Building");
+	//SpawnGameObject(pObj, Vec3(1048.f, -341.f, 6645.f), L"Building");
+	SpawnGameObject(pObj, Vec3(-141.f, -3.6f, -21.35f), L"Building");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Roof.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Hotel_Roof");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(8532.f, 365.f, -4365.f), L"Roof");
+	//SpawnGameObject(pObj, Vec3(4974.f, -70.f, 6979.f), L"Roof");
+	SpawnGameObject(pObj, Vec3(-101.72f, -0.910f, -18.075f), L"Roof");
+#pragma endregion
+
+#pragma region SandyBeach
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Base.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"SandyBeach_Base");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(10799.f, -669.f, -10157.f), L"Base");
+	//SpawnGameObject(pObj, Vec3(7241.f, -1104.f, 1187.f), L"Base");
+	SpawnGameObject(pObj, Vec3(-79.400f, -11.500f, -75.300f), L"Base");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Building.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"SandyBeach_Building");
+	rot = pObj->Transform()->GetRelativeRot();
+	rot.x = -1.5708f;
+	pObj->Transform()->SetRelativeRot(rot);
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(18869.f, 166.f, -1388.f), L"Building");
+	//SpawnGameObject(pObj, Vec3(15311.f, -269.f, 9956.f), L"Building");
+	SpawnGameObject(pObj, Vec3(0.911f, -0.700f, 12.500f), L"Building");
+#pragma endregion
+
+#pragma region School
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Base.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"School_Base");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(10055.f, 105.f, 4190.f), L"Base");
+	//SpawnGameObject(pObj, Vec3(6497.f, -330.f, 15534.f), L"Base");
+	SpawnGameObject(pObj, Vec3(-86.656f, -4.100f, 67.850f), L"Base");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Building.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"School_Building");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(11240.f, 385.f, 545.f), L"Building");
+	//SpawnGameObject(pObj, Vec3(7882.f, -50.f, 11889.f), L"Building");
+	SpawnGameObject(pObj, Vec3(-74.800f, -1.380f, 31.400f), L"Building");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Roof.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"School_Roof");
+	rot = pObj->Transform()->GetRelativeRot();
+	rot.y = -1.5708f;
+	pObj->Transform()->SetRelativeRot(rot);
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
+	//SpawnGameObject(pObj, Vec3(6437.f, -40.f, 16374.f), L"Roof");
+	SpawnGameObject(pObj, Vec3(-87.150f, -1.280f, 76.150f), L"Roof");
+	
+#pragma endregion
+
+#pragma region Uptown
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_Base.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Uptown_Base");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(21120.f, -144.f, -7965.f), L"Base");
+	//SpawnGameObject(pObj, Vec3(17562.f, -579.f, 3379.f), L"Base");
+	SpawnGameObject(pObj, Vec3(23.820f, -6.250f, -53.350f), L"Base");
+	
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_Building.mdat");
+	pObj = pMeshData->Instantiate();
+	pObj->SetName(L"Uptown_Building");
+	pObj->Transform()->SetRelativeScale(1.0f, 1.0f, 1.0f);
+	pObj->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	//SpawnGameObject(pObj, Vec3(19628.f, 68.f, -9652.f), L"Building");
+	//SpawnGameObject(pObj, Vec3(16070.f, -367.f, 1692.f), L"Building");
+	SpawnGameObject(pObj, Vec3(9.f, -5.600f, -70.290f), L"Building");
+#pragma endregion
 
 	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
 }
