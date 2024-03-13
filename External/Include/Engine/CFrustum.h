@@ -39,7 +39,6 @@ public:
     CLONE(CFrustum);
 
 public:
-    CFrustum() {}
     CFrustum(CCamera* _Camera);
     ~CFrustum();
 };

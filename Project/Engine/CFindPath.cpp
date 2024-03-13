@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CFindPath.h"
 
-#include "CNaviMap.h"
+// #include "CNaviMap.h"
 #include "CLevelMgr.h"
 #include "CGameObject.h"
 #include "CKeyMgr.h"
@@ -57,6 +57,7 @@ void CFindPath::finaltick()
 	//	LaycastResultTrigger = false;
 	//}
 
+	/*
 	if (KEY_TAP(KEY::RBTN)) {
 	//if (CPathFindMgr::GetInst()->GetRayResultTrigger()) {
 		//tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
@@ -64,28 +65,36 @@ void CFindPath::finaltick()
 		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.y, naviResult.resultPos.z));
 		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.z, naviResult.resultPos.y));
 		//CPathFindMgr::GetInst()->SetRayResultTrigger(false);
-		
-		DEBUG_LOG_INPUT(ToString(GetOwner()->GetName()).c_str(), "MovePoint", "RBTN");
 
+		// 명령 내리는 함수
+
+		// 맵 콜라이더를 받고
 		CGameObject* Map = CPathFindMgr::GetInst()->GetMapCollider();
+		
+		// 메인카메라의 레이를 받아와서 
 		CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
 		tRay ray = mainCam->GetRay();
+
+		// 교차점 위치를 받아오는 것
 		IntersectResult result = mainCam->IsCollidingBtwRayRect(ray, Map);
 		Vec3 TargetPos = result.vCrossPoint;
 
 		FindPath(TargetPos);
 	}
-	PathMove(5.0f, true);
+	*/
+
+	PathMove(5.0f, false);
 }
 
 void CFindPath::FindPath(Vec3 endPos)
 {
 	// 새 경로를 찾을 때마다 새로운 경로로 대체함
+
+	// 거리판단용
 	float dist = (endPos - m_vPrevEndPos).Length();
 
-	//if (dist > 10.f) //이전에 찍어둔 목적지와 현재 요청한 목적지의 차이가 10픽셀밖에안된다면 길찾기를 진행하지 않음 : 매번 비슷한곳을찍었을때 캐릭터가 덜덜떠는 현상 방지하기 위함!
-	//{
 	m_vecPath.clear();
+	
 	// 오브젝트의 현재 위치
 	Vec3 CurPos = GetOwner()->Transform()->GetRelativePos();
 
@@ -97,7 +106,6 @@ void CFindPath::FindPath(Vec3 endPos)
 	m_vNextPos = Vec3(m_vecPath[0].x, m_vecPath[0].y, m_vecPath[0].z);
 
 	m_vPrevEndPos = endPos;
-	//}
 }
 
 void CFindPath::FindNextPath()

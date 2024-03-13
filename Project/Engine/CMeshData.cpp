@@ -179,7 +179,7 @@ void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
 	vector<Ptr<CBone>> vectorBone;
 
 
-	int KeyLen = strMeshName.length();
+	int KeyLen = (int)strMeshName.length();
 
 	if (iter == mapBone.end())
 		return;

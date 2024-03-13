@@ -153,11 +153,6 @@ void CreateTestLevel()
 	else
 	{
 		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Rio");
-		CharObj->AddComponent(new CFindPath);
-
-		CharObj->Transform()->SetRelativeScale(Vec3(1.3f, 1.3f, 1.3f));
-		CharObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
 		CharObj->Animator3D()->SelectAnimation(L"Rio_Run");
 
 		SpawnGameObject(CharObj, Vec3(0.f, 0.f, 000.f), L"Monster");
@@ -180,22 +175,7 @@ void CreateTestLevel()
 	
 	// NaveMap
 	Ptr<CMeshData> pMeshData = nullptr;
-	CGameObject* NaviMap = nullptr;
-	
-	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Navi_Mesh02.mdat");
-	
-	NaviMap = pMeshData->Instantiate();
-	NaviMap->SetName(L"NaviMap");
-	Vec3 rot = NaviMap->Transform()->GetRelativeRot();
-	rot.x = 1.5708f;
-	//rot.y = -1.5708f;
-	//rot.z = +1.5708f;
-	NaviMap->Transform()->SetRelativeRot(rot);
-	NaviMap->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
-	NaviMap->Transform()->SetRelativeScale(1.f, 1.f, 1.f);
-	NaviMap->AddComponent(new CNaviMap);
-	CPathFindMgr::GetInst()->SetNaviMapObject(NaviMap);
-	
+	Vec3 rot = {};
 			
 #pragma region Archery
 	CGameObject* LandMesh = new CGameObject;

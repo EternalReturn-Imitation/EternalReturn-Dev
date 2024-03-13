@@ -19,7 +19,15 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 	if (_Level->GetState() != LEVEL_STATE::STOP)
 		return E_FAIL;
 
-	wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_level = path_content.wstring() + L"Level\\";
+
+	if (false == exists(path_level))
+	{
+		create_directory(path_level);
+	}
+
+	wstring strPath = path_level;
 	strPath += _LevelPath;
 
 	FILE* pFile = nullptr;
@@ -205,7 +213,10 @@ int CLevelSaveLoad::SaveGameObjectToDB(int _layerID, CGameObject* _Object, int _
 
 CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 {
-	wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_level = path_content.wstring() + L"Level\\";
+
+	wstring strPath = path_level;
 	strPath += _LevelPath;
 
 	FILE* pFile = nullptr;
@@ -287,6 +298,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			Component = new CAnimator2D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR3D:
+			Component = new CAnimator3D;
 			break;
 		case COMPONENT_TYPE::LIGHT2D:
 			Component = new CLight2D;
@@ -299,6 +311,12 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			break;
 		case COMPONENT_TYPE::BEHAVIORTREE:
 			Component = new CBehaviorTree;
+			break;
+		case COMPONENT_TYPE::NAVIMAP:
+			Component = new CNaviMap;
+			break;
+		case COMPONENT_TYPE::FINDPATH:
+			Component = new CFindPath;
 			break;
 		case COMPONENT_TYPE::MESHRENDER:
 			Component = new CMeshRender;

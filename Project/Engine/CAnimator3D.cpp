@@ -376,10 +376,57 @@ void CAnimator3D::SaveCurAnimDataToFile()
 
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
+	// 애니메이션 갯수
+	UINT iAnimCount = m_mapAnim.size();
+	fwrite(&iAnimCount, sizeof(UINT), 1, _pFile);
+
+	map<wstring,CAnim3D*>::iterator iter = m_mapAnim.begin();
+	wstring pCurAnimKey;
+
+	for (; iter != m_mapAnim.end(); ++iter)
+	{
+		SaveResRef(iter->second->GetBone().Get(), _pFile);
+		
+		if (iter->second == m_pCurAnim)
+			pCurAnimKey = iter->first;
+	}
+
+	int isCurAnim = 0;
+	
+	if (nullptr == m_pCurAnim)
+		fwrite(&isCurAnim, sizeof(UINT), 1, _pFile);
+	
+	else if (nullptr != m_pCurAnim)
+	{
+		isCurAnim = 1;
+		fwrite(&isCurAnim, sizeof(UINT), 1, _pFile);
+		SaveWString(pCurAnimKey, _pFile);
+	}
 }
 
 void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 {
+	// 애니메이션 갯수
+	UINT iAnimCount = 0;
+	fread(&iAnimCount, sizeof(UINT), 1, _pFile);
+
+	for (int i = 0; i < iAnimCount; ++i)
+	{
+		Ptr<CBone> pBone;
+		LoadResRef(pBone, _pFile);
+		AddAnim(pBone);
+	}
+
+	wstring pCurAnimKey;
+	
+	UINT isCurAnim = 0;
+	fread(&isCurAnim, sizeof(UINT), 1, _pFile);
+
+	if(isCurAnim)
+	{
+		LoadWString(pCurAnimKey, _pFile);
+		SelectAnimation(pCurAnimKey);
+	}
 }
 
 void CAnimator3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)

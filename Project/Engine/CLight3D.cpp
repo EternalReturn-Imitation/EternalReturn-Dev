@@ -153,6 +153,8 @@ void CLight3D::SaveToLevelFile(FILE* _File)
 	fwrite(&m_LightInfo.Angle,sizeof(float), 1, _File);
 	fwrite(&m_LightInfo.padding, sizeof(int), 1, _File);
 	fwrite(&m_LightIdx, sizeof(float), 1, _File);
+
+	m_pCamObj->Camera()->SaveToLevelFile(_File);
 }
 
 void CLight3D::LoadFromLevelFile(FILE* _File)
@@ -166,6 +168,8 @@ void CLight3D::LoadFromLevelFile(FILE* _File)
 	fread(&m_LightInfo.Angle, sizeof(float), 1, _File);
 	fread(&m_LightInfo.padding, sizeof(int), 1, _File);
 	fread(&m_LightIdx, sizeof(float), 1, _File);
+
+	m_pCamObj->Camera()->LoadFromLevelFile(_File);
 }
 
 void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)

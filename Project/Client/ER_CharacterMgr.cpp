@@ -4,6 +4,8 @@
 #include "ImGuiMgr.h"
 #include "CharacterDataUI.h"
 
+#include <Script\ER_PlayerScript.h>
+
 ER_CharacterMgr::ER_CharacterMgr()
 {
 }
@@ -24,6 +26,10 @@ void ER_CharacterMgr::init()
 CGameObject* ER_CharacterMgr::GetCharacter(const wstring& _key)
 {
     CGameObject* Character = new CGameObject(*m_mapCharacters.find(_key)->second);
+    Character->AddComponent(new ER_PlayerScript);
+    Character->AddComponent(new CFindPath);
+
+    Character->Transform()->SetRelativeScale(Vec3(1.3f, 1.3f, 1.3f));
 
     return Character;
 }

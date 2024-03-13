@@ -1033,20 +1033,32 @@ void CCamera::SaveToLevelFile(FILE* _File)
 {
 	fwrite(&m_fAspectRatio, sizeof(float), 1, _File);
 	fwrite(&m_fScale, sizeof(float), 1, _File);
+	fwrite(&m_Near, sizeof(float), 1, _File);
+	fwrite(&m_Far, sizeof(float), 1, _File);
 	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
 	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
+	fwrite(&m_iLayerFrustum, sizeof(UINT), 1, _File);
 	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
 	fwrite(&m_bMainCamera, sizeof(bool), 1, _File);
+	fwrite(&m_OrthoWidth, sizeof(float), 1, _File);
+	fwrite(&m_OrthoHeight, sizeof(float), 1, _File);
+
 }
 
 void CCamera::LoadFromLevelFile(FILE* _File)
 {
 	fread(&m_fAspectRatio, sizeof(float), 1, _File);
 	fread(&m_fScale, sizeof(float), 1, _File);
+	fread(&m_Near, sizeof(float), 1, _File);
+	fread(&m_Far, sizeof(float), 1, _File);
 	fread(&m_ProjType, sizeof(UINT), 1, _File);
 	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
+	fread(&m_iLayerFrustum, sizeof(UINT), 1, _File);
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
 	fread(&m_bMainCamera, sizeof(bool), 1, _File);
+	fread(&m_OrthoWidth, sizeof(float), 1, _File);
+	fread(&m_OrthoHeight, sizeof(float), 1, _File);
+
 }
 
 void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
