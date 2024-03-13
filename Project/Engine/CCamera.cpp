@@ -23,6 +23,7 @@
 #include "CKeyMgr.h"
 #include "CInstancingBuffer.h"
 #include "CEngine.h"
+#include "CCollider3D.h"
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
@@ -426,6 +427,113 @@ IntersectResult CCamera::IsCollidingBtwRayRect(tRay& _ray, CGameObject* _Object)
 
 
 	return IntersectsLay(arrLocal, m_ray);
+}
+
+IntersectResult CCamera::IsCollidingBtwRayCube(tRay& _ray, CGameObject* _Object)
+{
+	// 만약에 Collider3D가 없거나 Cube모양이 아닌 경우 return
+	if (_Object->Collider3D() == nullptr || _Object->Collider3D()->GetCollider3DType() != COLLIDER3D_TYPE::CUBE)
+		return IntersectResult{ Vec3(0.f, 0.f, 0.f), 0.f, false };
+
+	Matrix ColliderWorldMat = _Object->Collider3D()->GetColliderWorldMat();
+
+	// 위의 IsCollidingBtwRayRect함수와 같은 알고리즘으로 계산
+	// 단 Cube는 면이 6개이기 때문에 6번 계산해 줘야 하는 것임
+	Vec3 arrLocal[6][3] =
+	{
+		{Vec3(-0.5f, 0.5f, -0.5f),  Vec3(0.5f, 0.5f, -0.5f),  Vec3(-0.5f, 0.5f, 0.5f)},	 // 윗면
+		{Vec3(-0.5f, -0.5f, -0.5f), Vec3(0.5f, -0.5f, -0.5f), Vec3(-0.5f, -0.5f, 0.5f)}, // 밑면
+		{Vec3(-0.5f, -0.5f, -0.5f), Vec3(0.5f, -0.5f, -0.5f), Vec3(-0.5f, 0.5f, -0.5f)}, // 앞면
+		{Vec3(-0.5f, -0.5f, 0.5f),  Vec3(0.5f, -0.5f, 0.5f),  Vec3(-0.5f, 0.5f, 0.5f)},  // 뒷면
+		{Vec3(-0.5f, 0.5f, -0.5f),  Vec3(-0.5f, -0.5f, -0.5f),Vec3(-0.5f, 0.5f, 0.5f)},  // 왼쪽면
+		{Vec3(0.5f, 0.5f, -0.5f),   Vec3(0.5f, -0.5f, -0.5f), Vec3(0.5f, 0.5f, 0.5f)},   // 오른쪽면
+	};
+
+	for (int i = 0; i < 6; ++i)
+		for (int j = 0; j < 3; ++j)
+			arrLocal[i][j] = Vec4::Transform(Vec4(arrLocal[i][j], 1.f), ColliderWorldMat);
+
+	IntersectResult Final = IntersectResult{ Vec3(0.f, 0.f, 0.f), 0.f, false };
+	IntersectResult Temp;
+
+	for (int i = 0; i < 6; ++i)
+	{
+		Temp = IntersectsLay(arrLocal[i], m_ray);
+
+		if (Temp.bResult == true)
+		{
+			if (Final.bResult == false)
+			{
+				Final = Temp;
+			}
+			else
+			{
+				if (Temp.fResult < Final.fResult)
+					Final = Temp;
+			}
+		}
+	}
+
+	return Final;
+}
+
+IntersectResult CCamera::IsCollidingBtwRaySphere(tRay& _ray, CGameObject* _Object)
+{
+	IntersectResult result;
+
+	// 만약에 Collider3D가 없거나 Sphere모양이 아닌 경우 return
+	if (_Object->Collider3D() == nullptr || _Object->Collider3D()->GetCollider3DType() != COLLIDER3D_TYPE::SPHERE)
+		return IntersectResult{ Vec3(0.f, 0.f, 0.f), 0.f, false };
+
+	// 일단 있다가 작성..
+	Vec3 SpherePos = _Object->Transform()->GetRelativePos();
+	Vec3 SphereRadiusAll = _Object->Transform()->GetRelativeScale();
+	float SphereRadius = SphereRadiusAll.x / 2.f;
+
+	Vec3 m = _ray.vStart - SpherePos;
+
+	// 레이의 방향과 m 벡터의 내적을 계산합니다.
+	float b = m.x * _ray.vDir.x + m.y * _ray.vDir.y + m.z * _ray.vDir.z;
+
+	// m 벡터의 제곱과 구의 반지름의 제곱의 차를 계산합니다.
+	float c = (m.x * m.x + m.y * m.y + m.z * m.z) - SphereRadius * SphereRadius;
+
+	// 레이의 원점이 구의 외부에 있고 (c > 0), 레이가 구를 향하고 있지 않으면 (b > 0) false를 반환합니다.
+	if (c > 0.0f && b > 0.0f)
+	{
+		result.vCrossPoint = Vec3(0.f, 0.f, 0.f);
+		result.fResult = 0.f;
+		result.bResult = false;
+		return result;
+	}
+
+	// 판별식을 계산합니다. 판별식이 음수이면 레이가 구를 놓치는 것을 의미합니다.
+	float discr = b * b - c;
+
+	// 판별식이 음수이면 레이가 구를 놓친 것이므로 false를 반환합니다.
+	if (discr < 0.0f)
+	{
+		result.vCrossPoint = Vec3(0.f, 0.f, 0.f);
+		result.fResult = 0.f;
+		result.bResult = false;
+		return result;
+	}
+
+	// 이제 레이가 구와 교차하는 것이 확인되었으므로, 교차점의 가장 작은 t 값을 계산합니다.
+	float t = -b - sqrt(discr);
+
+	// 만약 t가 음수이면 레이가 구 내부에서 시작된 것이므로 t를 0으로 설정합니다.
+	if (t < 0.0f) t = 0.0f;
+
+	// 레이와 교차한 깊이값을 계산합니다.
+	float depth = XMVectorGetX(XMVector3Length(_ray.vDir) * t);
+
+	//m_LayMinDistance = depth;  // 현재 디스탠스 값으로 업데이트
+	result.vCrossPoint = _ray.vStart + _ray.vDir * t;
+	result.fResult = depth;
+	result.bResult = true;
+
+	return result;
 }
 
 void CCamera::SortObject()

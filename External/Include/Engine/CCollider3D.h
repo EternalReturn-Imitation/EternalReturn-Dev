@@ -23,6 +23,7 @@ private:
     bool            m_bDrawCollision;   //콜리전을 보이게할지 여부
 
 public:
+    virtual void begin() override;
     virtual void finaltick() override;
 
 public:
@@ -58,9 +59,7 @@ public:
     void OnOverlap(CCollider3D* _Other);
     void EndOverlap(CCollider3D* _Other);
 
-    void BeginRayOverlap();
     void OnRayOverlap();
-    void EndRayOverlap();
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;

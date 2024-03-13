@@ -3,7 +3,7 @@
 
 #include "CScript.h"
 #include "components.h"
-
+#include "CPathFindMgr.h"
 
 CCollider2D::CCollider2D()
 	: CComponent(COMPONENT_TYPE::COLLIDER2D)
@@ -26,13 +26,18 @@ CCollider2D::CCollider2D(const CCollider2D& _other)
 	, m_bDrawCollision(_other.m_bDrawCollision)
 	, m_bFixed(_other.m_bFixed)
 {
-
+	SetName(L"Collider2D");
 }
 
 CCollider2D::~CCollider2D()
 {
 }
 
+
+void CCollider2D::begin()
+{
+	CPathFindMgr::GetInst()->AddColliderObjects(GetOwner());
+}
 
 void CCollider2D::finaltick()
 {
@@ -134,22 +139,10 @@ void CCollider2D::EndOverlap(CCollider2D* _Other)
 	}
 }
 
-void CCollider2D::BeginRayOverlap()
-{
-	int a = 30;
-	//GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_2, &a);
-}
-
 void CCollider2D::OnRayOverlap()
 {
 	int a = 20;
 	//GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_2, &a);
-}
-
-void CCollider2D::EndRayOverlap()
-{
-	int b = 0;
-	//GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_2, &b);
 }
 
 void CCollider2D::SaveToLevelFile(FILE* _File)

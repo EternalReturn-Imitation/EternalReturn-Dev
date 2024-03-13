@@ -143,37 +143,36 @@ void CreateTestLevel()
 	//SpawnGameObject(pObject, Vec3(7000.f, 0.f, 6500.f), L"Monster");
 	SpawnGameObject(pObject, Vec3(000.f, 0.f, 000.f), L"Monster");
 
-	//pObject = new CGameObject;
-	//pObject->SetName(L"MapCollider");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CCollider2D);
-	//pObject->Collider2D()->SetOffsetRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
-	//pObject->Collider2D()->SetOffsetScale(Vec2(2700.f, 2700.f));
-	//pObject->Collider2D()->SetOffsetPos(Vec3(1125.f, 0.f, 1200.f));
-	////pObject->Collider2D()->SetDrawCollision(false);
-	////pObject->Transform()->SetGizmoObjExcept(true);
-	//CPathFindMgr::GetInst()->SetMapCollider(pObject);
-	//SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Monster");
+	pObject = new CGameObject;
+	pObject->SetName(L"MapCollider");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider2D);
+	pObject->Collider2D()->SetOffsetRot(Vec3(XMConvertToRadians(90.f), 0.f, 0.f));
+	pObject->Collider2D()->SetOffsetScale(Vec2(500.f, 500.f));
+	pObject->Collider2D()->SetOffsetScale(Vec2(1000.f, 1000.f));
+	//pObject->Collider2D()->SetDrawCollision(false);
+	//pObject->Transform()->SetGizmoObjExcept(true);
+	CPathFindMgr::GetInst()->SetMapCollider(pObject);
+	SpawnGameObject(pObject, Vec3(-0.f, 0.f, -0.f), L"Monster");
 
 	pObject = new CGameObject;
 	pObject->SetName(L"TestCollider2D01");
 	pObject->AddComponent(new CTransform);
 	pObject->AddComponent(new CCollider3D);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
+	pObject->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
 	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	CPathFindMgr::GetInst()->SetMapCollider(pObject);
+	pObject->begin();
 	SpawnGameObject(pObject, Vec3(10.f, 1.f, 10.f), L"Monster");
 	
-	pObject = new CGameObject;
-	pObject->SetName(L"TestCollider2D02");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	CPathFindMgr::GetInst()->SetMapCollider(pObject);
-	SpawnGameObject(pObject, Vec3(0.f, 1.f, 0.f), L"Monster");
+	//pObject = new CGameObject;
+	//pObject->SetName(L"TestCollider2D02");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CCollider3D);
+	//pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
+	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//SpawnGameObject(pObject, Vec3(0.f, 1.f, 0.f), L"Monster");
 
 	Ptr<CMeshData> pMeshData = nullptr;
 	CGameObject* pObj = nullptr;

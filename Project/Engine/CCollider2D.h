@@ -27,6 +27,7 @@ private:
     bool            m_bFixed;
 
 public:
+    virtual void begin() override;
     virtual void finaltick() override;
 
 public:
@@ -66,9 +67,7 @@ public:
     void EndOverlap(CCollider2D* _Other);
 
 
-    void BeginRayOverlap();
     void OnRayOverlap();
-    void EndRayOverlap();
 
 
     virtual void SaveToLevelFile(FILE* _File) override;

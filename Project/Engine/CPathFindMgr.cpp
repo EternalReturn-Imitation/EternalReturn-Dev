@@ -11,6 +11,10 @@
 
 #include "CResMgr.h"
 #include "CMesh.h"
+#include "CCollider2D.h"
+#include "CCollider3D.h"
+#include "CRenderMgr.h"
+#include "CCamera.h"
 
 #include "Detour/DetourNavMesh.h"
 #include "Detour/DetourNavMeshQuery.h"
@@ -130,55 +134,6 @@ bool CPathFindMgr::LoadNavMeshFromFile(const char* path)
 		assert(false);
 	}
 
-	vector<Vtx> vVtx;
-	vector<UINT> vIdx;
-
-	// 버텍스 ID를 관리하기 위한 맵 (버텍스 위치 -> 전역 버텍스 리스트 내의 인덱스)
-	std::map<tuple<float,float,float>, int> vertexIdMap;
-	int nextVertexId = 0;
-
-	// 타일과 폴리곤을 순회
-	for (int i = 0; i < m_NavMesh->getMaxTiles(); ++i) {
-		const dtMeshTile* tile = m_NavMesh->getTileAt(i,0,0);
-		if (!tile->header) continue;
-
-		// 각 타일 내의 폴리곤 순회
-		for (int j = 0; j < tile->header->polyCount; ++j) {
-			const dtPoly* poly = &tile->polys[j];
-
-			// 폴리곤이 폐쇄된 경계를 형성하는지 확인 (옵션)
-			if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION) continue;
-
-			// 각 폴리곤의 버텍스 인덱스 순회
-			for (int k = 0; k < 3; ++k) {
-				// 폴리곤의 버텍스 인덱스를 사용하여 실제 버텍스 좌표를 타일의 버텍스 배열에서 찾음
-				const float* v = &tile->verts[poly->verts[k] * 3];
-				
-				tuple<float, float, float> vertexKey(v[0], v[1], v[2]);
-
-				Vtx vtx1;
-				vtx1.vPos = Vec3(v[0], v[1], v[2]);
-				vtx1.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
-				vtx1.vUV = Vec2(0.f, 0.f);
-				vtx1.vNormal = Vec3(0.f, 1.f, 0.f);
-
-				if (vertexIdMap.find(vertexKey) == vertexIdMap.end()) {
-					vVtx.push_back(vtx1);
-					vertexIdMap.insert(make_pair(vertexKey, nextVertexId));
-					vIdx.push_back(nextVertexId);
-					nextVertexId++;
-				}
-				else {
-					vIdx.push_back(vertexIdMap.find(vertexKey)->second);
-				}
-			}
-		}
-	}
-
-	CMesh* mesh = new CMesh(true);
-	mesh->Create(vVtx.data(), (UINT)vVtx.size(), vIdx.data(), (UINT)vIdx.size());
-	CResMgr::GetInst()->AddRes<CMesh>(L"NavMesh", mesh);
-
 	return true;
 }
 
@@ -230,4 +185,72 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 	delete[] actualPath; // 더이상 필요없는 calcPath를 삭제합니다.
 
 	return vecPath;
+}
+
+vector<CGameObject*> CPathFindMgr::CheckCollisionObject(IntersectResult _intersectResult)
+{
+	vector<CGameObject*> semiResult;
+	vector<CGameObject*> result;
+
+	for (UINT i = 0; i < m_vColliderObjects.size(); ++i) {
+		Vec3 objTransform = m_vColliderObjects[i]->Transform()->GetRelativePos();
+		Vec3 objScale = m_vColliderObjects[i]->Transform()->GetRelativeScale();
+
+		if (m_vColliderObjects[i]->Collider2D()) {
+			objTransform += m_vColliderObjects[i]->Collider2D()->GetOffsetPos();
+			Vec3 colScale = m_vColliderObjects[i]->Collider2D()->GetOffsetScale();
+			objScale.x += colScale.x;
+			objScale.y += colScale.z;
+			objScale.z += colScale.y;
+		}
+		if (m_vColliderObjects[i]->Collider3D()) {
+			objTransform += m_vColliderObjects[i]->Collider3D()->GetOffsetPos();
+			objScale += m_vColliderObjects[i]->Collider3D()->GetOffsetScale();
+		}
+		objScale *= 2;
+
+		//탑뷰겜이라 y값은 계산 안함.
+		objTransform.y = 0.f;
+		_intersectResult.vCrossPoint.y = 0.f;
+
+		Vec3 objRange[2];
+		objRange[0] = Vec3(objTransform.x - (objScale.x / 2), objTransform.y - (objScale.y / 2), objTransform.z - (objScale.z / 2));
+		objRange[1] = Vec3(objTransform.x + (objScale.x / 2), objTransform.y + (objScale.y / 2), objTransform.z + (objScale.z / 2));
+		
+		if (objRange[0].x< _intersectResult.vCrossPoint.x && objRange[1].x > _intersectResult.vCrossPoint.x
+			&& objRange[0].y< _intersectResult.vCrossPoint.y && objRange[1].y > _intersectResult.vCrossPoint.y
+			&& objRange[0].z< _intersectResult.vCrossPoint.z && objRange[1].z > _intersectResult.vCrossPoint.z) {
+			semiResult.push_back(m_vColliderObjects[i]);
+		}
+	}
+
+	CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
+	tRay ray = mainCam->GetRay();
+	IntersectResult rayResult;
+	for (UINT i = 0; i < semiResult.size(); ++i) {
+		if (semiResult[i]->Collider2D()) {			
+			rayResult = mainCam->IsCollidingBtwRayRect(ray, semiResult[i]);
+		}
+		if (semiResult[i]->Collider3D()) {
+			switch (semiResult[i]->Collider3D()->GetColliderShape())
+			{
+			case COLLIDER3D_TYPE::CUBE:
+				rayResult = mainCam->IsCollidingBtwRayCube(ray, semiResult[i]);
+				break;
+			case COLLIDER3D_TYPE::SPHERE:
+				rayResult = mainCam->IsCollidingBtwRaySphere(ray, semiResult[i]);
+				break;
+			}
+		}
+
+		if (rayResult.bResult) {
+			if (semiResult[i]->Collider2D())
+				semiResult[i]->Collider2D()->OnRayOverlap();
+			if (semiResult[i]->Collider3D())
+				semiResult[i]->Collider3D()->OnRayOverlap();
+			result.push_back(semiResult[i]);
+		}
+	}
+
+	return result;
 }

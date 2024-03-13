@@ -33,42 +33,25 @@ void CFindPath::tick()
 
 void CFindPath::finaltick()
 {
-	//if (KEY_PRESSED(KEY::LBTN))
-	//{
-	//	LaycastResultTrigger = true;
-	//
-	//	tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
-	//	float yPos = CPathFindMgr::GetInst()->FindYPos(Vec2(naviResult.resultPos.x, naviResult.resultPos.z));
-	//	naviResult.resultPos.y = yPos;
-	//	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();
-	//	GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
-	//	
-	//	int a = 0;
-	//}
-	//
-	////여기에 naviResult변수를 만들면 한 틱 느리게 값을 받음.
-	//if (LaycastResultTrigger) {
-	//
-	//	LaycastResultTrigger = false;
-	//}
-
-	if (KEY_TAP(KEY::RBTN)) {
-	//if (CPathFindMgr::GetInst()->GetRayResultTrigger()) {
-		//tNaviResult naviResult = CPathFindMgr::GetInst()->GetNaviResult();
-		//GetOwner()->Transform()->SetRelativePos(Vec3(naviResult.resultPos.x,naviResult.resultPos.y,naviResult.resultPos.z));
-		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.y, naviResult.resultPos.z));
-		//FindPath(Vec3(naviResult.resultPos.x, naviResult.resultPos.z, naviResult.resultPos.y));
-		//CPathFindMgr::GetInst()->SetRayResultTrigger(false);
+	if (KEY_TAP(KEY::RBTN) && !(KEY_TAP(KEY::LSHIFT))) {
 		
 		DEBUG_LOG_INPUT(ToString(GetOwner()->GetName()).c_str(), "MovePoint", "RBTN");
 
 		CGameObject* Map = CPathFindMgr::GetInst()->GetMapCollider();
-		CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
-		tRay ray = mainCam->GetRay();
-		IntersectResult result = mainCam->IsCollidingBtwRayRect(ray, Map);
-		Vec3 TargetPos = result.vCrossPoint;
+		if (Map) {
+			CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
+			tRay ray = mainCam->GetRay();
+			IntersectResult result = mainCam->IsCollidingBtwRayRect(ray, Map);
+			Vec3 TargetPos = result.vCrossPoint;
 
-		FindPath(TargetPos);
+			vector<CGameObject*> rayColObjects = CPathFindMgr::GetInst()->CheckCollisionObject(result);
+			
+			if(rayColObjects.size() == 0)
+				FindPath(TargetPos);
+			else {
+
+			}
+		}		
 	}
 	PathMove(50.0f, false);
 }
