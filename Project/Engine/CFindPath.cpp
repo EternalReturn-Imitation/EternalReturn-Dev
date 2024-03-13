@@ -100,7 +100,7 @@ void CFindPath::FindPath(Vec3 endPos)
 
 	// 현재 경로를 시작으로 경로를 받아옴
 	m_vecPath = CPathFindMgr::GetInst()->FindPath(CurPos, endPos);
-	m_iPathCount = m_vecPath.size();
+	m_iPathCount = (UINT)m_vecPath.size();
 	m_iCurPathIdx = 0;
 
 	m_vNextPos = Vec3(m_vecPath[0].x, m_vecPath[0].y, m_vecPath[0].z);
@@ -167,14 +167,6 @@ void CFindPath::SaveToLevelFile(FILE* _File)
 }
 
 void CFindPath::LoadFromLevelFile(FILE* _FILE)
-{
-}
-
-void CFindPath::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-}
-
-void CFindPath::LoadFromDB(int _gameObjectID)
 {
 }
 

@@ -51,7 +51,7 @@ void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 {
 	vector<CGameObject*> vecChildObj = _ParentObject->GetChild();
 	
-	int iChildCnt = vecChildObj.size();
+	int iChildCnt = (int)vecChildObj.size();
 
 	for (int i = 0; i < iChildCnt; ++i)
 	{
@@ -498,42 +498,10 @@ float Deg2Rad(float _Degree)
 
 float roundToDecimal(double value, int decimalPlaces)
 {
-	float factor = pow(10, decimalPlaces);
+	float factor = (float)pow(10, decimalPlaces);
 	return round((float)value * factor) / factor;
 }
 
-wstring SaveResRefToDB(Ptr<CRes> _Res)
-{
-	std::wstringstream wss;
-
-	int i = 0;
-	if (nullptr == _Res)
-	{
-		wss << L"0\n";
-	}
-	else
-	{
-		wss << L"1\n";
-		wss << _Res->GetKey() << L"\n";
-		wss << _Res->GetRelativePath() << L"\n";
-	}
-	
-	return wss.str();
-}
-
-void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
-{
-	if (nullptr == _Res)
-	{
-		_Key = L"0";
-		_RelativePath = L"0";
-	}
-	else
-	{
-		_Key = _Res->GetKey();
-		_RelativePath = _Res->GetRelativePath();
-	}
-}
 
 //template<typename T>
 //void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
@@ -601,6 +569,6 @@ std::vector<int> WStringToIntArray(const std::wstring& str)
 
 
 float CTruncate(float value, int decimalPlaces) {
-	float factor = std::pow(10.0, decimalPlaces);
+	float factor = (float)std::pow(10.0, decimalPlaces);
 	return std::floor(value * factor) / factor;
 }

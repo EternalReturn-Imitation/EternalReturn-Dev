@@ -53,14 +53,12 @@ int MenuUI::render_update()
             if (ImGui::MenuItem("Save Level"))
             {
                 // Level 저장
-                //CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
-                CLevelSaveLoad::SaveLevelToDB(CLevelMgr::GetInst()->GetCurLevel());
+                CLevelSaveLoad::SaveLevel(L"TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());
             }
             if (ImGui::MenuItem("Load Level"))
             {
                 // Level 불러오기
-                //CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevel(L"Level\\TestLevel.lv");
-                CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevelByDB();
+                CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevel(L"TestLevel.lv");
 
                 tEvent evn = {};
                 evn.Type = EVENT_TYPE::LEVEL_CHANGE;

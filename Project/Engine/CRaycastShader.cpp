@@ -27,7 +27,7 @@ void CRaycastShader::SetVtx(vector<Vector4> _vtx)
 {
 	m_vVtx = _vtx;
 
-	m_pVtx->Create(sizeof(Vector4), m_vVtx.size(), SB_TYPE::READ_ONLY, false, m_vVtx.data());
+	m_pVtx->Create(sizeof(Vector4), (UINT)m_vVtx.size(), SB_TYPE::READ_ONLY, false, m_vVtx.data());
 }
 
 void CRaycastShader::UpdateData()

@@ -13,8 +13,6 @@
 #include "CBone.h"
 
 #include "CPathMgr.h"
-#include "CSQLMgr.h"
-
 
 class CResMgr :
     public CSingleton<CResMgr>

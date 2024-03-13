@@ -377,7 +377,7 @@ void CAnimator3D::SaveCurAnimDataToFile()
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
 	// 애니메이션 갯수
-	UINT iAnimCount = m_mapAnim.size();
+	UINT iAnimCount = (UINT)m_mapAnim.size();
 	fwrite(&iAnimCount, sizeof(UINT), 1, _pFile);
 
 	map<wstring,CAnim3D*>::iterator iter = m_mapAnim.begin();
@@ -410,7 +410,7 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	UINT iAnimCount = 0;
 	fread(&iAnimCount, sizeof(UINT), 1, _pFile);
 
-	for (int i = 0; i < iAnimCount; ++i)
+	for (UINT i = 0; i < iAnimCount; ++i)
 	{
 		Ptr<CBone> pBone;
 		LoadResRef(pBone, _pFile);
@@ -427,12 +427,4 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 		LoadWString(pCurAnimKey, _pFile);
 		SelectAnimation(pCurAnimKey);
 	}
-}
-
-void CAnimator3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-}
-
-void CAnimator3D::LoadFromDB(int _gameObjectID)
-{
 }

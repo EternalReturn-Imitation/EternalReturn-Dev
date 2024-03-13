@@ -1061,60 +1061,6 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 
 }
 
-void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-
-	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-		sqlite3_bind_double(stmt, 2, static_cast<double>(m_fAspectRatio));
-		sqlite3_bind_double(stmt, 3, static_cast<double>(m_fScale));
-		sqlite3_bind_int(stmt, 4, static_cast<int>(m_ProjType));
-		sqlite3_bind_int(stmt, 5, static_cast<int>(m_iLayerMask));
-		sqlite3_bind_int(stmt, 6, m_iCamIdx);
-		sqlite3_bind_int(stmt, 7, static_cast<int>(m_bMainCamera));
-
-		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			assert(false);
-		}
-
-		sqlite3_finalize(stmt);
-	}
-	else {
-		assert(false);
-	}
-}
-
-void CCamera::LoadFromDB(int _gameObjectID)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-	const char* szQuery = "SELECT AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera FROM CAMERA WHERE GameObject_ID = ?";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			m_fAspectRatio = static_cast<float>(sqlite3_column_double(stmt, 0));
-			m_fScale = static_cast<float>(sqlite3_column_double(stmt, 1));
-			m_ProjType = (PROJ_TYPE)(static_cast<UINT>(sqlite3_column_int(stmt, 2)));
-			m_iLayerMask = static_cast<UINT>(sqlite3_column_int(stmt, 3));
-			m_iCamIdx = sqlite3_column_int(stmt, 4);
-			m_bMainCamera = static_cast<bool>(sqlite3_column_int(stmt, 5)) != 0;
-		}
-		else {
-			assert(false);
-		}
-		sqlite3_finalize(stmt);
-	}
-	else {
-		assert(false);
-	}
-}
-
 bool CCamera::IsDebugFrustumView()
 {
 	return m_bDebugFrustumView;
