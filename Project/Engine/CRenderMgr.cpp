@@ -65,7 +65,6 @@ void CRenderMgr::render()
 
 void CRenderMgr::render_play()
 {
-    ClearMRT();
     // 카메라 기준 렌더링
     for (size_t i = 0; i < m_vecCam.size(); ++i)
     {

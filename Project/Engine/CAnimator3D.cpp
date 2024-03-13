@@ -55,6 +55,15 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
+
+	// AnimMap Clone
+	map<wstring,CAnim3D*>::const_iterator iter = _origin.m_mapAnim.begin();
+	
+	while (iter != _origin.m_mapAnim.end())
+	{
+		AddAnim(iter->second->GetBone());
+		iter++;
+	}
 }
 
 CAnimator3D::~CAnimator3D()
@@ -245,10 +254,13 @@ CAnim3D* CAnimator3D::AddAnim(Ptr<CBone> _pBone)
 	CAnim3D* pAnim = new CAnim3D;
 	pAnim = CAnim3D::CreateAnimation(_pBone);
 	pAnim->SetOwner(this);
-	m_mapAnim.insert(make_pair(_pBone->GetKey(), pAnim));
-	pAnim->SetName(_pBone->GetKey());
 
-	SelectAnimation(_pBone->GetKey());
+	wstring AnimKey = path(_pBone->GetKey()).stem().wstring();
+
+	m_mapAnim.insert(make_pair(AnimKey, pAnim));
+	pAnim->SetName(AnimKey);
+
+	SelectAnimation(AnimKey);
 
 	return pAnim;
 }
@@ -364,16 +376,55 @@ void CAnimator3D::SaveCurAnimDataToFile()
 
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
+	// 애니메이션 갯수
+	UINT iAnimCount = (UINT)m_mapAnim.size();
+	fwrite(&iAnimCount, sizeof(UINT), 1, _pFile);
+
+	map<wstring,CAnim3D*>::iterator iter = m_mapAnim.begin();
+	wstring pCurAnimKey;
+
+	for (; iter != m_mapAnim.end(); ++iter)
+	{
+		SaveResRef(iter->second->GetBone().Get(), _pFile);
+		
+		if (iter->second == m_pCurAnim)
+			pCurAnimKey = iter->first;
+	}
+
+	int isCurAnim = 0;
+	
+	if (nullptr == m_pCurAnim)
+		fwrite(&isCurAnim, sizeof(UINT), 1, _pFile);
+	
+	else if (nullptr != m_pCurAnim)
+	{
+		isCurAnim = 1;
+		fwrite(&isCurAnim, sizeof(UINT), 1, _pFile);
+		SaveWString(pCurAnimKey, _pFile);
+	}
 }
 
 void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 {
-}
+	// 애니메이션 갯수
+	UINT iAnimCount = 0;
+	fread(&iAnimCount, sizeof(UINT), 1, _pFile);
 
-void CAnimator3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-}
+	for (UINT i = 0; i < iAnimCount; ++i)
+	{
+		Ptr<CBone> pBone;
+		LoadResRef(pBone, _pFile);
+		AddAnim(pBone);
+	}
 
-void CAnimator3D::LoadFromDB(int _gameObjectID)
-{
+	wstring pCurAnimKey;
+	
+	UINT isCurAnim = 0;
+	fread(&isCurAnim, sizeof(UINT), 1, _pFile);
+
+	if(isCurAnim)
+	{
+		LoadWString(pCurAnimKey, _pFile);
+		SelectAnimation(pCurAnimKey);
+	}
 }

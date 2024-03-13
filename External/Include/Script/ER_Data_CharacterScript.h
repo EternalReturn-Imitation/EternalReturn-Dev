@@ -1,17 +1,19 @@
 #pragma once
 #include <Engine\CScript.h>
-
+#include "ER_define.h"
+#include "ER_struct.h"
 
 class ER_Data_CharacterScript :
     public CScript
 {
 private:
-    // [변수]
-    wstring m_strName;  // 실험체 이름
-    // 실험체 초기 능력치
+    wstring             m_strKey;
+    wstring             m_strName;              // 실험체 이름
+    ER_STD_CHAR_STATS   m_STDStats;             // 실험체 초기 능력치
 
-    // 초상화 텍스쳐
-    // 전신 일러
+    Ptr<CTexture>       m_PortraitTex;          // 초상화 텍스쳐
+    Ptr<CTexture>       m_FullTax;              // 전신 일러
+    Ptr<CTexture>       m_MapTex;               // 미니맵 텍스쳐
 
     // 실험체 최종 능력치 (초기능력치 * 레벨, + 아이템, + 스킬효과)
 
@@ -33,5 +35,8 @@ public:
 public:
     ER_Data_CharacterScript();
     ~ER_Data_CharacterScript();
+
+    friend class ER_CharacterMgr;
+    friend class CharacterDataUI;
 };
 

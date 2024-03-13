@@ -32,6 +32,7 @@ CAnim3D::CAnim3D()
 CAnim3D::CAnim3D(const CAnim3D& _origin)
 	: m_pOwner(nullptr)
 	, m_tMTAnimClip(_origin.m_tMTAnimClip)
+	, m_pBone(_origin.m_pBone)
 {
 }
 

@@ -17,6 +17,4 @@
 #include "CSkyBox.h"
 #include "CDecal.h"
 #include "CLandscape.h"
-#include "CNaviMap.h"
-
-//#include "CCollider3D.h"
+#include "CFindPath.h"

@@ -14,11 +14,13 @@ private:
     int Save();
     int Load();
 
+    int SaveCharacterData(CGameObject* _Character, FILE* _File);
+    CGameObject* LoadCharacterData(FILE* _File);
+
 public:
     void init();
-    void tick();
 
-    int SpawnCharacter(const wstring& _key);
+    CGameObject* GetCharacter(const wstring& _key);
 
     friend class CharacterDataUI;
 };

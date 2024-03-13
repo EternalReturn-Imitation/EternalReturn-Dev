@@ -696,8 +696,8 @@ void CCamera::render()
 	if (m_bMainCamera)
 	{
 		// 쉐이더 도메인에 따라서 순차적으로 그리기
-	// Deferred MRT 로 변경
-	// Deferred 물체들을 Deferred MRT 에 그리기
+		// Deferred MRT 로 변경
+		// Deferred 물체들을 Deferred MRT 에 그리기
 		CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 		render_deferred();
 
@@ -1033,74 +1033,32 @@ void CCamera::SaveToLevelFile(FILE* _File)
 {
 	fwrite(&m_fAspectRatio, sizeof(float), 1, _File);
 	fwrite(&m_fScale, sizeof(float), 1, _File);
+	fwrite(&m_Near, sizeof(float), 1, _File);
+	fwrite(&m_Far, sizeof(float), 1, _File);
 	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
 	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
+	fwrite(&m_iLayerFrustum, sizeof(UINT), 1, _File);
 	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
 	fwrite(&m_bMainCamera, sizeof(bool), 1, _File);
+	fwrite(&m_OrthoWidth, sizeof(float), 1, _File);
+	fwrite(&m_OrthoHeight, sizeof(float), 1, _File);
+
 }
 
 void CCamera::LoadFromLevelFile(FILE* _File)
 {
 	fread(&m_fAspectRatio, sizeof(float), 1, _File);
 	fread(&m_fScale, sizeof(float), 1, _File);
+	fread(&m_Near, sizeof(float), 1, _File);
+	fread(&m_Far, sizeof(float), 1, _File);
 	fread(&m_ProjType, sizeof(UINT), 1, _File);
 	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
+	fread(&m_iLayerFrustum, sizeof(UINT), 1, _File);
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
 	fread(&m_bMainCamera, sizeof(bool), 1, _File);
-}
+	fread(&m_OrthoWidth, sizeof(float), 1, _File);
+	fread(&m_OrthoHeight, sizeof(float), 1, _File);
 
-void CCamera::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-
-	const char* szQuery = "INSERT INTO CAMERA(GameObject_ID, AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-		sqlite3_bind_double(stmt, 2, static_cast<double>(m_fAspectRatio));
-		sqlite3_bind_double(stmt, 3, static_cast<double>(m_fScale));
-		sqlite3_bind_int(stmt, 4, static_cast<int>(m_ProjType));
-		sqlite3_bind_int(stmt, 5, static_cast<int>(m_iLayerMask));
-		sqlite3_bind_int(stmt, 6, m_iCamIdx);
-		sqlite3_bind_int(stmt, 7, static_cast<int>(m_bMainCamera));
-
-		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			assert(false);
-		}
-
-		sqlite3_finalize(stmt);
-	}
-	else {
-		assert(false);
-	}
-}
-
-void CCamera::LoadFromDB(int _gameObjectID)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-	const char* szQuery = "SELECT AspectRatio, Scale, ProjType, LayerMask, CamIdx, bMainCamera FROM CAMERA WHERE GameObject_ID = ?";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			m_fAspectRatio = static_cast<float>(sqlite3_column_double(stmt, 0));
-			m_fScale = static_cast<float>(sqlite3_column_double(stmt, 1));
-			m_ProjType = (PROJ_TYPE)(static_cast<UINT>(sqlite3_column_int(stmt, 2)));
-			m_iLayerMask = static_cast<UINT>(sqlite3_column_int(stmt, 3));
-			m_iCamIdx = sqlite3_column_int(stmt, 4);
-			m_bMainCamera = static_cast<bool>(sqlite3_column_int(stmt, 5)) != 0;
-		}
-		else {
-			assert(false);
-		}
-		sqlite3_finalize(stmt);
-	}
-	else {
-		assert(false);
-	}
 }
 
 bool CCamera::IsDebugFrustumView()

@@ -84,6 +84,9 @@
     <ClInclude Include="ER_Data_ItemScript.h">
       <Filter>Script\ER\DataScript\Item</Filter>
     </ClInclude>
+    <ClInclude Include="ER_PlayerScript.h">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -118,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="ER_Data_ItemScript.cpp">
       <Filter>Script\ER\DataScript\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_PlayerScript.cpp">
+      <Filter>Script\ER\PlayerScript</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

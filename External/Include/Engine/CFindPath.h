@@ -11,8 +11,13 @@ private:
     int                 m_iPathCount;
     int                 m_iCurPathIdx;
 
+    float               m_fPrevDir;
+
     Vec3                m_vNextPos;
     Vec3                m_vPrevEndPos;
+
+private:
+    float GetFrontDir(Vec3 _Direction);
 
 public:
     CFindPath();
@@ -35,9 +40,6 @@ public:
 public:
     virtual void SaveToLevelFile(FILE* _File);
     virtual void LoadFromLevelFile(FILE* _FILE);
-
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType);
-    virtual void LoadFromDB(int _gameObjectID);
 
     CLONE(CFindPath);
 };

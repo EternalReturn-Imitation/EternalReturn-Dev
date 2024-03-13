@@ -5,8 +5,6 @@ class CScript;
 
 typedef void (CScript::* SCRIPT_DELEGATE)(void);
 
-typedef
-
 class FSMState
 {
 private:

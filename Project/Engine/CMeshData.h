@@ -34,6 +34,7 @@ public:
 	virtual int Load(const wstring& _strFilePath) override;
 
 	CGameObject* Instantiate();
+	void Instantiate(CGameObject* _obj);
 
 	const Ptr<CMesh>& GetMesh(int i = 0) { return m_vecMeshData[i]->m_pMesh; }
 
