@@ -10,7 +10,7 @@ class ER_ItemMgr
 
 private:
 	vector<CGameObject*> m_vecItem;						// 아이템 리스트
-	unordered_map<DWORD_PTR, UINT> m_umapRecipe;	// 조합식 목록
+	unordered_map<DWORD_PTR, UINT> m_umapRecipe;		// 조합식 목록
 
 private:
 	int Save();
@@ -26,7 +26,6 @@ public:
 
 public:
 	void init();
-	void Update();
 
 	friend class ItemDataUI;
 };

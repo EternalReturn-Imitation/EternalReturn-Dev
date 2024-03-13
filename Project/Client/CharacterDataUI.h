@@ -5,9 +5,9 @@ class CharacterDataUI :
     public UI
 {
 private:
-//    map<wstring, ER_Character*>* m_pCharacters;
-    
-//    ER_Character* m_pSelectedCharacter;
+    map<wstring, CGameObject*>* m_pCharacters;
+  
+    CGameObject* m_pSelectedCharacter;
 
 public:
     void RegistCharacters();

@@ -103,7 +103,8 @@ void CLight3D::SetRadius(float _Radius)
 	m_LightInfo.Radius = _Radius;
 
 	// SphereMesh ¿« ∑Œƒ√ π›¡ˆ∏ß¿Ã 0.5f ¿Ã±‚ ∂ßπÆø° 2πË∑Œ ¿˚øÎ
-	Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
+	if (m_LightInfo.LightType != (UINT)LIGHT_TYPE::DIRECTIONAL)
+		Transform()->SetRelativeScale(Vec3(_Radius * 2.f, _Radius * 2.f, _Radius * 2.f));
 }
 
 void CLight3D::SetLightType(LIGHT_TYPE _type)
@@ -152,6 +153,8 @@ void CLight3D::SaveToLevelFile(FILE* _File)
 	fwrite(&m_LightInfo.Angle,sizeof(float), 1, _File);
 	fwrite(&m_LightInfo.padding, sizeof(int), 1, _File);
 	fwrite(&m_LightIdx, sizeof(float), 1, _File);
+
+	m_pCamObj->Camera()->SaveToLevelFile(_File);
 }
 
 void CLight3D::LoadFromLevelFile(FILE* _File)
@@ -165,80 +168,6 @@ void CLight3D::LoadFromLevelFile(FILE* _File)
 	fread(&m_LightInfo.Angle, sizeof(float), 1, _File);
 	fread(&m_LightInfo.padding, sizeof(int), 1, _File);
 	fread(&m_LightIdx, sizeof(float), 1, _File);
-}
 
-void CLight3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-
-	const char* szQuery = "INSERT INTO LIGHT3D(GameObject_ID, LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-		sqlite3_bind_blob(stmt, 2, &m_LightInfo, sizeof(m_LightInfo), SQLITE_STATIC);
-
-		wstring meshKey, meshPath, mtrlKey, mtrlPath;
-		SaveResRefToDB(m_Mesh.Get(), meshKey, meshPath);
-		SaveResRefToDB(m_Mtrl.Get(), mtrlKey, mtrlPath);
-
-		sqlite3_bind_text16(stmt, 3, meshKey.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text16(stmt, 4, meshPath.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text16(stmt, 5, mtrlKey.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text16(stmt, 6, mtrlPath.c_str(), -1, SQLITE_TRANSIENT);
-
-		sqlite3_bind_int(stmt, 7, m_LightIdx);
-
-		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			assert(false);
-		}
-
-		sqlite3_finalize(stmt);
-	}
-	else {
-		assert(false);
-	}
-}
-
-void CLight3D::LoadFromDB(int _gameObjectID)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-	const char* szQuery = "SELECT LightInfo, Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path, Light_Idx FROM LIGHT3D WHERE GameObject_ID = ?";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			const void* data = sqlite3_column_blob(stmt, 0);
-			int bytes = sqlite3_column_bytes(stmt, 0);
-
-			// tLightInfoÎ°?Î≥Ä??
-			if (bytes == sizeof(tLightInfo)) {
-				memcpy(&m_LightInfo, data, bytes);
-			}
-			else {
-				assert(false);
-			}
-
-			// Mesh_Key, Mesh_Path, Mtrl_Key, Mtrl_Path ?∞Ïù¥??Î∂àÎü¨?§Í∏∞
-			const wchar_t* meshKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
-			const wchar_t* meshPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
-			const wchar_t* mtrlKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
-			const wchar_t* mtrlPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 4));
-
-			LoadResRefFromDB(m_Mesh, meshKey, meshPath);
-			LoadResRefFromDB(m_Mtrl, mtrlKey, mtrlPath);
-
-			// Light_Idx ?∞Ïù¥??Î∂àÎü¨?§Í∏∞
-			m_LightIdx = sqlite3_column_int(stmt, 5);
-		}
-		else {
-			assert(false);
-		}
-		sqlite3_finalize(stmt);
-	}
-	else {
-		assert(false);
-	}
+	m_pCamObj->Camera()->LoadFromLevelFile(_File);
 }

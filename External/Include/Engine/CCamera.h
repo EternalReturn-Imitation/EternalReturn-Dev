@@ -19,8 +19,8 @@ private:
 
     bool        m_bMainCamera;      // 메인카메라 여부
 
-    float   m_OrthoWidth;   // OrthoGraphic 에서의 가로 투영 범위
-    float   m_OrthoHeight;  // OrthoGraphic 에서의 세로 투영 범위
+    float       m_OrthoWidth;   // OrthoGraphic 에서의 가로 투영 범위
+    float       m_OrthoHeight;  // OrthoGraphic 에서의 세로 투영 범위
 
     PROJ_TYPE   m_ProjType;
 
@@ -35,7 +35,7 @@ private:
 
     int         m_iCamIdx;          // 카메라 우선순위
 
-    tRay                    m_ray;      // 마우스 방향을 향하는 직선
+    tRay        m_ray;      // 마우스 방향을 향하는 직선
 
     bool        m_bDebugView;
     bool        m_bDebugFrustumView;
@@ -157,13 +157,13 @@ private:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
-    virtual void LoadFromDB(int _gameObjectID) override;
-
     CLONE(CCamera);
+
 public:    
     CCamera();
     CCamera(const CCamera& _Other);
     ~CCamera();
+
+    friend class CLight3D;
 };
 

@@ -3,8 +3,6 @@
 
 #include "CGameObject.h"
 
-#include "CSQLMgr.h"
-
 class CTransform;
 class CMeshRender;
 
@@ -31,10 +29,6 @@ public:
     virtual void SaveToLevelFile(FILE* _File) = 0;
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
 
-public:
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) abstract;
-    virtual void LoadFromDB(int _gameObjectID) abstract;
-
 public:  
     GET_OTHER_COMPONENT(Transform);
     GET_OTHER_COMPONENT(MeshRender);
@@ -47,6 +41,7 @@ public:
     GET_OTHER_COMPONENT(BehaviorTree);
     GET_OTHER_COMPONENT(LandScape);
     GET_OTHER_COMPONENT(Collider3D);
+    GET_OTHER_COMPONENT(FindPath);
 
 public:
     CComponent(COMPONENT_TYPE _Type);

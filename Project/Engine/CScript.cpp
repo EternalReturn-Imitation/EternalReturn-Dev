@@ -15,11 +15,3 @@ void CScript::AddScriptParam(SCRIPT_PARAM eParam, void* _pData, const string& _D
 {
 	m_vecParam.push_back(tScriptParam{ eParam , _pData , _Desc });
 }
-
-void CScript::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) {
-
-}
-
-void CScript::LoadFromDB(int _gameObjectID) {
-
-}

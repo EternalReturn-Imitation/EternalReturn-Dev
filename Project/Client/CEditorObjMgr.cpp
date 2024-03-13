@@ -72,7 +72,8 @@ void CEditorObjMgr::init()
 	pEditorCamObj->AddComponent(new CCamera);
 	pEditorCamObj->AddComponent(new CCameraMoveScript);
 
-	pEditorCamObj->Camera()->SetFar(100000.f);
+	pEditorCamObj->Camera()->SetFar(10000.f);
+	pEditorCamObj->Camera()->SetFOV(Deg2Rad(75));
 	pEditorCamObj->Camera()->SetLayerMaskAll(true);
 	pEditorCamObj->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pEditorCamObj->Camera()->SetMainCamera();

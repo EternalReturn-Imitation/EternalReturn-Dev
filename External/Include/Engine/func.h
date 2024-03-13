@@ -88,35 +88,8 @@ void LoadResRef(Ptr<T>& _Res, FILE* _File)
 }
 
 
-wstring SaveResRefToDB(Ptr<CRes> _Res);
-void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath);
-
 void SaveGameObjectPtr(CGameObject* _Obj, FILE* _File);
 void LoadGameObjectPtr(wstring& _ObjName, FILE* _File);
-
-template<typename T>
-void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
-	int exists;
-	wss >> exists;
-	std::wstring line;
-	std::getline(wss, line); // ?«ìž ?¤ì˜ ê°œí–‰ ë¬¸ìžë¥??Œë¹„
-
-	if (exists) {
-		std::wstring strKey, strRelativePath;
-
-		std::getline(wss, strKey);
-		std::getline(wss, strRelativePath);
-
-		_Res = CResMgr::GetInst()->Load<T>(strKey, strRelativePath);
-	}
-}
-
-template<typename T>
-void LoadResRefFromDB(Ptr<T>& _Res, const wstring& _Key, const wstring& _RelativePath) {
-	if (_Key != L"0") {
-		_Res = CResMgr::GetInst()->Load<T>(_Key, _RelativePath);
-	}
-}
 
 const wchar_t* ToWString(COMPONENT_TYPE type);
 
