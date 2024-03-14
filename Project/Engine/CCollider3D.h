@@ -16,10 +16,6 @@ private:
     Matrix          m_matCollider3D;    // Collider 의 월드행렬
     int             m_iCollisionCount;    // 충돌 횟수
 
-    bool            m_bIsCollidedFromRay; // Camera에서 Mouse피킹용 Ray와 충돌 가능한지
-
-    bool            m_bIsWall;           // Wall 취급을 받아서 전장의 안개 취급을 받을지
-
     bool            m_bDrawCollision;   //콜리전을 보이게할지 여부
 
 public:
@@ -43,12 +39,6 @@ public:
     const COLLIDER3D_TYPE& GetCollider3DType() { return m_Shape; }
 
     const int& GetCollisionCount() { return m_iCollisionCount; }
-
-    bool  IsCollidedFromRay() { return m_bIsCollidedFromRay; }
-    void  SetCollidedFromRay(bool _state) { m_bIsCollidedFromRay = _state; }
-
-    bool  IsWall() { return m_bIsWall; }
-    void  SetIsWall(bool _wall) { m_bIsWall = _wall; }
 
     bool GetDrawCollision() { return m_bDrawCollision; }
     void SetDrawCollision(bool _IsDraw) { m_bDrawCollision = _IsDraw; }

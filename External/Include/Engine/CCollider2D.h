@@ -19,12 +19,8 @@ private:
     Matrix          m_matCollider2D;    // Collider 의 월드행렬
     int             m_iCollisionCount;  // 충돌 횟수
 
-
-    bool            m_bIsCollidedFromRay;
     bool            m_bDrawCollision; //콜리전을 보이게 할지 여부
-
-    // 하은님이 요청하신 변수 추가
-    bool            m_bFixed;
+    bool            m_bFixed; //오브젝트에 따라 충돌체 돌리기
 
 public:
     virtual void begin() override;
@@ -45,18 +41,12 @@ public:
     bool GetColliderAbsolute() { return m_bAbsolute; }
     COLLIDER2D_TYPE GetColliderShape() { return m_Shape; }
 
-    bool IsFixed() { return m_bFixed; }
-    void SetFixed(bool _b) { m_bFixed = _b; }
-
     const Matrix& GetColliderPosMat() { return m_matColliderPos; }
     const Matrix& GetColliderScaleMat() { return m_matColliderScale; }
     const Matrix& GetColliderWorldMat() { return m_matCollider2D; }
     const COLLIDER2D_TYPE& GetCollider2DType() { return m_Shape; }
 
     const int& GetCollisionCount() { return m_iCollisionCount; }
-
-    bool  IsCollidedFromRay() { return m_bIsCollidedFromRay; }
-    void  SetCollidedFromRay(bool _state) { m_bIsCollidedFromRay = _state; }
 
     bool GetDrawCollision() { return m_bDrawCollision; }
     void SetDrawCollision(bool _IsDraw) { m_bDrawCollision = _IsDraw; }
@@ -66,9 +56,9 @@ public:
     void OnOverlap(CCollider2D* _Other);
     void EndOverlap(CCollider2D* _Other);
 
-
+    void BeginRayOverlap();
     void OnRayOverlap();
-
+    void EndRayOverlap();
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;

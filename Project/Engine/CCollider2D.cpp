@@ -10,7 +10,6 @@ CCollider2D::CCollider2D()
 	, m_Shape(COLLIDER2D_TYPE::RECT)
 	, m_bAbsolute(false)
 	, m_iCollisionCount(0)
-	, m_bIsCollidedFromRay(false)
 	, m_bDrawCollision(true)
 {
 	SetName(L"Collider2D");
@@ -139,10 +138,16 @@ void CCollider2D::EndOverlap(CCollider2D* _Other)
 	}
 }
 
+void CCollider2D::BeginRayOverlap()
+{
+}
+
 void CCollider2D::OnRayOverlap()
 {
-	int a = 20;
-	//GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_2, &a);
+}
+
+void CCollider2D::EndRayOverlap()
+{
 }
 
 void CCollider2D::SaveToLevelFile(FILE* _File)

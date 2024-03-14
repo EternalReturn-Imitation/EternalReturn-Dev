@@ -16,6 +16,10 @@ union CollisionID
 	UINT_PTR id;
 };
 
+union RayCollisionID {
+	UINT_PTR id;
+};
+
 
 class CCollisionMgr :
     public CSingleton<CCollisionMgr>
@@ -25,6 +29,8 @@ private:
 	UINT					m_matrix[MAX_LAYER];
 	map<UINT_PTR, bool>		m_mapColID;
 	std::bitset<MAX_LAYER>	m_bRayCol;
+	map<UINT_PTR, bool>		m_mRayColID;
+	std::set<CGameObject*>	m_mPrevRayColID;
 
 public:
 	void LayerCheck(UINT _left, UINT _right);

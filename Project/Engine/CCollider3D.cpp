@@ -9,8 +9,6 @@ CCollider3D::CCollider3D()
 	, m_Shape(COLLIDER3D_TYPE::SPHERE)
 	, m_bAbsolute(false)
 	, m_iCollisionCount(0)
-	, m_bIsCollidedFromRay(false)
-	, m_bIsWall(false)
 	, m_bDrawCollision(true)
 {
 }
@@ -21,8 +19,6 @@ CCollider3D::CCollider3D(const CCollider3D& _other)
 	, m_vOffsetScale(_other.m_vOffsetScale)
 	, m_bAbsolute(_other.m_bAbsolute)
 	, m_Shape(_other.m_Shape)
-	, m_bIsCollidedFromRay(false)
-	, m_bIsWall(_other.m_bIsWall)
 	, m_bDrawCollision(_other.m_bDrawCollision)
 {
 }
@@ -98,6 +94,7 @@ void CCollider3D::BeginOverlap(CCollider3D* _Other)
 	{
 		vecScript[i]->BeginOverlap(_Other);
 	}
+
 }
 
 void CCollider3D::OnOverlap(CCollider3D* _Other)
@@ -122,7 +119,17 @@ void CCollider3D::EndOverlap(CCollider3D* _Other)
 	}
 }
 
+void CCollider3D::BeginRayOverlap()
+{
+	int a = 0;
+}
+
 void CCollider3D::OnRayOverlap()
+{
+	int a = 0;
+}
+
+void CCollider3D::EndRayOverlap()
 {
 	int a = 0;
 }
@@ -133,7 +140,6 @@ void CCollider3D::SaveToLevelFile(FILE* _File)
 	fwrite(&m_vOffsetScale, sizeof(Vec3), 1, _File);
 	fwrite(&m_bAbsolute, sizeof(bool), 1, _File);
 	fwrite(&m_Shape, sizeof(UINT), 1, _File);
-	fwrite(&m_bIsWall, sizeof(bool), 1, _File);
 	fwrite(&m_bDrawCollision, sizeof(bool), 1, _File);
 }
 
@@ -143,7 +149,6 @@ void CCollider3D::LoadFromLevelFile(FILE* _File)
 	fread(&m_vOffsetScale, sizeof(Vec3), 1, _File);
 	fread(&m_bAbsolute, sizeof(bool), 1, _File);
 	fread(&m_Shape, sizeof(UINT), 1, _File);
-	fread(&m_bIsWall, sizeof(bool), 1, _File);
 	fread(&m_bDrawCollision, sizeof(bool), 1, _File);
 }
 

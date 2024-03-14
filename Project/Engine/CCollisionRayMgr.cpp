@@ -31,6 +31,52 @@ void CCollisionMgr::RayCollideCheck()
 		return;
 
 	vector<CGameObject*> rayColResult = CheckRayRangeObject(result);
+
+	CollisionID id = {};
+	for (UINT i = 0; i < rayColResult.size(); ++i) {
+		id.id = rayColResult[i]->GetID();
+		map<UINT_PTR, bool>::iterator iter = m_mRayColID.find(id.id);
+		if (iter == m_mRayColID.end())
+		{
+			m_mRayColID.insert(make_pair(id.id, false));
+			iter = m_mRayColID.find(id.id);
+		}
+
+		m_mPrevRayColID.erase(rayColResult[i]);
+
+		// 계속 충돌중이라면
+		if (iter->second)
+		{
+			if (rayColResult[i]->Collider2D())
+				rayColResult[i]->Collider2D()->OnRayOverlap();
+			if (rayColResult[i]->Collider3D())
+				rayColResult[i]->Collider3D()->OnRayOverlap();
+		}
+		//처음 충돌이라면
+		else {
+			if (rayColResult[i]->Collider2D())
+				rayColResult[i]->Collider2D()->BeginRayOverlap();
+			if (rayColResult[i]->Collider3D())
+				rayColResult[i]->Collider3D()->BeginRayOverlap();
+
+			iter->second = true;
+		}
+	}
+
+	for (auto it : m_mPrevRayColID) {
+		if (it->Collider2D())
+			it->Collider2D()->EndRayOverlap();
+		if (it->Collider3D())
+			it->Collider3D()->EndRayOverlap();
+
+		map<UINT_PTR, bool>::iterator iter = m_mRayColID.find(it->GetID());
+		iter->second = false;
+	}
+
+	m_mPrevRayColID.clear();
+	for (UINT i = 0; i < rayColResult.size(); ++i) {
+		m_mPrevRayColID.insert(rayColResult[i]);
+	}
 }
 
 vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _intersectResult)
@@ -50,6 +96,7 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 			Vec3 objTransform = Objects[j]->Transform()->GetRelativePos();
 			Vec3 objScale = Objects[j]->Transform()->GetRelativeScale();
 
+			//Collider 컴포넌트가 없으면 안씀
 			if (Objects[j]->Collider2D()) {
 				objTransform += Objects[j]->Collider2D()->GetOffsetPos();
 				Vec3 colScale = Objects[j]->Collider2D()->GetOffsetScale();
@@ -82,6 +129,7 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 		}
 	}
 
+
 	CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
 	tRay ray = mainCam->GetRay();
 	IntersectResult rayResult;
@@ -90,7 +138,7 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 		if (semiResult[i]->Collider2D()) {
 			rayResult = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, semiResult[i]);
 		}
-		if (semiResult[i]->Collider3D()) {
+		else if (semiResult[i]->Collider3D()) {
 			switch (semiResult[i]->Collider3D()->GetColliderShape())
 			{
 			case COLLIDER3D_TYPE::CUBE:
@@ -103,11 +151,6 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 		}
 
 		if (rayResult.bResult) {
-			if (semiResult[i]->Collider2D())
-				semiResult[i]->Collider2D()->OnRayOverlap();
-			if (semiResult[i]->Collider3D())
-				semiResult[i]->Collider3D()->OnRayOverlap();
-			semiResult[i]->Collider3D()->OnRayOverlap();
 			result.push_back(semiResult[i]);
 		}
 	}

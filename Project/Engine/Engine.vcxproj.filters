@@ -248,14 +248,14 @@
     <ClInclude Include="CFindPath.h">
       <Filter>Source\06. Component\9. FindPath</Filter>
     </ClInclude>
-    <ClInclude Include="CCollider3D.h">
-      <Filter>Source\06. Component\11. Collider3D</Filter>
-    </ClInclude>
     <ClInclude Include="debug.h">
       <Filter>Source\03. Manager\14. Debug</Filter>
     </ClInclude>
     <ClInclude Include="FSM.h">
       <Filter>Source\09. Module\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollider3D.h">
+      <Filter>Source\06. Component\11. Collider3D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
