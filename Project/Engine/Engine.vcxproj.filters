@@ -499,6 +499,9 @@
     <ClCompile Include="3DCCollisionMgr.cpp">
       <Filter>Source\03. Manager\07. CollisionMgr</Filter>
     </ClCompile>
+    <ClCompile Include="CCollisionRayMgr.cpp">
+      <Filter>Source\03. Manager\07. CollisionMgr</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -722,9 +725,6 @@
     </Filter>
     <Filter Include="Source\03. Manager\13. PathFindMgr">
       <UniqueIdentifier>{96d812ea-6676-4ea1-90de-90fc6de37f86}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\06. Component\10. FindPath">
-      <UniqueIdentifier>{09225021-bcc6-49c2-ab03-7eb99d32f80c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\06. Component\11. Collider3D">
       <UniqueIdentifier>{9134b812-6184-459c-bbba-748c8bb417c2}</UniqueIdentifier>

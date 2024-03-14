@@ -66,7 +66,6 @@ public:
 
 public:
     vector<Vec3> FindPath(const Vec3& startPos, const Vec3& endPos);
-    vector<CGameObject*> CheckCollisionObject(IntersectResult _intersectResult);
 
 public:
     void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }

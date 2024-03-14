@@ -271,6 +271,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CCollider2D.cpp" />
     <ClCompile Include="CCollider3D.cpp" />
     <ClCompile Include="CCollisionMgr.cpp" />
+    <ClCompile Include="CCollisionRayMgr.cpp" />
     <ClCompile Include="CComponent.cpp" />
     <ClCompile Include="CComputeShader.cpp" />
     <ClCompile Include="CConstBuffer.cpp" />

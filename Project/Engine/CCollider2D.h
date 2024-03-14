@@ -66,9 +66,9 @@ public:
     void OnOverlap(CCollider2D* _Other);
     void EndOverlap(CCollider2D* _Other);
 
-
+    void BeginRayOverlap();
     void OnRayOverlap();
-
+    void EndRayOverlap();
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;

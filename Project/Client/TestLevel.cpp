@@ -44,6 +44,7 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(4)->SetName(L"Roof");
 	pCurLevel->GetLayer(5)->SetName(L"Monster");
 	pCurLevel->GetLayer(30)->SetName(L"NaviMap");
+	pCurLevel->GetLayer(31)->SetName(L"Test");
 	//pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 
@@ -157,8 +158,6 @@ void CreateTestLevel()
 
 		SpawnGameObject(CharObj, Vec3(0.f, 0.f, 000.f), L"Monster");
 	}
-
-
 
 	CGameObject* MapCollider = new CGameObject;
 	MapCollider = new CGameObject;
@@ -318,4 +317,25 @@ void CreateTestLevel()
 #pragma endregion
 
 	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
+
+	CGameObject* pObject = new CGameObject;
+	pObject->SetName(L"TestCollider2D01");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->begin();
+	SpawnGameObject(pObject, Vec3(10.f, 1.f, 10.f), L"Test");
+
+	//pObject = new CGameObject;
+	//pObject->SetName(L"TestCollider2D02");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CCollider3D);
+	//pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
+	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//SpawnGameObject(pObject, Vec3(0.f, 1.f, 0.f), L"Test");
+
+	CCollisionMgr::GetInst()->RayLayerCheck(L"Test");
 }

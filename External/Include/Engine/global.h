@@ -68,3 +68,4 @@ typedef Vector4 Vec4;
 #include "CSingleton.h"
 
 #include "debug.h"
+#include <bitset>

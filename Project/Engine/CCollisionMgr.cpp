@@ -11,7 +11,7 @@
 CCollisionMgr::CCollisionMgr()
     : m_matrix{}
 {
-
+	m_bRayCol.reset();
 }
 
 
@@ -35,6 +35,8 @@ void CCollisionMgr::tick()
 			CollisionBtwLayer(pLevel->GetLayer(iRow), pLevel->GetLayer(iCol));
 		}
 	}
+
+	RayCollideCheck();
 }
 
 void CCollisionMgr::CollisionBtwLayer(CLayer* _Left, CLayer* _Right)
@@ -557,4 +559,18 @@ void CCollisionMgr::LayerCheck(const wstring& _strLeftLayer, const wstring& _str
 	CLayer* pRight = pCurLevel->FindLayerByName(_strRightLayer);
 
 	LayerCheck(pLeft->GetLayerIndex(), pRight->GetLayerIndex());
+}
+
+void CCollisionMgr::RayLayerCheck(UINT _num)
+{
+	m_bRayCol.set(_num);
+}
+
+void CCollisionMgr::RayLayerCheck(const wstring& _strLayer)
+{
+	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+
+	CLayer* pLayer = pCurLevel->FindLayerByName(_strLayer);
+
+	m_bRayCol.set(pLayer->GetLayerIndex());
 }
