@@ -54,6 +54,10 @@ public:
     virtual void OnOverlap(CCollider3D* _Other) {}
     virtual void EndOverlap(CCollider3D* _Other) {}
 
+    virtual void BeginRayOverlap() {}
+    virtual void OnRayOverlap() {}
+    virtual void EndRayOverlap() {}
+
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
     virtual void LoadFromLevelFile(FILE* _FILE) override {}

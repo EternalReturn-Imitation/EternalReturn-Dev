@@ -121,17 +121,32 @@ void CCollider3D::EndOverlap(CCollider3D* _Other)
 
 void CCollider3D::BeginRayOverlap()
 {
-	int a = 0;
+	// Script 호출
+	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->BeginRayOverlap();
+	}
 }
 
 void CCollider3D::OnRayOverlap()
 {
-	int a = 0;
+	// Script 호출
+	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->OnRayOverlap();
+	}
 }
 
 void CCollider3D::EndRayOverlap()
 {
-	int a = 0;
+	// Script 호출
+	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->EndRayOverlap();
+	}
 }
 
 void CCollider3D::SaveToLevelFile(FILE* _File)

@@ -140,14 +140,32 @@ void CCollider2D::EndOverlap(CCollider2D* _Other)
 
 void CCollider2D::BeginRayOverlap()
 {
+	// Script 호출
+	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->BeginRayOverlap();
+	}
 }
 
 void CCollider2D::OnRayOverlap()
 {
+	// Script 호출
+	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->OnRayOverlap();
+	}
 }
 
 void CCollider2D::EndRayOverlap()
 {
+	// Script 호출
+	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+	for (size_t i = 0; i < vecScript.size(); ++i)
+	{
+		vecScript[i]->EndRayOverlap();
+	}
 }
 
 void CCollider2D::SaveToLevelFile(FILE* _File)
