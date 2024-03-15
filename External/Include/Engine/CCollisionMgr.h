@@ -49,6 +49,10 @@ public:
 public:
 	void tick();
 
+public:
+	vector<CGameObject*> GetCurRayColObjs() { return m_vCurRayCol; }
+	std::set<CGameObject*> GetPrevRayColObjs() { return m_mPrevRayColID; }
+
 private:
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
 
