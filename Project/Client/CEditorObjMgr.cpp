@@ -78,6 +78,9 @@ void CEditorObjMgr::init()
 	pEditorCamObj->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pEditorCamObj->Camera()->SetMainCamera();
 
+	pEditorCamObj->Transform()->SetRelativePos(0.f, 100.f, 0.f);
+	pEditorCamObj->Transform()->SetRelativeRot(XM_PI / 2.f, 0.f, 0.f);
+
 	m_vecEditorObj.push_back(pEditorCamObj);
 	//Vec3 pos = pEditorCamObj->Transform()->GetRelativePos();
 	//Vec3 rot = pEditorCamObj->Transform()->GetRelativePos();

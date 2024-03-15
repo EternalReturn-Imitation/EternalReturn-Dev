@@ -10,7 +10,6 @@
 #include <Engine\CScript.h>
 
 #include <Script\CScriptMgr.h>
-#include <Engine\CSQLMgr.h>
 
 vector<int> CLevelSaveLoad::m_vLevelID;
 

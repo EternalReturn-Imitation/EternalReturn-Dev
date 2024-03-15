@@ -11,6 +11,11 @@
 
 #include "CResMgr.h"
 #include "CMesh.h"
+#include "CCollider2D.h"
+#include "CCollider3D.h"
+#include "CRenderMgr.h"
+#include "CCamera.h"
+#include "CCollisionMgr.h"
 
 #include "Detour/DetourNavMesh.h"
 #include "Detour/DetourNavMeshQuery.h"
@@ -127,55 +132,6 @@ bool CPathFindMgr::LoadNavMeshFromFile(const char* path)
 	if (dtStatusFailed(m_NavQuery->init(m_NavMesh, 2048))) {
 		assert(false);
 	}
-
-	vector<Vtx> vVtx;
-	vector<UINT> vIdx;
-
-	// 버텍스 ID를 관리하기 위한 맵 (버텍스 위치 -> 전역 버텍스 리스트 내의 인덱스)
-	std::map<tuple<float,float,float>, int> vertexIdMap;
-	int nextVertexId = 0;
-
-	// 타일과 폴리곤을 순회
-	for (int i = 0; i < m_NavMesh->getMaxTiles(); ++i) {
-		const dtMeshTile* tile = m_NavMesh->getTileAt(i,0,0);
-		if (!tile->header) continue;
-
-		// 각 타일 내의 폴리곤 순회
-		for (int j = 0; j < tile->header->polyCount; ++j) {
-			const dtPoly* poly = &tile->polys[j];
-
-			// 폴리곤이 폐쇄된 경계를 형성하는지 확인 (옵션)
-			if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION) continue;
-
-			// 각 폴리곤의 버텍스 인덱스 순회
-			for (int k = 0; k < 3; ++k) {
-				// 폴리곤의 버텍스 인덱스를 사용하여 실제 버텍스 좌표를 타일의 버텍스 배열에서 찾음
-				const float* v = &tile->verts[poly->verts[k] * 3];
-				
-				tuple<float, float, float> vertexKey(v[0], v[1], v[2]);
-
-				Vtx vtx1;
-				vtx1.vPos = Vec3(v[0], v[1], v[2]);
-				vtx1.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
-				vtx1.vUV = Vec2(0.f, 0.f);
-				vtx1.vNormal = Vec3(0.f, 1.f, 0.f);
-
-				if (vertexIdMap.find(vertexKey) == vertexIdMap.end()) {
-					vVtx.push_back(vtx1);
-					vertexIdMap.insert(make_pair(vertexKey, nextVertexId));
-					vIdx.push_back(nextVertexId);
-					nextVertexId++;
-				}
-				else {
-					vIdx.push_back(vertexIdMap.find(vertexKey)->second);
-				}
-			}
-		}
-	}
-
-	CMesh* mesh = new CMesh(true);
-	mesh->Create(vVtx.data(), (UINT)vVtx.size(), vIdx.data(), (UINT)vIdx.size());
-	CResMgr::GetInst()->AddRes<CMesh>(L"NavMesh", mesh);
 
 	return true;
 }

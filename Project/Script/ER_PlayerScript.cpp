@@ -3,6 +3,7 @@
 
 #include <Engine\CPathFindMgr.h>
 #include <Engine\CRenderMgr.h>
+#include <Engine/CCollisionMgr.h>
 
 ER_PlayerScript::ER_PlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT)
@@ -52,7 +53,7 @@ void ER_PlayerScript::MoveToPoint()
 	tRay ray = mainCam->GetRay();
 
 	// 교차점 위치 얻기
-	IntersectResult result = mainCam->IsCollidingBtwRayRect(ray, Map);
+	IntersectResult result = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, Map);
 	Vec3 TargetPos = result.vCrossPoint;
 
 

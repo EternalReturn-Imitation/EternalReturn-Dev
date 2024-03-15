@@ -254,6 +254,9 @@
     <ClInclude Include="FSM.h">
       <Filter>Source\09. Module\FSM</Filter>
     </ClInclude>
+    <ClInclude Include="CCollider3D.h">
+      <Filter>Source\06. Component\11. Collider3D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -484,11 +487,20 @@
     <ClCompile Include="CFindPath.cpp">
       <Filter>Source\06. Component\9. FindPath</Filter>
     </ClCompile>
+    <ClCompile Include="CCollider3D.cpp">
+      <Filter>Source\06. Component\11. Collider3D</Filter>
+    </ClCompile>
     <ClCompile Include="debug.cpp">
       <Filter>Source\03. Manager\14. Debug</Filter>
     </ClCompile>
     <ClCompile Include="FSM.cpp">
       <Filter>Source\09. Module\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="3DCCollisionMgr.cpp">
+      <Filter>Source\03. Manager\07. CollisionMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollisionRayMgr.cpp">
+      <Filter>Source\03. Manager\07. CollisionMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -713,6 +725,9 @@
     </Filter>
     <Filter Include="Source\03. Manager\13. PathFindMgr">
       <UniqueIdentifier>{96d812ea-6676-4ea1-90de-90fc6de37f86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\11. Collider3D">
+      <UniqueIdentifier>{9134b812-6184-459c-bbba-748c8bb417c2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\14. Debug">
       <UniqueIdentifier>{816921f8-d8a6-4c07-9176-0a979561e9fd}</UniqueIdentifier>

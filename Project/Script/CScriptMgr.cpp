@@ -9,6 +9,7 @@
 #include "CPlayerScript.h"
 #include "ER_Data_CharacterScript.h"
 #include "ER_Data_ItemScript.h"
+#include "ER_ItemBoxScript.h"
 #include "ER_PlayerScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
@@ -21,6 +22,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"ER_Data_CharacterScript");
 	_vec.push_back(L"ER_Data_ItemScript");
+	_vec.push_back(L"ER_ItemBoxScript");
 	_vec.push_back(L"ER_PlayerScript");
 }
 
@@ -42,6 +44,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_Data_CharacterScript;
 	if (L"ER_Data_ItemScript" == _strScriptName)
 		return new ER_Data_ItemScript;
+	if (L"ER_ItemBoxScript" == _strScriptName)
+		return new ER_ItemBoxScript;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
 	return nullptr;
@@ -74,6 +78,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_DATA_ITEMSCRIPT:
 		return new ER_Data_ItemScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_ITEMBOXSCRIPT:
+		return new ER_ItemBoxScript;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
@@ -116,6 +123,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_DATA_ITEMSCRIPT:
 		return L"ER_Data_ItemScript";
+		break;
+
+	case SCRIPT_TYPE::ER_ITEMBOXSCRIPT:
+		return L"ER_ItemBoxScript";
 		break;
 
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT:
