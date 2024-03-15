@@ -1,16 +1,16 @@
 #include "pch.h"
-#include "ER_Data_CharacterScript.h"
+#include "ER_DataScript_Character.h"
 
-ER_Data_CharacterScript::ER_Data_CharacterScript()
-	: CScript((UINT)SCRIPT_TYPE::ER_DATA_CHARACTERSCRIPT)
+ER_DataScript_Character::ER_DataScript_Character()
+	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 {
 }
 
-ER_Data_CharacterScript::~ER_Data_CharacterScript()
+ER_DataScript_Character::~ER_DataScript_Character()
 {
 }
 
-void ER_Data_CharacterScript::init()
+void ER_DataScript_Character::init()
 {
 	// [텍스쳐 로딩]
 	if (0 < m_strKey.length())
@@ -29,10 +29,10 @@ void ER_Data_CharacterScript::init()
 	}
 }
 
-void ER_Data_CharacterScript::begin()
+void ER_DataScript_Character::begin()
 {
 }
 
-void ER_Data_CharacterScript::tick()
+void ER_DataScript_Character::tick()
 {
 }

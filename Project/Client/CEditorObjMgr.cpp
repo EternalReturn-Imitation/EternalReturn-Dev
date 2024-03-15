@@ -72,11 +72,15 @@ void CEditorObjMgr::init()
 	pEditorCamObj->AddComponent(new CCamera);
 	pEditorCamObj->AddComponent(new CCameraMoveScript);
 
-	pEditorCamObj->Camera()->SetFar(10000.f);
-	pEditorCamObj->Camera()->SetFOV(Deg2Rad(75));
+	pEditorCamObj->Camera()->SetFOV(Deg2Rad(30));
 	pEditorCamObj->Camera()->SetLayerMaskAll(true);
 	pEditorCamObj->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pEditorCamObj->Camera()->SetMainCamera();
+
+	pEditorCamObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(54.f), Deg2Rad(-45.f), 0.f));
+	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 35.f, 0.f));
+	pEditorCamObj->Camera()->SetFar(10000.f);
+
 
 	m_vecEditorObj.push_back(pEditorCamObj);
 	//Vec3 pos = pEditorCamObj->Transform()->GetRelativePos();

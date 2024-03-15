@@ -63,14 +63,14 @@ int TransformUI::render_update()
 		CGameObject* TargetObj = CRenderMgr::GetInst()->GetGizmoTarget();
 		if (TargetObj->Transform())// 트랜스폼을 가지고있다면
 		{
-			if (!CRenderMgr::GetInst()->GetMainCam()->GetOwner()->GetScript<CCameraMoveScript>()->GetRBTNPressed()) {
-				if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_1))
-					mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-				else if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_2))
-					mCurrentGizmoOperation = ImGuizmo::ROTATE;
-				else if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_3))
-					mCurrentGizmoOperation = ImGuizmo::SCALE;
-			}			
+			// if (!CRenderMgr::GetInst()->GetMainCam()->GetOwner()->GetScript<CCameraMoveScript>()->GetRBTNPressed()) {
+			// }
+			if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_1))
+				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			else if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_2))
+				mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			else if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_3))
+				mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 			if (TargetObj->Transform()->GetGizmoOnSet()) //기즈모를 배치할수 있는 오브젝트라면
 				RenderGizmo();  //기즈모 렌더 처리
@@ -119,13 +119,13 @@ void TransformUI::EditTransform(float* cameraView, float* cameraProjection, floa
 		//윈도우 모드일때만 뜨도록 함
 		ImGui::Text("Position");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Tr", matrixTranslation);
+		ImGui::DragFloat3("##Tr", matrixTranslation, 0.01f);
 		ImGui::Text("Rotation");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Rt", matrixRotation);
+		ImGui::DragFloat3("##Rt", matrixRotation, 0.01f);
 		ImGui::Text("Scale   ");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Sc", matrixScale);
+		ImGui::DragFloat3("##Sc", matrixScale, 0.01f);
 		ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, matrix);
 
 		if (mCurrentGizmoOperation != ImGuizmo::SCALE)

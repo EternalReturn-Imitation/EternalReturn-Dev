@@ -29,7 +29,7 @@ CGameObject* ER_CharacterMgr::GetCharacter(const wstring& _key)
     Character->AddComponent(new ER_PlayerScript);
     Character->AddComponent(new CFindPath);
 
-    Character->Transform()->SetRelativeScale(Vec3(1.3f, 1.3f, 1.3f));
+    Character->Transform()->SetRelativeScale(Vec3(1.1f, 1.1f, 1.1f));
 
     return Character;
 }

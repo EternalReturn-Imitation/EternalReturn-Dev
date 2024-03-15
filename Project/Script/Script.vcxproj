@@ -181,8 +181,15 @@ call CodeGen.exe</Command>
     <ClInclude Include="CPlanetScript.h" />
     <ClInclude Include="CPlayerScript.h" />
     <ClInclude Include="CScriptMgr.h" />
-    <ClInclude Include="ER_Data_CharacterScript.h" />
-    <ClInclude Include="ER_Data_ItemScript.h" />
+    <ClInclude Include="ER_ActionScript_Aya.h" />
+    <ClInclude Include="ER_ActionScript_Hyunwoo.h" />
+    <ClInclude Include="ER_ActionScript_Jackie.h" />
+    <ClInclude Include="ER_ActionScript_Rio.h" />
+    <ClInclude Include="ER_ActionScript_Yuki.h" />
+    <ClInclude Include="ER_CamControllerScript.h" />
+    <ClInclude Include="ER_ActionScript_Character.h" />
+    <ClInclude Include="ER_DataScript_Character.h" />
+    <ClInclude Include="ER_DataScript_Item.h" />
     <ClInclude Include="ER_define.h" />
     <ClInclude Include="ER_PlayerScript.h" />
     <ClInclude Include="ER_struct.h" />
@@ -197,8 +204,15 @@ call CodeGen.exe</Command>
     <ClCompile Include="CPlanetScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
-    <ClCompile Include="ER_Data_CharacterScript.cpp" />
-    <ClCompile Include="ER_Data_ItemScript.cpp" />
+    <ClCompile Include="ER_ActionScript_Aya.cpp" />
+    <ClCompile Include="ER_ActionScript_Hyunwoo.cpp" />
+    <ClCompile Include="ER_ActionScript_Jackie.cpp" />
+    <ClCompile Include="ER_ActionScript_Rio.cpp" />
+    <ClCompile Include="ER_ActionScript_Yuki.cpp" />
+    <ClCompile Include="ER_CamControllerScript.cpp" />
+    <ClCompile Include="ER_ActionScript_Character.cpp" />
+    <ClCompile Include="ER_DataScript_Character.cpp" />
+    <ClCompile Include="ER_DataScript_Item.cpp" />
     <ClCompile Include="ER_PlayerScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

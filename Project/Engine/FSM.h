@@ -19,13 +19,15 @@ public:
 	void OnStateUpdate() { if (script && m_UpdateFunc) (script->*m_UpdateFunc)(); }
 	void OnStateExit() { if (script && m_ExitFunc) (script->*m_ExitFunc)(); }
 
-	FSMState(CScript* _script, SCRIPT_DELEGATE _enter, SCRIPT_DELEGATE _update, SCRIPT_DELEGATE _exit)
-	{
-		script = _script;
-		m_EnterFunc = _enter;
-		m_UpdateFunc = _update;
-		m_ExitFunc = _exit;
-	}
+	void SetStateEnter(SCRIPT_DELEGATE _delegate) { m_EnterFunc = _delegate; }
+	void SetStateUpdate(SCRIPT_DELEGATE _delegate) { m_UpdateFunc = _delegate; }
+	void SetStateExit(SCRIPT_DELEGATE _delegate) { m_ExitFunc = _delegate; }
+
+	FSMState(CScript* _script) : script(_script)
+		, m_EnterFunc(nullptr)
+		, m_UpdateFunc(nullptr)
+		, m_ExitFunc(nullptr)
+	{}
 };
 
 class FSM

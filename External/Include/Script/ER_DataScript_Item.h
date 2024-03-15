@@ -3,7 +3,7 @@
 #include "ER_define.h"
 #include "ER_struct.h"
 
-class ER_Data_ItemScript :
+class ER_DataScript_Item :
     public CScript
 {
 private:
@@ -57,10 +57,10 @@ public:
 
 	const ER_ItemStats& GetStats() { return m_tItemStats; }
 
-	CLONE(ER_Data_ItemScript);
+	CLONE(ER_DataScript_Item);
 public:
-	ER_Data_ItemScript();
-	~ER_Data_ItemScript();
+	ER_DataScript_Item();
+	~ER_DataScript_Item();
 
 	friend class ER_ItemMgr;
 	friend class ItemDataUI;

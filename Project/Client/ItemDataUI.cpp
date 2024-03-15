@@ -118,7 +118,7 @@ void ItemDataUI::RegistItemMgr()
     m_vecItemName.resize(ItemCnt);
 
     for (size_t i = 0; i < ItemCnt; ++i)
-        m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->GetItemName()).c_str();
+        m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_DataScript_Item>()->GetItemName()).c_str();
 }
 
 void ItemDataUI::render_menubar()
@@ -147,8 +147,8 @@ void ItemDataUI::render_menubar()
             if (ImGui::MenuItem("Add NewItem.."))
             {
                 CGameObject* NewItem = new CGameObject;
-                NewItem->AddComponent(new ER_Data_ItemScript());
-                NewItem->GetScript<ER_Data_ItemScript>()->m_eItemCode = (UINT)(*m_vecItem).size();
+                NewItem->AddComponent(new ER_DataScript_Item());
+                NewItem->GetScript<ER_DataScript_Item>()->m_eItemCode = (UINT)(*m_vecItem).size();
                 (*m_vecItem).push_back(NewItem);
 
                 m_vecItemName.push_back(string());
@@ -211,7 +211,7 @@ void ItemDataUI::render_ItemInfoTable()
         for (int row_n = 0; row_n < (*m_vecItem).size(); ++row_n)
         {
                 m_pCurItem = (*m_vecItem)[row_n];
-                ER_Data_ItemScript* itemcontext = m_pCurItem->GetScript<ER_Data_ItemScript>();
+                ER_DataScript_Item* itemcontext = m_pCurItem->GetScript<ER_DataScript_Item>();
 
                 int ID = itemcontext->GetCode();
                 ImGui::PushID(ID);
@@ -474,7 +474,7 @@ void ItemDataUI::render_ItemStatEdit()
         return;
     }
 
-    ER_Data_ItemScript* itemcontext = m_pCurStatsEditItem->GetScript<ER_Data_ItemScript>();
+    ER_DataScript_Item* itemcontext = m_pCurStatsEditItem->GetScript<ER_DataScript_Item>();
 
     string id = "Number";
     id += std::to_string(itemcontext->GetCode());
@@ -620,9 +620,9 @@ void ItemDataUI::SwapItem()
         (*m_vecItem)[m_iDragItemIdx] = m_DropItem;
         (*m_vecItem)[m_iDropItemIdx] = m_DragItem;
 
-        UINT ItemCode = m_DragItem->GetScript<ER_Data_ItemScript>()->m_eItemCode;
-        m_DragItem->GetScript<ER_Data_ItemScript>()->m_eItemCode = m_DropItem->GetScript<ER_Data_ItemScript>()->m_eItemCode;
-        m_DropItem->GetScript<ER_Data_ItemScript>()->m_eItemCode = ItemCode;
+        UINT ItemCode = m_DragItem->GetScript<ER_DataScript_Item>()->m_eItemCode;
+        m_DragItem->GetScript<ER_DataScript_Item>()->m_eItemCode = m_DropItem->GetScript<ER_DataScript_Item>()->m_eItemCode;
+        m_DropItem->GetScript<ER_DataScript_Item>()->m_eItemCode = ItemCode;
 
         m_DragItem = nullptr;
         m_DropItem = nullptr;
@@ -631,7 +631,7 @@ void ItemDataUI::SwapItem()
         size_t ItemCnt = (*m_vecItem).size();
 
         for (size_t i = 0; i < ItemCnt; ++i)
-            m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->GetItemName()).c_str();
+            m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_DataScript_Item>()->GetItemName()).c_str();
     }
 }
 
@@ -657,7 +657,7 @@ void ItemDataUI::ItemPopUp()
             size_t ItemCnt = (*m_vecItem).size();
             for (size_t i = 0; i < ItemCnt; ++i)
             {
-                (*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->m_eItemCode = (UINT)i;
+                (*m_vecItem)[i]->GetScript<ER_DataScript_Item>()->m_eItemCode = (UINT)i;
             }
 
             // utf-8 아이템 이름 갱신
@@ -666,7 +666,7 @@ void ItemDataUI::ItemPopUp()
 
             std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
             for (size_t i = 0; i < ItemCnt; ++i)
-                m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_Data_ItemScript>()->GetItemName()).c_str();
+                m_vecItemName[i] = converter.to_bytes((*m_vecItem)[i]->GetScript<ER_DataScript_Item>()->GetItemName()).c_str();
 
             m_bItemPopup = false;
             ImGui::CloseCurrentPopup();
@@ -806,7 +806,7 @@ void ItemDataUI::render_RecipeSearch()
         {
             ImGui::BeginGroup();
 
-            Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[iter->first]->GetScript<ER_Data_ItemScript>()->GetItemTex().Get();
+            Ptr<CTexture> pTex = (CTexture*)(*m_vecItem)[iter->first]->GetScript<ER_DataScript_Item>()->GetItemTex().Get();
 
             int width = (int)pTex->Width();
             int height = (int)pTex->Height();
@@ -842,7 +842,7 @@ void ItemDataUI::render_RecipeSearch()
 void ItemDataUI::SelectItemIcon(DWORD_PTR _data, DWORD_PTR _target)
 {
     string strKey = (char*)_data;
-    ER_Data_ItemScript* target = (ER_Data_ItemScript*)_target;
+    ER_DataScript_Item* target = (ER_DataScript_Item*)_target;
 
     Ptr<CTexture> tex = CResMgr::GetInst()->FindRes<CTexture>(ToWString(strKey));
  

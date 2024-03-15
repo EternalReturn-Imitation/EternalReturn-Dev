@@ -3,7 +3,7 @@
 #include "ER_define.h"
 #include "ER_struct.h"
 
-class ER_Data_CharacterScript :
+class ER_DataScript_Character :
     public CScript
 {
 private:
@@ -25,7 +25,7 @@ private:
     // [함수]
     // 능력치 갱신 함수 (아이템 장착, 레벨업, 상태이상 등 상호작용시 마지막에 호출)
 
-    CLONE(ER_Data_CharacterScript);
+    CLONE(ER_DataScript_Character);
 public:
     void init();
     virtual void begin() override;
@@ -33,8 +33,8 @@ public:
 
 
 public:
-    ER_Data_CharacterScript();
-    ~ER_Data_CharacterScript();
+    ER_DataScript_Character();
+    ~ER_DataScript_Character();
 
     friend class ER_CharacterMgr;
     friend class CharacterDataUI;

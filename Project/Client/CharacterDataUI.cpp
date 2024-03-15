@@ -2,7 +2,7 @@
 #include "CharacterDataUI.h"
 
 #include "ER_CharacterMgr.h"
-#include <Script\ER_Data_CharacterScript.h>
+#include <Script\ER_DataScript_Character.h>
 
 CharacterDataUI::CharacterDataUI()
     : UI("##CharacterDataUI")
@@ -101,8 +101,8 @@ void CharacterDataUI::render_menubar()
                 for (int i = 0; i < 5; ++i)
                 {
                     CGameObject* NewCharacter = new CGameObject;
-                    NewCharacter->AddComponent(new ER_Data_CharacterScript());
-                    ER_Data_CharacterScript* CharacterContext = NewCharacter->GetScript<ER_Data_CharacterScript>();
+                    NewCharacter->AddComponent(new ER_DataScript_Character());
+                    ER_DataScript_Character* CharacterContext = NewCharacter->GetScript<ER_DataScript_Character>();
                     
                     CharacterContext->m_strKey = CharNameList[i];
                     NewCharacter->SetName(CharacterContext->m_strKey);
@@ -167,7 +167,7 @@ void CharacterDataUI::render_CharacterList()
 
 void CharacterDataUI::render_CharacterInfoData()
 {
-    ER_Data_CharacterScript* CharacterContext = m_pSelectedCharacter->GetScript<ER_Data_CharacterScript>();
+    ER_DataScript_Character* CharacterContext = m_pSelectedCharacter->GetScript<ER_DataScript_Character>();
     float xsize = 61.f;
     
     // [ Full Tex ]

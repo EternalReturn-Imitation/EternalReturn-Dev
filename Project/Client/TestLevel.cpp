@@ -8,26 +8,28 @@
 #include <Engine\components.h>
 
 #include <Engine\CResMgr.h>
+#include <Engine\CPathFindMgr.h>
 #include <Engine\CCollisionMgr.h>
+
+#include <Engine\CCollider2D.h>
 
 #include <Script\CPlayerScript.h>
 #include <Script\CMonsterScript.h>
 #include <Script\CCameraMoveScript.h>
+#include <Script\ER_CamControllerScript.h>
+#include <Script\CFindPathScript.h>
 
 #include "CLevelSaveLoad.h"
 
 
-#include <Engine/CSetColorShader.h>
+#include <Engine\CSetColorShader.h>
+#include <Engine\CFindPath.h>
+
+#include "ER_CharacterMgr.h"
 
 #include "CEditorObjMgr.h"
 
-#include <Script/CFindPathScript.h>
-#include <Engine/CFindPath.h>
-#include <Engine/CPathFindMgr.h>
 
-#include <Engine\CCollider2D.h>
-
-#include "ER_CharacterMgr.h"
 
 
 void CreateTestLevel()
@@ -51,17 +53,19 @@ void CreateTestLevel()
 	pMainCam->SetName(L"MainCamera");
 
 	pMainCam->AddComponent(new CTransform);
+	pMainCam->AddComponent(new ER_CamControllerScript);
 	pMainCam->AddComponent(new CCamera);
-	pMainCam->AddComponent(new CCameraMoveScript);
 
-	pMainCam->Camera()->SetFar(100.f);
+	pMainCam->Transform()->SetRelativeRot(Vec3(Deg2Rad(54.f), Deg2Rad(-45.f), 0.f));
 
+	pMainCam->Camera()->SetFar(500.f);
+	pMainCam->Camera()->SetFOV(Deg2Rad(30));
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
 
-	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
+	SpawnGameObject(pMainCam, Vec3(0.f, 20.f, 0.f), 0);
 
 	// UI cameara
 	// CGameObject* pUICam = new CGameObject;
@@ -153,9 +157,8 @@ void CreateTestLevel()
 	else
 	{
 		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Rio");
-		CharObj->Animator3D()->SelectAnimation(L"Rio_Run");
 
-		SpawnGameObject(CharObj, Vec3(0.f, 0.f, 000.f), L"Monster");
+		SpawnGameObject(CharObj, Vec3(7.f, 0.f, 3.f), L"Monster");
 	}
 
 
@@ -172,7 +175,7 @@ void CreateTestLevel()
 	//pObject->Transform()->SetGizmoObjExcept(true);
 	CPathFindMgr::GetInst()->SetMapCollider(MapCollider);
 	SpawnGameObject(MapCollider, Vec3(0.f, 0.f, 0.f), L"NaviMap");
-	
+
 	// NaveMap
 	Ptr<CMeshData> pMeshData = nullptr;
 	Vec3 rot = {};

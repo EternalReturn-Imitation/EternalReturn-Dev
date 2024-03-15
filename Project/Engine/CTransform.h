@@ -9,7 +9,7 @@ private:
     Vec3    m_vRelativeScale;
     Vec3    m_vRelativeRot;
 
-    Vec3    m_vOffsetRelativePos;//오프셋을 입력한 상대 포즈
+    Vec3    m_vOffsetRelativePos;   //오프셋을 입력한 상대 포즈
 
     bool    m_bAbsolute;    // 상대 이동, 크기를 절대값으로 지정    
 

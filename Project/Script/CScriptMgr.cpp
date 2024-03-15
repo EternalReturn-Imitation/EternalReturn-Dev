@@ -7,8 +7,14 @@
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
 #include "CPlayerScript.h"
-#include "ER_Data_CharacterScript.h"
-#include "ER_Data_ItemScript.h"
+#include "ER_ActionScript_Aya.h"
+#include "ER_ActionScript_Hyunwoo.h"
+#include "ER_ActionScript_Jackie.h"
+#include "ER_ActionScript_Rio.h"
+#include "ER_ActionScript_Yuki.h"
+#include "ER_CamControllerScript.h"
+#include "ER_DataScript_Character.h"
+#include "ER_DataScript_Item.h"
 #include "ER_PlayerScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
@@ -19,8 +25,14 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
 	_vec.push_back(L"CPlayerScript");
-	_vec.push_back(L"ER_Data_CharacterScript");
-	_vec.push_back(L"ER_Data_ItemScript");
+	_vec.push_back(L"ER_ActionScript_Aya");
+	_vec.push_back(L"ER_ActionScript_Hyunwoo");
+	_vec.push_back(L"ER_ActionScript_Jackie");
+	_vec.push_back(L"ER_ActionScript_Rio");
+	_vec.push_back(L"ER_ActionScript_Yuki");
+	_vec.push_back(L"ER_CamControllerScript");
+	_vec.push_back(L"ER_DataScript_Character");
+	_vec.push_back(L"ER_DataScript_Item");
 	_vec.push_back(L"ER_PlayerScript");
 }
 
@@ -38,10 +50,22 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CPlanetScript;
 	if (L"CPlayerScript" == _strScriptName)
 		return new CPlayerScript;
-	if (L"ER_Data_CharacterScript" == _strScriptName)
-		return new ER_Data_CharacterScript;
-	if (L"ER_Data_ItemScript" == _strScriptName)
-		return new ER_Data_ItemScript;
+	if (L"ER_ActionScript_Aya" == _strScriptName)
+		return new ER_ActionScript_Aya;
+	if (L"ER_ActionScript_Hyunwoo" == _strScriptName)
+		return new ER_ActionScript_Hyunwoo;
+	if (L"ER_ActionScript_Jackie" == _strScriptName)
+		return new ER_ActionScript_Jackie;
+	if (L"ER_ActionScript_Rio" == _strScriptName)
+		return new ER_ActionScript_Rio;
+	if (L"ER_ActionScript_Yuki" == _strScriptName)
+		return new ER_ActionScript_Yuki;
+	if (L"ER_CamControllerScript" == _strScriptName)
+		return new ER_CamControllerScript;
+	if (L"ER_DataScript_Character" == _strScriptName)
+		return new ER_DataScript_Character;
+	if (L"ER_DataScript_Item" == _strScriptName)
+		return new ER_DataScript_Item;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
 	return nullptr;
@@ -69,11 +93,29 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::PLAYERSCRIPT:
 		return new CPlayerScript;
 		break;
-	case (UINT)SCRIPT_TYPE::ER_DATA_CHARACTERSCRIPT:
-		return new ER_Data_CharacterScript;
+	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:
+		return new ER_ActionScript_Aya;
 		break;
-	case (UINT)SCRIPT_TYPE::ER_DATA_ITEMSCRIPT:
-		return new ER_Data_ItemScript;
+	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_HYUNWOO:
+		return new ER_ActionScript_Hyunwoo;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_JACKIE:
+		return new ER_ActionScript_Jackie;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_RIO:
+		return new ER_ActionScript_Rio;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_YUKI:
+		return new ER_ActionScript_Yuki;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
+		return new ER_CamControllerScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:
+		return new ER_DataScript_Character;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_ITEM:
+		return new ER_DataScript_Item;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
@@ -110,12 +152,36 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CPlayerScript";
 		break;
 
-	case SCRIPT_TYPE::ER_DATA_CHARACTERSCRIPT:
-		return L"ER_Data_CharacterScript";
+	case SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:
+		return L"ER_ActionScript_Aya";
 		break;
 
-	case SCRIPT_TYPE::ER_DATA_ITEMSCRIPT:
-		return L"ER_Data_ItemScript";
+	case SCRIPT_TYPE::ER_ACTIONSCRIPT_HYUNWOO:
+		return L"ER_ActionScript_Hyunwoo";
+		break;
+
+	case SCRIPT_TYPE::ER_ACTIONSCRIPT_JACKIE:
+		return L"ER_ActionScript_Jackie";
+		break;
+
+	case SCRIPT_TYPE::ER_ACTIONSCRIPT_RIO:
+		return L"ER_ActionScript_Rio";
+		break;
+
+	case SCRIPT_TYPE::ER_ACTIONSCRIPT_YUKI:
+		return L"ER_ActionScript_Yuki";
+		break;
+
+	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
+		return L"ER_CamControllerScript";
+		break;
+
+	case SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:
+		return L"ER_DataScript_Character";
+		break;
+
+	case SCRIPT_TYPE::ER_DATASCRIPT_ITEM:
+		return L"ER_DataScript_Item";
 		break;
 
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT:

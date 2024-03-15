@@ -1,13 +1,18 @@
 #pragma once
 #include <Engine\CScript.h>
 
+class ER_ActionScript_Character;
+
 class ER_PlayerScript :
     public CScript
 {
 private:
+    ER_ActionScript_Character* m_pActionScript;
 
 private:
-    void MoveToPoint();
+    Vec3            GetFocusPoint();                // 타겟 지점
+    CGameObject*    GetFocusObj();                  // 마우스레이와 충돌중인 오브젝트
+    Vec3            GetFocusDir(Vec3 _Point);       // 마우스레이 방향
 
 public:
     void init();
@@ -16,6 +21,7 @@ public:
 
 public:
     ER_PlayerScript();
+    ER_PlayerScript(const ER_PlayerScript& _origin);
     ~ER_PlayerScript();
 
     CLONE_DISABLE(ER_PlayerScript);

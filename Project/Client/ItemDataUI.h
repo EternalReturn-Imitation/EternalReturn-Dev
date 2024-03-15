@@ -1,7 +1,7 @@
 #pragma once
 #include "UI.h"
 
-#include <Script\ER_Data_ItemScript.h>
+#include <Script\ER_DataScript_Item.h>
 #include <Script\ER_define.h>
 #include <Script\ER_struct.h>
 

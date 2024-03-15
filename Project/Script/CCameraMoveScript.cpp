@@ -17,10 +17,13 @@ CCameraMoveScript::~CCameraMoveScript()
 
 void CCameraMoveScript::tick()
 {
-	if (PROJ_TYPE::ORTHOGRAPHIC == Camera()->GetProjType())
-		Camera2DMove();
-	else
-		Camera3DMove();
+	if (LEVEL_STATE::PLAY != CLevelMgr::GetInst()->GetCurLevel()->GetState())
+	{
+		if (PROJ_TYPE::ORTHOGRAPHIC == Camera()->GetProjType())
+			Camera2DMove();
+		else
+			Camera3DMove();
+	}
 }
 
 void CCameraMoveScript::Camera2DMove()
