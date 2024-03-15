@@ -30,6 +30,7 @@ private:
 	map<UINT_PTR, bool>		m_mapColID;
 	std::bitset<MAX_LAYER>	m_bRayCol;
 	map<UINT_PTR, bool>		m_mRayColID;
+	vector<CGameObject*>	m_vCurRayCol;
 	std::set<CGameObject*>	m_mPrevRayColID;
 
 public:
@@ -47,6 +48,10 @@ public:
 
 public:
 	void tick();
+
+public:
+	vector<CGameObject*> GetCurRayColObjs() { return m_vCurRayCol; }
+	std::set<CGameObject*> GetPrevRayColObjs() { return m_mPrevRayColID; }
 
 private:
 	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);

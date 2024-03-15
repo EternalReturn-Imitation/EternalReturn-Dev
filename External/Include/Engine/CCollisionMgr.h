@@ -30,6 +30,7 @@ private:
 	map<UINT_PTR, bool>		m_mapColID;
 	std::bitset<MAX_LAYER>	m_bRayCol;
 	map<UINT_PTR, bool>		m_mRayColID;
+	vector<CGameObject*>	m_vCurRayCol;
 	std::set<CGameObject*>	m_mPrevRayColID;
 
 public:

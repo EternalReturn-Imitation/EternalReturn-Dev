@@ -30,11 +30,11 @@ void CCollisionMgr::RayCollideCheck()
 	if (!result.bResult)
 		return;
 
-	vector<CGameObject*> rayColResult = CheckRayRangeObject(result);
+	m_vCurRayCol = CheckRayRangeObject(result);
 
 	CollisionID id = {};
-	for (UINT i = 0; i < rayColResult.size(); ++i) {
-		id.id = rayColResult[i]->GetID();
+	for (UINT i = 0; i < m_vCurRayCol.size(); ++i) {
+		id.id = m_vCurRayCol[i]->GetID();
 		map<UINT_PTR, bool>::iterator iter = m_mRayColID.find(id.id);
 		if (iter == m_mRayColID.end())
 		{
@@ -42,22 +42,22 @@ void CCollisionMgr::RayCollideCheck()
 			iter = m_mRayColID.find(id.id);
 		}
 
-		m_mPrevRayColID.erase(rayColResult[i]);
+		m_mPrevRayColID.erase(m_vCurRayCol[i]);
 
 		// 계속 충돌중이라면
 		if (iter->second)
 		{
-			if (rayColResult[i]->Collider2D())
-				rayColResult[i]->Collider2D()->OnRayOverlap();
-			if (rayColResult[i]->Collider3D())
-				rayColResult[i]->Collider3D()->OnRayOverlap();
+			if (m_vCurRayCol[i]->Collider2D())
+				m_vCurRayCol[i]->Collider2D()->OnRayOverlap();
+			if (m_vCurRayCol[i]->Collider3D())
+				m_vCurRayCol[i]->Collider3D()->OnRayOverlap();
 		}
 		//처음 충돌이라면
 		else {
-			if (rayColResult[i]->Collider2D())
-				rayColResult[i]->Collider2D()->BeginRayOverlap();
-			if (rayColResult[i]->Collider3D())
-				rayColResult[i]->Collider3D()->BeginRayOverlap();
+			if (m_vCurRayCol[i]->Collider2D())
+				m_vCurRayCol[i]->Collider2D()->BeginRayOverlap();
+			if (m_vCurRayCol[i]->Collider3D())
+				m_vCurRayCol[i]->Collider3D()->BeginRayOverlap();
 
 			iter->second = true;
 		}
@@ -74,8 +74,8 @@ void CCollisionMgr::RayCollideCheck()
 	}
 
 	m_mPrevRayColID.clear();
-	for (UINT i = 0; i < rayColResult.size(); ++i) {
-		m_mPrevRayColID.insert(rayColResult[i]);
+	for (UINT i = 0; i < m_vCurRayCol.size(); ++i) {
+		m_mPrevRayColID.insert(m_vCurRayCol[i]);
 	}
 }
 
