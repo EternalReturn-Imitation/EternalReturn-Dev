@@ -28,6 +28,14 @@ FSMState* ER_ActionScript_Rio::CreateMove()
     // state->SetStateEnter((SCRIPT_DELEGATE)&ER_ActionScript_Rio::MoveEnter);
     // state->SetStateUpdate((SCRIPT_DELEGATE)&ER_ActionScript_Rio::MoveUpdate);
 
+    Vector3 vector;
+    vector.x = 1.0f;
+    vector.y = 2.0f;
+    vector.z = 3.0f;
+
+    Vector3* pVector = &vector;
+    DWORD_PTR address = reinterpret_cast<DWORD_PTR>(pVector);
+
     STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Move);
     STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Move);
 
@@ -61,7 +69,7 @@ FSMState* ER_ActionScript_Rio::CreateAttack()
 FSMState* ER_ActionScript_Rio::CreateArrive()
 {
     FSMState* state = new FSMState(this);
-
+    
     STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Arrive);
     STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Arrive);
 
@@ -119,6 +127,10 @@ void ER_ActionScript_Rio::Wait()
 
 void ER_ActionScript_Rio::Move(CGameObject* _Target, Vec3 _DestPos)
 {
+    tFSMData tmp;
+    tmp.v4Data = Vec4(_DestPos.x, _DestPos.y, _DestPos.z, 0.f);
+    StateList[ER_CHAR_ACT::MOVE]->SetData(tmp);
+
     ER_ActionScript_Character::Move(nullptr, _DestPos);
 }
 
@@ -147,13 +159,21 @@ void ER_ActionScript_Rio::Rest()
     ChangeState(ER_CHAR_ACT::REST);
 }
 
-void ER_ActionScript_Rio::MoveEnter()
+void ER_ActionScript_Rio::MoveEnter(tFSMData param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Run");
     SetAbleToCancle(bAbleChange::COMMON);
+
+    Vec3 DestPos = param.v4Data;
+
+    CFindPath* findpathcomp = GetOwner()->FindPath();
+    bool bMove = findpathcomp->FindPath(DestPos);
+
+    if (!bMove)
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
-void ER_ActionScript_Rio::MoveUpdate()
+void ER_ActionScript_Rio::MoveUpdate(tFSMData param)
 {
     // 캐릭터 속도 얻어와서 넣어주기
     float speed = m_Data->GetStatus().fMovementSpeed;
@@ -163,30 +183,31 @@ void ER_ActionScript_Rio::MoveUpdate()
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
-void ER_ActionScript_Rio::WaitEnter()
+void ER_ActionScript_Rio::WaitEnter(tFSMData param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Wait");
     SetAbleToCancle(bAbleChange::COMMON);
 }
 
-void ER_ActionScript_Rio::ArriveEnter()
+void ER_ActionScript_Rio::ArriveEnter(tFSMData param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Arrive", false);
 }
 
-void ER_ActionScript_Rio::ArriveUpdate()
+void ER_ActionScript_Rio::ArriveUpdate(tFSMData param)
 {
     if (GetOwner()->Animator3D()->IsFinish())
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
-void ER_ActionScript_Rio::RestEnter()
+void ER_ActionScript_Rio::RestEnter(tFSMData param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Rest_Start", false);
+    
     // 시전게이지 표기
 }
 
-void ER_ActionScript_Rio::RestUpdate()
+void ER_ActionScript_Rio::RestUpdate(tFSMData param)
 {
     static int RestAnimStep = 0;
     
@@ -197,7 +218,7 @@ void ER_ActionScript_Rio::RestUpdate()
     case 0: // 시작 동작
     {
         // 시전 캔슬가능
-        // 애니메이션 길이만큼 시전게이지 출력
+        // 애니메이션 길이만큼 시전게이지 UI 출력
 
         if (animator->IsFinish())
         {
@@ -222,7 +243,7 @@ void ER_ActionScript_Rio::RestUpdate()
     case 2: // 종료 동작
     {
         // 캔슬 가능
-        // 애니메이션 길이만큼 시전게이지 출력
+        // 애니메이션 길이만큼 시전게이지 UI 출력
         if (animator->IsFinish())
         {
             SetAbleToCancle(bAbleChange::COMMON);

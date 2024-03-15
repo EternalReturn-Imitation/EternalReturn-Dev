@@ -41,6 +41,7 @@ protected:
 
     bAbleChange m_bAbleChange;              // 동작 변경 가능 여부
 
+    // FSMState에 Delegate를 생성해서 연결해주는 함수
     virtual FSMState* CreateWait() = 0;
     virtual FSMState* CreateMove() = 0;
     virtual FSMState* CreateCraft() = 0;
@@ -57,6 +58,7 @@ public:
     virtual void begin() override;
     virtual void tick() override;
 
+    // 동작 명령 함수. FSM 변경 명령 및 추가 동작 구현
     virtual void Attack(CGameObject* _EnemyObj) = 0;                // 기본공격
     virtual void Wait();                                            // 대기
     virtual void Move(CGameObject* _Target, Vec3 _DestPos);         // 이동

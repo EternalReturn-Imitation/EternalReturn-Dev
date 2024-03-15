@@ -73,15 +73,15 @@ void CreateTestLevel()
 	pLightObj->AddComponent(new CTransform);
 	pLightObj->AddComponent(new CLight3D);
 	pLightObj->AddComponent(new CFollowMainCamScript);
-	pLightObj->GetScript<CFollowMainCamScript>()->SetTarget(Vec3(-20.f, 0.f, 0.f));
+	pLightObj->GetScript<CFollowMainCamScript>()->SetTarget(Vec3(-14, 0.f, 0.f));
 	pLightObj->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
 	pLightObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(55.f), 0.f, Deg2Rad(5.f)));
 
 	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
 	pLightObj->Light3D()->SetRadius(500.f);
-	pLightObj->Light3D()->GetLightRenderCam()->SetFar(40.f);
-	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoWidth(40.f);
-	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoHeight(40.f);
+	pLightObj->Light3D()->GetLightRenderCam()->SetFar(200.f);
+	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoWidth(30.f);
+	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoHeight(30.f);
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 

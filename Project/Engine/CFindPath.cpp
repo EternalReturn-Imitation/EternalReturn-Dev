@@ -14,6 +14,7 @@
 
 #define DIR_ERROR_RANGE 0.0872665f	// 오차범위	5도 (radian)
 #define DIR_ADD_RADIAN	0.0872665f	// 변화 각도 5도 (radian)
+#define RADIAN360		6.23819f	// 360도에 해당하는 radian
 
 
 CFindPath::CFindPath()
@@ -129,7 +130,13 @@ bool CFindPath::PathMove(float _fSpeed)
 	float DestDir = GetFrontDir(Dir);
 
 	// Change Direction
-	if (DIR_ERROR_RANGE * 1.5f < fabsf(m_fDestDir - curDir.y))
+
+	float CheckErrorRange = fabsf(m_fDestDir - curDir.y);
+	
+	if (RADIAN360 < CheckErrorRange)
+		CheckErrorRange -= RADIAN360;
+
+	if (DIR_ERROR_RANGE < CheckErrorRange)
 		DestDir = isLeft(Dir, vFront) ? curDir.y + DIR_ADD_RADIAN : curDir.y - DIR_ADD_RADIAN;
 	else
 		DestDir = m_fDestDir;

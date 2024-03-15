@@ -49,12 +49,15 @@ void ER_ActionScript_Character::Move(CGameObject* _Target, Vec3 _DestPos)
 {
 	if (IsAbleChange(bAbleChange::COMMON))
 	{
-		// FindPath Component에 목적지 위치 전달
-		CFindPath* findpathcomp = GetOwner()->FindPath();
-		bool bMove = findpathcomp->FindPath(_DestPos);
 
-		if (bMove && m_iCurState != ER_CHAR_ACT::MOVE)
+		if (m_iCurState != ER_CHAR_ACT::MOVE)
 			ChangeState(ER_CHAR_ACT::MOVE);
+		else if (m_iCurState == ER_CHAR_ACT::MOVE)
+		{
+			// 플레이어블 캐릭터 특성으로 지속명령이기때문에 이곳에서 목적지 경로 설정 진행
+			CFindPath* findpathcomp = GetOwner()->FindPath();
+			findpathcomp->FindPath(_DestPos);
+		}
 	}
 }
 
