@@ -236,7 +236,7 @@ void CharacterDataUI::render_CharacterInfoData()
     // [ stats ]
     ImGui::SameLine();
     ImGui::BeginGroup();
-    ER_STD_CHAR_STATS& stats = CharacterContext->m_STDStats;
+    ER_Initial_Stats& stats = CharacterContext->m_STDStats;
 
     ImGui::Button("Character Stats", ImVec2(200.f, 0.f));
 

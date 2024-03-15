@@ -1,21 +1,21 @@
 #include "pch.h"
-#include "CCameraMoveScript.h"
+#include "CEditCamControlScript.h"
 
 #include <Engine\CTransform.h>
 #include <Engine\CCamera.h>
 
-CCameraMoveScript::CCameraMoveScript()
-	: CScript((UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT)
+CEditCamControlScript::CEditCamControlScript()
+	: CScript((UINT)SCRIPT_TYPE::EDITCAMCONTROLSCRIPT)
 	, m_fCamSpeed(10.f)
 	, b_RBTNPressed(false)
 {
 }
 
-CCameraMoveScript::~CCameraMoveScript()
+CEditCamControlScript::~CEditCamControlScript()
 {
 }
 
-void CCameraMoveScript::tick()
+void CEditCamControlScript::tick()
 {
 	if (LEVEL_STATE::PLAY != CLevelMgr::GetInst()->GetCurLevel()->GetState())
 	{
@@ -26,7 +26,7 @@ void CCameraMoveScript::tick()
 	}
 }
 
-void CCameraMoveScript::Camera2DMove()
+void CEditCamControlScript::Camera2DMove()
 {
 	// 키 입력에 따른 카메라 이동
 	Vec3 vPos = Transform()->GetRelativePos();
@@ -72,7 +72,7 @@ void CCameraMoveScript::Camera2DMove()
 	Transform()->SetRelativePos(vPos);
 }
 
-void CCameraMoveScript::Camera3DMove()
+void CEditCamControlScript::Camera3DMove()
 {
 	Vec3 vPos = Transform()->GetRelativePos();
 	Vec3 vRot = Transform()->GetRelativeRot();
@@ -118,11 +118,11 @@ void CCameraMoveScript::Camera3DMove()
 
 
 
-	if (KEY_PRESSED(KEY::LSHIFT) && KEY_PRESSED(KEY::RBTN))
+	if (KEY_PRESSED(KEY::RBTN))
 	{
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
-		vRot.y += DT * vMouseDir.x * 5.f;
-		vRot.x -= DT * vMouseDir.y * 5.f;
+		vRot.y += DT * vMouseDir.x * 0.1f;
+		vRot.x -= DT * vMouseDir.y * 0.1f;
 		b_RBTNPressed = true;
 	}
 	else
@@ -130,5 +130,4 @@ void CCameraMoveScript::Camera3DMove()
 
 	Transform()->SetRelativePos(vPos);
 	Transform()->SetRelativeRot(vRot);
-
 }

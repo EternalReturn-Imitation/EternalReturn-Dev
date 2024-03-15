@@ -29,6 +29,7 @@ void ER_ActionScript_Character::begin()
 	StateInit();
 	FSMContext = new FSM(StateList[ER_CHAR_ACT::WAIT]);
 	m_Data = GetOwner()->GetScript<ER_DataScript_Character>();
+	
 }
 
 void ER_ActionScript_Character::tick()
@@ -72,16 +73,20 @@ void ER_ActionScript_Character::StateInit()
 	StateList[ER_CHAR_ACT::SKILL_R] = CreateSkill_R();
 }
 
-void ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state)
+void ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade)
 {
-	FSMContext->ChangeState(StateList[_state]);
-	m_iCurState = _state;
+	// 변경 가능 수준 검사
+	if (IsAbleChange(_Grade))
+	{
+		FSMContext->ChangeState(StateList[_state]);
+		m_iCurState = _state;
+	}
 }
 
-bool ER_ActionScript_Character::IsAbleChange(bAbleChange _able)
+bool ER_ActionScript_Character::IsAbleChange(bAbleChange _Grade)
 {
 	// 인자로 들어온 동작변경가능 수준이
 	// 현재설정된 동작변경가능 수준과 같거나 높아야 true 반환.
 	
-	return m_bAbleChange <= _able;
+	return m_bAbleChange <= _Grade;
 }

@@ -12,7 +12,7 @@
 #include "ImGui/ImGuizmo.h"
 
 #include <Engine/CKeyMgr.h>
-#include <Script/CCameraMoveScript.h>
+#include <Script/CEditCamControlScript.h>
 
 static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
@@ -119,13 +119,13 @@ void TransformUI::EditTransform(float* cameraView, float* cameraProjection, floa
 		//윈도우 모드일때만 뜨도록 함
 		ImGui::Text("Position");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Tr", matrixTranslation, 0.01f);
+		ImGui::DragFloat3("##Tr", matrixTranslation, 0.01f, 0.f, 0.f, "%.5f");
 		ImGui::Text("Rotation");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Rt", matrixRotation, 0.01f);
+		ImGui::DragFloat3("##Rt", matrixRotation, 0.01f, 0.f, 0.f, "%.5f");
 		ImGui::Text("Scale   ");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Sc", matrixScale, 0.01f);
+		ImGui::DragFloat3("##Sc", matrixScale, 0.01f, 0.f, 0.f, "%.5f");
 		ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, matrix);
 
 		if (mCurrentGizmoOperation != ImGuizmo::SCALE)

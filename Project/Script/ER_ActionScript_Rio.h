@@ -18,6 +18,8 @@ protected:
     virtual FSMState* CreateSkill_R();
 
 public:
+    virtual void begin() override;
+
     virtual void Attack(CGameObject* _EnemyObj);                // 기본공격
     virtual void Wait();                                        // 대기
     virtual void Move(CGameObject* _Target, Vec3 _DestPos);     // 이동
@@ -33,6 +35,12 @@ private:
     void MoveUpdate();
 
     void WaitEnter();
+
+    void ArriveEnter();
+    void ArriveUpdate();
+
+    void RestEnter();
+    void RestUpdate();
 
 public:
     ER_ActionScript_Rio();

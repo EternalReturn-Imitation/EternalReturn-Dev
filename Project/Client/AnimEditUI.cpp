@@ -252,7 +252,7 @@ void AnimEditUI::render_cliplistwindow()
                     pPreviousAnim->SetAnimClip(m_tTempAnimclip);
 
                 // 정상적으로 애니메이션이 추가된 경우 추가한 애니메이션으로 변경해준다.
-                m_pCurAnimator->SelectAnimation(iter->first);
+                m_pCurAnimator->SelectAnimation(iter->first, true);
                 m_tTempAnimclip = m_pCurAnimator->GetCurAnim()->GetAnimClip();
             }
         }
@@ -721,7 +721,7 @@ void AnimEditUI::SelectBone(DWORD_PTR _data)
             pPreviousAnim->SetAnimClip(m_tTempAnimclip);
 
         // 정상적으로 애니메이션이 추가된 경우 추가한 애니메이션으로 변경해준다.
-        m_pCurAnimator->SelectAnimation(temp->GetKey());
+        m_pCurAnimator->SelectAnimation(temp->GetKey(), true);
         m_tTempAnimclip = m_pCurAnimator->GetCurAnim()->GetAnimClip();
     }
     else

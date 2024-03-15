@@ -75,13 +75,7 @@
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>Script\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="CCameraMoveScript.h">
-      <Filter>Script\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="CFindPathScript.h">
+    <ClInclude Include="CEditCamControlScript.h">
       <Filter>Script\Default</Filter>
     </ClInclude>
     <ClInclude Include="CMissileScript.h">
@@ -129,6 +123,9 @@
     <ClInclude Include="ER_ActionScript_Yuki.h">
       <Filter>Script\ER\ActionScript\Character\Yuki</Filter>
     </ClInclude>
+    <ClInclude Include="CFollowMainCamScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -140,10 +137,7 @@
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CCameraMoveScript.cpp">
-      <Filter>Script\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="CFindPathScript.cpp">
+    <ClCompile Include="CEditCamControlScript.cpp">
       <Filter>Script\Default</Filter>
     </ClCompile>
     <ClCompile Include="CMissileScript.cpp">
@@ -153,9 +147,6 @@
       <Filter>Script\Default</Filter>
     </ClCompile>
     <ClCompile Include="CPlanetScript.cpp">
-      <Filter>Script\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
       <Filter>Script\Default</Filter>
     </ClCompile>
     <ClCompile Include="ER_DataScript_Character.cpp">
@@ -187,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="ER_ActionScript_Yuki.cpp">
       <Filter>Script\ER\ActionScript\Character\Yuki</Filter>
+    </ClCompile>
+    <ClCompile Include="CFollowMainCamScript.cpp">
+      <Filter>Script\Default</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

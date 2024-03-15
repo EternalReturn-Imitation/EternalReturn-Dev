@@ -52,7 +52,7 @@ public:
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
-    virtual void LoadFromLevelFile(FILE* _FILE) override {}
+    virtual void LoadFromLevelFile(FILE* _File) override {}
 
 protected:
     void AddScriptParam(SCRIPT_PARAM eParam, void* _pData, const string& _Desc);

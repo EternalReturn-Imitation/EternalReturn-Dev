@@ -13,11 +13,10 @@
 
 #include <Engine\CCollider2D.h>
 
-#include <Script\CPlayerScript.h>
 #include <Script\CMonsterScript.h>
-#include <Script\CCameraMoveScript.h>
+#include <Script\CEditCamControlScript.h>
+#include <Script\CFollowMainCamScript.h>
 #include <Script\ER_CamControllerScript.h>
-#include <Script\CFindPathScript.h>
 
 #include "CLevelSaveLoad.h"
 
@@ -67,6 +66,27 @@ void CreateTestLevel()
 
 	SpawnGameObject(pMainCam, Vec3(0.f, 20.f, 0.f), 0);
 
+	// 광원 추가
+	CGameObject* pLightObj = new CGameObject;
+	pLightObj->SetName(L"Directional Light");
+
+	pLightObj->AddComponent(new CTransform);
+	pLightObj->AddComponent(new CLight3D);
+	pLightObj->AddComponent(new CFollowMainCamScript);
+	pLightObj->GetScript<CFollowMainCamScript>()->SetTarget(Vec3(-20.f, 0.f, 0.f));
+	pLightObj->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
+	pLightObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(55.f), 0.f, Deg2Rad(5.f)));
+
+	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
+	pLightObj->Light3D()->SetRadius(500.f);
+	pLightObj->Light3D()->GetLightRenderCam()->SetFar(40.f);
+	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoWidth(40.f);
+	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoHeight(40.f);
+	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
+	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
+
+	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
+
 	// UI cameara
 	// CGameObject* pUICam = new CGameObject;
 	// pUICam->SetName(L"UICamera");
@@ -94,25 +114,7 @@ void CreateTestLevel()
 	// 
 	// SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), L"SkyBox");
 
-	// 광원 추가
-	CGameObject* pLightObj = new CGameObject;
-	pLightObj->SetName(L"Directional Light");
-
-	pLightObj->AddComponent(new CTransform);
-	pLightObj->AddComponent(new CLight3D);
-
-	pLightObj->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
-	pLightObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(55.f), 0.f, 0.f));
-	pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-	pLightObj->Light3D()->SetRadius(500.f);
-	pLightObj->Light3D()->GetLightRenderCam()->SetFar(200.f);
-	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoWidth(280.f);
-	pLightObj->Light3D()->GetLightRenderCam()->SetOrthoHeight(240.f);
-	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
-	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
-
-	//SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
-	SpawnGameObject(pLightObj, Vec3(-70.f, 100.f, -20.f), 0);
+	
 
 	// 오브젝트 생성
 	// CGameObject* pObject = new CGameObject;

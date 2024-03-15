@@ -1,9 +1,8 @@
-CCameraMoveScript
-CFindPathScript
+CEditCamControlScript
+CFollowMainCamScript
 CMissileScript
 CMonsterScript
 CPlanetScript
-CPlayerScript
 ER_ActionScript_Aya
 ER_ActionScript_Hyunwoo
 ER_ActionScript_Jackie

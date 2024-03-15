@@ -69,10 +69,10 @@ public:
 
     void StateInit();
 
-    void ChangeState(ER_CHAR_ACT _state);
+    void ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade = bAbleChange::COMMON);
     
-    void SetAbleToCancle(bAbleChange _bAble) { m_bAbleChange = _bAble; }
-    bool IsAbleChange(bAbleChange _able);
+    void SetAbleToCancle(bAbleChange _Grade) { m_bAbleChange = _Grade; }
+    bool IsAbleChange(bAbleChange _Grade);
 
 public:
     ER_ActionScript_Character(SCRIPT_TYPE _type);

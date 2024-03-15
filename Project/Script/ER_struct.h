@@ -1,6 +1,6 @@
 #pragma once
 
-struct tStandard_Character_Stats
+struct tInitial_Character_Stats
 {
 	// 기본 능력치
 	short iAttackPower;					// 공격력
@@ -23,7 +23,7 @@ struct tStandard_Character_Stats
 	UINT	eWPType;					// 주무기 타입
 	float	fWpAtkSpd;					// 주무기 공격 속도
 	float	fWpAtkRange;				// 주무기 사거리
-}typedef ER_STD_CHAR_STATS;
+}typedef ER_Initial_Stats;
 
 struct tIngame_Character_Stats
 {
@@ -46,6 +46,27 @@ struct tIngame_Character_Stats
 
 	int		iSkillAmplification;	// 스킬 증폭
 
+	void Init_To_LevelOne(const ER_Initial_Stats& _StdStats)
+	{
+		iLevel = 1;
+		iExp = 1;
+		iNeedExpForNextLevel = iLevel * 100;	// 임의 설정
+
+		iAttackPower = _StdStats.iAttackPower;
+		iDefense = _StdStats.iDefense;
+		iMaxHP = _StdStats.iMaxHP;
+		iHP = _StdStats.iMaxHP;
+		fHPRegen = _StdStats.fHPRegen;
+		iMaxSP = _StdStats.iMaxSP;
+		iSP = _StdStats.iMaxHP;
+		fSPRegen = _StdStats.fSPRegen;
+		fAttackSpeed = _StdStats.fAttackSpeed;
+		fCriticalStrikeChance = _StdStats.fCriticalStrikeChance;
+		fMovementSpeed = _StdStats.fMovementSpeed;
+		fVisionRange = _StdStats.fVisionRange;
+
+		iSkillAmplification = 0;
+	};
 }typedef ER_Ingame_Stats;
 
 struct tItem_Stats

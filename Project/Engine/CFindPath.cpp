@@ -12,8 +12,8 @@
 #include "CRenderMgr.h"
 #include "CCamera.h"
 
-#define DIR_ERROR_RANGE 0.0872665f	// 오차범위 5도 (radian)
-#define DIR_ADD_RADIAN	0.0523599f	// 변화 각도 3도 (radian)
+#define DIR_ERROR_RANGE 0.0872665f	// 오차범위	5도 (radian)
+#define DIR_ADD_RADIAN	0.0872665f	// 변화 각도 5도 (radian)
 
 
 CFindPath::CFindPath()
@@ -129,13 +129,14 @@ bool CFindPath::PathMove(float _fSpeed)
 	float DestDir = GetFrontDir(Dir);
 
 	// Change Direction
-	if (DIR_ERROR_RANGE < fabsf(m_fDestDir - curDir.y))
+	if (DIR_ERROR_RANGE * 1.5f < fabsf(m_fDestDir - curDir.y))
 		DestDir = isLeft(Dir, vFront) ? curDir.y + DIR_ADD_RADIAN : curDir.y - DIR_ADD_RADIAN;
 	else
 		DestDir = m_fDestDir;
 
 	GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, DestDir, 0.f));
 
+	// 경로로 오브젝트 이동
 	float speed = _fSpeed;
 	Vec3 newPos = curPos + (speed * Dir * DT);
 	GetOwner()->Transform()->SetRelativePos(newPos);

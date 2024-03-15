@@ -62,8 +62,13 @@ void ER_PlayerScript::tick()
 		// cursor On Land (else)
 		else
 		{
-			m_pActionScript->Move(pFocusObj, vTargetPoint);
+			m_pActionScript->Move(nullptr, vTargetPoint);
 		}
+	}
+	else if (KEY_PRESSED(KEY::RBTN))
+	{
+		// 이동 유지
+		m_pActionScript->Move(nullptr, vTargetPoint);
 	}
 	
 	if (KEY_TAP(KEY::Q))
@@ -93,6 +98,7 @@ void ER_PlayerScript::tick()
 	
 	if (KEY_TAP(KEY::X))
 	{
+		m_pActionScript->Rest();
 	}
 	
 	if (KEY_TAP(KEY::TAB))

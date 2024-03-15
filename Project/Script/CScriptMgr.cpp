@@ -1,12 +1,11 @@
 #include "pch.h"
 #include "CScriptMgr.h"
 
-#include "CCameraMoveScript.h"
-#include "CFindPathScript.h"
+#include "CEditCamControlScript.h"
+#include "CFollowMainCamScript.h"
 #include "CMissileScript.h"
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
-#include "CPlayerScript.h"
 #include "ER_ActionScript_Aya.h"
 #include "ER_ActionScript_Hyunwoo.h"
 #include "ER_ActionScript_Jackie.h"
@@ -19,12 +18,11 @@
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
-	_vec.push_back(L"CCameraMoveScript");
-	_vec.push_back(L"CFindPathScript");
+	_vec.push_back(L"CEditCamControlScript");
+	_vec.push_back(L"CFollowMainCamScript");
 	_vec.push_back(L"CMissileScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
-	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"ER_ActionScript_Aya");
 	_vec.push_back(L"ER_ActionScript_Hyunwoo");
 	_vec.push_back(L"ER_ActionScript_Jackie");
@@ -38,18 +36,16 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
-	if (L"CCameraMoveScript" == _strScriptName)
-		return new CCameraMoveScript;
-	if (L"CFindPathScript" == _strScriptName)
-		return new CFindPathScript;
+	if (L"CEditCamControlScript" == _strScriptName)
+		return new CEditCamControlScript;
+	if (L"CFollowMainCamScript" == _strScriptName)
+		return new CFollowMainCamScript;
 	if (L"CMissileScript" == _strScriptName)
 		return new CMissileScript;
 	if (L"CMonsterScript" == _strScriptName)
 		return new CMonsterScript;
 	if (L"CPlanetScript" == _strScriptName)
 		return new CPlanetScript;
-	if (L"CPlayerScript" == _strScriptName)
-		return new CPlayerScript;
 	if (L"ER_ActionScript_Aya" == _strScriptName)
 		return new ER_ActionScript_Aya;
 	if (L"ER_ActionScript_Hyunwoo" == _strScriptName)
@@ -75,11 +71,11 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 {
 	switch (_iScriptType)
 	{
-	case (UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT:
-		return new CCameraMoveScript;
+	case (UINT)SCRIPT_TYPE::EDITCAMCONTROLSCRIPT:
+		return new CEditCamControlScript;
 		break;
-	case (UINT)SCRIPT_TYPE::FINDPATHSCRIPT:
-		return new CFindPathScript;
+	case (UINT)SCRIPT_TYPE::FOLLOWMAINCAMSCRIPT:
+		return new CFollowMainCamScript;
 		break;
 	case (UINT)SCRIPT_TYPE::MISSILESCRIPT:
 		return new CMissileScript;
@@ -89,9 +85,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::PLANETSCRIPT:
 		return new CPlanetScript;
-		break;
-	case (UINT)SCRIPT_TYPE::PLAYERSCRIPT:
-		return new CPlayerScript;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:
 		return new ER_ActionScript_Aya;
@@ -128,12 +121,12 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 {
 	switch ((SCRIPT_TYPE)_pScript->GetScriptType())
 	{
-	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
-		return L"CCameraMoveScript";
+	case SCRIPT_TYPE::EDITCAMCONTROLSCRIPT:
+		return L"CEditCamControlScript";
 		break;
 
-	case SCRIPT_TYPE::FINDPATHSCRIPT:
-		return L"CFindPathScript";
+	case SCRIPT_TYPE::FOLLOWMAINCAMSCRIPT:
+		return L"CFollowMainCamScript";
 		break;
 
 	case SCRIPT_TYPE::MISSILESCRIPT:
@@ -146,10 +139,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::PLANETSCRIPT:
 		return L"CPlanetScript";
-		break;
-
-	case SCRIPT_TYPE::PLAYERSCRIPT:
-		return L"CPlayerScript";
 		break;
 
 	case SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:

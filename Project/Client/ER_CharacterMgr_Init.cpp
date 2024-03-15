@@ -75,7 +75,7 @@ int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
     SaveWString(CharacterContext->m_strName, _File);
 
     // Character Std Stats
-    fwrite(&CharacterContext->m_STDStats, sizeof(ER_STD_CHAR_STATS), 1, _File);
+    fwrite(&CharacterContext->m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 
     return 0;
 }
@@ -94,7 +94,7 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
     LoadWString(CharacterContext->m_strName, _File);
 
     // Character Std Stats
-    fread(&CharacterContext->m_STDStats, sizeof(ER_STD_CHAR_STATS), 1, _File);
+    fread(&CharacterContext->m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 
     // CharacterData init
     pCharacter->SetName(CharacterContext->m_strKey);

@@ -9,14 +9,14 @@ class ER_DataScript_Character :
 private:
     wstring             m_strKey;
     wstring             m_strName;              // 실험체 이름
-    ER_STD_CHAR_STATS   m_STDStats;             // 실험체 초기 능력치
+    ER_Initial_Stats    m_STDStats;             // 실험체 초기 능력치
 
     Ptr<CTexture>       m_PortraitTex;          // 초상화 텍스쳐
     Ptr<CTexture>       m_FullTax;              // 전신 일러
     Ptr<CTexture>       m_MapTex;               // 미니맵 텍스쳐
 
     // 실험체 최종 능력치 (초기능력치 * 레벨, + 아이템, + 스킬효과)
-
+    ER_Ingame_Stats     m_Stats;                // 게임 능력치
 
     // [인벤토리 15개]
     // 장착 5개
@@ -24,6 +24,7 @@ private:
 
     // [함수]
     // 능력치 갱신 함수 (아이템 장착, 레벨업, 상태이상 등 상호작용시 마지막에 호출)
+    void StatusUpdate();    // Status 갱신 함수
 
     CLONE(ER_DataScript_Character);
 public:
@@ -31,9 +32,16 @@ public:
     virtual void begin() override;
     virtual void tick() override;
 
+public:
+    const ER_Ingame_Stats& GetStatus() { return m_Stats; }
+
+public:
+    virtual void SaveToLevelFile(FILE* _File) override;
+    virtual void LoadFromLevelFile(FILE* _FILE) override;
 
 public:
     ER_DataScript_Character();
+    ER_DataScript_Character(const ER_DataScript_Character& _origin);
     ~ER_DataScript_Character();
 
     friend class ER_CharacterMgr;

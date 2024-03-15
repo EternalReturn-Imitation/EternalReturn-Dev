@@ -14,7 +14,7 @@
 #include <Engine\CRenderMgr.h>
 #include <Engine\CMRT.h>
 
-#include <Script\CCameraMoveScript.h>
+#include <Script\CEditCamControlScript.h>
 
 CEditorObjMgr::CEditorObjMgr()
 	: m_DebugShape{}
@@ -70,7 +70,7 @@ void CEditorObjMgr::init()
 	CGameObjectEx* pEditorCamObj = new CGameObjectEx;
 	pEditorCamObj->AddComponent(new CTransform);
 	pEditorCamObj->AddComponent(new CCamera);
-	pEditorCamObj->AddComponent(new CCameraMoveScript);
+	pEditorCamObj->AddComponent(new CEditCamControlScript);
 
 	pEditorCamObj->Camera()->SetFOV(Deg2Rad(30));
 	pEditorCamObj->Camera()->SetLayerMaskAll(true);
