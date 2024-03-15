@@ -184,6 +184,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_Data_CharacterScript.h" />
     <ClInclude Include="ER_Data_ItemScript.h" />
     <ClInclude Include="ER_define.h" />
+    <ClInclude Include="ER_ItemBoxScript.h" />
     <ClInclude Include="ER_PlayerScript.h" />
     <ClInclude Include="ER_struct.h" />
     <ClInclude Include="framework.h" />
@@ -199,6 +200,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CScriptMgr.cpp" />
     <ClCompile Include="ER_Data_CharacterScript.cpp" />
     <ClCompile Include="ER_Data_ItemScript.cpp" />
+    <ClCompile Include="ER_ItemBoxScript.cpp" />
     <ClCompile Include="ER_PlayerScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

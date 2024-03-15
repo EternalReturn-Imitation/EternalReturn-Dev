@@ -43,6 +43,9 @@
     <Filter Include="Default\ER_header">
       <UniqueIdentifier>{ab7cb09f-7a29-440c-94a5-7cc14bfb4d66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\ItemBox">
+      <UniqueIdentifier>{4917d2dd-28b0-48a2-94e5-08be8efd8b71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="ER_PlayerScript.h">
       <Filter>Script\ER\PlayerScript</Filter>
     </ClInclude>
+    <ClInclude Include="ER_ItemBoxScript.h">
+      <Filter>Script\ER\ItemBox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -124,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="ER_PlayerScript.cpp">
       <Filter>Script\ER\PlayerScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ItemBoxScript.cpp">
+      <Filter>Script\ER\ItemBox</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
