@@ -2,3 +2,7 @@
 
 
 void CreateTestLevel();
+
+void LoadingBackGround();
+
+void LoadingItemBoxes();

@@ -30,7 +30,6 @@
 
 #include "ER_CharacterMgr.h"
 
-
 void CreateTestLevel()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -42,7 +41,8 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(2)->SetName(L"Base");
 	pCurLevel->GetLayer(3)->SetName(L"Building");
 	pCurLevel->GetLayer(4)->SetName(L"Roof");
-	pCurLevel->GetLayer(5)->SetName(L"Monster");
+	pCurLevel->GetLayer(5)->SetName(L"ItemBox");
+	pCurLevel->GetLayer(11)->SetName(L"Monster");
 	pCurLevel->GetLayer(30)->SetName(L"NaviMap");
 	pCurLevel->GetLayer(31)->SetName(L"Test");
 	//pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
@@ -172,7 +172,35 @@ void CreateTestLevel()
 	CPathFindMgr::GetInst()->SetMapCollider(MapCollider);
 	SpawnGameObject(MapCollider, Vec3(0.f, 0.f, 0.f), L"NaviMap");
 
-	// NaveMap
+	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Test");
+
+	CGameObject* pObject = new CGameObject;
+	pObject->SetName(L"TestCollider2D01");
+	pObject->AddComponent(new CTransform);
+	pObject->AddComponent(new CCollider3D);
+	pObject->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
+	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	pObject->begin();
+	SpawnGameObject(pObject, Vec3(10.f, 1.f, 10.f), L"Test");
+
+	//pObject = new CGameObject;
+	//pObject->SetName(L"TestCollider2D02");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CCollider3D);
+	//pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
+	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//SpawnGameObject(pObject, Vec3(0.f, 1.f, 0.f), L"Test");
+
+	LoadingBackGround();
+	LoadingItemBoxes();
+
+	CCollisionMgr::GetInst()->RayLayerCheck(L"Test");
+}
+
+void LoadingBackGround() {
 	Ptr<CMeshData> pMeshData = nullptr;
 	Vec3 rot = {};
 #pragma region Archery
@@ -210,7 +238,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(13341.f, -389.f, -4629.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(9783.f, -824.f, 6715.f), L"Base");
 	SpawnGameObject(LandMesh, Vec3(-53.680f, -8.500f, -20.202f), L"Base");
-	 
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_Building.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"Forest_Building");
@@ -228,7 +256,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(9070.f, 230.f, 15030.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(5512.f, -205.f, 26374.f), L"Base");
 	SpawnGameObject(LandMesh, Vec3(-96.4f, -2.32f, 176.4f), L"Base");
-	
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Building.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"Hotel_Building");
@@ -236,7 +264,7 @@ void CreateTestLevel()
 	//LandMesh(pObj, Vec3(4606.f, 94.f, -4699.f), L"Building");
 	//SpawnGameObject(pObj, Vec3(1048.f, -341.f, 6645.f), L"Building");
 	SpawnGameObject(LandMesh, Vec3(-141.f, -3.6f, -21.35f), L"Building");
-	
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Roof.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"Hotel_Roof");
@@ -254,7 +282,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(10799.f, -669.f, -10157.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(7241.f, -1104.f, 1187.f), L"Base");
 	SpawnGameObject(LandMesh, Vec3(-79.400f, -11.500f, -75.300f), L"Base");
-	
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Building.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"SandyBeach_Building");
@@ -276,7 +304,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(10055.f, 105.f, 4190.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(6497.f, -330.f, 15534.f), L"Base");
 	SpawnGameObject(LandMesh, Vec3(-86.656f, -4.100f, 67.850f), L"Base");
-	
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Building.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"School_Building");
@@ -284,7 +312,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(11240.f, 385.f, 545.f), L"Building");
 	//SpawnGameObject(pObj, Vec3(7882.f, -50.f, 11889.f), L"Building");
 	SpawnGameObject(LandMesh, Vec3(-74.800f, -1.380f, 31.400f), L"Building");
-	
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Roof.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"School_Roof");
@@ -295,7 +323,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(9995.f, 395.f, 5030.f), L"Roof");
 	//SpawnGameObject(pObj, Vec3(6437.f, -40.f, 16374.f), L"Roof");
 	SpawnGameObject(LandMesh, Vec3(-87.150f, -1.280f, 76.150f), L"Roof");
-	
+
 #pragma endregion
 
 #pragma region Uptown
@@ -306,7 +334,7 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(21120.f, -144.f, -7965.f), L"Base");
 	//SpawnGameObject(pObj, Vec3(17562.f, -579.f, 3379.f), L"Base");
 	SpawnGameObject(LandMesh, Vec3(23.820f, -6.250f, -53.350f), L"Base");
-	
+
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_Building.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"Uptown_Building");
@@ -315,27 +343,330 @@ void CreateTestLevel()
 	//SpawnGameObject(pObj, Vec3(16070.f, -367.f, 1692.f), L"Building");
 	SpawnGameObject(LandMesh, Vec3(9.f, -5.600f, -70.290f), L"Building");
 #pragma endregion
+}
 
-	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
+void LoadingItemBoxes() {
+	Ptr<CMeshData> pMeshData = nullptr;
+	Vec3 rot = {};
+	CGameObject* pItemBox;
 
-	CGameObject* pObject = new CGameObject;
-	pObject->SetName(L"TestCollider2D01");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->begin();
-	SpawnGameObject(pObject, Vec3(10.f, 1.f, 10.f), L"Test");
+#pragma region Archery
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Biotoilet01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Archery_Biotoilet01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(90.000f);
+	rot.y = XMConvertToRadians(-68.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 300.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 100.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-134.624f, -1.012f, 91.280f), L"ItemBox");
 
-	//pObject = new CGameObject;
-	//pObject->SetName(L"TestCollider2D02");
-	//pObject->AddComponent(new CTransform);
-	//pObject->AddComponent(new CCollider3D);
-	//pObject->Collider3D()->SetOffsetScale(Vec3(10.f, 10.f, 10.f));
-	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	//SpawnGameObject(pObject, Vec3(0.f, 1.f, 0.f), L"Test");
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Dumpster01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Archery_Dumpster01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(90.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 100.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-122.704f, -0.380f, 60.545f), L"ItemBox");
 
-	CCollisionMgr::GetInst()->RayLayerCheck(L"Test");
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Locker01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Archery_Locker01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-90.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 300.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 100.f, 100.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-133.184f, 0.028f, 46.186f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_SteelBox01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Archery_SteelBox01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.y = XMConvertToRadians(-36.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 100.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-121.580f, -0.397f, 35.689f), L"ItemBox");
+#pragma endregion
+
+#pragma region Forest
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_PalletLoaded01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Forest_PalletLoaded01");
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(120.f, 120.f, 120.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(22.388f, -0.119f, 13.376f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_SteelBox01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Forest_SteelBox01");
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 120.f, 100.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-25.402f, -0.299f, 15.090f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_TreeStump01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Forest_TreeStump01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.y = XMConvertToRadians(21.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(400.f, 100.f, 100.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(15.907f, 0.082f, 3.220f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_TreeStump02.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Forest_TreeStump02");
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(400.f, 100.f, 100.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-27.720f, -0.009f, 10.245f), L"ItemBox");
+#pragma endregion
+
+#pragma region Hotel
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_ATM01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Hotel_ATM01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-180.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 100.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-112.772f, -0.318f, -16.547f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_BarbequeGrill01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Hotel_BarbequeGrill01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.y = XMConvertToRadians(-90.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(120.f, 150.f, 150.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-103.886f, -0.374f, -32.562f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_Dumpster01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Hotel_Dumpster01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-90.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-63.052f, -0.332f, -19.634f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Hotel_VendingMachine01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Hotel_VendingMachine01");
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(120.f, 220.f, 120.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 140.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-105.717f, -0.322f, 8.205f), L"ItemBox");
+#pragma endregion
+
+#pragma region SandyBeach
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Boat01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"SandyBeach_Boat01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(90.000f);
+	rot.y = XMConvertToRadians(45.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(200.f, 700.f, 120.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-32.593f, -3.816f, -68.192f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Boat02.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"SandyBeach_Boat02");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-90.000f);
+	rot.y = XMConvertToRadians(22.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(200.f, 700.f, 120.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-64.518f, -4.001f, -72.063f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Dumpster01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"SandyBeach_Dumpster01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-91.000f);
+	rot.y = XMConvertToRadians(-66.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-42.661f, -2.764f, -48.906f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"SandyBeach_Dumpster02.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"SandyBeach_Dumpster02");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(90.000f);
+	rot.y = XMConvertToRadians(-90.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-64.094f, -2.371f, -42.020f), L"ItemBox");
+#pragma endregion
+
+#pragma region School
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Dumpster01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"School_Dumpster01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-90.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-105.100f, -1.160f, 53.730f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_Locker01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"School_Locker01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-90.000f);
+	rot.y = XMConvertToRadians(90.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(50.f, 200.f, 250.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(30.f, 90.f, 120.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-66.118f, -0.291f, 68.203f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_WreckCar01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"School_WreckCar01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-180.000f);
+	rot.y = XMConvertToRadians(-90.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-66.021f, -0.499f, 101.998f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"School_WreckCar02.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"School_WreckCar02");
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-84.585f, -1.220f, 47.429f), L"ItemBox");
+#pragma endregion
+
+#pragma region Uptown
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_BarbequeGrill01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Uptown_BarbequeGrill01");
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(120.f, 150.f, 150.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-13.929f, -0.333f, -50.756f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_Sedan01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Uptown_Sedan01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-180.000f);
+	rot.y = XMConvertToRadians(9.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(-5.619f, -0.523f, -65.105f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_SteelBox01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Uptown_SteelBox01");
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 100.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(31.074f, -0.497f, -41.496f), L"ItemBox");
+
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Uptown_WreckCar01.mdat");
+	pItemBox = pMeshData->Instantiate();
+	pItemBox->SetName(L"Uptown_WreckCar01");
+	rot = pItemBox->Transform()->GetRelativeRot();
+	rot.x = XMConvertToRadians(-180.000f);
+	rot.y = XMConvertToRadians(-90.000f);
+	rot.z = XMConvertToRadians(-180.000f);
+	pItemBox->Transform()->SetRelativeRot(rot);
+	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
+	pItemBox->AddComponent(new CCollider3D);
+	pItemBox->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
+	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
+	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	SpawnGameObject(pItemBox, Vec3(27.374f, -0.969f, -76.997f), L"ItemBox");
+#pragma endregion
 }

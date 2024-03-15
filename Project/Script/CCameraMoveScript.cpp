@@ -118,8 +118,8 @@ void CCameraMoveScript::Camera3DMove()
 	if (KEY_PRESSED(KEY::LSHIFT) && KEY_PRESSED(KEY::RBTN))
 	{
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
-		vRot.y += DT * vMouseDir.x * 5.f;
-		vRot.x -= DT * vMouseDir.y * 5.f;
+		vRot.y += DT * vMouseDir.x * 2.f;
+		vRot.x -= DT * vMouseDir.y * 2.f;
 		b_RBTNPressed = true;
 	}
 	else
