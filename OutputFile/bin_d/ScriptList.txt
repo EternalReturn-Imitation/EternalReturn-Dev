@@ -11,4 +11,4 @@ ER_ActionScript_Yuki
 ER_CamControllerScript
 ER_DataScript_Character
 ER_DataScript_Item
-ER_PlayerScript
+ER_ItemBoxScript

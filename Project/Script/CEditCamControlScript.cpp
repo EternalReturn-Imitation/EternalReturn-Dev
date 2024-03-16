@@ -28,7 +28,7 @@ void CEditCamControlScript::tick()
 
 void CEditCamControlScript::Camera2DMove()
 {
-	// Å° ÀÔ·Â¿¡ µû¸¥ Ä«¸Þ¶ó ÀÌµ¿
+	// Å° ï¿½Ô·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½Ìµï¿½
 	Vec3 vPos = Transform()->GetRelativePos();
 
 	float fSpeed = m_fCamSpeed;

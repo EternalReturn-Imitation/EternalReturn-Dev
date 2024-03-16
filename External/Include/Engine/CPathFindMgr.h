@@ -41,6 +41,7 @@ private:
     dtNavMesh*              m_NavMesh;
     dtNavMeshQuery*         m_NavQuery;
     CGameObject*            m_MapCollider;
+    vector<CGameObject*>    m_vColliderObjects;
 
 private:
     tNaviResult             m_sResultPos;
@@ -71,6 +72,7 @@ public:
     void SetNavMeshScale(Vec3 _scale) { m_vNavMeshScale = _scale; }
     void SetRayResultTrigger(bool _trigger) { RayResultTrigger = _trigger; }
     void SetMapCollider(CGameObject* _object) { m_MapCollider = _object; }
+    void AddColliderObjects(CGameObject* _object) { m_vColliderObjects.push_back(_object); }
 
     tNaviResult GetNaviResult() { return m_sResultPos; }
     const vector<Vec4> GetNaviVtx() { return m_vNaviVtx; }

@@ -23,6 +23,7 @@
 #include "CKeyMgr.h"
 #include "CInstancingBuffer.h"
 #include "CEngine.h"
+#include "CCollider3D.h"
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
@@ -340,92 +341,6 @@ tRaycastOutV3 CCamera::Raycasting(Vec3* _vertices, tRay _ray)
 
 	result.bSuccess = true;
 	return result;
-}
-
-IntersectResult CCamera::IntersectsLay(Vec3* _vertices, tRay _ray)
-{
-	IntersectResult result;
-	result.vCrossPoint = Vec3(0.f, 0.f, 0.f);
-	result.bResult = false;
-
-	Vec3 edge[2] = { Vec3(), Vec3() };
-	edge[0] = _vertices[1] - _vertices[0];
-	edge[1] = _vertices[2] - _vertices[0];
-
-	Vec3 normal = (edge[0].Cross(edge[1])).Normalize();
-	float b = normal.Dot(_ray.vDir);
-
-
-	Vec3 w0 = _ray.vStart - _vertices[0];
-	float a = -(normal.Dot(w0));
-	float t = a / b;
-
-	result.fResult = t;
-
-	Vec3 p = _ray.vStart + t * _ray.vDir;
-
-	result.vCrossPoint = p;
-
-	float uu, uv, vv, wu, wv, inverseD;
-	uu = edge[0].Dot(edge[0]);
-	uv = edge[0].Dot(edge[1]);
-	vv = edge[1].Dot(edge[1]);
-
-	Vec3 w = p - _vertices[0];
-	wu = w.Dot(edge[0]);
-	wv = w.Dot(edge[1]);
-
-	inverseD = uv * uv - uu * vv;
-	inverseD = 1.0f / inverseD;
-
-	float u = (uv * wv - vv * wu) * inverseD;
-	if (u < 0.0f || u > 1.0f)
-	{
-		result.vCrossPoint = Vec3();
-		result.fResult = 0.0f;
-		result.bResult = false;
-		return result;
-	}
-
-	float v = (uv * wu - uu * wv) * inverseD;
-	if (v < 0.0f || v > 1.0f)
-	{
-		result.vCrossPoint = Vec3();
-		result.fResult = 0.0f;
-		result.bResult = false;
-		return result;
-	}
-
-	result.bResult = true;
-	return result;
-}
-
-IntersectResult CCamera::IsCollidingBtwRayRect(tRay& _ray, CGameObject* _Object)
-{
-	// 만약에 Collider2D가 없거나 Rect모양이 아닌 경우 return
-	if (_Object->Collider2D() == nullptr)
-		return IntersectResult{ Vec3(0.f, 0.f, 0.f), 0.f, false };
-	if (_Object->Collider2D()->GetCollider2DType() != COLLIDER2D_TYPE::RECT)
-		return IntersectResult{ Vec3(0.f, 0.f, 0.f), 0.f, false };
-
-	Matrix ColliderWorldMat = _Object->Collider2D()->GetColliderWorldMat();
-
-	// Local Rect의 3개의 Pos에 대해서 World Pos 계산을 해준다.
-	// 점 4개까지 필요없고 3개만 있으면 됨
-	// 아래의 정점들의 순서는 의미가 있음
-	// IntersectsLay함수에서 특정 정점의 순서에서만 올바르게 계산하도록 함
-	Vec3 arrLocal[3] =
-	{
-		Vec3(-0.5f, -0.5f, 0.f),
-		Vec3(0.5f, -0.5f, 0.f),
-		Vec3(-0.5f, 0.5f, 0.f),
-	};
-
-	for (int i = 0; i < 3; ++i)
-		arrLocal[i] = Vector4::Transform(Vec4(arrLocal[i], 1.f), ColliderWorldMat);
-
-
-	return IntersectsLay(arrLocal, m_ray);
 }
 
 void CCamera::SortObject()

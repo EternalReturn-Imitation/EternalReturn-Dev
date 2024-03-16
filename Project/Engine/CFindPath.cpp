@@ -12,9 +12,9 @@
 #include "CRenderMgr.h"
 #include "CCamera.h"
 
-#define DIR_ERROR_RANGE 0.0872665f	// ¿ÀÂ÷¹üÀ§	5µµ (radian)
-#define DIR_ADD_RADIAN	0.0872665f	// º¯È­ °¢µµ 5µµ (radian)
-#define RADIAN360		6.23819f	// 360µµ¿¡ ÇØ´çÇÏ´Â radian
+#define DIR_ERROR_RANGE 0.0872665f	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	5ï¿½ï¿½ (radian)
+#define DIR_ADD_RADIAN	0.0872665f	// ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ 5ï¿½ï¿½ (radian)
+#define RADIAN360		6.23819f	// 360ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ï¿½Ï´ï¿½ radian
 
 
 CFindPath::CFindPath()
@@ -46,16 +46,16 @@ void CFindPath::finaltick()
 
 bool CFindPath::FindPath(Vec3 endPos)
 {
-	// °Å¸®ÆÇ´Ü¿ë
+	// ï¿½Å¸ï¿½ï¿½Ç´Ü¿ï¿½
 	// float dist = (endPos - m_vPrevEndPos).Length();
 
-	// ¸ñÀûÁö °æ·Î ÃÊ±âÈ­
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
 	m_vecPath.clear();
 	
-	// ¿ÀºêÁ§Æ®ÀÇ ÇöÀç À§Ä¡
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
 	Vec3 CurPos = GetOwner()->Transform()->GetRelativePos();
 
-	// ÇöÀç °æ·Î¸¦ ½ÃÀÛÀ¸·Î °æ·Î¸¦ ¹Þ¾Æ¿È
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î¸ï¿½ ï¿½Þ¾Æ¿ï¿½
 	m_vecPath = CPathFindMgr::GetInst()->FindPath(CurPos, endPos);
 	m_iPathCount = (UINT)m_vecPath.size();
 	m_iCurPathIdx = 0;
@@ -70,7 +70,7 @@ bool CFindPath::FindPath(Vec3 endPos)
 
 	m_vNextPos = Vec3(m_vecPath[1].x, m_vecPath[1].y, m_vecPath[1].z);
 
-	// ¸ñÀûÁö ¹æÇâ ÀúÀå
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	Vec3 Dir = (m_vNextPos - CurPos).Normalize();
 	m_fDestDir = GetFrontDir(Dir);
 
@@ -83,19 +83,19 @@ bool CFindPath::FindNextPath()
 {
 	m_iCurPathIdx++;
 
-	// ´ÙÀ½ °æ·Î°¡ ÀÖ´Ù¸é ±× À§Ä¡¸¦ ¹ÝÈ¯ÇÏ°í, °æ·Î ÀÎµ¦½º Áõ°¡½ÃÅ´
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î°ï¿½ ï¿½Ö´Ù¸ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï°ï¿½, ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å´
 	if (m_iCurPathIdx != -1 && m_iCurPathIdx < m_iPathCount)
 	{
 		m_vNextPos = Vec3(m_vecPath[m_iCurPathIdx].x, m_vecPath[m_iCurPathIdx].y, m_vecPath[m_iCurPathIdx].z);
 
-		// ´ÙÀ½ÀÌµ¿°æ·Î°¡ ÀÖ´Ù.
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½Î°ï¿½ ï¿½Ö´ï¿½.
 		Vec3 CurPos = GetOwner()->Transform()->GetRelativePos();
-		Vec3 vNextDir = (m_vNextPos - CurPos).Normalize();	// »õ·Î¿î ¸ñÀûÁö ¹æÇâ
+		Vec3 vNextDir = (m_vNextPos - CurPos).Normalize();	// ï¿½ï¿½ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		m_fDestDir = GetFrontDir(vNextDir);
 
 		return true;
 	}
-	// ´ÙÀ½ °æ·Î°¡ ¾ø´Ù¸é °¥ ¼ö ¾ø´Â À§Ä¡ ¹ÝÈ¯
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Î°ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½È¯
 	else
 	{
 		m_vNextPos = Vec3(NaN, NaN, NaN);
@@ -107,25 +107,25 @@ bool CFindPath::FindNextPath()
 
 bool CFindPath::PathMove(float _fSpeed)
 {
-	// ÀúÀåµÈ ´ÙÀ½À§Ä¡ ¾ò¾î¿À±â
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Vec3 NextPos = m_vNextPos;
 
-	// ´ÙÀ½ ÁöÁ¡ÀÌ ¾ø´Â°æ¿ì false ¹ÝÈ¯
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ï¿½ false ï¿½ï¿½È¯
 	if (isnan(NextPos.x))
 		return false;
 
-	// ÇöÀç À§Ä¡¿Í ¹æÇâ ±¸ÇÏ±â
-	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();				// ÇöÀç À§Ä¡
-	Vec3 vFront = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT); // Front ¹æÇâº¤ÅÍ
-	Vec3 curDir = GetOwner()->Transform()->GetRelativeRot();				// ÇöÀç ¹æÇâ
-	Vec3 Dir = (NextPos - curPos).Normalize();								// ¸ñÀûÁö ¹æÇâ
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½
+	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();				// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
+	Vec3 vFront = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT); // Front ï¿½ï¿½ï¿½âº¤ï¿½ï¿½
+	Vec3 curDir = GetOwner()->Transform()->GetRelativeRot();				// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	Vec3 Dir = (NextPos - curPos).Normalize();								// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 
-	// ¹æÇâÀüÈ¯
-	// 1. ÇöÀç ¹æÇâ ¾ò¾î¿À±â
-	// 2. ¸ñÀû ¹æÇâ ¾ò¾î¿À±â
-	// 3. if(ÇöÀç¹æÇâ - ¸ñÀûÁö¹æÇâ > ¿ÀÂ÷¹üÀ§) ÇöÀç¹æÇâ ¿ÀÂ÷¹üÀ§¸¸Å­ µ¹·ÁÁØ´Ù.
-	// 4. ³ÑÁö ¾Ê¾Ñ´Ù¸é ¸ñÀûÁö ¹æÇâÀ¸·Î ¼¼ÆÃ.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¯
+	// 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// 3. if(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ > ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ï¿½Ø´ï¿½.
+	// 4. ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ñ´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
 	float DestDir = GetFrontDir(Dir);
 
@@ -143,7 +143,7 @@ bool CFindPath::PathMove(float _fSpeed)
 
 	GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, DestDir, 0.f));
 
-	// °æ·Î·Î ¿ÀºêÁ§Æ® ÀÌµ¿
+	// ï¿½ï¿½Î·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ìµï¿½
 	float speed = _fSpeed;
 	Vec3 newPos = curPos + (speed * Dir * DT);
 	GetOwner()->Transform()->SetRelativePos(newPos);
@@ -178,7 +178,7 @@ float CFindPath::GetFrontDir(Vec3 _Direction)
 			DirectX::XMVectorGetZ(_Direction) *
 			DirectX::XMVectorGetZ(_Direction)));
 
-	// À§¸¦ ÇâÇÏ´Â °æ¿ì radian ±¸ÇØÁÖ±â
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ radian ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½
 	if (_Direction.z > 0.0f)
 		yRad = (DirectX::XM_PI - yRad);
 
@@ -187,11 +187,11 @@ float CFindPath::GetFrontDir(Vec3 _Direction)
 
 bool CFindPath::isLeft(const Vec3& _objDir, const Vec3& _DestDir)
 {
-	Vec3 yAxis = { 0.0f, 1.0f, 0.0f };		// yÃà º¤ÅÍ
-	Vec3 corss = _objDir.Cross(_DestDir);	// µÎ º¤ÅÍÀÇ ¿ÜÀû
+	Vec3 yAxis = { 0.0f, 1.0f, 0.0f };		// yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	Vec3 corss = _objDir.Cross(_DestDir);	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-	// ¿ÜÀû °á°ú¿Í yÃà º¤ÅÍÀÇ ³»ÀûÀ» °è»êÇÏ¿© ºÎÈ£ ÆÇ´Ü
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½È£ ï¿½Ç´ï¿½
 	float dot = corss.Dot(yAxis);
 
-	return dot > 0.0f;	// ¾ç¼ö¸é ¿ÞÂÊ, À½¼ö¸é ¿À¸¥ÂÊ
+	return dot > 0.0f;	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 }

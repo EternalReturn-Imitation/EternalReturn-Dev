@@ -35,7 +35,7 @@ CEditorObjMgr::~CEditorObjMgr()
 
 void CEditorObjMgr::init()
 {
-	// µð¹ö±× ½¦ÀÌÇÁ »ý¼º
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT] = new CGameObjectEx;
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT]->AddComponent(new CTransform);
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT]->AddComponent(new CMeshRender);
@@ -66,7 +66,7 @@ void CEditorObjMgr::init()
 	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"FrustumMesh_Debug"));
 	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeFrustumMtrl"), 0);
 
-	// EditorObject »ý¼º
+	// EditorObject ï¿½ï¿½ï¿½ï¿½
 	CGameObjectEx* pEditorCamObj = new CGameObjectEx;
 	pEditorCamObj->AddComponent(new CTransform);
 	pEditorCamObj->AddComponent(new CCamera);
@@ -81,7 +81,6 @@ void CEditorObjMgr::init()
 	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 35.f, 0.f));
 	pEditorCamObj->Camera()->SetFar(10000.f);
 
-
 	m_vecEditorObj.push_back(pEditorCamObj);
 	//Vec3 pos = pEditorCamObj->Transform()->GetRelativePos();
 	//Vec3 rot = pEditorCamObj->Transform()->GetRelativePos();
@@ -92,7 +91,7 @@ void CEditorObjMgr::init()
 
 void CEditorObjMgr::progress()
 {
-	// DebugShape Á¤º¸ °¡Á®¿À±â
+	// DebugShape ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	vector<tDebugShapeInfo>& vecInfo = CRenderMgr::GetInst()->GetDebugShapeInfo();
 	m_DebugShapeInfo.insert(m_DebugShapeInfo.end(), vecInfo.begin(), vecInfo.end());
 	vecInfo.clear();
