@@ -43,6 +43,9 @@ enum class COMPONENT_TYPE
 	BEHAVIORTREE,
 	NAVIMAP,
 	FINDPATH,
+	
+	// UI
+	UI_BUTTON,
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링

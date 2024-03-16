@@ -3,6 +3,7 @@
 
 #include "CTransform.h"
 #include "CCollider2D.h"
+#include "CCollider3D.h"
 #include "CLight2D.h"
 #include "CLight3D.h"
 #include "CCamera.h"
@@ -18,3 +19,4 @@
 #include "CDecal.h"
 #include "CLandscape.h"
 #include "CFindPath.h"
+#include "CUI_Button.h"

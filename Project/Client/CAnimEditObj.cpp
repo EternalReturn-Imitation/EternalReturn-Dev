@@ -15,7 +15,7 @@
 #include <Engine\CMeshRender.h>
 #include <Engine\CCamera.h>
 
-#include <Script\CCameraMoveScript.h>
+#include <Script\CEditCamControlScript.h>
 
 CAnimEditObj::CAnimEditObj()
 	: m_pRenderObj(nullptr)

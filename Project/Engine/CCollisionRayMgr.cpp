@@ -64,6 +64,9 @@ void CCollisionMgr::RayCollideCheck()
 	}
 
 	for (auto it : m_mPrevRayColID) {
+		if (it->IsDead())
+			continue;
+
 		if (it->Collider2D())
 			it->Collider2D()->EndRayOverlap();
 		if (it->Collider3D())

@@ -28,6 +28,7 @@ class CCollisionMgr :
 private:
 	UINT					m_matrix[MAX_LAYER];
 	map<UINT_PTR, bool>		m_mapColID;
+	
 	std::bitset<MAX_LAYER>	m_bRayCol;
 	map<UINT_PTR, bool>		m_mRayColID;
 	vector<CGameObject*>	m_vCurRayCol;
@@ -44,6 +45,13 @@ public:
 	void Clear()
 	{
 		memset(m_matrix, 0, sizeof(UINT) * MAX_LAYER);
+	}
+	void ClearID()
+	{
+		m_mapColID.clear();
+		m_mRayColID.clear();
+		m_vCurRayCol.clear();
+		m_mPrevRayColID.clear();
 	}
 
 public:
@@ -70,6 +78,4 @@ public:
 	IntersectResult IsCollidingBtwRayRect(tRay& _ray, CGameObject* _Object);
 	IntersectResult IsCollidingBtwRayCube(tRay& _ray, CGameObject* _Object);
 	IntersectResult IsCollidingBtwRaySphere(tRay& _ray, CGameObject* _Object);
-
 };
-

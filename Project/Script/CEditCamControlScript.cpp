@@ -1,31 +1,34 @@
 #include "pch.h"
-#include "CCameraMoveScript.h"
+#include "CEditCamControlScript.h"
 
 #include <Engine\CTransform.h>
 #include <Engine\CCamera.h>
 
-CCameraMoveScript::CCameraMoveScript()
-	: CScript((UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT)
+CEditCamControlScript::CEditCamControlScript()
+	: CScript((UINT)SCRIPT_TYPE::EDITCAMCONTROLSCRIPT)
 	, m_fCamSpeed(10.f)
 	, b_RBTNPressed(false)
 {
 }
 
-CCameraMoveScript::~CCameraMoveScript()
+CEditCamControlScript::~CEditCamControlScript()
 {
 }
 
-void CCameraMoveScript::tick()
+void CEditCamControlScript::tick()
 {
-	if (PROJ_TYPE::ORTHOGRAPHIC == Camera()->GetProjType())
-		Camera2DMove();
-	else
-		Camera3DMove();
+	if (LEVEL_STATE::PLAY != CLevelMgr::GetInst()->GetCurLevel()->GetState())
+	{
+		if (PROJ_TYPE::ORTHOGRAPHIC == Camera()->GetProjType())
+			Camera2DMove();
+		else
+			Camera3DMove();
+	}
 }
 
-void CCameraMoveScript::Camera2DMove()
+void CEditCamControlScript::Camera2DMove()
 {
-	// Å° ÀÔ·Â¿¡ µû¸¥ Ä«¸Þ¶ó ÀÌµ¿
+	// Å° ï¿½Ô·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½Ìµï¿½
 	Vec3 vPos = Transform()->GetRelativePos();
 
 	float fSpeed = m_fCamSpeed;
@@ -69,7 +72,7 @@ void CCameraMoveScript::Camera2DMove()
 	Transform()->SetRelativePos(vPos);
 }
 
-void CCameraMoveScript::Camera3DMove()
+void CEditCamControlScript::Camera3DMove()
 {
 	Vec3 vPos = Transform()->GetRelativePos();
 	Vec3 vRot = Transform()->GetRelativeRot();
@@ -115,11 +118,11 @@ void CCameraMoveScript::Camera3DMove()
 
 
 
-	if (KEY_PRESSED(KEY::LSHIFT) && KEY_PRESSED(KEY::RBTN))
+	if (KEY_PRESSED(KEY::RBTN))
 	{
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
-		vRot.y += DT * vMouseDir.x * 2.f;
-		vRot.x -= DT * vMouseDir.y * 2.f;
+		vRot.y += DT * vMouseDir.x * 0.1f;
+		vRot.x -= DT * vMouseDir.y * 0.1f;
 		b_RBTNPressed = true;
 	}
 	else
@@ -127,5 +130,4 @@ void CCameraMoveScript::Camera3DMove()
 
 	Transform()->SetRelativePos(vPos);
 	Transform()->SetRelativeRot(vRot);
-
 }

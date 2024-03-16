@@ -13,6 +13,9 @@
 #include "CFontMgr.h"
 #include "CInstancingBuffer.h"
 #include "CPathFindMgr.h"
+#include "CUIMgr.h"
+
+#include "CCamera.h"
 
 #include "debug.h"
 
@@ -66,6 +69,8 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 
 	CPathFindMgr::GetInst()->init();
 
+	CUIMgr::GetInst()->init();
+
 	DebugContext::GetInst();
 
 	return S_OK;
@@ -99,11 +104,15 @@ void CEngine::tick()
 
 	// Level 내에 GameObject 들의 변경점에 의해서 발생한 충돌을 체크한다.
 	CCollisionMgr::GetInst()->tick();
+
+	CUIMgr::GetInst()->tick();
 }
 
 void CEngine::render()
 {	
 	CRenderMgr::GetInst()->render();	
+
+	CRenderMgr::GetInst()->GetMainCam()->MatrixUpdate();
 
 	// FPS, DT 출력
 	CTimeMgr::GetInst()->render();

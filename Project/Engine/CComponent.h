@@ -42,6 +42,7 @@ public:
     GET_OTHER_COMPONENT(LandScape);
     GET_OTHER_COMPONENT(Collider3D);
     GET_OTHER_COMPONENT(FindPath);
+    GET_OTHER_COMPONENT(UI_Button);
 
 public:
     CComponent(COMPONENT_TYPE _Type);

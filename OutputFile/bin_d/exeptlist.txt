@@ -5,3 +5,4 @@ targetver.h
 CSceneSaveLoad.h
 ER_define.h
 ER_struct.h
+ER_ActionScript_Character.h

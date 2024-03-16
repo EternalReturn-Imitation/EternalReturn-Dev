@@ -71,6 +71,7 @@ public:
     void SetGizmoTarget(CGameObject* _Object) { m_GizmoTarget = _Object; }
 
     CCamera* GetMainCam();
+    CCamera* GetUICam();
 
     void CopyRenderTarget();
 

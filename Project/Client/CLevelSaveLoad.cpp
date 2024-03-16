@@ -225,6 +225,9 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::FINDPATH:
 			Component = new CFindPath;
 			break;
+		case COMPONENT_TYPE::UI_BUTTON:
+			Component = new CUI_Button;
+			break;
 		case COMPONENT_TYPE::MESHRENDER:
 			Component = new CMeshRender;
 			break;

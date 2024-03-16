@@ -30,6 +30,8 @@ CAnimator3D::CAnimator3D()
 	, m_fTransitionsRatio(0.f)
 	, m_pBoneFinalMatBuffer(nullptr)
 	, m_bFinalMatUpdate(false)
+	, m_bRepeat(false)
+	, m_bFinish(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -52,6 +54,8 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	, m_fTransitionsRatio(0.f)
 	, m_pBoneFinalMatBuffer(nullptr)
 	, m_bFinalMatUpdate(false)
+	, m_bRepeat(false)
+	, m_bFinish(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_pBoneFinalMatBuffer = new CStructuredBuffer;
@@ -105,22 +109,30 @@ void CAnimator3D::finaltick()
 
 		if (!m_bAnimTrans && m_bPlay)
 		{
-			// 반복여부, 애니메이션 완료여부로 리셋 작업
-			// if (m_pCurAnim->IsFinish())
-			// {
-			// 	m_pCurAnim->Reset();
-			// }
 
 			CAnim3D* pCurAnim = m_pCurAnim;
 
 			m_dCurTime = 0.f;
 
 			// 현재 재생중인 Clip 의 시간을 진행한다.
-			pCurAnim->m_tMTAnimClip.fUpdateTime += DT;
-
-			if (pCurAnim->m_tMTAnimClip.fUpdateTime >= pCurAnim->m_tMTAnimClip.dEndTime)
+			if (!m_bFinish)
 			{
-				pCurAnim->m_tMTAnimClip.fUpdateTime = 0.f;
+				pCurAnim->m_tMTAnimClip.fUpdateTime += DT;
+
+				// 마지막 프레임에 도달했을 때
+				if (pCurAnim->m_tMTAnimClip.fUpdateTime >= pCurAnim->m_tMTAnimClip.dEndTime)
+				{
+					if (m_bRepeat)
+					{
+						// 반복 설정이다
+						pCurAnim->m_tMTAnimClip.fUpdateTime = 0.f;
+					}
+					else
+					{
+						pCurAnim->m_tMTAnimClip.fUpdateTime = (float)pCurAnim->m_tMTAnimClip.dEndTime;
+						m_bFinish = true;
+					}
+				}
 			}
 
 			m_dCurTime = pCurAnim->m_tMTAnimClip.dStartTime + pCurAnim->m_tMTAnimClip.fUpdateTime;
@@ -128,8 +140,6 @@ void CAnimator3D::finaltick()
 			// 현재 프레임 인덱스 구하기
 			double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
 			m_iFrameIdx = (int)(dFrameIdx);
-
-			// 현재프레임 iframecount /
 
 			// 다음 프레임 인덱스
 			if (m_iFrameIdx >= pCurAnim->m_tMTAnimClip.iEndFrame - 1)
@@ -260,7 +270,7 @@ CAnim3D* CAnimator3D::AddAnim(Ptr<CBone> _pBone)
 	m_mapAnim.insert(make_pair(AnimKey, pAnim));
 	pAnim->SetName(AnimKey);
 
-	SelectAnimation(AnimKey);
+	SelectAnimation(AnimKey, true);
 
 	return pAnim;
 }
@@ -269,6 +279,8 @@ void CAnimator3D::Play()
 {
 	if (m_pCurAnim)
 		m_bPlay = true;
+	
+	m_bFinish = false;
 }
 
 void CAnimator3D::Stop()
@@ -281,6 +293,8 @@ void CAnimator3D::Reset()
 {
 	if (m_pCurAnim)
 		m_pCurAnim->Reset();
+
+	m_bFinish = false;
 }
 
 void CAnimator3D::SetFrame(int _Frame)
@@ -318,7 +332,7 @@ void CAnimator3D::SetFrame(int _Frame)
 	}
 }
 
-CAnim3D* CAnimator3D::SelectAnimation(const wstring& _AnimName)
+CAnim3D* CAnimator3D::SelectAnimation(const wstring& _AnimName, bool _bRepeat)
 {
 	// 재생중이던 애니메이션이 없었다.
 	if (!m_pCurAnim)
@@ -347,6 +361,8 @@ CAnim3D* CAnimator3D::SelectAnimation(const wstring& _AnimName)
 
 		Play();
 	}
+	
+	m_bRepeat = _bRepeat;
 
 	return m_pCurAnim;
 }
@@ -357,6 +373,11 @@ bool CAnimator3D::IsPlay()
 		return m_bPlay;
 
 	return false;
+}
+
+bool CAnimator3D::IsFinish()
+{
+	return m_bFinish;
 }
 
 void CAnimator3D::Check_Bone(Ptr<CBone> _pBone)
@@ -425,6 +446,6 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	if(isCurAnim)
 	{
 		LoadWString(pCurAnimKey, _pFile);
-		SelectAnimation(pCurAnimKey);
+		SelectAnimation(pCurAnimKey, false);
 	}
 }

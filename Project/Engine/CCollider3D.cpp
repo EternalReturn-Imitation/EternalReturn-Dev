@@ -166,12 +166,3 @@ void CCollider3D::LoadFromLevelFile(FILE* _File)
 	fread(&m_Shape, sizeof(UINT), 1, _File);
 	fread(&m_bDrawCollision, sizeof(bool), 1, _File);
 }
-
-void CCollider3D::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-}
-
-void CCollider3D::LoadFromDB(int _gameObjectID)
-{
-}
-

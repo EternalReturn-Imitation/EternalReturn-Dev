@@ -1,7 +1,7 @@
 #pragma once
 #include <Engine\CScript.h>
 
-class CCameraMoveScript :
+class CEditCamControlScript :
     public CScript
 {
 private:
@@ -20,9 +20,9 @@ public:
     bool GetRBTNPressed() { return b_RBTNPressed; }
     void SetRBTNPressed(bool _pressed) { b_RBTNPressed = _pressed; }
 
-    CLONE(CCameraMoveScript);
+    CLONE(CEditCamControlScript);
 public:
-    CCameraMoveScript();
-    ~CCameraMoveScript();
+    CEditCamControlScript();
+    ~CEditCamControlScript();
 };
 

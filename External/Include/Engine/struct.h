@@ -171,6 +171,17 @@ struct tParticleModule
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
 };
 
+// FSM 가용 데이터
+struct tFSMData
+{
+	Vec2		v2Data;
+	float		fData;
+	int			iData;
+	Vec4		v4Data;
+	DWORD_PTR	lParam;
+	DWORD_PTR	RParam;
+};
+
 
 // 광선 구조체
 struct tRay

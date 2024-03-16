@@ -281,6 +281,26 @@ wstring ToWString(string _string)
 	return wString;
 }
 
+string ToUpper(string _string)
+{
+	std::string result;
+	std::locale loc;
+	for (char ch : _string) {
+		result += std::toupper(ch, loc);
+	}
+	return result;
+}
+
+wstring ToUpper(wstring _wstring)
+{
+	std::wstring result;
+	std::locale loc;
+	for (wchar_t ch : _wstring) {
+		result += std::toupper(ch, loc);
+	}
+	return result;
+}
+
 wstring GetRelativePath(const wstring& _strBase, const wstring& _strPath)
 {
 	wstring strRelativePath;

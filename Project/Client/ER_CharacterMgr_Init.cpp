@@ -3,7 +3,8 @@
 
 #include <Engine\CPathMgr.h>
 
-#include <Script\ER_Data_CharacterScript.h>
+#include <Script\ER_DataScript_Character.h>
+#include <Script\CScriptMgr.h>
 
 int ER_CharacterMgr::Save()
 {
@@ -65,7 +66,7 @@ int ER_CharacterMgr::Load()
 
 int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
 {
-    ER_Data_CharacterScript* CharacterContext = _Character->GetScript<ER_Data_CharacterScript>();
+    ER_DataScript_Character* CharacterContext = _Character->GetScript<ER_DataScript_Character>();
 
     // Character Key
     SaveWString(CharacterContext->m_strKey, _File);
@@ -74,7 +75,7 @@ int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
     SaveWString(CharacterContext->m_strName, _File);
 
     // Character Std Stats
-    fwrite(&CharacterContext->m_STDStats, sizeof(ER_STD_CHAR_STATS), 1, _File);
+    fwrite(&CharacterContext->m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 
     return 0;
 }
@@ -82,9 +83,9 @@ int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
 CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
 {
     CGameObject* pCharacter = new CGameObject;
-    pCharacter->AddComponent(new ER_Data_CharacterScript());
+    pCharacter->AddComponent(new ER_DataScript_Character());
 
-    ER_Data_CharacterScript* CharacterContext = pCharacter->GetScript<ER_Data_CharacterScript>();
+    ER_DataScript_Character* CharacterContext = pCharacter->GetScript<ER_DataScript_Character>();
 
     // Character Key
     LoadWString(CharacterContext->m_strKey, _File);
@@ -93,7 +94,7 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
     LoadWString(CharacterContext->m_strName, _File);
 
     // Character Std Stats
-    fread(&CharacterContext->m_STDStats, sizeof(ER_STD_CHAR_STATS), 1, _File);
+    fread(&CharacterContext->m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 
     // CharacterData init
     pCharacter->SetName(CharacterContext->m_strKey);
@@ -105,6 +106,11 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
     
     if(meshdata != nullptr)
         meshdata->Instantiate(pCharacter);
+
+    wstring ActionScript = L"ER_ActionScript_";
+    ActionScript += CharacterContext->m_strKey;
+
+    pCharacter->AddComponent(CScriptMgr::GetScript(ActionScript));
 
     m_mapCharacters.insert(make_pair(CharacterContext->m_strKey, pCharacter));
 

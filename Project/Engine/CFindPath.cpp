@@ -12,6 +12,9 @@
 #include "CRenderMgr.h"
 #include "CCamera.h"
 
+#define DIR_ERROR_RANGE 0.0872665f	// ��������	5�� (radian)
+#define DIR_ADD_RADIAN	0.0872665f	// ��ȭ ���� 5�� (radian)
+#define RADIAN360		6.23819f	// 360���� �ش��ϴ� radian
 
 
 CFindPath::CFindPath()
@@ -21,6 +24,7 @@ CFindPath::CFindPath()
 	, m_iPathCount(0)
 	, m_iCurPathIdx(0)
 	, m_fPrevDir(0.f)
+	, m_fDestDir(0.f)
 {
 }
 
@@ -38,74 +42,110 @@ void CFindPath::tick()
 
 void CFindPath::finaltick()
 {
-	PathMove(5.0f, false);
 }
 
-void CFindPath::FindPath(Vec3 endPos)
+bool CFindPath::FindPath(Vec3 endPos)
 {
-	// �� ��θ� ã�� ������ ���ο� ��η� ��ü��
-
-	// �Ÿ��Ǵܿ�
-	float dist = (endPos - m_vPrevEndPos).Length();
-
+	// 경로 초기화
 	m_vecPath.clear();
 	
-	// ������Ʈ�� ���� ��ġ
+	// 현재 위치를 받아온다
 	Vec3 CurPos = GetOwner()->Transform()->GetRelativePos();
 
-	// ���� ��θ� �������� ��θ� �޾ƿ�
+	// 현재 위치에서 목표 위치로의 경로를 검색한다
 	m_vecPath = CPathFindMgr::GetInst()->FindPath(CurPos, endPos);
 	m_iPathCount = (UINT)m_vecPath.size();
 	m_iCurPathIdx = 0;
 
-	m_vNextPos = Vec3(m_vecPath[0].x, m_vecPath[0].y, m_vecPath[0].z);
+	// 경로가 없거나 목표 지점과 현재 지점이 같은 경우
+	if (m_iPathCount <= 1)
+	{
+		// 경로 초기화 및 이동 정보 설정
+		m_vecPath.clear();
+		m_vNextPos = Vec3(NaN, NaN, NaN);	// 다음 위치를 무효값으로 설정
+		m_vPrevEndPos = endPos;
+		return false; // 경로 탐색 실패
+	}
+
+	// 다음 이동할 위치 설정
+	m_vNextPos = Vec3(m_vecPath[1].x, m_vecPath[1].y, m_vecPath[1].z);
+
+	// 이동 방향 계산
+	Vec3 Dir = (m_vNextPos - CurPos).Normalize();
+	m_fDestDir = GetFrontDir(Dir); // 정면 방향 갱신
 
 	m_vPrevEndPos = endPos;
+
+	return true;
 }
 
-void CFindPath::FindNextPath()
+bool CFindPath::FindNextPath()
 {
 	m_iCurPathIdx++;
 
-	// ���� ��ΰ� �ִٸ� �� ��ġ�� ��ȯ�ϰ�, ��� �ε��� ������Ŵ
+	// 다음 경로 인덱스가 경로 배열의 범위 내에 있으면
 	if (m_iCurPathIdx != -1 && m_iCurPathIdx < m_iPathCount)
 	{
-		
+		// 다음 이동할 위치 설정
 		m_vNextPos = Vec3(m_vecPath[m_iCurPathIdx].x, m_vecPath[m_iCurPathIdx].y, m_vecPath[m_iCurPathIdx].z);
-		
-		string nextpos = u8"������ǥ : ";
-		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].x) + ",";
-		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].y) + ",";
-		nextpos += std::to_string(m_vecPath[m_iCurPathIdx].z);
+
+		// 이동방향 계산
+		Vec3 CurPos = GetOwner()->Transform()->GetRelativePos();
+		Vec3 vNextDir = (m_vNextPos - CurPos).Normalize();	// 다음 방향 벡터
+		m_fDestDir = GetFrontDir(vNextDir);	// 다음 목표 방향 설정
+
+		return true;
 	}
-	// ���� ��ΰ� ���ٸ� �� �� ���� ��ġ ��ȯ
+	// 다음 경로 인덱스가 범위를 벗어나면
 	else
 	{
+		// 다음 위치를 무효값으로 설정하고 이동방향 초기화
 		m_vNextPos = Vec3(NaN, NaN, NaN);
+		m_fDestDir = 0.f;
+
+		return false;
 	}
 }
 
-bool CFindPath::PathMove(float _fSpeed, bool _IsRotation)
+bool CFindPath::PathMove(float _fSpeed)
 {
+	// 다음 이동 위치 가져오기
 	Vec3 NextPos = m_vNextPos;
 
+	// 유효한 값이 아니면 이동 종료
 	if (isnan(NextPos.x))
-		return true;
+		return false;
 
-	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();
-	Vec3 Dir = (NextPos - curPos).Normalize();
+	// 현재 위치와 방향 가져오기
+	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();				// 현재 위치
+	Vec3 vFront = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT); // Front 방향 벡터
+	Vec3 curDir = GetOwner()->Transform()->GetRelativeRot();				// 현재 방향
+	Vec3 Dir = (NextPos - curPos).Normalize();								// 다음 방향 벡터
+	// 방향 변경
+	float DestDir = GetFrontDir(Dir);
 
-	// SetDir
-	float CurfrontDir = GetFrontDir(Dir);
+	// 방향 오차 계산
+	float CheckErrorRange = fabsf(m_fDestDir - curDir.y);
 
-	m_fPrevDir = CurfrontDir;
-	GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, CurfrontDir, 0.f));
+	if (RADIAN360 < CheckErrorRange)
+		CheckErrorRange -= RADIAN360;
 
+	if (DIR_ERROR_RANGE < CheckErrorRange)
+		DestDir = isLeft(Dir, vFront) ? curDir.y + DIR_ADD_RADIAN : curDir.y - DIR_ADD_RADIAN;
+	else
+		DestDir = m_fDestDir;
+
+	// 방향 설정
+	GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, DestDir, 0.f));
+
+	// 이동 속도 설정
 	float speed = _fSpeed;
 	Vec3 newPos = curPos + (speed * Dir * DT);
 	GetOwner()->Transform()->SetRelativePos(newPos);
 
-	if ((newPos - NextPos).Length() < _fSpeed * DT) {
+	// 다음 위치까지의 거리가 이동 속도보다 짧으면 다음 경로로 이동
+	if ((newPos - NextPos).Length() < _fSpeed * DT)
+	{
 		FindNextPath();
 	}
 
@@ -127,16 +167,27 @@ void CFindPath::LoadFromLevelFile(FILE* _FILE)
 
 float CFindPath::GetFrontDir(Vec3 _Direction)
 {
-	// Cal Front Dir
+	// 앞쪽 방향 계산
 	float yRad = atan2(-DirectX::XMVectorGetX(_Direction),
 		sqrt(DirectX::XMVectorGetY(_Direction) *
 			DirectX::XMVectorGetY(_Direction) +
 			DirectX::XMVectorGetZ(_Direction) *
 			DirectX::XMVectorGetZ(_Direction)));
 
-	// ���� ���ϴ� ��� radian �����ֱ�
+	// 벡터가 양수인 경우 180도 회전
 	if (_Direction.z > 0.0f)
 		yRad = (DirectX::XM_PI - yRad);
 
 	return yRad;
+}
+
+bool CFindPath::isLeft(const Vec3& _objDir, const Vec3& _DestDir)
+{
+	Vec3 yAxis = { 0.0f, 1.0f, 0.0f };		// y축 벡터
+	Vec3 corss = _objDir.Cross(_DestDir);	// 두 벡터의 외적 계산
+
+	// 외적 결과와 y축 벡터의 내적 계산하여 왼쪽 여부 판단
+	float dot = corss.Dot(yAxis);
+
+	return dot > 0.0f;	// 양수면 왼쪽, 음수면 오른쪽
 }
