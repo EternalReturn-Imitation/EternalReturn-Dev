@@ -22,6 +22,8 @@ class CBehaviorTree;
 class CNaviMap;
 class CCollider3D;
 class CFindPath;
+class CUIComponent;
+class CUI_Button;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -31,9 +33,10 @@ class CGameObject :
     public CEntity
 {
 private:
-    CComponent* m_arrCom[(UINT)COMPONENT_TYPE::END];
-    CRenderComponent* m_RenderCom;
-    vector<CScript*>        m_vecScript;
+    CComponent*         m_arrCom[(UINT)COMPONENT_TYPE::END];
+    CRenderComponent*   m_RenderCom;
+    CUIComponent*       m_UICom;
+    vector<CScript*>    m_vecScript;
 
     CGameObject* m_Parent;
     vector<CGameObject*>    m_vecChild;
@@ -47,9 +50,9 @@ private:
 public:
     // 레벨이 시작될 때 호출 or 시작 된 레벨에 합류할 때 호출
     // 생성자
-    void begin();
+    virtual void begin();
 
-    void tick();
+    virtual void tick();
     virtual void finaltick();
     void finaltick_module();
     void render();
@@ -81,8 +84,10 @@ public:
     GET_COMPONENT(NaviMap, NAVIMAP);
     GET_COMPONENT(Collider3D, COLLIDER3D);
     GET_COMPONENT(FindPath, FINDPATH);
+    GET_COMPONENT(UI_Button, UI_BUTTON);
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
+    CUIComponent* GetUIComponent() const { return m_UICom; }
 
 
     int GetLayerIndex() { return m_iLayerIdx; }

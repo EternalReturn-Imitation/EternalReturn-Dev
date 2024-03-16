@@ -14,8 +14,13 @@
 
 #include "CScriptMgr.h"
 
+#include <Engine\FSM.h>
+
 #include "ER_define.h"
 #include "ER_struct.h"
 
+//Comp
+
+#include <Engine\CFindPath.h>
 
 #endif //PCH_H

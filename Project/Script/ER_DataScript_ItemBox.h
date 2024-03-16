@@ -1,7 +1,7 @@
 #pragma once
 #include <Engine\CScript.h>
 
-class ER_ItemBoxScript :
+class ER_DataScript_ItemBox :
     public CScript
 {
 private:
@@ -21,9 +21,9 @@ public:
     virtual void EndRayOverlap() override;
 
 public:
-    ER_ItemBoxScript();
-    ~ER_ItemBoxScript();
+    ER_DataScript_ItemBox();
+    ~ER_DataScript_ItemBox();
 
-    CLONE_DISABLE(ER_ItemBoxScript);
+    CLONE_DISABLE(ER_DataScript_ItemBox);
 };
 

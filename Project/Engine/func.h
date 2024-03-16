@@ -56,6 +56,9 @@ COLLIDER2D_TYPE ToCollider2DType(wstring _wstring);
 string ToString(wstring _wstring);
 wstring ToWString(string _string);
 
+string ToUpper(string _string);
+wstring ToUpper(wstring _wstring);
+
 // Save / Load
 void SaveWString(const wstring& _str, FILE* _File);
 void LoadWString(wstring& _str, FILE* _File);

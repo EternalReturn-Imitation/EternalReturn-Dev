@@ -11,6 +11,7 @@ CCollider2D::CCollider2D()
 	, m_bAbsolute(false)
 	, m_iCollisionCount(0)
 	, m_bDrawCollision(true)
+	, m_bFixed(true)
 {
 	SetName(L"Collider2D");
 }
@@ -186,4 +187,5 @@ void CCollider2D::LoadFromLevelFile(FILE* _File)
 	fread(&m_vOffsetRot, sizeof(Vec3), 1, _File);
 	fread(&m_bAbsolute, sizeof(bool), 1, _File);
 	fread(&m_Shape, sizeof(UINT), 1, _File);
+	fread(&m_bDrawCollision, sizeof(bool), 1, _File);
 }

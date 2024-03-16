@@ -28,6 +28,8 @@ private:
     double                      m_dCurTime;                 // 현재 시간
 
     bool                        m_bPlay;                    // 재생 여부
+    bool                        m_bRepeat;                  // 반복 여부
+    bool                        m_bFinish;                  // 완료 여부
     
     // Animation transitions Blending
     CAnim3D*                    m_pPreviousAnim;
@@ -65,9 +67,10 @@ public:
 
     int GetCurFrame() { return m_iFrameIdx; }
 
-    CAnim3D* SelectAnimation(const wstring& _AnimName);
+    CAnim3D* SelectAnimation(const wstring& _AnimName, bool _bRepeat = true);
 
     bool IsPlay();
+    bool IsFinish();
 
 private:
     void Check_Bone(Ptr<CBone> _pBone);

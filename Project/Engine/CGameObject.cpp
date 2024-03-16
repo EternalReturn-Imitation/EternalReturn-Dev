@@ -17,6 +17,7 @@
 CGameObject::CGameObject()
 	: m_arrCom{}
 	, m_RenderCom(nullptr)
+	, m_UICom(nullptr)
 	, m_Parent(nullptr)
 	, m_iLayerIdx(-1)
 	, m_bDead(false)
@@ -30,6 +31,7 @@ CGameObject::CGameObject(const CGameObject& _Other)
 	: CEntity(_Other)
 	, m_arrCom{}
 	, m_RenderCom(nullptr)
+	, m_UICom(nullptr)
 	, m_Parent(nullptr)
 	, m_iLayerIdx(-1)
 	, m_bDead(false)
@@ -91,10 +93,6 @@ void CGameObject::begin()
 
 void CGameObject::tick()
 {
-	if (GetName() == L"NaviMap")
-		int a = 0;
-	if (GetName() == L"Plane")
-		int a = 0;
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
 	{
 		if (nullptr != m_arrCom[i])
@@ -194,6 +192,15 @@ void CGameObject::AddComponent(CComponent* _Component)
 			// 이미 1개 이상의 렌더컴포넌트를 보유하고 있다면 assert
 			assert(!m_RenderCom);
 			m_RenderCom = pRenderCom;
+		}
+		
+		// UIComponent 확인
+		CUIComponent* pUICom = dynamic_cast<CUIComponent*>(_Component);
+		if (pUICom)
+		{
+			// 1개 이상의 UI 컴포넌트를 보유하고있다면 assert
+			assert(!m_UICom);
+			m_UICom = pUICom;
 		}
 	}
 }

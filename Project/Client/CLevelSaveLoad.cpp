@@ -201,7 +201,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			Component = new CCollider2D;
 			break;
 		case COMPONENT_TYPE::COLLIDER3D:
-			//Component = new CCollider2D;
+			Component = new CCollider3D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			Component = new CAnimator2D;
@@ -223,6 +223,9 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			break;
 		case COMPONENT_TYPE::FINDPATH:
 			Component = new CFindPath;
+			break;
+		case COMPONENT_TYPE::UI_BUTTON:
+			Component = new CUI_Button;
 			break;
 		case COMPONENT_TYPE::MESHRENDER:
 			Component = new CMeshRender;

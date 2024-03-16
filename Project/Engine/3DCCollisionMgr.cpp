@@ -148,7 +148,7 @@ bool CCollisionMgr::CollisionBtw3DCollider(CCollider3D* _pLeft, CCollider3D* _pR
 		Vec3 RightCenter = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), _pRight->GetColliderWorldMat());
 		Vec3 LeftCenter = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), _pLeft->GetColliderWorldMat());
 
-		float CenterLength = pow(pow((RightCenter.x - LeftCenter.x), 2) + pow((RightCenter.y - LeftCenter.y), 2) + pow((RightCenter.z - LeftCenter.z), 2), 1.0 / 2.0);
+		float CenterLength = (float)pow(pow((RightCenter.x - LeftCenter.x), 2) + pow((RightCenter.y - LeftCenter.y), 2) + pow((RightCenter.z - LeftCenter.z), 2), 1.0 / 2.0);
 
 		Vec3 LeftCircleRadius = Vec3(1.f, 1.f, 1.f);
 		LeftCircleRadius = XMVector3TransformCoord(LeftCircleRadius, _pLeft->GetColliderScaleMat());

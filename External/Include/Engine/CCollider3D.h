@@ -56,9 +56,6 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType);
-    virtual void LoadFromDB(int _gameObjectID);
-
     CLONE(CCollider3D);
 public:
     CCollider3D();

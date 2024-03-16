@@ -196,3 +196,16 @@ CCamera* CRenderMgr::GetMainCam()
         return m_pEditorCam;
     }
 }
+
+CCamera* CRenderMgr::GetUICam()
+{
+    if (CLevelMgr::GetInst()->GetCurLevel()->GetState() == LEVEL_STATE::PLAY)
+    {
+        if (2 > m_vecCam.size())
+            return nullptr;
+
+        return m_vecCam[1];
+    }
+    else
+        return nullptr;
+}

@@ -6,7 +6,7 @@
 #include <Engine\CResMgr.h>
 #include <Engine\CTexture.h>
 
-#include <Script\ER_Data_ItemScript.h>
+#include <Script\ER_DataScript_Item.h>
 
 int ER_ItemMgr::Save()
 {
@@ -67,7 +67,7 @@ int ER_ItemMgr::Load()
 
 int ER_ItemMgr::SaveItemData(CGameObject* _Item, FILE* _File)
 {
-	ER_Data_ItemScript* ItemContext = _Item->GetScript<ER_Data_ItemScript>();
+	ER_DataScript_Item* ItemContext = _Item->GetScript<ER_DataScript_Item>();
 	// ItemName
 	SaveWString(ItemContext->m_strItemName, _File);
 
@@ -113,9 +113,9 @@ int ER_ItemMgr::SaveItemData(CGameObject* _Item, FILE* _File)
 CGameObject* ER_ItemMgr::LoadItemData(FILE* _File)
 {
 	CGameObject* pItem = new CGameObject;
-	pItem->AddComponent(new ER_Data_ItemScript());
+	pItem->AddComponent(new ER_DataScript_Item());
 
-	ER_Data_ItemScript* ItemContext = pItem->GetScript<ER_Data_ItemScript>();
+	ER_DataScript_Item* ItemContext = pItem->GetScript<ER_DataScript_Item>();
 
 	// Item Name
 	wstring strName;
@@ -159,7 +159,7 @@ void ER_ItemMgr::RecipeUpdate()
 
 	for (UINT i = 0; i < iItemCnt; ++i)
 	{
-		ER_Data_ItemScript* ItemContext = m_vecItem[i]->GetScript<ER_Data_ItemScript>();
+		ER_DataScript_Item* ItemContext = m_vecItem[i]->GetScript<ER_DataScript_Item>();
 
 		if (0 != ItemContext->m_uniRecipe.recipe)
 			m_umapRecipe.insert(make_pair(ItemContext->m_uniRecipe.recipe, i));

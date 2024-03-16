@@ -654,7 +654,7 @@ void CCamera::render()
 	render_decal();
 	render_transparent();
 
-	// PostProcess - ?„ì²˜ë¦?
+	// PostProcess
 	render_postprocess();
 
 	// UI
@@ -950,6 +950,7 @@ void CCamera::SaveToLevelFile(FILE* _File)
 	fwrite(&m_fScale, sizeof(float), 1, _File);
 	fwrite(&m_Near, sizeof(float), 1, _File);
 	fwrite(&m_Far, sizeof(float), 1, _File);
+	fwrite(&m_FOV, sizeof(float), 1, _File);
 	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
 	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fwrite(&m_iLayerFrustum, sizeof(UINT), 1, _File);
@@ -966,6 +967,7 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 	fread(&m_fScale, sizeof(float), 1, _File);
 	fread(&m_Near, sizeof(float), 1, _File);
 	fread(&m_Far, sizeof(float), 1, _File);
+	fread(&m_FOV, sizeof(float), 1, _File);
 	fread(&m_ProjType, sizeof(UINT), 1, _File);
 	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fread(&m_iLayerFrustum, sizeof(UINT), 1, _File);

@@ -24,9 +24,11 @@ void CCollisionMgr::tick()
 {
 	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
 
-	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
+	// 31번째 UI Layer는 제외하고 아래 별도로 진행해준다.
+
+	for (UINT iRow = 0; iRow < MAX_LAYER - 1; ++iRow)
 	{
-		for (UINT iCol = iRow; iCol < MAX_LAYER; ++iCol)
+		for (UINT iCol = iRow; iCol < MAX_LAYER - 1; ++iCol)
 		{
 			if (!(m_matrix[iRow] & (1 << iCol)))
 				continue;
@@ -212,7 +214,7 @@ bool CCollisionMgr::CollisionBtw2DCollider(CCollider2D* _pLeft, CCollider2D* _pR
 			Vec3 RightCenter = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), _pRight->GetColliderWorldMat());
 			Vec3 LeftCenter = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), _pLeft->GetColliderWorldMat());
 
-			float CenterLength = pow(pow((RightCenter.x - LeftCenter.x), 2) + pow((RightCenter.z - LeftCenter.z), 2), 1.0 / 2.0);
+			float CenterLength = (float)pow(pow((RightCenter.x - LeftCenter.x), 2) + pow((RightCenter.z - LeftCenter.z), 2), 1.0 / 2.0);
 
 			Vec3 LeftCircleRadius = Vec3(1.f, 0.f, 1.f);
 			LeftCircleRadius = XMVector3TransformCoord(LeftCircleRadius, _pLeft->GetColliderScaleMat());
@@ -407,7 +409,7 @@ bool CCollisionMgr::CollisionBtw2DCollider(CCollider2D* _pLeft, CCollider2D* _pR
 			Vec3 RightCenter = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), _pRight->GetColliderWorldMat());
 			Vec3 LeftCenter = XMVector3TransformCoord(Vec3(0.f, 0.f, 0.f), _pLeft->GetColliderWorldMat());
 
-			float CenterLength = pow(pow((RightCenter.x - LeftCenter.x), 2) + pow((RightCenter.y - LeftCenter.y), 2), 1.0 / 2.0);
+			float CenterLength = (float)pow(pow((RightCenter.x - LeftCenter.x), 2) + pow((RightCenter.y - LeftCenter.y), 2), 1.0 / 2.0);
 
 			Vec3 LeftCircleRadius = Vec3(1.f, 1.f, 0.f);
 			LeftCircleRadius = XMVector3TransformCoord(LeftCircleRadius, _pLeft->GetColliderScaleMat());

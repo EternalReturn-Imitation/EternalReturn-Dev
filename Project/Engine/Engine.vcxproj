@@ -235,6 +235,9 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CTileMap.h" />
     <ClInclude Include="CTimeMgr.h" />
     <ClInclude Include="CTransform.h" />
+    <ClInclude Include="CUIComponent.h" />
+    <ClInclude Include="CUIMgr.h" />
+    <ClInclude Include="CUI_Button.h" />
     <ClInclude Include="CWeightMapShader.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
@@ -328,6 +331,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CTileMap.cpp" />
     <ClCompile Include="CTimeMgr.cpp" />
     <ClCompile Include="CTransform.cpp" />
+    <ClCompile Include="CUIComponent.cpp" />
+    <ClCompile Include="CUIMgr.cpp" />
+    <ClCompile Include="CUI_Button.cpp" />
     <ClCompile Include="CWeightMapShader.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Detour\DetourAlloc.cpp" />

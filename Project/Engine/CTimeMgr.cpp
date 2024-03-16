@@ -39,6 +39,10 @@ void CTimeMgr::tick()
 	// tick 간격 시간
 	m_fDeltaTime = (float)(m_llCurCount.QuadPart - m_llPrevCount.QuadPart) / (float)m_llFrequency.QuadPart;
 
+	// 최소 DT 제한
+	if (0.01f < m_fDeltaTime)
+		m_fDeltaTime = 0.01f;
+
 	// 누적 시간
 	m_fTime += m_fDeltaTime;
 

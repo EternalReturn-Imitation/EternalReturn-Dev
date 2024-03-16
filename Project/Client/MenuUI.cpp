@@ -7,6 +7,7 @@
 #include <Engine\components.h>
 #include <Engine\CScript.h>
 #include <Engine\CLevelMgr.h>
+#include <Engine\CCollisionMgr.h>
 
 #include <Engine\CPathFindMgr.h>
 
@@ -189,6 +190,9 @@ int MenuUI::render_update()
                 CurLevel->ChangeState(LEVEL_STATE::STOP);
                 CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Temp.lv");
                 // CLevel* pNewLevel = CLevelSaveLoad::LoadLevelByDB();
+
+                // 충돌체 매니저 초기화
+                CCollisionMgr::GetInst()->Clear();
 
                 tEvent evn = {};
                 evn.Type = EVENT_TYPE::LEVEL_CHANGE;
