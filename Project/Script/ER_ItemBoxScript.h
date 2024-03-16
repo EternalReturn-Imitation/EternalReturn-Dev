@@ -6,6 +6,7 @@ class ER_ItemBoxScript :
 {
 private:
 
+
 public:
     void init();
     virtual void begin() override;

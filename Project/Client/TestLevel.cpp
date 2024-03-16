@@ -201,6 +201,20 @@ void CreateTestLevel()
 
 	CCollisionMgr::GetInst()->RayLayerCheck(L"Test");
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
+
+	CGameObject* DeathPostprocess = new CGameObject;
+	DeathPostprocess->SetName(L"Gray_Shader");
+	DeathPostprocess->AddComponent(new CTransform);
+	DeathPostprocess->AddComponent(new CMeshRender);
+
+	DeathPostprocess->MeshRender()->SetFrustumCheck(false);
+
+	DeathPostprocess->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	DeathPostprocess->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"GrayMtrl"), 0);
+	DeathPostprocess->MeshRender()->GetMaterial(0)->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"GrayShader"));
+	DeathPostprocess->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"RTCopyTex"));
+
+	SpawnGameObject(DeathPostprocess, Vec3(0.f, 0.f, 0.f), 0);
 }
 
 void LoadingBackGround() {
@@ -460,6 +474,7 @@ void LoadingItemBoxes() {
 	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pItemBox->AddComponent(new ER_ItemBoxScript);
+	pItemBox->MeshRender()->GetDynamicMaterial(0);
 	SpawnGameObject(pItemBox, Vec3(-27.720f, -0.009f, 10.245f), L"ItemBox");
 #pragma endregion
 

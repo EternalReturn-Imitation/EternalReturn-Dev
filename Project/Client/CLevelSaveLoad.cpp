@@ -8,6 +8,7 @@
 #include <Engine\CGameObject.h>
 #include <Engine\components.h>
 #include <Engine\CScript.h>
+#include <Engine\CCollider3D.h>
 
 #include <Script\CScriptMgr.h>
 
@@ -201,7 +202,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			Component = new CCollider2D;
 			break;
 		case COMPONENT_TYPE::COLLIDER3D:
-			//Component = new CCollider2D;
+			Component = new CCollider3D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			Component = new CAnimator2D;

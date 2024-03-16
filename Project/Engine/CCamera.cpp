@@ -643,6 +643,7 @@ void CCamera::render()
 			pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
 			pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
 			pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
+			pMtrl->SetTexParam(TEX_5, CResMgr::GetInst()->FindRes<CTexture>(L"DataTargetTex"));
 		}
 
 		pMtrl->UpdateData();
