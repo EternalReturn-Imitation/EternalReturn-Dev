@@ -110,7 +110,7 @@ public:
     bool IsAncestor(CGameObject* _Target);
     bool IsEnable() { return m_bEnable; }
 
-    bool SetEnable(bool _b) { m_bEnable = _b; }
+    void SetEnable(bool _b) { m_bEnable = _b; }
 
 private:
     void DisconnectFromParent();
