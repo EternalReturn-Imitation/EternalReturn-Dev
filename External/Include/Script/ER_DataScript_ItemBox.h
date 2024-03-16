@@ -27,4 +27,3 @@ public:
 
     CLONE_DISABLE(ER_DataScript_ItemBox);
 };
-

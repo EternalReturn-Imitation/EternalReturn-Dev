@@ -464,7 +464,6 @@ void LoadingItemBoxes() {
 	pItemBox->Collider3D()->SetOffsetScale(Vec3(400.f, 100.f, 100.f));
 	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pItemBox->AddComponent(new ER_ItemBoxScript);
 	pItemBox->MeshRender()->GetDynamicMaterial(0);
 	pItemBox->AddComponent(new ER_DataScript_ItemBox);
 	SpawnGameObject(pItemBox, Vec3(-32.45346f, -0.05804f, -2.84341f), L"ItemBox");
