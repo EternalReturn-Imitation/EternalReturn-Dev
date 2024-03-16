@@ -129,7 +129,7 @@ void CAnimator3D::finaltick()
 					}
 					else
 					{
-						pCurAnim->m_tMTAnimClip.fUpdateTime = pCurAnim->m_tMTAnimClip.dEndTime;
+						pCurAnim->m_tMTAnimClip.fUpdateTime = (float)pCurAnim->m_tMTAnimClip.dEndTime;
 						m_bFinish = true;
 					}
 				}

@@ -31,16 +31,16 @@ public:
     virtual void Skill_R(CGameObject* _Target, Vec3 _DestPos);  // R Skill
 
 private:
-    void MoveEnter(tFSMData param);
-    void MoveUpdate(tFSMData param);
+    void MoveEnter(tFSMData& param);
+    void MoveUpdate(tFSMData& param);
 
-    void WaitEnter(tFSMData param);
+    void WaitEnter(tFSMData& param);
 
-    void ArriveEnter(tFSMData param);
-    void ArriveUpdate(tFSMData param);
+    void ArriveEnter(tFSMData& param);
+    void ArriveUpdate(tFSMData& param);
 
-    void RestEnter(tFSMData param);
-    void RestUpdate(tFSMData param);
+    void RestEnter(tFSMData& param);
+    void RestUpdate(tFSMData& param);
 
 public:
     ER_ActionScript_Rio();

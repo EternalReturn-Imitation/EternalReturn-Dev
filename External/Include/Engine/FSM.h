@@ -3,7 +3,7 @@
 class CGameObject;
 class CScript;
 
-typedef void (CScript::* SCRIPT_DELEGATE)(tFSMData);
+typedef void (CScript::* SCRIPT_DELEGATE)(tFSMData&);
 
 class FSMState
 {

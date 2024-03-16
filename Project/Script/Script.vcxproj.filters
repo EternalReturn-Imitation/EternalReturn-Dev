@@ -43,8 +43,29 @@
     <Filter Include="Default\ER_header">
       <UniqueIdentifier>{ab7cb09f-7a29-440c-94a5-7cc14bfb4d66}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER\ItemBox">
+    <Filter Include="Script\ER\DataScript\ItemBox">
       <UniqueIdentifier>{4917d2dd-28b0-48a2-94e5-08be8efd8b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript">
+      <UniqueIdentifier>{fa13962b-4671-41fe-b9e1-93ae6b79ae42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript\Cam">
+      <UniqueIdentifier>{afcad44f-5ae1-4bcc-9276-fe611232c7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Rio">
+      <UniqueIdentifier>{08d6a4eb-a4f9-4554-a421-96f8c0253ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Jackie">
+      <UniqueIdentifier>{570d651e-3b29-44dc-90ee-067541a651fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Hyunwoo">
+      <UniqueIdentifier>{87476fa6-013b-4e45-b889-ed7a0f3ad9ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Aya">
+      <UniqueIdentifier>{7d751086-2f6f-49ce-a474-d6aeba6ee9bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Yuki">
+      <UniqueIdentifier>{78e8d3fd-5132-4e6a-8ad5-f304e1f74d06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,15 +78,6 @@
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>Script\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="CCameraMoveScript.h">
-      <Filter>Script\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="CFindPathScript.h">
-      <Filter>Script\Default</Filter>
-    </ClInclude>
     <ClInclude Include="CMissileScript.h">
       <Filter>Script\Default</Filter>
     </ClInclude>
@@ -75,23 +87,50 @@
     <ClInclude Include="CPlanetScript.h">
       <Filter>Script\Default</Filter>
     </ClInclude>
-    <ClInclude Include="ER_Data_CharacterScript.h">
-      <Filter>Script\ER\DataScript\Character</Filter>
-    </ClInclude>
     <ClInclude Include="ER_define.h">
       <Filter>Default\ER_header</Filter>
     </ClInclude>
     <ClInclude Include="ER_struct.h">
       <Filter>Default\ER_header</Filter>
     </ClInclude>
-    <ClInclude Include="ER_Data_ItemScript.h">
-      <Filter>Script\ER\DataScript\Item</Filter>
-    </ClInclude>
     <ClInclude Include="ER_PlayerScript.h">
       <Filter>Script\ER\PlayerScript</Filter>
     </ClInclude>
-    <ClInclude Include="ER_ItemBoxScript.h">
-      <Filter>Script\ER\ItemBox</Filter>
+    <ClInclude Include="ER_DataScript_ItemBox.h">
+      <Filter>Script\ER\DataScript\ItemBox</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Aya.h">
+      <Filter>Script\ER\ActionScript\Character\Aya</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Hyunwoo.h">
+      <Filter>Script\ER\ActionScript\Character\Hyunwoo</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Jackie.h">
+      <Filter>Script\ER\ActionScript\Character\Jackie</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Rio.h">
+      <Filter>Script\ER\ActionScript\Character\Rio</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Yuki.h">
+      <Filter>Script\ER\ActionScript\Character\Yuki</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Character.h">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Character.h">
+      <Filter>Script\ER\DataScript\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Item.h">
+      <Filter>Script\ER\DataScript\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="CEditCamControlScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CFollowMainCamScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_CamControllerScript.h">
+      <Filter>Script\ER\SystemScript\Cam</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -104,12 +143,6 @@
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CCameraMoveScript.cpp">
-      <Filter>Script\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="CFindPathScript.cpp">
-      <Filter>Script\Default</Filter>
-    </ClCompile>
     <ClCompile Include="CMissileScript.cpp">
       <Filter>Script\Default</Filter>
     </ClCompile>
@@ -119,20 +152,44 @@
     <ClCompile Include="CPlanetScript.cpp">
       <Filter>Script\Default</Filter>
     </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
-      <Filter>Script\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_Data_CharacterScript.cpp">
-      <Filter>Script\ER\DataScript\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_Data_ItemScript.cpp">
-      <Filter>Script\ER\DataScript\Item</Filter>
-    </ClCompile>
     <ClCompile Include="ER_PlayerScript.cpp">
       <Filter>Script\ER\PlayerScript</Filter>
     </ClCompile>
-    <ClCompile Include="ER_ItemBoxScript.cpp">
-      <Filter>Script\ER\ItemBox</Filter>
+    <ClCompile Include="ER_DataScript_ItemBox.cpp">
+      <Filter>Script\ER\DataScript\ItemBox</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Aya.cpp">
+      <Filter>Script\ER\ActionScript\Character\Aya</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Hyunwoo.cpp">
+      <Filter>Script\ER\ActionScript\Character\Hyunwoo</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Jackie.cpp">
+      <Filter>Script\ER\ActionScript\Character\Jackie</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Rio.cpp">
+      <Filter>Script\ER\ActionScript\Character\Rio</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Yuki.cpp">
+      <Filter>Script\ER\ActionScript\Character\Yuki</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Character.cpp">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Character.cpp">
+      <Filter>Script\ER\DataScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Item.cpp">
+      <Filter>Script\ER\DataScript\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="CEditCamControlScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CFollowMainCamScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_CamControllerScript.cpp">
+      <Filter>Script\ER\SystemScript\Cam</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

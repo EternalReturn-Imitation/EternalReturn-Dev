@@ -129,7 +129,7 @@ void ER_ActionScript_Rio::Move(CGameObject* _Target, Vec3 _DestPos)
 {
     tFSMData tmp;
     tmp.v4Data = Vec4(_DestPos.x, _DestPos.y, _DestPos.z, 0.f);
-    StateList[ER_CHAR_ACT::MOVE]->SetData(tmp);
+    STATEDATA_SET(MOVE,tmp);
 
     ER_ActionScript_Character::Move(nullptr, _DestPos);
 }
@@ -159,7 +159,7 @@ void ER_ActionScript_Rio::Rest()
     ChangeState(ER_CHAR_ACT::REST);
 }
 
-void ER_ActionScript_Rio::MoveEnter(tFSMData param)
+void ER_ActionScript_Rio::MoveEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Run");
     SetAbleToCancle(bAbleChange::COMMON);
@@ -173,7 +173,7 @@ void ER_ActionScript_Rio::MoveEnter(tFSMData param)
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
-void ER_ActionScript_Rio::MoveUpdate(tFSMData param)
+void ER_ActionScript_Rio::MoveUpdate(tFSMData& param)
 {
     // 캐릭터 속도 얻어와서 넣어주기
     float speed = m_Data->GetStatus().fMovementSpeed;
@@ -183,37 +183,35 @@ void ER_ActionScript_Rio::MoveUpdate(tFSMData param)
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
-void ER_ActionScript_Rio::WaitEnter(tFSMData param)
+void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Wait");
     SetAbleToCancle(bAbleChange::COMMON);
 }
 
-void ER_ActionScript_Rio::ArriveEnter(tFSMData param)
+void ER_ActionScript_Rio::ArriveEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Arrive", false);
 }
 
-void ER_ActionScript_Rio::ArriveUpdate(tFSMData param)
+void ER_ActionScript_Rio::ArriveUpdate(tFSMData& param)
 {
     if (GetOwner()->Animator3D()->IsFinish())
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
-void ER_ActionScript_Rio::RestEnter(tFSMData param)
+void ER_ActionScript_Rio::RestEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Rest_Start", false);
     
-    // 시전게이지 표기
+    param.iData = 0;
 }
 
-void ER_ActionScript_Rio::RestUpdate(tFSMData param)
+void ER_ActionScript_Rio::RestUpdate(tFSMData& param)
 {
-    static int RestAnimStep = 0;
-    
     CAnimator3D* animator = GetOwner()->Animator3D();
     
-    switch (RestAnimStep)
+    switch (param.iData)
     {
     case 0: // 시작 동작
     {
@@ -226,7 +224,7 @@ void ER_ActionScript_Rio::RestUpdate(tFSMData param)
             
             // 상태변경불가
             SetAbleToCancle(bAbleChange::DISABLE);
-            RestAnimStep++;
+            param.iData++;
         }
         break;
     }
@@ -236,7 +234,7 @@ void ER_ActionScript_Rio::RestUpdate(tFSMData param)
         if (KEY_TAP(KEY::RBTN) || KEY_TAP(KEY::X))
         {
             animator->SelectAnimation(L"Rio_Rest_End", false);
-            RestAnimStep++;
+            param.iData++;
         }
         break;
     }
@@ -248,7 +246,7 @@ void ER_ActionScript_Rio::RestUpdate(tFSMData param)
         {
             SetAbleToCancle(bAbleChange::COMMON);
             ChangeState(ER_CHAR_ACT::WAIT);
-            RestAnimStep = 0;
+            param.iData = 0;
         }
         break;
     }

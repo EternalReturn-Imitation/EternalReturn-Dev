@@ -91,7 +91,7 @@ void CEditorObjMgr::init()
 
 void CEditorObjMgr::progress()
 {
-	// DebugShape ���� ��������
+	// DebugShape Update
 	vector<tDebugShapeInfo>& vecInfo = CRenderMgr::GetInst()->GetDebugShapeInfo();
 	m_DebugShapeInfo.insert(m_DebugShapeInfo.end(), vecInfo.begin(), vecInfo.end());
 	vecInfo.clear();
