@@ -96,6 +96,10 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 			continue;
 
 		for (UINT j = 0; j < Objects.size(); ++j) {
+			//비활성화된경우 제외
+			if (Objects[j]->IsEnable() == false)
+				continue;
+
 			Vec3 objTransform = Objects[j]->Transform()->GetRelativePos();
 			Vec3 objScale = Objects[j]->Transform()->GetRelativeScale();
 

@@ -218,20 +218,6 @@ void CreateTestLevel()
 
 	CCollisionMgr::GetInst()->RayLayerCheck(L"NONERender");
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
-
-	CGameObject* DeathPostprocess = new CGameObject;
-	DeathPostprocess->SetName(L"Gray_Shader");
-	DeathPostprocess->AddComponent(new CTransform);
-	DeathPostprocess->AddComponent(new CMeshRender);
-
-	DeathPostprocess->MeshRender()->SetFrustumCheck(false);
-
-	DeathPostprocess->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	DeathPostprocess->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"GrayMtrl"), 0);
-	DeathPostprocess->MeshRender()->GetMaterial(0)->SetShader(CResMgr::GetInst()->FindRes<CGraphicsShader>(L"GrayShader"));
-	DeathPostprocess->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"RTCopyTex"));
-
-	SpawnGameObject(DeathPostprocess, Vec3(0.f, 0.f, 0.f), 0);
 }
 
 void LoadingBackGround() {

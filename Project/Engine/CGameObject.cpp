@@ -24,6 +24,7 @@ CGameObject::CGameObject()
 	, m_LifeTime(0.f)
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
+	, m_bEnable(true)
 {
 }
 
@@ -38,6 +39,7 @@ CGameObject::CGameObject(const CGameObject& _Other)
 	, m_LifeTime(0.f)
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
+	, m_bEnable(true)
 {
 	// Component บนป็
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
