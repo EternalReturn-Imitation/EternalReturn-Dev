@@ -3,11 +3,13 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <random>
 #include <sstream>
 
+using std::queue;
 using std::vector;
 using std::list;
 using std::map;

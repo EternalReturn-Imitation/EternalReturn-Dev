@@ -654,7 +654,7 @@ void CCamera::render()
 	render_decal();
 	render_transparent();
 
-	// PostProcess - ?„ì²˜ë¦?
+	// PostProcess
 	render_postprocess();
 
 	// UI

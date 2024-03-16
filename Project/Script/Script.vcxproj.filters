@@ -67,6 +67,12 @@
     <Filter Include="Script\ER\ActionScript\Character\Yuki">
       <UniqueIdentifier>{78e8d3fd-5132-4e6a-8ad5-f304e1f74d06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\UI">
+      <UniqueIdentifier>{3685c51a-070f-4ee1-a7b5-2deae237c121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Button">
+      <UniqueIdentifier>{bb96cd13-f5de-4fcd-b6cf-7ca5033965a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -132,6 +138,9 @@
     <ClInclude Include="ER_CamControllerScript.h">
       <Filter>Script\ER\SystemScript\Cam</Filter>
     </ClInclude>
+    <ClInclude Include="CUIScript_Button.h">
+      <Filter>Script\UI\Button</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -190,6 +199,9 @@
     </ClCompile>
     <ClCompile Include="ER_CamControllerScript.cpp">
       <Filter>Script\ER\SystemScript\Cam</Filter>
+    </ClCompile>
+    <ClCompile Include="CUIScript_Button.cpp">
+      <Filter>Script\UI\Button</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

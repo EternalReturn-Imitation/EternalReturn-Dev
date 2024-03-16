@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "CKeyMgr.h"
 
+#include "CRenderMgr.h"
+#include "CCamera.h"
+
 #include "CEngine.h"
 
 int g_arrVK[(UINT)KEY::END]
@@ -125,6 +128,8 @@ void CKeyMgr::tick()
 		ScreenToClient(CEngine::GetInst()->GetMainWnd(), &ptMousePos);
 		m_vMousePos = Vec2((float)ptMousePos.x, (float)ptMousePos.y);
 
+		CalcUnProjectPos();
+
 		m_vMouseDir = m_vMousePos - m_vPrevMousePos;
 		m_vMouseDir.y *= -1;
 	}
@@ -145,4 +150,35 @@ void CKeyMgr::tick()
 			}			 
 		}
 	}	
+}
+
+void CKeyMgr::CalcUnProjectPos()
+{
+	Vector3 ReturnPos(m_vMousePos.x, m_vMousePos.y, 0.f);
+
+	RECT rect = {};
+	GetClientRect(CEngine::GetInst()->GetMainWnd(), &rect);
+	float width = (float)(rect.right - rect.left);
+	float height = (float)(rect.bottom - rect.top);
+
+	Viewport viewport;
+	viewport.width = width;
+	viewport.height = height;
+
+	viewport.x = 0;
+	viewport.y = 0;
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+
+	CCamera* pUICamera = CRenderMgr::GetInst()->GetUICam();
+
+	if (!pUICamera)
+		return;
+
+	DirectX::XMFLOAT4X4 identityMatrix;
+	DirectX::XMStoreFloat4x4(&identityMatrix, DirectX::XMMatrixIdentity());
+
+	ReturnPos = viewport.Unproject(ReturnPos, pUICamera->GetProjMat(), pUICamera->GetViewMat(), identityMatrix);
+	m_vUnProjectMousePos.x = ReturnPos.x;
+	m_vUnProjectMousePos.y = ReturnPos.y;
 }

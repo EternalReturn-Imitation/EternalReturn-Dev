@@ -24,9 +24,11 @@ void CCollisionMgr::tick()
 {
 	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
 
-	for (UINT iRow = 0; iRow < MAX_LAYER; ++iRow)
+	// 31번째 UI Layer는 제외하고 아래 별도로 진행해준다.
+
+	for (UINT iRow = 0; iRow < MAX_LAYER - 1; ++iRow)
 	{
-		for (UINT iCol = iRow; iCol < MAX_LAYER; ++iCol)
+		for (UINT iCol = iRow; iCol < MAX_LAYER - 1; ++iCol)
 		{
 			if (!(m_matrix[iRow] & (1 << iCol)))
 				continue;

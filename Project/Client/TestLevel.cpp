@@ -43,9 +43,8 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(4)->SetName(L"Roof");
 	pCurLevel->GetLayer(5)->SetName(L"ItemBox");
 	pCurLevel->GetLayer(11)->SetName(L"Monster");
-	pCurLevel->GetLayer(30)->SetName(L"NaviMap");
-	pCurLevel->GetLayer(31)->SetName(L"Test");
-	//pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
+	pCurLevel->GetLayer(30)->SetName(L"NONERender");
+	pCurLevel->GetLayer(31)->SetName(L"UI");
 
 
 	// Main Camera Object
@@ -66,6 +65,30 @@ void CreateTestLevel()
 	pMainCam->Camera()->SetLayerMask(31, false);
 
 	SpawnGameObject(pMainCam, Vec3(0.f, 20.f, 0.f), 0);
+
+
+	// UI Camera
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"UICamera");
+	
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+	
+	pUICam->Transform()->SetRelativeRot(Vec3(0.f,0.f,0.f));
+	
+	pUICam->Camera()->SetFar(10.f);
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pUICam->Camera()->SetCameraIndex(1);
+	
+	Vec2 WinResolution = CEngine::GetInst()->GetWindowResolution();
+	pUICam->Camera()->SetOrthoWidth(WinResolution.x);
+	pUICam->Camera()->SetOrthoHeight(WinResolution.y);
+	
+	pUICam->Camera()->SetLayerMaskAll(false);
+	pUICam->Camera()->SetLayerMask(31, true);
+	
+	// SpawnGameObject(pUICam, Vec3(-(WinResolution.x / 2.f), -(WinResolution.y / 2.f), 0.f), 0);
+	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 	// 메인 조명
 	CGameObject* pLightObj = new CGameObject;
@@ -88,18 +111,22 @@ void CreateTestLevel()
 
 	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
 
-	// UI cameara
-	// CGameObject* pUICam = new CGameObject;
-	// pUICam->SetName(L"UICamera");
-	// 
-	// pUICam->AddComponent(new CTransform);
-	// pUICam->AddComponent(new CCamera);
-	// 
-	// pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-	// pUICam->Camera()->SetCameraIndex(1);
-	// pUICam->Camera()->SetLayerMask(31, true);
-	// 
-	// SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
+
+	// UITestObj
+	CGameObject* UITestObj = new CGameObject;
+	UITestObj->SetName(L"UITestObj");
+	
+	UITestObj->AddComponent(new CTransform);
+	UITestObj->AddComponent(new CMeshRender);
+	UITestObj->AddComponent(new CUI_Button);
+	
+	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
+	
+	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Char_Portrait_Rio.png"));
+	
+	SpawnGameObject(UITestObj, Vec3(-300.f, -300.f, 0.f), L"UI");
 
 
 	// SkyBox
@@ -164,7 +191,6 @@ void CreateTestLevel()
 	}
 
 	CGameObject* MapCollider = new CGameObject;
-	MapCollider = new CGameObject;
 	MapCollider->SetName(L"MapCollider");
 	MapCollider->AddComponent(new CTransform);
 	MapCollider->AddComponent(new CCollider2D);
@@ -172,25 +198,25 @@ void CreateTestLevel()
 	MapCollider->Collider2D()->SetOffsetScale(Vec2(256.f, 240.f));
 	MapCollider->Collider2D()->SetOffsetPos(Vec3(-65.f, 0.f, -10.f));
 	CPathFindMgr::GetInst()->SetMapCollider(MapCollider);
-	SpawnGameObject(MapCollider, Vec3(0.f, 0.f, 0.f), L"NaviMap");
+	SpawnGameObject(MapCollider, Vec3(0.f, 0.f, 0.f), L"NONERender");
 
 	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
-	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Test");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"NONERender");
 
-	CGameObject* pObject = new CGameObject;
-	pObject->SetName(L"TestCollider2D01");
-	pObject->AddComponent(new CTransform);
-	pObject->AddComponent(new CCollider3D);
-	pObject->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
-	pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
-	pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	pObject->begin();
-	SpawnGameObject(pObject, Vec3(10.f, 1.f, 10.f), L"Test");
+	//CGameObject* pObject = new CGameObject;
+	//pObject->SetName(L"TestCollider2D01");
+	//pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CCollider3D);
+	//pObject->Collider3D()->SetOffsetScale(Vec3(1.f, 1.f, 1.f));
+	//pObject->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
+	//pObject->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	//pObject->begin();
+	//SpawnGameObject(pObject, Vec3(10.f, 1.f, 10.f), L"Nonerender");
 
 	LoadingBackGround();
 	LoadingItemBoxes();
 
-	CCollisionMgr::GetInst()->RayLayerCheck(L"Test");
+	CCollisionMgr::GetInst()->RayLayerCheck(L"NONERender");
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
 }
 
@@ -232,7 +258,7 @@ void LoadingBackGround() {
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"Forest_Building");
 	LandMesh->Transform()->SetRelativeScale(0.01025f, 0.01110f, 0.01110f);
-	SpawnGameObject(LandMesh, Vec3(-12.71692, -0.42700, -21.42004), L"Building");
+	SpawnGameObject(LandMesh, Vec3(-12.71692f, -0.42700f, -21.42004f), L"Building");
 #pragma endregion
 
 #pragma region Hotel
@@ -388,7 +414,7 @@ void LoadingItemBoxes() {
 	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pItemBox->AddComponent(new ER_DataScript_ItemBox);
-	SpawnGameObject(pItemBox, Vec3(19.80982, -0.11900, 17.09492), L"ItemBox");
+	SpawnGameObject(pItemBox, Vec3(19.80982f, -0.11900f, 17.09492f), L"ItemBox");
 
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_SteelBox01.mdat");
 	pItemBox = pMeshData->Instantiate();
@@ -399,7 +425,7 @@ void LoadingItemBoxes() {
 	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 50.f, 0.f));
 	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pItemBox->AddComponent(new ER_DataScript_ItemBox);
-	SpawnGameObject(pItemBox, Vec3(-27.24952, -0.299f, 19.63642), L"ItemBox");
+	SpawnGameObject(pItemBox, Vec3(-27.24952f, -0.299f, 19.63642f), L"ItemBox");
 
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_TreeStump01.mdat");
 	pItemBox = pMeshData->Instantiate();
@@ -413,7 +439,7 @@ void LoadingItemBoxes() {
 	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 0.f));
 	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	pItemBox->AddComponent(new ER_DataScript_ItemBox);
-	SpawnGameObject(pItemBox, Vec3(14.36587, 0.59560, -3.72484), L"ItemBox");
+	SpawnGameObject(pItemBox, Vec3(14.36587f, 0.59560f, -3.72484f), L"ItemBox");
 
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Forest_TreeStump02.mdat");
 	pItemBox = pMeshData->Instantiate();

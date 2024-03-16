@@ -19,27 +19,18 @@ private:
 public:
 	void OnStateEnter()
 	{
-		if (script)
-		{
-			if (m_EnterFunc)
-				(script->*m_EnterFunc)(Data);
-		}
+		if (script && m_EnterFunc)
+			(script->*m_EnterFunc)(Data);
 	}
 	void OnStateUpdate()
 	{
-		if (script)
-		{
-			if (m_UpdateFunc)
-				(script->*m_UpdateFunc)(Data);
-		}
+		if (script && m_UpdateFunc)
+			(script->*m_UpdateFunc)(Data);
 	}
 	void OnStateExit()
 	{
-		if (script)
-		{
-			if (m_ExitFunc)
-				(script->*m_ExitFunc)(Data);
-		}
+		if (script && m_ExitFunc)
+			(script->*m_ExitFunc)(Data);
 	}
 
 	void SetStateEnter(SCRIPT_DELEGATE _delegate) { m_EnterFunc = _delegate; }

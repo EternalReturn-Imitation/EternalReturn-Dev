@@ -180,6 +180,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CMonsterScript.h" />
     <ClInclude Include="CPlanetScript.h" />
     <ClInclude Include="CScriptMgr.h" />
+    <ClInclude Include="CUIScript_Button.h" />
     <ClInclude Include="ER_ActionScript_Aya.h" />
     <ClInclude Include="ER_ActionScript_Character.h" />
     <ClInclude Include="ER_ActionScript_Hyunwoo.h" />
@@ -203,6 +204,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CMonsterScript.cpp" />
     <ClCompile Include="CPlanetScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
+    <ClCompile Include="CUIScript_Button.cpp" />
     <ClCompile Include="ER_ActionScript_Aya.cpp" />
     <ClCompile Include="ER_ActionScript_Character.cpp" />
     <ClCompile Include="ER_ActionScript_Hyunwoo.cpp" />

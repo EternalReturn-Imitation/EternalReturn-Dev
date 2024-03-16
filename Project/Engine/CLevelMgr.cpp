@@ -2,6 +2,8 @@
 #include "CLevelMgr.h"
 #include "CPathFindMgr.h"
 
+#include "CCollisionMgr.h"
+
 #include "CLevel.h"
 #include "CLayer.h"
 

@@ -6,6 +6,7 @@
 #include "CMissileScript.h"
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
+#include "CUIScript_Button.h"
 #include "ER_ActionScript_Aya.h"
 #include "ER_ActionScript_Hyunwoo.h"
 #include "ER_ActionScript_Jackie.h"
@@ -24,6 +25,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CMissileScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
+	_vec.push_back(L"CUIScript_Button");
 	_vec.push_back(L"ER_ActionScript_Aya");
 	_vec.push_back(L"ER_ActionScript_Hyunwoo");
 	_vec.push_back(L"ER_ActionScript_Jackie");
@@ -48,6 +50,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CMonsterScript;
 	if (L"CPlanetScript" == _strScriptName)
 		return new CPlanetScript;
+	if (L"CUIScript_Button" == _strScriptName)
+		return new CUIScript_Button;
 	if (L"ER_ActionScript_Aya" == _strScriptName)
 		return new ER_ActionScript_Aya;
 	if (L"ER_ActionScript_Hyunwoo" == _strScriptName)
@@ -89,6 +93,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::PLANETSCRIPT:
 		return new CPlanetScript;
+		break;
+	case (UINT)SCRIPT_TYPE::UISCRIPT_BUTTON:
+		return new CUIScript_Button;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:
 		return new ER_ActionScript_Aya;
@@ -146,6 +153,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::PLANETSCRIPT:
 		return L"CPlanetScript";
+		break;
+
+	case SCRIPT_TYPE::UISCRIPT_BUTTON:
+		return L"CUIScript_Button";
 		break;
 
 	case SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:
