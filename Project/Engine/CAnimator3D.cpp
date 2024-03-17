@@ -261,7 +261,8 @@ CAnim3D* CAnimator3D::AddAnim(Ptr<CBone> _pBone)
 	map<wstring, CAnim3D*>::iterator iter = m_mapAnim.find(_pBone->GetKey());
 	if(iter != m_mapAnim.end())
 		return nullptr;
-	CAnim3D* pAnim = new CAnim3D;
+	
+	CAnim3D* pAnim = nullptr;
 	pAnim = CAnim3D::CreateAnimation(_pBone);
 	pAnim->SetOwner(this);
 

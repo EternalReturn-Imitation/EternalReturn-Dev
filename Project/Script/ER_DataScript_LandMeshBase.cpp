@@ -7,6 +7,7 @@ int ER_DataScript_LandMeshBase::m_iRoofCount = 0;
 
 ER_DataScript_LandMeshBase::ER_DataScript_LandMeshBase()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE)
+	, m_pRoof(nullptr)
 {
 }
 

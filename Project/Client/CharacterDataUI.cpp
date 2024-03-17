@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CharacterDataUI.h"
 
-#include "ER_CharacterMgr.h"
+#include <Script\ER_CharacterMgr.h>
 #include <Script\ER_DataScript_Character.h>
 
 CharacterDataUI::CharacterDataUI()

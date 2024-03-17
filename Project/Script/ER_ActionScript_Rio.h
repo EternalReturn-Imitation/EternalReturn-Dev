@@ -20,15 +20,15 @@ protected:
 public:
     virtual void begin() override;
 
-    virtual void Attack(CGameObject* _EnemyObj);                // 기본공격
-    virtual void Wait();                                        // 대기
-    virtual void Move(CGameObject* _Target, Vec3 _DestPos);     // 이동
-    virtual void Craft();                                       // 제작
-    virtual void Rest();                                        // 휴식
-    virtual void Skill_Q(CGameObject* _Target, Vec3 _DestPos);  // Q Skill
-    virtual void Skill_W(CGameObject* _Target, Vec3 _DestPos);  // W Skill
-    virtual void Skill_E(CGameObject* _Target, Vec3 _DestPos);  // E Skill
-    virtual void Skill_R(CGameObject* _Target, Vec3 _DestPos);  // R Skill
+    virtual void Attack(tFSMData& _Data);         // 기본공격
+    virtual void Wait(tFSMData& _Data);           // 대기
+    virtual void Move(tFSMData& _Data);           // 이동
+    virtual void Craft(tFSMData& _Data);          // 제작
+    virtual void Rest(tFSMData& _Data);           // 휴식
+    virtual void Skill_Q(tFSMData& _Data);        // Q Skill
+    virtual void Skill_W(tFSMData& _Data);        // W Skill
+    virtual void Skill_E(tFSMData& _Data);        // E Skill
+    virtual void Skill_R(tFSMData& _Data);        // R Skill
 
 private:
     void MoveEnter(tFSMData& param);

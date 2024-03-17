@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "ER_ItemMgr.h"
 
-#include "ImGuiMgr.h"
-#include "ItemDataUI.h"
-
 ER_ItemMgr::ER_ItemMgr()
 {
 }
@@ -20,5 +17,4 @@ void ER_ItemMgr::init()
 
 	// 레시피 업데이트
 	RecipeUpdate();
-	((ItemDataUI*)ImGuiMgr::GetInst()->FindUI("##ItemDataUI"))->RegistItemMgr();
 }

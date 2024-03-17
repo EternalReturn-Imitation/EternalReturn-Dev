@@ -5,7 +5,7 @@
 #include "Client.h"
 
 #include <Engine\CDevice.h>
-#include "ER_GameSystem.h"
+#include <Script\ER_GameSystem.h>
 #include "CEditorObjMgr.h"
 
 // ImGui
@@ -56,17 +56,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     
     // GameSystem 초기화
     ER_GameSystem::GetInst()->init();
-
+    ImGuiMgr::GetInst()->InitGameSystem();
+    
     // 테스트 용 레벨 생성
     CreateTestLevel();
 
     // 메세지 루프
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
     MSG msg;
-
-
-   
-
 
     while (true)
     {

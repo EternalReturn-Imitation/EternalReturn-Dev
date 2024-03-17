@@ -11,13 +11,13 @@
 #include "framework.h"
 
 #include <Engine\global.h>
-
-#include "CScriptMgr.h"
-
 #include <Engine\FSM.h>
 
 #include "ER_define.h"
 #include "ER_struct.h"
+
+#include "CScriptMgr.h"
+
 
 //Comp
 

@@ -123,6 +123,8 @@
       <UnityFilesDirectory>$(ProjectDir)</UnityFilesDirectory>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>26495</DisableSpecificWarnings>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/Ylsymbol %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,9 +169,6 @@
     <ClInclude Include="ComputeShaderUI.h" />
     <ClInclude Include="ContentUI.h" />
     <ClInclude Include="DebugLogUI.h" />
-    <ClInclude Include="ER_CharacterMgr.h" />
-    <ClInclude Include="ER_GameSystem.h" />
-    <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphicsShaderUI.h" />
     <ClInclude Include="ImGuiMgr.h" />
@@ -230,11 +229,6 @@
     <ClCompile Include="ComputeShaderUI.cpp" />
     <ClCompile Include="ContentUI.cpp" />
     <ClCompile Include="DebugLogUI.cpp" />
-    <ClCompile Include="ER_CharacterMgr.cpp" />
-    <ClCompile Include="ER_CharacterMgr_Init.cpp" />
-    <ClCompile Include="ER_GameSystem.cpp" />
-    <ClCompile Include="ER_ItemMgr.cpp" />
-    <ClCompile Include="ER_ItemMgr_Init.cpp" />
     <ClCompile Include="GraphicsShaderUI.cpp" />
     <ClCompile Include="ImGuiMgr.cpp" />
     <ClCompile Include="ImGui\GraphEditor.cpp" />

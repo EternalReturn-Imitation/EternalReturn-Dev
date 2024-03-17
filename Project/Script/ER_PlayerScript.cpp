@@ -16,12 +16,6 @@ ER_PlayerScript::ER_PlayerScript()
 {
 }
 
-ER_PlayerScript::ER_PlayerScript(const ER_PlayerScript& _origin)
-	: m_pActionScript(nullptr)
-	, CScript((UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT)
-{
-}
-
 ER_PlayerScript::~ER_PlayerScript()
 {
 }
@@ -44,30 +38,12 @@ void ER_PlayerScript::tick()
 
 	CGameObject* pFocusObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vTargetPoint = GetFocusPoint();	// 타겟 지점
-	Vec3 vFocusDir = GetFocusDir(vTargetPoint);	// 타겟 방향
 
-	if (KEY_TAP(KEY::LBTN))
-	{
-		Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+	tFSMData data = {};
 
-		Vec3 testtp = vTargetPoint;
-		Vec3 testvp = vPos;
 
-		testtp.y = 0.f;
-		testvp.y = 0.f;
-
-		float dist = Vec3::Distance(testtp, testvp);
-
-		Vec3 TargetPos = GetOwner()->FindPath()->findMaxClearDistance(vFocusDir, 0, dist);
-		
-		if (TargetPos != Vec3(0.f, 0.f, 0.f))
-		{
-			vPos.x += TargetPos.x;
-			vPos.z += TargetPos.z;
-			GetOwner()->Transform()->SetRelativePos(vPos);
-		}
-	}
-
+	// [ Mouse Control ]
+	// 이동
 	if (KEY_TAP(KEY::RBTN))
 	{
 		DEBUG_LOG_INPUT(ToString(GetOwner()->GetName()).c_str(), "TAP", "RBTN");
@@ -87,32 +63,43 @@ void ER_PlayerScript::tick()
 		// cursor On Land (else)
 		else
 		{
-			m_pActionScript->Move(nullptr, vTargetPoint);
+			data.v4Data = vTargetPoint;
+			m_pActionScript->Move(data);
 		}
 	}
 	else if (KEY_PRESSED(KEY::RBTN))
 	{
 		// 이동 유지
-		m_pActionScript->Move(nullptr, vTargetPoint);
-	}
-	
-	if (KEY_TAP(KEY::Q))
-	{
-		
-	}
-	if (KEY_TAP(KEY::W))
-	{
-	}
-	if (KEY_TAP(KEY::E))
-	{
-	}
-	if (KEY_TAP(KEY::R))
-	{
+		data.v4Data = vTargetPoint;
+		m_pActionScript->Move(data);
 	}
 	
 	if (KEY_TAP(KEY::A))
 	{
+		// 공격
+		// 공격 상태가 아닌경우 공격명령대기상태
+
+		// 공격명령 상태라면
 	}
+
+
+	if (KEY_TAP(KEY::Q))
+	{
+		m_pActionScript->Skill_Q(data);
+	}
+	if (KEY_TAP(KEY::W))
+	{
+		m_pActionScript->Skill_W(data);
+	}
+	if (KEY_TAP(KEY::E))
+	{
+		m_pActionScript->Skill_E(data);
+	}
+	if (KEY_TAP(KEY::R))
+	{
+		m_pActionScript->Skill_R(data);
+	}
+	
 
 	// 정지
 	if (KEY_TAP(KEY::S))
@@ -121,13 +108,23 @@ void ER_PlayerScript::tick()
 		GetOwner()->FindPath()->ClearPath();
 	}
 	
+	// 휴식
 	if (KEY_TAP(KEY::X))
 	{
-		m_pActionScript->Rest();
+		m_pActionScript->Rest(data);
+	}
+
+	// UI
+
+	if (KEY_TAP(KEY::ESC))
+	{
+		// 게임메뉴
+		// 종료, 설정 등
 	}
 	
 	if (KEY_TAP(KEY::TAB))
 	{
+		// 상태 UI 띄우기
 	}
 
 
@@ -137,6 +134,12 @@ void ER_PlayerScript::tick()
 	{
 		CGameObject* pMainCam = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
 		pMainCam->GetScript<ER_CamControllerScript>()->CameraFixToggle();
+	}
+
+	if (KEY_PRESSED(KEY::SPACE))
+	{
+		CGameObject* pMainCam = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
+		pMainCam->GetScript<ER_CamControllerScript>()->FollowPlayerCamera();
 	}
 }
 

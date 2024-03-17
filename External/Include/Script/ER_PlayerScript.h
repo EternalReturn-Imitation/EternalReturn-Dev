@@ -21,7 +21,6 @@ public:
 
 public:
     ER_PlayerScript();
-    ER_PlayerScript(const ER_PlayerScript& _origin);
     ~ER_PlayerScript();
 
     CLONE_DISABLE(ER_PlayerScript);

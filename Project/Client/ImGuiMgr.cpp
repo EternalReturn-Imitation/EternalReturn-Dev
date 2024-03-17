@@ -254,3 +254,9 @@ void ImGuiMgr::InitInspector()
         pair.second->init();
     }
 }
+
+void ImGuiMgr::InitGameSystem()
+{
+    ((ItemDataUI*)FindUI("##ItemDataUI"))->RegistItemMgr();
+    ((CharacterDataUI*)FindUI("##CharacterDataUI"))->RegistCharacters();
+}

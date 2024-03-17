@@ -87,38 +87,38 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_R()
     return state;
 }
 
-void ER_ActionScript_Yuki::Attack(CGameObject* _EnemyObj)
+void ER_ActionScript_Yuki::Attack(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Wait()
+void ER_ActionScript_Yuki::Wait(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Move(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Yuki::Move(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Skill_Q(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Yuki::Craft(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Skill_W(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Yuki::Rest(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Skill_E(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Yuki::Skill_Q(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Skill_R(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Yuki::Skill_W(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Craft()
+void ER_ActionScript_Yuki::Skill_E(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Yuki::Rest()
+void ER_ActionScript_Yuki::Skill_R(tFSMData& _Data)
 {
 }

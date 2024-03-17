@@ -23,7 +23,7 @@
 
 #include <Engine\CSetColorShader.h>
 
-#include "ER_CharacterMgr.h"
+#include <Script\ER_CharacterMgr.h>
 
 #include "CEditorObjMgr.h"
 
@@ -231,7 +231,7 @@ void LoadingBackGround() {
 	Ptr<CMeshData> pMeshData = nullptr;
 	Vec3 rot = {};
 #pragma region Archery
-	CGameObject* LandMesh = new CGameObject;
+	CGameObject* LandMesh = nullptr;
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Roof.mdat");
 	LandMesh = pMeshData->Instantiate();
 	LandMesh->SetName(L"Archery_Roof");
@@ -360,6 +360,8 @@ void LoadingBackGround() {
 
 	roof = LandMesh;
 
+	// TO_DO : 복합 콜라이더의 오버랩 카운트를 동기화시켜서 한번에 관리할 수 있도록 프로세스 구성
+
 	LandMesh = new CGameObject;
 	LandMesh->SetName(L"School_Base_Collider3D01");
 	LandMesh->AddComponent(new CTransform);
@@ -416,7 +418,7 @@ void LoadingBackGround() {
 void LoadingItemBoxes() {
 	Ptr<CMeshData> pMeshData = nullptr;
 	Vec3 rot = {};
-	CGameObject* pItemBox;
+	CGameObject* pItemBox = nullptr;
 
 #pragma region Archery
 	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"Archery_Biotoilet01.mdat");
@@ -426,9 +428,11 @@ void LoadingItemBoxes() {
 	rot.x = XMConvertToRadians(90.000f);
 	rot.y = XMConvertToRadians(-68.000f);
 	rot.z = XMConvertToRadians(-180.000f);
+	
 	pItemBox->Transform()->SetRelativeRot(rot);
 	pItemBox->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
 	pItemBox->AddComponent(new CCollider3D);
+	
 	pItemBox->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 300.f));
 	pItemBox->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 100.f));
 	pItemBox->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
