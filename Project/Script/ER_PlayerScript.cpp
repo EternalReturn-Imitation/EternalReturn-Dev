@@ -41,7 +41,6 @@ void ER_PlayerScript::tick()
 
 	tFSMData data = {};
 
-
 	// [ Mouse Control ]
 	// ÀÌµ¿
 	if (KEY_TAP(KEY::RBTN))
@@ -93,6 +92,7 @@ void ER_PlayerScript::tick()
 	}
 	if (KEY_TAP(KEY::E))
 	{
+		data.v4Data = vTargetPoint;
 		m_pActionScript->Skill_E(data);
 	}
 	if (KEY_TAP(KEY::R))

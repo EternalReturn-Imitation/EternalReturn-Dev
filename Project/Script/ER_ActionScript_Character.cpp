@@ -2,12 +2,15 @@
 #include "ER_ActionScript_Character.h"
 #include "ER_DataScript_Character.h"
 
+
+
 ER_ActionScript_Character::ER_ActionScript_Character(SCRIPT_TYPE _type)
 	: CScript((UINT)_type)
 	, FSMContext(nullptr)
 	, StateList{}
 	, m_Data(nullptr)
 	, m_iCurState(0)
+	, m_iPrevState(0)
 	, m_bAbleChange(bAbleChange::COMMON)
 {
 }
@@ -106,6 +109,8 @@ void ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, bAbleChange _Gra
 	// 변경 가능 수준 검사
 	if (IsAbleChange(_Grade))
 	{
+		m_iPrevState = m_iCurState;
+
 		FSMContext->ChangeState(StateList[_state]);
 		m_iCurState = _state;
 	}
