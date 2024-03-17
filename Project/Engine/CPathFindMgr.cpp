@@ -136,11 +136,11 @@ bool CPathFindMgr::LoadNavMeshFromFile(const char* path)
 	return true;
 }
 
-vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
+vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& _endPos)
 {
 	// 시작 위치와 끝 위치를 설정합니다.
 	float startpos[3] = { startPos.x, startPos.y, -startPos.z }; // 시작 위치
-	float endpos[3] = { endPos.x, endPos.y, -endPos.z }; // 끝 위치
+	float endpos[3] = { _endPos.x, _endPos.y, -_endPos.z }; // 끝 위치
 
 	dtPolyRef startRef, endRef;
 	float polyPickExt[3] = { 6000,6000,6000 }; // 범위를 제한하기 위한 벡터
@@ -184,4 +184,36 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& endPos)
 	delete[] actualPath; // 더이상 필요없는 calcPath를 삭제합니다.
 
 	return vecPath;
+}
+
+bool CPathFindMgr::IsValidPoint(const Vec3& _CheckPos)
+{
+	float checkpos[3] = { _CheckPos.x, _CheckPos.y, -_CheckPos.z }; // 검사 위치
+
+	dtPolyRef checkRef;
+	float polyPickExt[3] = { 6000,6000,6000 }; // 범위를 제한하기 위한 벡터
+
+	dtQueryFilter filter;
+	filter.setIncludeFlags(0xFFFF); // 모든 폴리곤 참조
+	filter.setExcludeFlags(0);      // 제외할 폴리곤 없음
+
+	// 가까운 폴리곤 검색
+	dtStatus status = m_NavQuery->findNearestPoly(checkpos, polyPickExt, &filter, &checkRef, 0);
+
+	// 시작과 끝 위치를 찾습니다.
+	float nearestPos[3];
+	status = m_NavQuery->closestPointOnPoly(checkRef, checkpos, nearestPos, 0);
+
+	Vec3 FinalPos = { nearestPos[0], nearestPos[1], -nearestPos[2] };
+	Vec3 OriginPos = _CheckPos;
+
+	float diffX = FinalPos.x - OriginPos.x;
+	float diffZ = FinalPos.z - OriginPos.z;
+
+	if (fabsf(diffX) > 0.1f || fabsf(diffZ) > 0.1f)
+	{
+		return false;
+	}
+	
+	return true;
 }

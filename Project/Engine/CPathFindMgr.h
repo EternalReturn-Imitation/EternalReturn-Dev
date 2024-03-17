@@ -57,15 +57,15 @@ private:
 private:
     bool LoadNavMeshFromFile(const char* path);
   
-
 public:
     void init();
     void tick();
     void render();
 
-
 public:
     vector<Vec3> FindPath(const Vec3& startPos, const Vec3& endPos);
+
+    bool IsValidPoint(const Vec3& _CheckPos);
 
 public:
     void SetNaviResult(tNaviResult _result) { m_sResultPos = _result; }

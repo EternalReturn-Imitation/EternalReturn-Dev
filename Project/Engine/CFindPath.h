@@ -19,7 +19,7 @@ private:
 
 private:
     float GetFrontDir(Vec3 _Direction);
-    bool isLeft(const Vec3& _objDir, const Vec3& _DestDir);
+    bool IsLeft(const Vec3& _objDir, const Vec3& _DestDir);
 
 public:
     CFindPath();
@@ -34,6 +34,8 @@ public:
     bool FindPath(Vec3 endPos);
     bool FindNextPath();
     bool PathMove(float _fSpeed);
+
+    Vec3 findMaxClearDistance(const Vec3& _dir, float _min, float _max);
 
 public:
     Vec3 GetNextPos() { return m_vNextPos; }

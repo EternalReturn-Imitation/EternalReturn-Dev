@@ -4,7 +4,7 @@
 #include <Engine\CResMgr.h>
 
 ER_DataScript_LandMeshBase::ER_DataScript_LandMeshBase()
-	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_LANDMESH)
+	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE)
 {
 }
 
