@@ -41,6 +41,9 @@ void ER_PlayerScript::tick()
 
 	tFSMData data = {};
 
+
+	// [ Mouse Control ]
+	// 이동
 	if (KEY_TAP(KEY::RBTN))
 	{
 		DEBUG_LOG_INPUT(ToString(GetOwner()->GetName()).c_str(), "TAP", "RBTN");
@@ -71,23 +74,32 @@ void ER_PlayerScript::tick()
 		m_pActionScript->Move(data);
 	}
 	
+	if (KEY_TAP(KEY::A))
+	{
+		// 공격
+		// 공격 상태가 아닌경우 공격명령대기상태
+
+		// 공격명령 상태라면
+	}
+
+
 	if (KEY_TAP(KEY::Q))
 	{
-		
+		m_pActionScript->Skill_Q(data);
 	}
 	if (KEY_TAP(KEY::W))
 	{
+		m_pActionScript->Skill_W(data);
 	}
 	if (KEY_TAP(KEY::E))
 	{
+		m_pActionScript->Skill_E(data);
 	}
 	if (KEY_TAP(KEY::R))
 	{
+		m_pActionScript->Skill_R(data);
 	}
 	
-	if (KEY_TAP(KEY::A))
-	{
-	}
 
 	// 정지
 	if (KEY_TAP(KEY::S))
@@ -96,13 +108,23 @@ void ER_PlayerScript::tick()
 		GetOwner()->FindPath()->ClearPath();
 	}
 	
+	// 휴식
 	if (KEY_TAP(KEY::X))
 	{
 		m_pActionScript->Rest(data);
 	}
+
+	// UI
+
+	if (KEY_TAP(KEY::ESC))
+	{
+		// 게임메뉴
+		// 종료, 설정 등
+	}
 	
 	if (KEY_TAP(KEY::TAB))
 	{
+		// 상태 UI 띄우기
 	}
 
 
@@ -119,8 +141,6 @@ void ER_PlayerScript::tick()
 		CGameObject* pMainCam = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
 		pMainCam->GetScript<ER_CamControllerScript>()->FollowPlayerCamera();
 	}
-
-
 }
 
 Vec3 ER_PlayerScript::GetFocusPoint()
