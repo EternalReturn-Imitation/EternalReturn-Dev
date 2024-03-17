@@ -367,6 +367,10 @@ void CCamera::SortObject()
 				if (nullptr == pRenderCom)
 					continue;
 
+				//°ÔÀÓ¿ÀºêÁ§Æ®°¡ ºñÈ°¼ºÈ­ »óÅÂ¶ó¸é?
+				if (vecObject[j]->IsEnable() == false)
+					continue;
+
 				// Frustum Check
 				// if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ?ˆë‘ì²´ë Œ???¬ë? ?ë‹¨, ?Œì† ?ˆì´???¹ì? ë³¸ì¸ ?ì²´ ?ˆë‘ì²´ë Œ??ì²´í¬ê°€ ?˜ì–´?ˆëŠ” ê²½ìš°
 				// {
@@ -479,6 +483,9 @@ void CCamera::SortObject(CCamera* _MainCamera)
 
 				// ·»´õ¸µ ±â´ÉÀÌ ¾ø´Â ¿ÀºêÁ§Æ®´Â Á¦¿Ü
 				if (nullptr == pRenderCom)
+					continue;
+
+				if (vecObject[j]->IsEnable() == false)
 					continue;
 
 				// Frustum Check
@@ -600,6 +607,9 @@ void CCamera::SortObject_Shadow()
 					continue;
 				}
 
+				if (vecObject[j]->IsEnable() == false)
+					continue;
+
 				m_vecShadow.push_back(vecObject[j]);
 			}
 		}
@@ -643,6 +653,7 @@ void CCamera::render()
 			pMtrl->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"SpecularTargetTex"));
 			pMtrl->SetTexParam(TEX_3, CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex"));
 			pMtrl->SetTexParam(TEX_4, CResMgr::GetInst()->FindRes<CTexture>(L"ShadowTargetTex"));
+			pMtrl->SetTexParam(TEX_5, CResMgr::GetInst()->FindRes<CTexture>(L"DataTargetTex"));
 		}
 
 		pMtrl->UpdateData();

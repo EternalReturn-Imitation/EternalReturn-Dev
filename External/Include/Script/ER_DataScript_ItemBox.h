@@ -6,6 +6,7 @@ class ER_DataScript_ItemBox :
 {
 private:
 
+
 public:
     void init();
     virtual void begin() override;
@@ -26,4 +27,3 @@ public:
 
     CLONE_DISABLE(ER_DataScript_ItemBox);
 };
-

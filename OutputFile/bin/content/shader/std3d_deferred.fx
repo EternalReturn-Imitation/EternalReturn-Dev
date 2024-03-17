@@ -151,9 +151,21 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         vViewNormal = normalize(mul(vNormal, vRotateMat));
     }
     
+    
+    
     output.vNormal = float4(vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);
-    output.vData = float4(0.f, 0.f, 0.f, 1.f);
+    //아웃라이너 용 데이터
+    //마우스를 가져다 댔을때
+    if (g_int_3==2)
+    {        
+        output.vData = float4(1.f, 0.f, 0.f, 1.f);
+    }
+    //마우스 안가져다 댔을때
+    else if (g_int_3 == 1)
+    {
+        output.vData = float4(0.f, 1.f, 0.f, 1.f);
+    }
     
     output.vColor.a = saturate(SpecCoeff);
     

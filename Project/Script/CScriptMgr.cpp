@@ -16,6 +16,7 @@
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_Item.h"
 #include "ER_DataScript_ItemBox.h"
+#include "ER_DataScript_LandMeshBase.h"
 #include "ER_PlayerScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
@@ -35,6 +36,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_DataScript_Character");
 	_vec.push_back(L"ER_DataScript_Item");
 	_vec.push_back(L"ER_DataScript_ItemBox");
+	_vec.push_back(L"ER_DataScript_LandMeshBase");
 	_vec.push_back(L"ER_PlayerScript");
 }
 
@@ -70,6 +72,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_DataScript_Item;
 	if (L"ER_DataScript_ItemBox" == _strScriptName)
 		return new ER_DataScript_ItemBox;
+	if (L"ER_DataScript_LandMeshBase" == _strScriptName)
+		return new ER_DataScript_LandMeshBase;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
 	return nullptr;
@@ -123,6 +127,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_ITEMBOX:
 		return new ER_DataScript_ItemBox;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE:
+		return new ER_DataScript_LandMeshBase;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
@@ -193,6 +200,14 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_DATASCRIPT_ITEMBOX:
 		return L"ER_DataScript_ItemBox";
+		break;
+
+	case SCRIPT_TYPE::ER_DATASCRIPT_LANDMESH:
+		return L"ER_DataScript_LandMesh";
+		break;
+
+	case SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE:
+		return L"ER_DataScript_LandMeshBase";
 		break;
 
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT:

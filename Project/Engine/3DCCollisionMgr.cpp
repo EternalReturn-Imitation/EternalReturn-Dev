@@ -15,6 +15,10 @@ void CCollisionMgr::CollisionBtw3DObject(CGameObject* _LeftObject, CGameObject* 
 	if (!(_LeftObject->Collider3D() && _RightObject->Collider3D()))
 		return;
 
+	//厚劝己拳等版快 力寇
+	if (_LeftObject->IsEnable() == false || _LeftObject->IsEnable() == false)
+		return;
+
 	// 面倒眉 ID 积己
 	CollisionID id = {};
 	if (_LeftObject->Collider3D()->GetID() < _RightObject->Collider3D()->GetID()) {

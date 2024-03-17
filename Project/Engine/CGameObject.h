@@ -46,6 +46,7 @@ private:
     float                   m_LifeTime;
     float                   m_CurLifeTime;
     bool                    m_bLifeSpan;
+    bool                    m_bEnable;
 
 public:
     // 레벨이 시작될 때 호출 or 시작 된 레벨에 합류할 때 호출
@@ -89,7 +90,6 @@ public:
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
     CUIComponent* GetUIComponent() const { return m_UICom; }
 
-
     int GetLayerIndex() { return m_iLayerIdx; }
 
     template<typename T>
@@ -108,7 +108,9 @@ public:
 
     bool IsDead() { return m_bDead; }
     bool IsAncestor(CGameObject* _Target);
+    bool IsEnable() { return m_bEnable; }
 
+    bool SetEnable(bool _b) { m_bEnable = _b; }
 
 private:
     void DisconnectFromParent();
