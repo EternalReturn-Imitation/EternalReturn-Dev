@@ -18,9 +18,10 @@ public:
         else m_bFollowToPlayer = true;
     }
 
+    void FollowPlayerCamera();
+
 private:
     void CameraMove();
-    void FollowPlayerCamera();
 
 private:
     Vec3 CalculateCamPos_ForTarget(Vec3 _CamPos, Vec3 _vTargetPos, Vec3 _CamFrontDir);

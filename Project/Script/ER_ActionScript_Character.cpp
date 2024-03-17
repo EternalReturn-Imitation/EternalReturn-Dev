@@ -37,7 +37,7 @@ void ER_ActionScript_Character::tick()
 	FSMContext->UpdateState();
 }
 
-void ER_ActionScript_Character::Wait()
+void ER_ActionScript_Character::Wait(tFSMData& _Data)
 {
 	if (IsAbleChange(bAbleChange::COMMON))
 	{
@@ -45,7 +45,7 @@ void ER_ActionScript_Character::Wait()
 	}
 }
 
-void ER_ActionScript_Character::Move(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Character::Move(tFSMData& _Data)
 {
 	if (IsAbleChange(bAbleChange::COMMON))
 	{
@@ -56,7 +56,8 @@ void ER_ActionScript_Character::Move(CGameObject* _Target, Vec3 _DestPos)
 		{
 			// 플레이어블 캐릭터 특성으로 지속명령이기때문에 이곳에서 목적지 경로 설정 진행
 			CFindPath* findpathcomp = GetOwner()->FindPath();
-			findpathcomp->FindPath(_DestPos);
+			Vec3 destPos = _Data.v4Data;
+			findpathcomp->FindPath(destPos);
 		}
 	}
 }
@@ -108,6 +109,8 @@ void ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, bAbleChange _Gra
 		FSMContext->ChangeState(StateList[_state]);
 		m_iCurState = _state;
 	}
+	
+	// TO_DO : 당장 변환이 불가능한경우 담아놓기.
 }
 
 bool ER_ActionScript_Character::IsAbleChange(bAbleChange _Grade)

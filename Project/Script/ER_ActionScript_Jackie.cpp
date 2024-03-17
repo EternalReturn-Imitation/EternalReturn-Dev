@@ -87,38 +87,38 @@ FSMState* ER_ActionScript_Jackie::CreateSkill_R()
     return state;
 }
 
-void ER_ActionScript_Jackie::Attack(CGameObject* _EnemyObj)
+void ER_ActionScript_Jackie::Attack(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Wait()
+void ER_ActionScript_Jackie::Wait(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Move(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Jackie::Move(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Skill_Q(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Jackie::Craft(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Skill_W(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Jackie::Rest(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Skill_E(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Jackie::Skill_Q(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Skill_R(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Jackie::Skill_W(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Craft()
+void ER_ActionScript_Jackie::Skill_E(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Jackie::Rest()
+void ER_ActionScript_Jackie::Skill_R(tFSMData& _Data)
 {
 }

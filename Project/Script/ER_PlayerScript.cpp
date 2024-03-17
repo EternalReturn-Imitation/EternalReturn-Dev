@@ -38,29 +38,8 @@ void ER_PlayerScript::tick()
 
 	CGameObject* pFocusObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vTargetPoint = GetFocusPoint();	// 타겟 지점
-	Vec3 vFocusDir = GetFocusDir(vTargetPoint);	// 타겟 방향
 
-	if (KEY_TAP(KEY::LBTN))
-	{
-		Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
-
-		Vec3 testtp = vTargetPoint;
-		Vec3 testvp = vPos;
-
-		testtp.y = 0.f;
-		testvp.y = 0.f;
-
-		float dist = Vec3::Distance(testtp, testvp);
-
-		Vec3 TargetPos = GetOwner()->FindPath()->findMaxClearDistance(vFocusDir, 0, dist);
-		
-		if (TargetPos != Vec3(0.f, 0.f, 0.f))
-		{
-			vPos.x += TargetPos.x;
-			vPos.z += TargetPos.z;
-			GetOwner()->Transform()->SetRelativePos(vPos);
-		}
-	}
+	tFSMData data = {};
 
 	if (KEY_TAP(KEY::RBTN))
 	{
@@ -81,13 +60,15 @@ void ER_PlayerScript::tick()
 		// cursor On Land (else)
 		else
 		{
-			m_pActionScript->Move(nullptr, vTargetPoint);
+			data.v4Data = vTargetPoint;
+			m_pActionScript->Move(data);
 		}
 	}
 	else if (KEY_PRESSED(KEY::RBTN))
 	{
 		// 이동 유지
-		m_pActionScript->Move(nullptr, vTargetPoint);
+		data.v4Data = vTargetPoint;
+		m_pActionScript->Move(data);
 	}
 	
 	if (KEY_TAP(KEY::Q))
@@ -117,7 +98,7 @@ void ER_PlayerScript::tick()
 	
 	if (KEY_TAP(KEY::X))
 	{
-		m_pActionScript->Rest();
+		m_pActionScript->Rest(data);
 	}
 	
 	if (KEY_TAP(KEY::TAB))
@@ -132,6 +113,14 @@ void ER_PlayerScript::tick()
 		CGameObject* pMainCam = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
 		pMainCam->GetScript<ER_CamControllerScript>()->CameraFixToggle();
 	}
+
+	if (KEY_PRESSED(KEY::SPACE))
+	{
+		CGameObject* pMainCam = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
+		pMainCam->GetScript<ER_CamControllerScript>()->FollowPlayerCamera();
+	}
+
+
 }
 
 Vec3 ER_PlayerScript::GetFocusPoint()

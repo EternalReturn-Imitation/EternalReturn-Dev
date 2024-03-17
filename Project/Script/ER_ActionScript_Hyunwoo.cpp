@@ -87,38 +87,38 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_R()
     return state;
 }
 
-void ER_ActionScript_Hyunwoo::Attack(CGameObject* _EnemyObj)
+void ER_ActionScript_Hyunwoo::Attack(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Wait()
+void ER_ActionScript_Hyunwoo::Wait(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Move(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Hyunwoo::Move(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Skill_Q(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Hyunwoo::Craft(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Skill_W(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Hyunwoo::Rest(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Skill_E(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Hyunwoo::Skill_Q(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Skill_R(CGameObject* _Target, Vec3 _DestPos)
+void ER_ActionScript_Hyunwoo::Skill_W(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Craft()
+void ER_ActionScript_Hyunwoo::Skill_E(tFSMData& _Data)
 {
 }
 
-void ER_ActionScript_Hyunwoo::Rest()
+void ER_ActionScript_Hyunwoo::Skill_R(tFSMData& _Data)
 {
 }
