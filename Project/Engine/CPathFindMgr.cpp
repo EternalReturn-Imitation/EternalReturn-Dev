@@ -188,9 +188,9 @@ vector<Vec3> CPathFindMgr::FindPath(const Vec3& startPos, const Vec3& _endPos)
 
 bool CPathFindMgr::IsValidPoint(const Vec3& _CheckPos)
 {
-	float destPos[3] = { _CheckPos.x, _CheckPos.y, -_CheckPos.z }; // 검사 지점
+	float checkpos[3] = { _CheckPos.x, _CheckPos.y, -_CheckPos.z }; // 검사 위치
 
-	dtPolyRef destRef;
+	dtPolyRef checkRef;
 	float polyPickExt[3] = { 6000,6000,6000 }; // 범위를 제한하기 위한 벡터
 
 	dtQueryFilter filter;
@@ -198,13 +198,13 @@ bool CPathFindMgr::IsValidPoint(const Vec3& _CheckPos)
 	filter.setExcludeFlags(0);      // 제외할 폴리곤 없음
 
 	// 가까운 폴리곤 검색
-	dtStatus status = m_NavQuery->findNearestPoly(destPos, polyPickExt, &filter, &destRef, 0);
+	dtStatus status = m_NavQuery->findNearestPoly(checkpos, polyPickExt, &filter, &checkRef, 0);
 
-	// 목적 위치를 찾습니다.
-	float nearestDestPos[3];
-	status = m_NavQuery->closestPointOnPoly(destRef, destPos, nearestDestPos, 0);
+	// 시작과 끝 위치를 찾습니다.
+	float nearestPos[3];
+	status = m_NavQuery->closestPointOnPoly(checkRef, checkpos, nearestPos, 0);
 
-	Vec3 FinalPos = { nearestDestPos[0],nearestDestPos[1],-nearestDestPos[2] };
+	Vec3 FinalPos = { nearestPos[0], nearestPos[1], -nearestPos[2] };
 	Vec3 OriginPos = _CheckPos;
 
 	float diffX = FinalPos.x - OriginPos.x;

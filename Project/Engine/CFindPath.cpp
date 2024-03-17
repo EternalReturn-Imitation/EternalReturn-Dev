@@ -203,6 +203,8 @@ Vec3 CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
 	float right = _max;
 	float maxClearDistance = 0;
 	
+	Vec3 vOwnerPos = GetOwner()->Transform()->GetRelativePos();
+
 	// while (left <= maxClearDistance)
 	// {
 	// 	Vec3 tmp(_dir.x * maxClearDistance, _dir.y * maxClearDistance, _dir.z * maxClearDistance);
@@ -224,8 +226,9 @@ Vec3 CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
 		float mid = (left + right) / 2.f;
 
 		Vec3 tmp(_dir.x * mid, _dir.y * mid, _dir.z * mid);
+		Vec3 CheckPos = vOwnerPos + tmp;
 
-		if (CPathFindMgr::GetInst()->IsValidPoint(tmp))
+		if (CPathFindMgr::GetInst()->IsValidPoint(CheckPos))
 		{
 			maxClearDistance = mid;
 			left = mid + 0.1f;

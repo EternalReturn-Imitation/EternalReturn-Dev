@@ -202,10 +202,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_DataScript_ItemBox";
 		break;
 
-	case SCRIPT_TYPE::ER_DATASCRIPT_LANDMESH:
-		return L"ER_DataScript_LandMesh";
-		break;
-
 	case SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE:
 		return L"ER_DataScript_LandMeshBase";
 		break;
