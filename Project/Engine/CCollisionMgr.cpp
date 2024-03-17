@@ -75,6 +75,10 @@ void CCollisionMgr::CollisionBtw2DObject(CGameObject* _LeftObject, CGameObject* 
 	if (!(_LeftObject->Collider2D() && _RightObject->Collider2D()))
 		return;
 
+	//厚劝己拳等版快 力寇
+	if (_LeftObject->IsEnable() == false || _LeftObject->IsEnable() == false)
+		return;
+
 	// 面倒眉 ID 积己
 	CollisionID id = {};
 	id.LeftID = _LeftObject->Collider2D()->GetID();

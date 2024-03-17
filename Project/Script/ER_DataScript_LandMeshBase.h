@@ -1,11 +1,13 @@
 #pragma once
 #include <Engine\CScript.h>
 
-class ER_DataScript_ItemBox :
+class CGameObject;
+
+class ER_DataScript_LandMeshBase :
     public CScript
 {
 private:
-
+    CGameObject* m_pRoof;
 
 public:
     void init();
@@ -22,8 +24,12 @@ public:
     virtual void EndRayOverlap() override;
 
 public:
-    ER_DataScript_ItemBox();
-    ~ER_DataScript_ItemBox();
+    void SetRoof(CGameObject* _roof) { m_pRoof = _roof; }
 
-    CLONE_DISABLE(ER_DataScript_ItemBox);
+public:
+    ER_DataScript_LandMeshBase();
+    ~ER_DataScript_LandMeshBase();
+
+    CLONE_DISABLE(ER_DataScript_LandMeshBase);
 };
+

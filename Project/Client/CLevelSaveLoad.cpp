@@ -8,6 +8,7 @@
 #include <Engine\CGameObject.h>
 #include <Engine\components.h>
 #include <Engine\CScript.h>
+#include <Engine\CCollider3D.h>
 
 #include <Script\CScriptMgr.h>
 

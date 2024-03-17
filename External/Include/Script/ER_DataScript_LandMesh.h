@@ -1,7 +1,6 @@
 #pragma once
-#include <Engine\CScript.h>
-
-class ER_DataScript_ItemBox :
+#include "E:\EldenRing-Dev\External\Include\Engine\CScript.h"
+class ER_DataScript_LandMesh :
     public CScript
 {
 private:
@@ -22,8 +21,9 @@ public:
     virtual void EndRayOverlap() override;
 
 public:
-    ER_DataScript_ItemBox();
-    ~ER_DataScript_ItemBox();
+    ER_DataScript_LandMesh();
+    ~ER_DataScript_LandMesh();
 
-    CLONE_DISABLE(ER_DataScript_ItemBox);
+    CLONE_DISABLE(ER_DataScript_LandMesh);
 };
+

@@ -203,6 +203,7 @@ PS_OUT PS_PointLightShader(VS_OUT _in)
 #define SpecularTargetTex g_tex_2
 #define EmissiveTargetTex g_tex_3
 #define ShadowTargetTex   g_tex_4
+#define DataTargetTex     g_tex_5
 // =====================================
 VS_OUT VS_MergeShader(VS_IN _in)
 {
@@ -227,16 +228,62 @@ float4 PS_MergeShader(VS_OUT _in) : SV_Target
     float4 vSpecular = SpecularTargetTex.Sample(g_sam_0, vScreenUV);
     float4 vEmissive = EmissiveTargetTex.Sample(g_sam_0, vScreenUV);
     float fShadowPow = ShadowTargetTex.Sample(g_sam_0, vScreenUV).r;
+    float4 vData = DataTargetTex.Sample(g_sam_0, vScreenUV);
     
     vOutColor.xyz = vColor.xyz * vDiffuse.xyz * (1.f - fShadowPow)
                     + (vSpecular.xyz * vColor.a) * (1.f - fShadowPow)
                     + vEmissive.xyz;
     
-    vOutColor.xyz = vColor.xyz * 1.f * (1.f - fShadowPow)
-                    + (1.f * vColor.a) * (1.f - fShadowPow)
-                    + vEmissive.xyz;
+    // 외곽선 감지를 위한 주변 픽셀 샘플링 오프셋
+    float2 offsets[8] =
+    {
+        { -1, -1 },
+        { 0, -1 },
+        { 1, -1 },
+        { -1, 0 },
+        { 1, 0 },
+        { -1, 1 },
+        { 0, 1 },
+        { 1, 1 }
+    };
+    
+    //엣지가 0일땐, 엣지 없음, 1일땐 일반상태(하얀색), 2일땐 마우스가져다 댔을때(빨간색)
+    int iEdgeState = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        float4 sampleData = DataTargetTex.Sample(g_sam_0, vScreenUV + offsets[i] * 0.002); // 0.001은 해상도에 따라 조정 필요
+        // 초록색 오브젝트와 비-초록색(검은색) 오브젝트 사이의 경계 감지
+        if (vData.g > 0.5 && sampleData.g <= 0.5)
+        {
+            iEdgeState = 1;
+            break;
+        }
+        if (vData.r > 0.5 && sampleData.r <= 0.5)
+        {
+            iEdgeState = 2;
+            break;
+        }
+    }
+
+    if (iEdgeState == 1)
+    {
+        // 외곽선을 강조하기 위해 색상을 변경 (예: 흰색)
+        vOutColor = float4(1.0, 1.0, 1.0, 1.0);
+    }
+    else if (iEdgeState == 2)
+    {        
+        vOutColor = float4(1.0, 0.0, 0.0, 1.0);
+    }
+    else
+    {
+        // 외곽선이 아닌 경우 원래 색상 계산 로직 유지
+        vOutColor.xyz = vColor.xyz * 1.f * (1.f - fShadowPow)
+                        + (1.f * vColor.a) * (1.f - fShadowPow)
+                        + vEmissive.xyz;
+    }    
     
     vOutColor.a = 1.f;
+    
     
     return vOutColor;
 }

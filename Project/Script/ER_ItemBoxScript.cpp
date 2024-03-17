@@ -1,24 +1,24 @@
 #include "pch.h"
-#include "ER_DataScript_ItemBox.h"
+#include "ER_ItemBoxScript.h"
 
 #include <Engine\CResMgr.h>
 #include <Engine\CTexture.h>
 #include <Engine\define.h>
 
-ER_DataScript_ItemBox::ER_DataScript_ItemBox()
-	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_ITEMBOX)
+ER_ItemBoxScript::ER_ItemBoxScript()
+	: CScript((UINT)SCRIPT_TYPE::ER_ITEMBOXSCRIPT)
 {
 }
 
-ER_DataScript_ItemBox::~ER_DataScript_ItemBox()
+ER_ItemBoxScript::~ER_ItemBoxScript()
 {
 }
 
-void ER_DataScript_ItemBox::init()
+void ER_ItemBoxScript::init()
 {
 }
 
-void ER_DataScript_ItemBox::begin()
+void ER_ItemBoxScript::begin()
 {
 	int a = 1;
 	if (GetOwner()->GetRenderComponent() != nullptr && GetOwner()->GetRenderComponent()->GetMaterial(0) != nullptr)
@@ -27,23 +27,23 @@ void ER_DataScript_ItemBox::begin()
 	}
 }
 
-void ER_DataScript_ItemBox::tick()
+void ER_ItemBoxScript::tick()
 {
 }
 
-void ER_DataScript_ItemBox::BeginOverlap(CCollider3D* _Other)
+void ER_ItemBoxScript::BeginOverlap(CCollider3D* _Other)
 {
 }
 
-void ER_DataScript_ItemBox::OnOverlap(CCollider3D* _Other)
+void ER_ItemBoxScript::OnOverlap(CCollider3D* _Other)
 {
 }
 
-void ER_DataScript_ItemBox::EndOverlap(CCollider3D* _Other)
+void ER_ItemBoxScript::EndOverlap(CCollider3D* _Other)
 {
 }
 
-void ER_DataScript_ItemBox::BeginRayOverlap()
+void ER_ItemBoxScript::BeginRayOverlap()
 {
 	int a = 2;
 	if (GetOwner()->GetRenderComponent() != nullptr && GetOwner()->GetRenderComponent()->GetMaterial(0) != nullptr)
@@ -52,11 +52,12 @@ void ER_DataScript_ItemBox::BeginRayOverlap()
 	}
 }
 
-void ER_DataScript_ItemBox::OnRayOverlap()
+void ER_ItemBoxScript::OnRayOverlap()
 {
+	
 }
 
-void ER_DataScript_ItemBox::EndRayOverlap()
+void ER_ItemBoxScript::EndRayOverlap()
 {
 	int a = 1;
 	if (GetOwner()->GetRenderComponent() != nullptr && GetOwner()->GetRenderComponent()->GetMaterial(0) != nullptr)

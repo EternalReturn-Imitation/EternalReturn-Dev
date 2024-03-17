@@ -73,6 +73,9 @@
     <Filter Include="Script\UI\Button">
       <UniqueIdentifier>{bb96cd13-f5de-4fcd-b6cf-7ca5033965a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\DataScript\LandMesh">
+      <UniqueIdentifier>{f1617758-7daa-4bac-a50c-2e5e988e6019}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -141,6 +144,9 @@
     <ClInclude Include="CUIScript_Button.h">
       <Filter>Script\UI\Button</Filter>
     </ClInclude>
+    <ClInclude Include="ER_DataScript_LandMeshBase.h">
+      <Filter>Script\ER\DataScript\LandMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -202,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="CUIScript_Button.cpp">
       <Filter>Script\UI\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_LandMeshBase.cpp">
+      <Filter>Script\ER\DataScript\LandMesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

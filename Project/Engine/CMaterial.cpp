@@ -115,7 +115,11 @@ void CMaterial::SetScalarParam(SCALAR_PARAM _Param, const void* _Src)
 	case MAT_2:
 	case MAT_3:
 		m_Const.arrMat[_Param - MAT_0] = *((Matrix*)_Src);
-		break;	
+		break;
+
+	case ITEX_5:
+		m_Const.arrTex[_Param - MAT_0] = *((int*)_Src);
+		break;
 	}
 }
 
