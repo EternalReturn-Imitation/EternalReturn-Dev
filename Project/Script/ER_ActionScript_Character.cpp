@@ -49,9 +49,9 @@ void ER_ActionScript_Character::Move(tFSMData& _Data)
 {
 	if (IsAbleChange(bAbleChange::COMMON))
 	{
-
 		if (m_iCurState != ER_CHAR_ACT::MOVE)
 			ChangeState(ER_CHAR_ACT::MOVE);
+		
 		else if (m_iCurState == ER_CHAR_ACT::MOVE)
 		{
 			// 플레이어블 캐릭터 특성으로 지속명령이기때문에 이곳에서 목적지 경로 설정 진행
