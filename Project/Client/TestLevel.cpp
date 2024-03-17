@@ -188,7 +188,7 @@ void CreateTestLevel()
 	}
 	else
 	{
-		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Rio");
+		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Aya");
 		CharObj->AddComponent(new CCollider3D);
 		CharObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		CharObj->Collider3D()->SetOffsetScale(Vec3(2.0f, 2.0f, 2.0f));

@@ -28,6 +28,20 @@ public:
     virtual void Skill_E(tFSMData& _Data);        // E Skill
     virtual void Skill_R(tFSMData& _Data);        // R Skill
 
+private:
+    virtual void begin() override;
+
+    void MoveEnter(tFSMData& param);
+    void MoveUpdate(tFSMData& param);
+
+    void WaitEnter(tFSMData& param);
+
+    void ArriveEnter(tFSMData& param);
+    void ArriveUpdate(tFSMData& param);
+
+    void RestEnter(tFSMData& param);
+    void RestUpdate(tFSMData& param);
+
 public:
     ER_ActionScript_Aya();
     ~ER_ActionScript_Aya();
