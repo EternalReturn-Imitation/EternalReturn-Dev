@@ -52,6 +52,11 @@ bool CFindPath::FindPath(Vec3 endPos)
 	// 현재 위치를 받아온다
 	Vec3 CurPos = GetOwner()->Transform()->GetRelativePos();
 
+	float dist = Vec3::Distance(CurPos, endPos);
+	if (dist < 1.f)
+		false;
+
+
 	// 현재 위치에서 목표 위치로의 경로를 검색한다
 	m_vecPath = CPathFindMgr::GetInst()->FindPath(CurPos, endPos);
 	m_iPathCount = (UINT)m_vecPath.size();
@@ -131,7 +136,7 @@ bool CFindPath::PathMove(float _fSpeed)
 		CheckErrorRange -= RADIAN360;
 
 	if (DIR_ERROR_RANGE < CheckErrorRange)
-		DestDir = isLeft(Dir, vFront) ? curDir.y + DIR_ADD_RADIAN : curDir.y - DIR_ADD_RADIAN;
+		DestDir = IsLeft(Dir, vFront) ? curDir.y + DIR_ADD_RADIAN : curDir.y - DIR_ADD_RADIAN;
 	else
 		DestDir = m_fDestDir;
 
@@ -181,7 +186,7 @@ float CFindPath::GetFrontDir(Vec3 _Direction)
 	return yRad;
 }
 
-bool CFindPath::isLeft(const Vec3& _objDir, const Vec3& _DestDir)
+bool CFindPath::IsLeft(const Vec3& _objDir, const Vec3& _DestDir)
 {
 	Vec3 yAxis = { 0.0f, 1.0f, 0.0f };		// y축 벡터
 	Vec3 corss = _objDir.Cross(_DestDir);	// 두 벡터의 외적 계산
@@ -191,3 +196,53 @@ bool CFindPath::isLeft(const Vec3& _objDir, const Vec3& _DestDir)
 
 	return dot > 0.0f;	// 양수면 왼쪽, 음수면 오른쪽
 }
+
+Vec3 CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
+{
+	float left = _min;
+	float right = _max;
+	float maxClearDistance = 0;
+	
+	// while (left <= maxClearDistance)
+	// {
+	// 	Vec3 tmp(_dir.x * maxClearDistance, _dir.y * maxClearDistance, _dir.z * maxClearDistance);
+	// 
+	// 	if (CPathFindMgr::GetInst()->IsValidPoint(tmp))
+	// 	{
+	// 		break;
+	// 	}
+	// 	else
+	// 	{
+	// 		maxClearDistance -= 0.5;
+	// 	}
+	// }
+
+	// binary
+	
+	while (left <= right)
+	{
+		float mid = (left + right) / 2.f;
+
+		Vec3 tmp(_dir.x * mid, _dir.y * mid, _dir.z * mid);
+
+		if (CPathFindMgr::GetInst()->IsValidPoint(tmp))
+		{
+			maxClearDistance = mid;
+			left = mid + 0.1f;
+		}
+		else
+		{
+			right = mid - 0.1f;
+		}
+	}
+
+	Vec3 res(_dir.x * maxClearDistance, _dir.y * maxClearDistance, _dir.z * maxClearDistance);
+
+	return res;
+}
+
+
+
+
+
+

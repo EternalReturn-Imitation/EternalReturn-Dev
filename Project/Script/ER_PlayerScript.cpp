@@ -3,7 +3,9 @@
 
 #include <Engine\CPathFindMgr.h>
 #include <Engine\CRenderMgr.h>
-#include <Engine/CCollisionMgr.h>
+#include <Engine\CCollisionMgr.h>
+
+#include <Engine\CFindPath.h>
 
 #include "ER_CamControllerScript.h"
 #include "ER_ActionScript_Character.h"
@@ -43,6 +45,28 @@ void ER_PlayerScript::tick()
 	CGameObject* pFocusObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vTargetPoint = GetFocusPoint();	// 타겟 지점
 	Vec3 vFocusDir = GetFocusDir(vTargetPoint);	// 타겟 방향
+
+	if (KEY_TAP(KEY::LBTN))
+	{
+		Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+
+		Vec3 testtp = vTargetPoint;
+		Vec3 testvp = vPos;
+
+		testtp.y = 0.f;
+		testvp.y = 0.f;
+
+		float dist = Vec3::Distance(testtp, testvp);
+
+		Vec3 TargetPos = GetOwner()->FindPath()->findMaxClearDistance(vFocusDir, 0, dist);
+		
+		if (TargetPos != Vec3(0.f, 0.f, 0.f))
+		{
+			vPos.x += TargetPos.x;
+			vPos.z += TargetPos.z;
+			GetOwner()->Transform()->SetRelativePos(vPos);
+		}
+	}
 
 	if (KEY_TAP(KEY::RBTN))
 	{
@@ -139,16 +163,8 @@ CGameObject* ER_PlayerScript::GetFocusObj()
 
 Vec3 ER_PlayerScript::GetFocusDir(Vec3 _Point)
 {
-	// Cal Front Dir
-	float yRad = atan2(-DirectX::XMVectorGetX(_Point),
-		sqrt(DirectX::XMVectorGetY(_Point) *
-			DirectX::XMVectorGetY(_Point) +
-			DirectX::XMVectorGetZ(_Point) *
-			DirectX::XMVectorGetZ(_Point)));
-
-	// 위를 향하는 경우 radian 구해주기
-	if (_Point.z > 0.0f)
-		yRad = (DirectX::XM_PI - yRad);
-
-	return Vec3(0.f, yRad, 0.f);
+	Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+	Vec3 Dir = (_Point - vPos).Normalize();
+	
+	return Dir;
 }
