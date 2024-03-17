@@ -3,8 +3,8 @@
 
 #include <Engine\CPathMgr.h>
 
-#include <Script\ER_DataScript_Character.h>
-#include <Script\CScriptMgr.h>
+#include "ER_DataScript_Character.h"
+#include "CScriptMgr.h"
 
 int ER_CharacterMgr::Save()
 {

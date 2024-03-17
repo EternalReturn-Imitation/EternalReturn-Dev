@@ -6,3 +6,6 @@ CSceneSaveLoad.h
 ER_define.h
 ER_struct.h
 ER_ActionScript_Character.h
+ER_GameSystem.h
+ER_ItemMgr.h
+ER_CharacterMgr.h

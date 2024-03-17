@@ -23,7 +23,7 @@
 
 #include <Engine\CSetColorShader.h>
 
-#include "ER_CharacterMgr.h"
+#include <Script\ER_CharacterMgr.h>
 
 #include "CEditorObjMgr.h"
 
@@ -359,6 +359,8 @@ void LoadingBackGround() {
 	SpawnGameObject(LandMesh, Vec3(-87.150f, -1.280f, 76.150f), L"Roof");
 
 	roof = LandMesh;
+
+	// TO_DO : 복합 콜라이더의 오버랩 카운트를 동기화시켜서 한번에 관리할 수 있도록 프로세스 구성
 
 	LandMesh = new CGameObject;
 	LandMesh->SetName(L"School_Base_Collider3D01");

@@ -180,6 +180,15 @@ struct tFSMData
 	Vec4		v4Data;
 	DWORD_PTR	lParam;
 	DWORD_PTR	RParam;
+
+	tFSMData() : v2Data{}
+		, fData(0.f)
+		, iData(0)
+		, v4Data{}
+		, lParam(0)
+		, RParam(0)
+	{}
+
 };
 
 

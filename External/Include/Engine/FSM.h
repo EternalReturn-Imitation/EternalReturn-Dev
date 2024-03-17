@@ -8,6 +8,8 @@ typedef void (CScript::* SCRIPT_DELEGATE)(tFSMData&);
 class FSMState
 {
 private:
+	wstring m_strName;
+
 	tFSMData Data;
 
 	CScript* script;
@@ -39,6 +41,8 @@ public:
 
 	void SetData(const tFSMData& _data) { Data = _data; }
 	const tFSMData& GetData() { return Data; }
+
+	void SetName(const wstring& _str) { m_strName = _str; }
 
 	FSMState(CScript* _script) : script(_script)
 		, Data{}
