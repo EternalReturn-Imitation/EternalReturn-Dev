@@ -23,7 +23,7 @@
 
 #include <Engine\CSetColorShader.h>
 
-#include "ER_CharacterMgr.h"
+#include <Script\ER_CharacterMgr.h>
 
 #include "CEditorObjMgr.h"
 

@@ -48,5 +48,6 @@ private:
 
 public:
     void InitInspector();
+    void InitGameSystem();
 };
 

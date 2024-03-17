@@ -16,12 +16,6 @@ ER_PlayerScript::ER_PlayerScript()
 {
 }
 
-ER_PlayerScript::ER_PlayerScript(const ER_PlayerScript& _origin)
-	: m_pActionScript(nullptr)
-	, CScript((UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT)
-{
-}
-
 ER_PlayerScript::~ER_PlayerScript()
 {
 }

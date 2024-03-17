@@ -76,6 +76,15 @@
     <Filter Include="Script\ER\DataScript\LandMesh">
       <UniqueIdentifier>{f1617758-7daa-4bac-a50c-2e5e988e6019}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameSystem">
+      <UniqueIdentifier>{148f1ec1-74ec-49d7-abe3-e185dc4794a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Item">
+      <UniqueIdentifier>{a9474beb-0254-47f3-bb38-916c060681d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Character">
+      <UniqueIdentifier>{4fbeb1f6-b219-4820-8f25-26282d0ee874}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -147,6 +156,15 @@
     <ClInclude Include="ER_DataScript_LandMeshBase.h">
       <Filter>Script\ER\DataScript\LandMesh</Filter>
     </ClInclude>
+    <ClInclude Include="ER_GameSystem.h">
+      <Filter>GameSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_CharacterMgr.h">
+      <Filter>GameSystem\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ItemMgr.h">
+      <Filter>GameSystem\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -211,6 +229,21 @@
     </ClCompile>
     <ClCompile Include="ER_DataScript_LandMeshBase.cpp">
       <Filter>Script\ER\DataScript\LandMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_GameSystem.cpp">
+      <Filter>GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_CharacterMgr_Init.cpp">
+      <Filter>GameSystem\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_CharacterMgr.cpp">
+      <Filter>GameSystem\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ItemMgr_Init.cpp">
+      <Filter>GameSystem\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ItemMgr.cpp">
+      <Filter>GameSystem\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

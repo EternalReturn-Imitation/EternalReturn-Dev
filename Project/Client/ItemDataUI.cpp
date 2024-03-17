@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ItemDataUI.h"
-#include "ER_ItemMgr.h"
+
+#include <Script\ER_ItemMgr.h>
 
 #include "ListUI.h"
 

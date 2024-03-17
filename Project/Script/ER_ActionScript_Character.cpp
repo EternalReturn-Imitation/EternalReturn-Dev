@@ -74,6 +74,30 @@ void ER_ActionScript_Character::StateInit()
 	StateList[ER_CHAR_ACT::SKILL_W] = CreateSkill_W();
 	StateList[ER_CHAR_ACT::SKILL_E] = CreateSkill_E();
 	StateList[ER_CHAR_ACT::SKILL_R] = CreateSkill_R();
+
+
+	if (StateList[ER_CHAR_ACT::WAIT])
+		StateList[ER_CHAR_ACT::WAIT]->SetName(L"WAIT");
+	if (StateList[ER_CHAR_ACT::MOVE])
+		StateList[ER_CHAR_ACT::MOVE]->SetName(L"MOVE");
+	if (StateList[ER_CHAR_ACT::CRAFT])
+		StateList[ER_CHAR_ACT::CRAFT]->SetName(L"CRAFT");
+	if (StateList[ER_CHAR_ACT::REST])
+		StateList[ER_CHAR_ACT::REST]->SetName(L"REST");
+	if (StateList[ER_CHAR_ACT::ATTACK])
+		StateList[ER_CHAR_ACT::ATTACK]->SetName(L"ATTACK");
+	if (StateList[ER_CHAR_ACT::ARRIVE])
+		StateList[ER_CHAR_ACT::ARRIVE]->SetName(L"ARRIVE");
+	if (StateList[ER_CHAR_ACT::DEATH])
+		StateList[ER_CHAR_ACT::DEATH]->SetName(L"DEATH");
+	if (StateList[ER_CHAR_ACT::SKILL_Q])
+		StateList[ER_CHAR_ACT::SKILL_Q]->SetName(L"SKILL_Q");
+	if (StateList[ER_CHAR_ACT::SKILL_W])
+		StateList[ER_CHAR_ACT::SKILL_W]->SetName(L"SKILL_W");
+	if (StateList[ER_CHAR_ACT::SKILL_E])
+		StateList[ER_CHAR_ACT::SKILL_E]->SetName(L"SKILL_E");
+	if (StateList[ER_CHAR_ACT::SKILL_R])
+		StateList[ER_CHAR_ACT::SKILL_R]->SetName(L"SKILL_R");
 }
 
 void ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade)
