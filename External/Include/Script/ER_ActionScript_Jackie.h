@@ -18,6 +18,8 @@ protected:
     virtual FSMState* CreateSkill_R();
 
 public:
+    virtual void tick() override;
+
     virtual void Attack(tFSMData& _Data);         // 기본공격
     virtual void Wait(tFSMData& _Data);           // 대기
     virtual void Move(tFSMData& _Data);           // 이동
@@ -27,6 +29,32 @@ public:
     virtual void Skill_W(tFSMData& _Data);        // W Skill
     virtual void Skill_E(tFSMData& _Data);        // E Skill
     virtual void Skill_R(tFSMData& _Data);        // R Skill
+
+    void MoveEnter(tFSMData& param);
+    void MoveUpdate(tFSMData& param);
+
+    void WaitEnter(tFSMData& param);
+
+    void ArriveEnter(tFSMData& param);
+    void ArriveUpdate(tFSMData& param);
+
+    void RestEnter(tFSMData& param);
+    void RestUpdate(tFSMData& param);
+
+    void Skill_QEnter(tFSMData& param);
+    void Skill_QUpdate(tFSMData& param);
+    void Skill_QExit(tFSMData& param);
+
+    void Skill_WEnter(tFSMData& param);
+    void Skill_WUpdate(tFSMData& param);
+
+    void Skill_EEnter(tFSMData& param);
+    void Skill_EUpdate(tFSMData& param);
+    void Skill_EExit(tFSMData& param);
+
+    void Skill_REnter(tFSMData& param);
+    void Skill_RUpdate(tFSMData& param);
+    void Skill_RExit(tFSMData& param);
 
 public:
     ER_ActionScript_Jackie();

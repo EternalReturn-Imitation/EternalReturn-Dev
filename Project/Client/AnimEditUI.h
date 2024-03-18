@@ -24,6 +24,7 @@ private:
 private:
     void print_strElement(const char* _BtnTitle, const char* _str, Vec2 _Btnsize = Vec2(0, 0));
     void print_intElement(const char* _BtnTitle, int& _int, Vec2 _Btnsize = Vec2(0, 0));
+    void print_floatElement(const char* _BtnTitle, float& _float, Vec2 _Btnsize = Vec2(0, 0));
     void print_doubleElement(const char* _BtnTitle, double& _double, Vec2 _Btnsize = Vec2(0, 0));
 
 public:

@@ -59,6 +59,8 @@ protected:
     Vec3 GetClearPoint(const Vec3& vDir, float dist);
     float GetClearDistance(const Vec3& vDir, float dist);
     Vec3 SetRotationToTarget(const Vec3& vTarget);
+    Vec3 GetFocusPoint();
+
 
 public:
     virtual void begin() override;
@@ -77,7 +79,7 @@ public:
 
     void StateInit();
 
-    void ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade = bAbleChange::COMMON);
+    bool ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade = bAbleChange::COMMON);
     
     void SetAbleToCancle(bAbleChange _Grade) { m_bAbleChange = _Grade; }
     bool IsAbleChange(bAbleChange _Grade);

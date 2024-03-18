@@ -18,7 +18,6 @@ FSMState* ER_ActionScript_Rio::CreateWait()
 {
     FSMState* state = new FSMState(this);
 
-    // state->SetStateEnter((SCRIPT_DELEGATE)&ER_ActionScript_Rio::WaitEnter);
     STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Wait);
 
     return state;
@@ -113,12 +112,6 @@ FSMState* ER_ActionScript_Rio::CreateSkill_R()
     STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Skill_R);
 
     return state;
-}
-
-void ER_ActionScript_Rio::begin()
-{
-    ER_ActionScript_Character::begin();
-    ChangeState(ER_CHAR_ACT::ARRIVE);
 }
 
 void ER_ActionScript_Rio::Attack(tFSMData& _Data)
@@ -281,14 +274,19 @@ void ER_ActionScript_Rio::Skill_QEnter(tFSMData& param)
 
 void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
 {
-    if (GetOwner()->Animator3D()->IsFinish())
+    if (ER_CHAR_ACT::MOVE == m_iPrevState)
+    {
+        if (7 <= GetOwner()->Animator3D()->GetCurFrame())
+        {
+            SetAbleToCancle(bAbleChange::COMMON);
+            ChangeState(ER_CHAR_ACT::MOVE);
+        }
+    }
+    else if (GetOwner()->Animator3D()->IsFinish())
     {
         SetAbleToCancle(bAbleChange::COMMON);
 
-        if (ER_CHAR_ACT::MOVE == m_iPrevState)
-            ChangeState(ER_CHAR_ACT::MOVE);
-        else
-            ChangeState(ER_CHAR_ACT::WAIT);
+        ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
 
@@ -337,7 +335,7 @@ void ER_ActionScript_Rio::Skill_EEnter(tFSMData& param)
     param.v4Data[0] = 10.f;                                              // 스킬 거리
     float ClearDist = GetClearDistance(vDir, param.v4Data[0]);
     param.v4Data[1] = ClearDist;                                        // 이동 가능 거리
-    param.v4Data[2] = Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
+    param.v4Data[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
     param.v4Data[3] = 0.f;                                              // 이동한 거리 초기화.
 
     SetAbleToCancle(bAbleChange::ABSOUTE);
@@ -346,32 +344,56 @@ void ER_ActionScript_Rio::Skill_EEnter(tFSMData& param)
 void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
 {
     CTransform* transform = GetOwner()->Transform();
+    CAnimator3D* animator = GetOwner()->Animator3D();
 
-    // 이동한거리가 이동가능거리를 넘지 않았는지 판단.
-    if (param.v4Data[3] < param.v4Data[1] * 0.7)
+    // param.v4Data[0] : 스킬 거리(속도)
+    // param.v4Data[1] : 이동 가능 거리
+    // param.v4Data[2] : 전체 애니메이션 재생 시간
+    // param.v4Data[3] : 이동한 거리
+
+    if (animator->GetCurFrame() < 3)
     {
-        // param.v4Data[0] : 스킬 거리(속도)
-        // param.v4Data[1] : 이동 가능 거리
-        // param.v4Data[2] : 전체 애니메이션 재생 시간
-        // param.v4Data[3] : 이동한 거리
+        if (param.v4Data[3] < param.v4Data[1] * 0.1f)
+        {
+            Vec3 vPos = transform->GetRelativePos();
+            Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
 
-        Vec3 vPos = transform->GetRelativePos();
-        Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
-        
-        float speed = param.v4Data[0];
-        
-        if (param.v4Data[3] > (param.v4Data[1] / 5.f))
-            speed = param.v4Data[0] * 1.5;
-        
-        float CurFrameMoveDist = speed * param.v4Data[2] * DT;
-        
-        param.v4Data[3] += CurFrameMoveDist;
+            float speed = param.v4Data[0] * 0.5f;
 
-        vPos += vDir * CurFrameMoveDist;
-        
-        // 캐릭터 이동
-        transform->SetRelativePos(vPos);
+            float CurFrameMoveDist = speed * param.v4Data[2] * DT;
+
+            param.v4Data[3] += CurFrameMoveDist;
+
+            vPos += vDir * CurFrameMoveDist;
+
+            // 캐릭터 이동
+            transform->SetRelativePos(vPos);
+        }
+        return;
     }
+    // 3 점프
+    else if (animator->GetCurFrame() < 16)
+    {
+        // 이동한거리가 이동가능거리를 넘지 않았는지 판단.
+        if (param.v4Data[3] < param.v4Data[1])
+        {
+            Vec3 vPos = transform->GetRelativePos();
+            Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
+
+            float speed = param.v4Data[0] * 1.5f;
+
+            float CurFrameMoveDist = speed * param.v4Data[2] * DT;
+
+            param.v4Data[3] += CurFrameMoveDist;
+
+            vPos += vDir * CurFrameMoveDist;
+
+            // 캐릭터 이동
+            transform->SetRelativePos(vPos);
+        }
+        return;
+    }
+    // 17 착지
 
     if (GetOwner()->Animator3D()->IsFinish())
     {

@@ -188,10 +188,11 @@ void CreateTestLevel()
 	}
 	else
 	{
-		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Rio");
+		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Jackie");
 		CharObj->AddComponent(new CCollider3D);
 		CharObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		CharObj->Collider3D()->SetOffsetScale(Vec3(2.0f, 2.0f, 2.0f));
+		CharObj->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
 		//SpawnGameObject(CharObj, Vec3(7.f, 0.f, 3.f), L"Monster");
 		SpawnGameObject(CharObj, Vec3(-69.32188f, 0.0f, 37.60328f), L"Player");
 	}

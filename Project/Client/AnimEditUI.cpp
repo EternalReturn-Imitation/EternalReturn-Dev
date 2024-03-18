@@ -336,9 +336,9 @@ void AnimEditUI::render_infowindow()
     int  Modify_EndFrm = 0;
     int  Modify_FrameLength = 0;
 
-    double  Modify_StartTime = 0;
-    double  Modify_EndTime = 0;
-    double  Modify_TimeLength = 0;
+    float  Modify_StartTime = 0;
+    float  Modify_EndTime = 0;
+    float  Modify_TimeLength = 0;
 
     if (pCurAnimation)
     {
@@ -420,7 +420,7 @@ void AnimEditUI::render_infowindow()
         if (ImGui::InputInt("##Modify_EndFrm", &Modify_EndFrm))
         {
             Modify_EndFrm = Modify_FrameLength < Modify_EndFrm ? Modify_FrameLength : Modify_EndFrm;
-            Modify_EndTime = Modify_EndFrm * Modify_TimeLength / Modify_FrameLength;
+            Modify_EndTime = Modify_EndFrm * (Origin_TimeLength / Origin_FrameLength);
         }
 
         print_intElement(" FrameLength ", Modify_FrameLength);
@@ -435,7 +435,7 @@ void AnimEditUI::render_infowindow()
         //     Modify_startFrm = Modify_StartTime * Modify_FrameLength / Modify_TimeLength;
         // }
 
-        print_doubleElement("  End   Time ", Modify_EndTime);
+        print_floatElement("  End   Time ", Modify_EndTime);
 
         // ImGui::Button("  End   Time ");
         // ImGui::SameLine();
@@ -446,7 +446,7 @@ void AnimEditUI::render_infowindow()
         //     Modify_EndFrm = Modify_EndTime * Modify_FrameLength / Modify_TimeLength;
         // }
 
-        print_doubleElement(" Time Length ", Modify_TimeLength);
+        print_floatElement(" Time Length ", Modify_TimeLength);
     }
 
     if (ImGui::Button("Save Clip.."))
@@ -751,6 +751,13 @@ void AnimEditUI::print_intElement(const char* _BtnTitle, int& _int, Vec2 _Btnsiz
     ImGui::Button(_BtnTitle);
     ImGui::SameLine();
     ImGui::Text("%d", _int);
+}
+
+void AnimEditUI::print_floatElement(const char* _BtnTitle, float& _float, Vec2 _Btnsize)
+{
+    ImGui::Button(_BtnTitle);
+    ImGui::SameLine();
+    ImGui::Text("%.2f", _float);
 }
 
 void AnimEditUI::print_doubleElement(const char* _BtnTitle, double& _double, Vec2 _Btnsize)
