@@ -119,20 +119,20 @@ void CAnimator3D::finaltick()
 			{
 				pCurAnim->m_tMTAnimClip.fUpdateTime += DT;
 
-				// 마지막 프레임에 도달했을 때
-				if (pCurAnim->m_tMTAnimClip.fUpdateTime >= pCurAnim->m_tMTAnimClip.dEndTime)
-				{
-					if (m_bRepeat)
-					{
-						// 반복 설정이다
-						pCurAnim->m_tMTAnimClip.fUpdateTime = 0.f;
-					}
-					else
-					{
-						pCurAnim->m_tMTAnimClip.fUpdateTime = (float)pCurAnim->m_tMTAnimClip.dEndTime;
-						m_bFinish = true;
-					}
-				}
+				// // EndTime에 도달했을 때
+				// if (pCurAnim->m_tMTAnimClip.fUpdateTime >= pCurAnim->m_tMTAnimClip.dEndTime)
+				// {
+				// 	if (m_bRepeat)
+				// 	{
+				// 		// 반복 설정이다
+				// 		pCurAnim->m_tMTAnimClip.fUpdateTime = 0.f;
+				// 	}
+				// 	else
+				// 	{
+				// 		pCurAnim->m_tMTAnimClip.fUpdateTime = (float)pCurAnim->m_tMTAnimClip.dEndTime;
+				// 		m_bFinish = true;
+				// 	}
+				// }
 			}
 
 			m_dCurTime = pCurAnim->m_tMTAnimClip.dStartTime + pCurAnim->m_tMTAnimClip.fUpdateTime;
@@ -141,14 +141,30 @@ void CAnimator3D::finaltick()
 			double dFrameIdx = m_dCurTime * (double)m_iFrameCount;
 			m_iFrameIdx = (int)(dFrameIdx);
 
-			// 다음 프레임 인덱스
-			if (m_iFrameIdx >= pCurAnim->m_tMTAnimClip.iEndFrame - 1)
-				m_iNextFrameIdx = m_iFrameIdx;	// 끝이면 현재 인덱스를 유지
-			else
-				m_iNextFrameIdx = m_iFrameIdx + 1;
-
 			// 프레임간의 시간에 따른 비율을 구해준다.
 			m_fRatio = (float)(dFrameIdx - (double)m_iFrameIdx);
+
+			// 다음 프레임 인덱스
+			if (m_iFrameIdx >= pCurAnim->m_tMTAnimClip.iEndFrame - 1)
+			{
+				// 마지막 프레임 도달했을 때
+				
+				if (m_bRepeat)
+				{
+					// 반복 설정이다
+					pCurAnim->m_tMTAnimClip.fUpdateTime = 0.f;
+				}
+				else
+				{
+					pCurAnim->m_tMTAnimClip.fUpdateTime = (float)pCurAnim->m_tMTAnimClip.dEndTime;
+					m_bFinish = true;
+				}
+
+				m_iNextFrameIdx = m_iFrameIdx;	// 끝이면 현재 인덱스를 유지
+				m_fRatio = 0.f;
+			}
+			else
+				m_iNextFrameIdx = m_iFrameIdx + 1;
 
 			// 컴퓨트 쉐이더 연산여부
 			m_bFinalMatUpdate = false;

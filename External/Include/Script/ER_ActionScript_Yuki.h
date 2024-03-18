@@ -28,6 +28,31 @@ public:
     virtual void Skill_E(tFSMData& _Data);        // E Skill
     virtual void Skill_R(tFSMData& _Data);        // R Skill
 
+    void MoveEnter(tFSMData& param);
+    void MoveUpdate(tFSMData& param);
+
+    void WaitEnter(tFSMData& param);
+
+    void ArriveEnter(tFSMData& param);
+    void ArriveUpdate(tFSMData& param);
+
+    void RestEnter(tFSMData& param);
+    void RestUpdate(tFSMData& param);
+
+    void Skill_QEnter(tFSMData& param);
+    void Skill_QUpdate(tFSMData& param);
+
+    void Skill_WEnter(tFSMData& param);
+    void Skill_WUpdate(tFSMData& param);
+
+    void Skill_EEnter(tFSMData& param);
+    void Skill_EUpdate(tFSMData& param);
+    void Skill_EExit(tFSMData& param);
+
+    void Skill_REnter(tFSMData& param);
+    void Skill_RUpdate(tFSMData& param);
+    void Skill_RExit(tFSMData& param);
+
 public:
     ER_ActionScript_Yuki();
     ~ER_ActionScript_Yuki();

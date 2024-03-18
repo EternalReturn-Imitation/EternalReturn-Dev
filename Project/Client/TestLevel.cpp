@@ -186,13 +186,13 @@ void CreateTestLevel()
 
 	SpawnGameObject(CubeObj, Vec3(-74.98286f, 2.f, 35.10072f), L"Monster");
 
-	CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Aya");
+	CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Jackie");
 	CharObj->AddComponent(new CCollider3D);
 	CharObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 	CharObj->Collider3D()->SetOffsetScale(Vec3(2.0f, 2.0f, 2.0f));
+	CharObj->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
 	//SpawnGameObject(CharObj, Vec3(7.f, 0.f, 3.f), L"Monster");
 	SpawnGameObject(CharObj, Vec3(-69.32188f, 0.0f, 37.60328f), L"Player");
-
 
 	CGameObject* MapCollider = new CGameObject;
 	MapCollider->SetName(L"MapCollider");
