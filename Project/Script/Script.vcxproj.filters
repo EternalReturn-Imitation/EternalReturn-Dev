@@ -245,5 +245,8 @@
     <ClCompile Include="ER_ItemMgr.cpp">
       <Filter>GameSystem\Item</Filter>
     </ClCompile>
+    <ClCompile Include="ER_ActionScript_Character_func.cpp">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

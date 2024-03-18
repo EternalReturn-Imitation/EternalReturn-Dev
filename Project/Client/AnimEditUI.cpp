@@ -254,6 +254,8 @@ void AnimEditUI::render_cliplistwindow()
                 // 정상적으로 애니메이션이 추가된 경우 추가한 애니메이션으로 변경해준다.
                 m_pCurAnimator->SelectAnimation(iter->first, true);
                 m_tTempAnimclip = m_pCurAnimator->GetCurAnim()->GetAnimClip();
+
+                m_bPlay = true;
             }
         }
 
@@ -433,7 +435,7 @@ void AnimEditUI::render_infowindow()
         //     Modify_startFrm = Modify_StartTime * Modify_FrameLength / Modify_TimeLength;
         // }
 
-        print_doubleElement("  End   Time ", Origin_EndTime);
+        print_doubleElement("  End   Time ", Modify_EndTime);
 
         // ImGui::Button("  End   Time ");
         // ImGui::SameLine();
@@ -482,6 +484,9 @@ void AnimEditUI::render_TimeLine()
 {
     int MaxFrame = 0; 
     int iCurFrame = 0; 
+
+    float TimeLength = 0.f;
+    float fCurTime = 0.f;
     
     CAnim3D* pCurAnim = nullptr;
     if(m_pCurAnimator)
@@ -491,12 +496,14 @@ void AnimEditUI::render_TimeLine()
     {
         MaxFrame = pCurAnim->GetAnimClip().iEndFrame;
         iCurFrame = m_pCurAnimator->GetCurFrame();
+        TimeLength = (float)pCurAnim->GetAnimClip().dEndTime;
+        fCurTime = (float)pCurAnim->GetAnimClip().fUpdateTime;
     }
 
     ImGui::SetNextItemWidth(ImGui::GetWindowWidth());
     ImGui::SliderInt("Lines", &iCurFrame, 0, MaxFrame);
-    ImGui::Text("%.0f/%.0f", iCurFrame, MaxFrame);
     
+    ImGui::Text("CurFrame : %d / %d, CurTime : %.2f, %.2f", iCurFrame, MaxFrame, fCurTime, TimeLength);
 
     if (pCurAnim && false == m_pCurAnimator->IsPlay())
     {

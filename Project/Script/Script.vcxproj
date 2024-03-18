@@ -211,6 +211,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CUIScript_Button.cpp" />
     <ClCompile Include="ER_ActionScript_Aya.cpp" />
     <ClCompile Include="ER_ActionScript_Character.cpp" />
+    <ClCompile Include="ER_ActionScript_Character_func.cpp" />
     <ClCompile Include="ER_ActionScript_Hyunwoo.cpp" />
     <ClCompile Include="ER_ActionScript_Jackie.cpp" />
     <ClCompile Include="ER_ActionScript_Rio.cpp" />

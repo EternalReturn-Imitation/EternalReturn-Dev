@@ -36,6 +36,7 @@ public:
 protected:
     FSM* FSMContext;
     FSMState* StateList[ER_CHAR_ACT::END];  // State List
+    UINT m_iPrevState;                      // Prev State
     UINT m_iCurState;                       // Cur State
     ER_DataScript_Character* m_Data;        // Cur Character Data
 
@@ -53,6 +54,11 @@ protected:
     virtual FSMState* CreateSkill_W() = 0;
     virtual FSMState* CreateSkill_E() = 0;
     virtual FSMState* CreateSkill_R() = 0;
+
+protected:
+    Vec3 GetClearPoint(const Vec3& vDir, float dist);
+    float GetClearDistance(const Vec3& vDir, float dist);
+    Vec3 SetRotationToTarget(const Vec3& vTarget);
 
 public:
     virtual void begin() override;
