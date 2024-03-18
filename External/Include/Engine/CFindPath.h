@@ -33,7 +33,7 @@ public:
 public:
     bool FindPath(Vec3 endPos);
     bool FindNextPath();
-    bool PathMove(float _fSpeed);
+    bool PathMove(float _fSpeed, bool _isRotation = true);
 
     Vec3 findMaxClearPoint(const Vec3& _dir, float _min, float _max);
     float findMaxClearDistance(const Vec3& _dir, float _min, float _max);

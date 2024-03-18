@@ -48,6 +48,12 @@ private:
     void Skill_QEnter(tFSMData& param);
     void Skill_QUpdate(tFSMData& param);
 
+    void Skill_WEnter(tFSMData& param);
+    void Skill_WUpdate(tFSMData& param);
+
+    void Skill_EEnter(tFSMData& param);
+    void Skill_EUpdate(tFSMData& param);
+
     void Skill_RUpdate(tFSMData& param);
 
 public:

@@ -112,7 +112,7 @@ bool CFindPath::FindNextPath()
 	}
 }
 
-bool CFindPath::PathMove(float _fSpeed)
+bool CFindPath::PathMove(float _fSpeed, bool _isRotation)
 {
 	// 다음 이동 위치 가져오기
 	Vec3 NextPos = m_vNextPos;
@@ -125,24 +125,27 @@ bool CFindPath::PathMove(float _fSpeed)
 	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();				// 현재 위치
 	Vec3 vFront = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT); // Front 방향 벡터
 	Vec3 curDir = GetOwner()->Transform()->GetRelativeRot();				// 현재 방향
-	Vec3 Dir = (NextPos - curPos).Normalize();								// 다음 방향 벡터
-	// 방향 변경
-	float DestDir = GetFrontDir(Dir);
+	Vec3 Dir = (NextPos - curPos).Normalize();// 다음 방향 벡터
+	
+	if (_isRotation) {
+		// 방향 변경
+		float DestDir = GetFrontDir(Dir);
 
-	// 방향 오차 계산
-	float CheckErrorRange = fabsf(m_fDestDir - curDir.y);
+		// 방향 오차 계산
+		float CheckErrorRange = fabsf(m_fDestDir - curDir.y);
 
-	if (RADIAN360 < CheckErrorRange)
-		CheckErrorRange -= RADIAN360;
+		if (RADIAN360 < CheckErrorRange)
+			CheckErrorRange -= RADIAN360;
 
-	if (DIR_ERROR_RANGE < CheckErrorRange)
-		DestDir = IsLeft(Dir, vFront) ? curDir.y + DIR_ADD_RADIAN : curDir.y - DIR_ADD_RADIAN;
-	else
-		DestDir = m_fDestDir;
+		if (DIR_ERROR_RANGE < CheckErrorRange)
+			DestDir = IsLeft(Dir, vFront) ? curDir.y + DIR_ADD_RADIAN : curDir.y - DIR_ADD_RADIAN;
+		else
+			DestDir = m_fDestDir;
 
-	// 방향 설정
-	GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, DestDir, 0.f));
-
+		// 방향 설정
+		GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, DestDir, 0.f));
+	}
+	
 	// 이동 속도 설정
 	float speed = _fSpeed;
 	Vec3 newPos = curPos + (speed * Dir * DT);
