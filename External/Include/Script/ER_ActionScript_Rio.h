@@ -21,8 +21,6 @@ protected:
     virtual FSMState* CreateSkill_R();
 
 public:
-    virtual void begin() override;
-
     virtual void Attack(tFSMData& _Data);         // 기본공격
     virtual void Wait(tFSMData& _Data);           // 대기
     virtual void Move(tFSMData& _Data);           // 이동

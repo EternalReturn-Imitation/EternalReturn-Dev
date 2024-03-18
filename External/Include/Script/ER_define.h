@@ -5,6 +5,7 @@
 #define STATEDELEGATE_EXIT(obj, className, func) obj->SetStateExit((SCRIPT_DELEGATE)&className::func##Exit)
 
 #define STATEDATA_SET(State, FSMData) StateList[ER_CHAR_ACT::State]->SetData(FSMData)
+#define STATEDATA_GET(State) StateList[ER_CHAR_ACT::State]->GetData()
 
 enum class ER_ITEM_GRADE
 {

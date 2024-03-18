@@ -32,7 +32,8 @@ void ER_ActionScript_Character::begin()
 	StateInit();
 	FSMContext = new FSM(StateList[ER_CHAR_ACT::WAIT]);
 	m_Data = GetOwner()->GetScript<ER_DataScript_Character>();
-	
+
+	ChangeState(ER_CHAR_ACT::ARRIVE);
 }
 
 void ER_ActionScript_Character::tick()
@@ -104,17 +105,21 @@ void ER_ActionScript_Character::StateInit()
 		StateList[ER_CHAR_ACT::SKILL_R]->SetName(L"SKILL_R");
 }
 
-void ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade)
+bool ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade)
 {
+	if (m_iCurState == _state)
+		return false;
+
 	// 변경 가능 수준 검사
 	if (IsAbleChange(_Grade))
 	{
 		m_iPrevState = m_iCurState;
-
 		FSMContext->ChangeState(StateList[_state]);
 		m_iCurState = _state;
+
 	}
-	
+
+	return true;
 	// TO_DO : 당장 변환이 불가능한경우 담아놓기.
 }
 
