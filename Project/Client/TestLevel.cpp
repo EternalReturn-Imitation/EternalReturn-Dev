@@ -170,32 +170,29 @@ void CreateTestLevel()
 
 	// SpawnGameObject(pObject, Vec3(0.f, -100, 0.f), L"Default");
 
-	bool bCube = false;
-	if (bCube)
-	{
-		CGameObject* CubeObj = new CGameObject;
-		CubeObj->SetName(L"CubeObj");
-		CubeObj->AddComponent(new CTransform);
-		CubeObj->AddComponent(new CMeshRender);
-		CubeObj->AddComponent(new CFindPath);
-		CubeObj->Transform()->SetRelativeScale(Vec3(1.f, 2.f, 1.f));
-		CubeObj->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	CGameObject* CubeObj = new CGameObject;
+	CubeObj->SetName(L"CubeObj");
+	CubeObj->AddComponent(new CTransform);
+	CubeObj->AddComponent(new CMeshRender);
+	CubeObj->AddComponent(new CFindPath);
+	CubeObj->AddComponent(new CCollider3D);
+	CubeObj->Collider3D()->SetOffsetScale(Vec3(2.0f, 2.0f, 2.0f));
+	CubeObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	CubeObj->Transform()->SetRelativeScale(Vec3(1.f, 2.f, 1.f));
+	CubeObj->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
-		CubeObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		CubeObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+	CubeObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+	CubeObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
 
-		SpawnGameObject(CubeObj, Vec3(000.f, 0.f, 000.f), L"Monster");
-	}
-	else
-	{
-		CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Jackie");
-		CharObj->AddComponent(new CCollider3D);
-		CharObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		CharObj->Collider3D()->SetOffsetScale(Vec3(2.0f, 2.0f, 2.0f));
-		CharObj->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
-		//SpawnGameObject(CharObj, Vec3(7.f, 0.f, 3.f), L"Monster");
-		SpawnGameObject(CharObj, Vec3(-69.32188f, 0.0f, 37.60328f), L"Player");
-	}
+	SpawnGameObject(CubeObj, Vec3(-74.98286f, 2.f, 35.10072f), L"Monster");
+
+	CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Jackie");
+	CharObj->AddComponent(new CCollider3D);
+	CharObj->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	CharObj->Collider3D()->SetOffsetScale(Vec3(2.0f, 2.0f, 2.0f));
+	CharObj->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
+	//SpawnGameObject(CharObj, Vec3(7.f, 0.f, 3.f), L"Monster");
+	SpawnGameObject(CharObj, Vec3(-69.32188f, 0.0f, 37.60328f), L"Player");
 
 	CGameObject* MapCollider = new CGameObject;
 	MapCollider->SetName(L"MapCollider");
@@ -224,8 +221,10 @@ void CreateTestLevel()
 	LoadingBackGround();
 	LoadingItemBoxes();
 
-	CCollisionMgr::GetInst()->RayLayerCheck(L"NONERender");
+	//CCollisionMgr::GetInst()->RayLayerCheck(L"NONERender");
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
+	CCollisionMgr::GetInst()->RayLayerCheck(L"Character");
+	CCollisionMgr::GetInst()->RayLayerCheck(L"Monster");
 }
 
 void LoadingBackGround() {

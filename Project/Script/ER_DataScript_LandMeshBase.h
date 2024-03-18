@@ -9,6 +9,8 @@ class ER_DataScript_LandMeshBase :
 private:
     CGameObject* m_pRoof;
 
+    static int m_iRoofCount;
+
 public:
     void init();
     virtual void begin() override;

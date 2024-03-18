@@ -4,6 +4,9 @@
 class ER_ActionScript_Aya :
     public ER_ActionScript_Character
 {
+private:
+    float m_fSec;
+
 protected:
     virtual FSMState* CreateWait();
     virtual FSMState* CreateMove();
@@ -27,6 +30,34 @@ public:
     virtual void Skill_W(tFSMData& _Data);        // W Skill
     virtual void Skill_E(tFSMData& _Data);        // E Skill
     virtual void Skill_R(tFSMData& _Data);        // R Skill
+
+private:
+    virtual void begin() override;
+
+    void MoveEnter(tFSMData& param);
+    void MoveUpdate(tFSMData& param);
+
+    void WaitEnter(tFSMData& param);
+
+    void ArriveEnter(tFSMData& param);
+    void ArriveUpdate(tFSMData& param);
+
+    void CraftEnter(tFSMData& param);
+    void CraftUpdate(tFSMData& param);
+
+    void RestEnter(tFSMData& param);
+    void RestUpdate(tFSMData& param);
+
+    void Skill_QEnter(tFSMData& param);
+    void Skill_QUpdate(tFSMData& param);
+
+    void Skill_WEnter(tFSMData& param);
+    void Skill_WUpdate(tFSMData& param);
+
+    void Skill_EEnter(tFSMData& param);
+    void Skill_EUpdate(tFSMData& param);
+
+    void Skill_RUpdate(tFSMData& param);
 
 public:
     ER_ActionScript_Aya();
