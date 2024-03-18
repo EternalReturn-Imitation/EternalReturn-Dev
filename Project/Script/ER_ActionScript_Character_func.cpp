@@ -38,6 +38,14 @@ float ER_ActionScript_Character::GetClearDistance(const Vec3& vDir, float dist)
 	return ClearDist;
 }
 
+float ER_ActionScript_Character::GetClearDistanceByWall(const Vec3& vDir, float dist)
+{
+	float ClearDist = 0.f;
+	ClearDist = GetOwner()->FindPath()->findMaxClearDistanceByWall(vDir, 0.f, dist);
+
+	return ClearDist;
+}
+
 Vec3 ER_ActionScript_Character::SetRotationToTarget(const Vec3& vTarget)
 {
 	Vec3 vPos = GetOwner()->Transform()->GetRelativePos();

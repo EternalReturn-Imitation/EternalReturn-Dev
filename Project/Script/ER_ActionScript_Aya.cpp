@@ -6,6 +6,7 @@
 
 ER_ActionScript_Aya::ER_ActionScript_Aya()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA)
+    , m_fSec(0.f)
 {
 }
 
@@ -323,11 +324,15 @@ void ER_ActionScript_Aya::Skill_WEnter(tFSMData& param)
     param.iData = 0;
     param.fData = 0.f;
 
+    param.bData[0] = false;
+
     SetAbleToCancle(bAbleChange::ABSOUTE);
 }
 
 void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
 {
+    m_fSec += DT;
+
     CAnimator3D* Animator = GetOwner()->Animator3D();
 
     // 방향 저장
@@ -361,31 +366,44 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         //angleDeg에는 방향이 들어감.
         param.fData = angleDeg;
 
+        param.bData[0] = true;
+
         GetOwner()->FindPath()->FindPath(param.v4Data);
     }
 
     //애니메이션이 끝날때마다 이동 애니메이션 갱신
-    if (Animator->IsFinish()) {
-        if (abs(vPos.x- param.v4Data.x)>0.1f || abs(vPos.z - param.v4Data.z)>0.1f) {
-            // 방향 결정
-            if (param.fData > -45 && param.fData <= 45) {
-                Animator->SelectAnimation(L"Aya_SkillW_Forward", false);
-            }
-            else if (param.fData > 45 && param.fData <= 135) {
-                Animator->SelectAnimation(L"Aya_SkillW_Left", false);
-            }
-            else if (param.fData > -135 && param.fData <= -45) {
-                Animator->SelectAnimation(L"Aya_SkillW_Right", false);
-            }
-            else {
-                Animator->SelectAnimation(L"Aya_SkillW_Back", false);
+    if ((abs(vPos.x- param.v4Data.x)>0.1f || abs(vPos.z - param.v4Data.z)>0.1f) && param.bData[0]) {
+        // 방향 결정
+        if (param.fData > -45 && param.fData <= 45) {
+            if (param.iData != 1) {
+                Animator->SelectAnimation(L"Aya_SkillW_Forward", true);
+                param.iData = 1;
             }
         }
-        //같으면 그냥 쏨.
+        else if (param.fData > 45 && param.fData <= 135) {
+            if (param.iData != 2) {
+                Animator->SelectAnimation(L"Aya_SkillW_Left", true);
+                param.iData = 2;
+            }
+        }
+        else if (param.fData > -135 && param.fData <= -45) {
+            if (param.iData != 3) {
+                Animator->SelectAnimation(L"Aya_SkillW_Right", true);
+                param.iData = 3;
+            }
+        }
         else {
-            Animator->SelectAnimation(L"Aya_SkillW_Shot", false);
+            if (param.iData != 4) {
+                Animator->SelectAnimation(L"Aya_SkillW_Back", true);
+                param.iData = 4;
+            }
         }
-        ++param.iData;
+        param.bData[0] = false;
+    }
+    //같으면 그냥 쏨.
+    else if((abs(vPos.x - param.v4Data.x) < 0.1f && abs(vPos.z - param.v4Data.z) < 0.1f)){
+        Animator->SelectAnimation(L"Aya_SkillW_Shot", false);
+        param.iData = 0;
     }
 
     //목적지 위치랑 현재 위치랑 같지 않을 때, 계속 이동함.
@@ -394,13 +412,14 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         GetOwner()->FindPath()->PathMove(speed, false);
     }
 
-    if (param.iData == 6) {
+    if (m_fSec > 1.5f) {
         SetAbleToCancle(bAbleChange::COMMON);
         ChangeState(ER_CHAR_ACT::WAIT);
         param.iData = 0;
         param.fData = 0.f;
         param.v2Data = Vec2();
         param.v4Data = Vec4();
+        m_fSec = 0.f;
     }
 }
 
@@ -476,7 +495,7 @@ void ER_ActionScript_Aya::Skill_EUpdate(tFSMData& param)
         param.v4Data = Vec2();
 
         ChangeState(ER_CHAR_ACT::WAIT);
-    }    
+    }
 }
 
 void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
@@ -500,6 +519,7 @@ void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
             animator->SelectAnimation(L"Aya_SkillR_End", false);
             SetAbleToCancle(bAbleChange::COMMON);
             ++param.iData;
+            param.iData = 0;
         }
     }
         break;

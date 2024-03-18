@@ -37,6 +37,7 @@ public:
 
     Vec3 findMaxClearPoint(const Vec3& _dir, float _min, float _max);
     float findMaxClearDistance(const Vec3& _dir, float _min, float _max);
+    float findMaxClearDistanceByWall(const Vec3& _dir, float _min, float _max);
 
 public:
     Vec3 GetNextPos() { return m_vNextPos; }

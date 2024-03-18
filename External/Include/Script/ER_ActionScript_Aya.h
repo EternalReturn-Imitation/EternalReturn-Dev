@@ -4,6 +4,9 @@
 class ER_ActionScript_Aya :
     public ER_ActionScript_Character
 {
+private:
+    float m_fSec;
+
 protected:
     virtual FSMState* CreateWait();
     virtual FSMState* CreateMove();

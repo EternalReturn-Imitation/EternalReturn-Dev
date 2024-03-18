@@ -141,6 +141,8 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 	tRay ray = mainCam->GetRay();
 	IntersectResult rayResult;
 
+	map<float, CGameObject*> mRayResults;
+
 	for (UINT i = 0; i < semiResult.size(); ++i) {
 		if (semiResult[i]->Collider2D()) {
 			rayResult = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, semiResult[i]);
@@ -158,9 +160,12 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 		}
 
 		if (rayResult.bResult) {
-			result.push_back(semiResult[i]);
+			mRayResults.insert(make_pair(rayResult.fResult, semiResult[i]));
 		}
 	}
+
+	for (auto it : mRayResults)
+		result.push_back(it.second);
 
 	return result;
 }

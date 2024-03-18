@@ -278,6 +278,35 @@ float CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
 	return maxClearDistance;
 }
 
+float CFindPath::findMaxClearDistanceByWall(const Vec3& _dir, float _min, float _max)
+{
+	float left = _min + 0.1f;
+	float right = _max;
+	float maxClearDistance = 0.f;
+
+	Vec3 vOwnerPos = GetOwner()->Transform()->GetRelativePos();
+
+	// binary
+
+	while (left <= right)
+	{
+		Vec3 tmp(_dir.x * left, _dir.y * left, _dir.z * left);
+		Vec3 CheckPos = vOwnerPos + tmp;
+
+		if (CPathFindMgr::GetInst()->IsValidPoint(CheckPos))
+		{
+			maxClearDistance = left;
+			left += 0.1f;
+		}
+		else
+		{
+			return maxClearDistance-0.1f;
+		}
+	}
+
+	return maxClearDistance;
+}
+
 
 
 

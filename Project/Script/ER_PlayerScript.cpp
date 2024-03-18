@@ -37,7 +37,7 @@ void ER_PlayerScript::tick()
 {
 	// [ Mouse ]
 
-	CGameObject* pTargetObj = GetFocusObj();	// 타겟 오브젝트
+	std::pair<CGameObject*,int> pTargetObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vCsrPoint = GetFocusPoint();	// 타겟 지점
 
 	tFSMData data = {};
@@ -46,7 +46,7 @@ void ER_PlayerScript::tick()
 	// lParam : 현재 마우스위치에 충돌중인 오브젝트
 
 	data.v4Data = vCsrPoint;
-	data.lParam = (DWORD_PTR)pTargetObj;
+	data.lParam = (DWORD_PTR)pTargetObj.first;
 
 	// [ Mouse Control ]
 	// 이동
@@ -69,14 +69,20 @@ void ER_PlayerScript::tick()
 			// 플레이어스크립트에서는 별도 동작 하지 않음
 		}
 		// cursor On Enemy
-		else if(false)
+		else if(pTargetObj.second == 5)
 		{
-			// false에 있는 조건에 data.lParam(pTargetObj)가 Enemy인지 Box인지 판단할 수 있는 참거짓 값 입력
+			//몬스터인경우(Layer 이름 : ItemBox)
+			int i = 0;
 		}
 		// cursor On Box
-		else if(false)
+		else if(pTargetObj.second == 11)
 		{
-			// false에 있는 조건에 data.lParam(pTargetObj)가 Enemy인지 Box인지 판단할 수 있는 참거짓 값 입력
+			//몬스터인경우(Layer 이름 : Monster)
+			int i = 0;
+		}
+		else if (pTargetObj.second == 12) {
+			//적 캐릭터인 경우(Layer 이름 : Character)
+			int i = 0;
 		}
 		// cursor On Land (else)
 		else
@@ -193,10 +199,17 @@ Vec3 ER_PlayerScript::GetFocusPoint()
 	return TargetPos;
 }
 
-CGameObject* ER_PlayerScript::GetFocusObj()
+std::pair<CGameObject*,int> ER_PlayerScript::GetFocusObj()
 {
 	// 마우스 레이와 겹쳐진 오브젝트 판단
-	return nullptr;
+	vector<CGameObject*> rayColObjs = CCollisionMgr::GetInst()->GetCurRayColObjs();
+	
+	if (rayColObjs.size() == 1) 
+		return make_pair(rayColObjs[0], rayColObjs[0]->GetLayerIndex());
+	else if (rayColObjs.size() > 1)
+		return make_pair(rayColObjs[0], rayColObjs[0]->GetLayerIndex());
+	else
+		return make_pair(nullptr, -1);
 }
 
 Vec3 ER_PlayerScript::GetFocusDir(Vec3 _Point)

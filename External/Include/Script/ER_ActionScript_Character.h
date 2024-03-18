@@ -59,6 +59,7 @@ protected:
     Vec3 GetFocusPoint();                // Å¸°Ù ÁöÁ¡
     Vec3 GetClearPoint(const Vec3& vDir, float dist);
     float GetClearDistance(const Vec3& vDir, float dist);
+    float GetClearDistanceByWall(const Vec3& vDir, float dist);
     Vec3 SetRotationToTarget(const Vec3& vTarget);
 
 public:
