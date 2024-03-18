@@ -61,8 +61,6 @@ protected:
     float GetClearDistance(const Vec3& vDir, float dist);
     float GetClearDistanceByWall(const Vec3& vDir, float dist);
     Vec3 SetRotationToTarget(const Vec3& vTarget);
-    Vec3 GetFocusPoint();
-
 
 public:
     virtual void begin() override;
