@@ -60,6 +60,7 @@ int g_arrVK[(UINT)KEY::END]
 	 '8',
 	 '9',
 
+	 VK_OEM_3,
 };
 
 

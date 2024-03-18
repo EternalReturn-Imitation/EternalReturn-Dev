@@ -114,8 +114,12 @@ void ER_PlayerScript::tick()
 		m_pActionScript->Rest(data);
 	}
 
-	// UI
+	// 제작(CRAFT)
+	if (KEY_TAP(KEY::APOSTROPHE)) {
+		m_pActionScript->Craft(data);
+	}
 
+	// UI
 	if (KEY_TAP(KEY::ESC))
 	{
 		// 게임메뉴

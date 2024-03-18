@@ -39,8 +39,16 @@ private:
     void ArriveEnter(tFSMData& param);
     void ArriveUpdate(tFSMData& param);
 
+    void CraftEnter(tFSMData& param);
+    void CraftUpdate(tFSMData& param);
+
     void RestEnter(tFSMData& param);
     void RestUpdate(tFSMData& param);
+
+    void Skill_QEnter(tFSMData& param);
+    void Skill_QUpdate(tFSMData& param);
+
+    void Skill_RUpdate(tFSMData& param);
 
 public:
     ER_ActionScript_Aya();

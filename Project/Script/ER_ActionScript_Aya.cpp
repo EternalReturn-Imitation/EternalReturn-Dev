@@ -2,6 +2,8 @@
 #include "ER_ActionScript_Aya.h"
 #include "ER_DataScript_Character.h"
 
+#include <Engine/CAnim3D.h>
+
 ER_ActionScript_Aya::ER_ActionScript_Aya()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA)
 {
@@ -33,6 +35,9 @@ FSMState* ER_ActionScript_Aya::CreateMove()
 FSMState* ER_ActionScript_Aya::CreateCraft()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Craft);
+    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Craft);
 
     return state;
 }
@@ -75,6 +80,9 @@ FSMState* ER_ActionScript_Aya::CreateSkill_Q()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Skill_Q);
+    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Skill_Q);
+
     return state;
 }
 
@@ -96,6 +104,8 @@ FSMState* ER_ActionScript_Aya::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Skill_R);
+
     return state;
 }
 
@@ -116,6 +126,7 @@ void ER_ActionScript_Aya::Move(tFSMData& _Data)
 
 void ER_ActionScript_Aya::Craft(tFSMData& _Data)
 {
+    ChangeState(ER_CHAR_ACT::CRAFT);
 }
 
 void ER_ActionScript_Aya::Rest(tFSMData& _Data)
@@ -125,6 +136,7 @@ void ER_ActionScript_Aya::Rest(tFSMData& _Data)
 
 void ER_ActionScript_Aya::Skill_Q(tFSMData& _Data)
 {
+    ChangeState(ER_CHAR_ACT::SKILL_Q);
 }
 
 void ER_ActionScript_Aya::Skill_W(tFSMData& _Data)
@@ -137,6 +149,7 @@ void ER_ActionScript_Aya::Skill_E(tFSMData& _Data)
 
 void ER_ActionScript_Aya::Skill_R(tFSMData& _Data)
 {
+    ChangeState(ER_CHAR_ACT::SKILL_R);
 }
 
 void ER_ActionScript_Aya::begin()
@@ -183,6 +196,15 @@ void ER_ActionScript_Aya::ArriveUpdate(tFSMData& param)
 {
     if (GetOwner()->Animator3D()->IsFinish())
         ChangeState(ER_CHAR_ACT::WAIT);
+}
+
+void ER_ActionScript_Aya::CraftEnter(tFSMData& param)
+{
+    GetOwner()->Animator3D()->SelectAnimation(L"Aya_Craft", false);
+}
+
+void ER_ActionScript_Aya::CraftUpdate(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Aya::RestEnter(tFSMData& param)
@@ -235,5 +257,69 @@ void ER_ActionScript_Aya::RestUpdate(tFSMData& param)
         }
         break;
     }
+    }
+}
+
+void ER_ActionScript_Aya::Skill_QEnter(tFSMData& param)
+{
+    GetOwner()->Animator3D()->SelectAnimation(L"Aya_SkillQ", false);
+    SetAbleToCancle(bAbleChange::DISABLE);
+}
+
+void ER_ActionScript_Aya::Skill_QUpdate(tFSMData& param)
+{
+    CAnimator3D* animator = GetOwner()->Animator3D();
+
+    int curFrame = animator->GetCurFrame();
+
+    if (animator->IsFinish())
+    {
+        SetAbleToCancle(bAbleChange::COMMON);
+        ChangeState(ER_CHAR_ACT::WAIT);
+        param.iData = 0;
+    }
+
+    if (curFrame > 16) {
+        SetAbleToCancle(bAbleChange::COMMON);
+        param.iData = 0;
+    }
+}
+
+void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
+{
+    CAnimator3D* animator = GetOwner()->Animator3D();
+    switch (param.iData)
+    {
+    //시전 중 캐슬불가
+    case 0:
+    {
+        animator->SelectAnimation(L"Aya_SkillR_Start", false);
+        SetAbleToCancle(bAbleChange::DISABLE);
+        ++param.iData;
+    }
+        break;
+    //후딜 캐슬 가능
+    case 1:
+    {
+        if (animator->IsFinish())
+        {
+            animator->SelectAnimation(L"Aya_SkillR_End", false);
+            SetAbleToCancle(bAbleChange::COMMON);
+            ++param.iData;
+        }
+    }
+        break;
+    case 2:
+    {
+        if (animator->IsFinish())
+        {
+            SetAbleToCancle(bAbleChange::COMMON);
+            ChangeState(ER_CHAR_ACT::WAIT);
+            param.iData=0;
+        }
+    }
+        break;
+    default:
+        break;
     }
 }

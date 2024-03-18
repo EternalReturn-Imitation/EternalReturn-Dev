@@ -45,6 +45,8 @@ enum class KEY
 	_7,
 	_8,
 	_9,
+
+	APOSTROPHE,
 	
 	END,
 };
