@@ -251,7 +251,7 @@ float4 PS_MergeShader(VS_OUT _in) : SV_Target
     int iEdgeState = 0;
     for (int i = 0; i < 8; ++i)
     {
-        float4 sampleData = DataTargetTex.Sample(g_sam_0, vScreenUV + offsets[i] * 0.002); // 0.001은 해상도에 따라 조정 필요
+        float4 sampleData = DataTargetTex.Sample(g_sam_0, vScreenUV + offsets[i] * 0.001); // 0.001은 해상도에 따라 조정 필요
         // 초록색 오브젝트와 비-초록색(검은색) 오브젝트 사이의 경계 감지
         if (vData.g > 0.5 && sampleData.g <= 0.5)
         {
@@ -263,16 +263,29 @@ float4 PS_MergeShader(VS_OUT _in) : SV_Target
             iEdgeState = 2;
             break;
         }
+        if (vData.b > 0.5 && sampleData.b <= 0.5)
+        {
+            iEdgeState = 3;
+            break;
+        }
     }
 
     if (iEdgeState == 1)
     {
         // 외곽선을 강조하기 위해 색상을 변경 (예: 흰색)
-        vOutColor = float4(1.0, 1.0, 1.0, 1.0);
+        vOutColor.xyz = vColor.xyz * 1.f * (1.f - fShadowPow)
+                        + (1.f * vColor.a) * (1.f - fShadowPow)
+                        + vEmissive.xyz;
+        
+        vOutColor *= float4(0.8f, 0.8f, 0.8f, 0.6f);
     }
     else if (iEdgeState == 2)
     {        
-        vOutColor = float4(1.0, 0.0, 0.0, 1.0);
+        vOutColor = float4(0.0f, 1.0f, 1.0f, 1.0f);
+    }
+    else if (iEdgeState == 3)
+    {
+        vOutColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
     }
     else
     {

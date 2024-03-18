@@ -85,6 +85,12 @@
     <Filter Include="GameSystem\Character">
       <UniqueIdentifier>{4fbeb1f6-b219-4820-8f25-26282d0ee874}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameSystem\Battle">
+      <UniqueIdentifier>{9c8c5026-9c9a-4c8c-9ce5-d9043b036923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Monster">
+      <UniqueIdentifier>{74d458ac-2568-48e0-abaf-a8d9d240b711}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -165,6 +171,7 @@
     <ClInclude Include="ER_ItemMgr.h">
       <Filter>GameSystem\Item</Filter>
     </ClInclude>
+    <ClInclude Include="ER_BattleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -248,5 +255,6 @@
     <ClCompile Include="ER_ActionScript_Character_func.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
     </ClCompile>
+    <ClCompile Include="ER_BattleSystem.cpp" />
   </ItemGroup>
 </Project>

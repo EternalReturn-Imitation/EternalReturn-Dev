@@ -62,7 +62,6 @@ protected:
     float GetClearDistanceByWall(const Vec3& vDir, float dist);
     Vec3 SetRotationToTarget(const Vec3& vTarget);
 
-
 public:
     virtual void begin() override;
     virtual void tick() override;

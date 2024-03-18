@@ -5,10 +5,10 @@
 #include "CLevel.h"
 #include "CLayer.h"
 #include "CGameObject.h"
-#include "CTransform.h"
 #include "CRenderMgr.h"
 #include "ptr.h"
 #include "CResMgr.h"
+#include "components.h"
 
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 {
@@ -75,7 +75,29 @@ void DestroyObject(CGameObject* _DeletObject)
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 
-
+void AddComponents(CGameObject* _Object, int CreateCompType)
+{
+	if (CreateCompType & _TRANSFORM)
+		_Object->AddComponent(new CTransform);
+	if (CreateCompType & _COLLIDER2D)
+		_Object->AddComponent(new CCollider2D);
+	if (CreateCompType & _COLLIDER3D)
+		_Object->AddComponent(new CCollider3D);
+	if (CreateCompType & _ANIMATOR2D)
+		_Object->AddComponent(new CAnimator2D);
+	if (CreateCompType & _ANIMATOR3D)
+		_Object->AddComponent(new CAnimator3D);
+	if (CreateCompType & _LIGHT2D)
+		_Object->AddComponent(new CLight2D);
+	if (CreateCompType & _LIGHT3D)
+		_Object->AddComponent(new CLight3D);
+	if (CreateCompType & _CAMERA)
+		_Object->AddComponent(new CCamera);
+	if (CreateCompType & _BEHAVIORTREE)
+		_Object->AddComponent(new CBehaviorTree);
+	if (CreateCompType & _FINDPATH)
+		_Object->AddComponent(new CFindPath);
+}
 
 void DrawDebugRect(Vec3 _vWorldPos, Vec2 _vWorldScale, Vec4 _vColor
 	, Vec3 _vRotation, float _fTime, bool DepthTest)

@@ -48,10 +48,51 @@ void ER_DataScript_Character::begin()
 {
 	// 캐릭터 초기능력치를 받아와 레벨 1로 초기화
 	m_Stats.Init_To_LevelOne(m_STDStats);
+
+	int a = 1;
+	if (GetOwner()->GetRenderComponent() != nullptr && GetOwner()->GetRenderComponent()->GetMaterial(0) != nullptr)
+	{
+		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
+	}
 }
 
 void ER_DataScript_Character::tick()
 {
+}
+
+void ER_DataScript_Character::BeginOverlap(CCollider3D* _Other)
+{
+	
+}
+
+void ER_DataScript_Character::OnOverlap(CCollider3D* _Other)
+{
+}
+
+void ER_DataScript_Character::EndOverlap(CCollider3D* _Other)
+{
+}
+
+void ER_DataScript_Character::BeginRayOverlap()
+{
+	int a = 3;
+	if (GetOwner()->GetRenderComponent() != nullptr && GetOwner()->GetRenderComponent()->GetMaterial(0) != nullptr)
+	{
+		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
+	}
+}
+
+void ER_DataScript_Character::OnRayOverlap()
+{
+}
+
+void ER_DataScript_Character::EndRayOverlap()
+{
+	int a = 1;
+	if (GetOwner()->GetRenderComponent() != nullptr && GetOwner()->GetRenderComponent()->GetMaterial(0) != nullptr)
+	{
+		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
+	}
 }
 
 void ER_DataScript_Character::SaveToLevelFile(FILE* _File)

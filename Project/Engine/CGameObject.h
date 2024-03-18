@@ -19,7 +19,6 @@ class CDecal;
 class CLandScape;
 class CScript;
 class CBehaviorTree;
-class CNaviMap;
 class CCollider3D;
 class CFindPath;
 class CUIComponent;
@@ -82,7 +81,6 @@ public:
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
     GET_COMPONENT(LandScape, LANDSCAPE);
-    GET_COMPONENT(NaviMap, NAVIMAP);
     GET_COMPONENT(Collider3D, COLLIDER3D);
     GET_COMPONENT(FindPath, FINDPATH);
     GET_COMPONENT(UI_Button, UI_BUTTON);

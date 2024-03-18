@@ -59,3 +59,27 @@ typedef struct item_combination_slot
 	UINT iSlot2;
 	UINT iAssemblyItem;
 }ER_CMB_SLOT;
+
+enum eExpForLevelUp
+{
+	LEVEL1 = 0,
+	LEVEL2 = 0,
+	LEVEL3 = 0,
+	LEVEL4 = 0,
+	LEVEL5 = 0,
+	LEVEL6 = 0,
+	LEVEL7 = 0,
+	LEVEL8 = 0,
+	LEVEL9 = 0,
+	LEVEL10 = 0,
+	LEVEL11 = 0,
+	LEVEL12 = 0,
+	LEVEL13 = 0,
+	LEVEL14 = 0,
+	LEVEL15 = 0,
+	LEVEL16 = 0,
+	LEVEL17 = 0,
+	LEVEL18 = 0,
+	LEVEL19 = 0,
+	LEVEL20 = 0
+};
