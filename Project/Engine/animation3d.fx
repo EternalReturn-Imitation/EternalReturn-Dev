@@ -267,9 +267,6 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     // 최종 본행렬 연산
     MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
 
-    // 최종 본행렬 연산    
-    //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
-
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
 
     // 구조화버퍼에 결과값 저장

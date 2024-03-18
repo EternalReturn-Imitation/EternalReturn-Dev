@@ -197,12 +197,12 @@ bool CFindPath::IsLeft(const Vec3& _objDir, const Vec3& _DestDir)
 	return dot > 0.0f;	// 양수면 왼쪽, 음수면 오른쪽
 }
 
-Vec3 CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
+Vec3 CFindPath::findMaxClearPoint(const Vec3& _dir, float _min, float _max)
 {
 	float left = _min;
 	float right = _max;
 	float maxClearDistance = 0;
-	
+
 	Vec3 vOwnerPos = GetOwner()->Transform()->GetRelativePos();
 
 	// while (left <= maxClearDistance)
@@ -220,7 +220,7 @@ Vec3 CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
 	// }
 
 	// binary
-	
+
 	while (left <= right)
 	{
 		float mid = (left + right) / 2.f;
@@ -242,6 +242,37 @@ Vec3 CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
 	Vec3 res(_dir.x * maxClearDistance, _dir.y * maxClearDistance, _dir.z * maxClearDistance);
 
 	return res;
+}
+
+float CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
+{
+	float left = _min;
+	float right = _max;
+	float maxClearDistance = 0.f;
+
+	Vec3 vOwnerPos = GetOwner()->Transform()->GetRelativePos();
+	
+	// binary
+
+	while (left <= right)
+	{
+		float mid = (left + right) / 2.f;
+
+		Vec3 tmp(_dir.x * mid, _dir.y * mid, _dir.z * mid);
+		Vec3 CheckPos = vOwnerPos + tmp;
+
+		if (CPathFindMgr::GetInst()->IsValidPoint(CheckPos))
+		{
+			maxClearDistance = mid;
+			left = mid + 0.1f;
+		}
+		else
+		{
+			right = mid - 0.1f;
+		}
+	}
+
+	return maxClearDistance;
 }
 
 
