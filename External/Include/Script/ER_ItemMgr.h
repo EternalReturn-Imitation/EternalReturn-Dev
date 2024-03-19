@@ -23,6 +23,8 @@ private:
 
 public:
 	int SearchRecipe(UINT _ingr_1, UINT _ingr_2, int& _res);
+	vector<CGameObject*> GetItemObjs() { return m_vecItem; }
+	CGameObject* GetItemObj(int _i) { return m_vecItem[_i]; }
 
 public:
 	void init();

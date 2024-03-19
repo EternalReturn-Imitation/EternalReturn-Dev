@@ -34,6 +34,7 @@ public:
 
 public:
     const ER_Ingame_Stats& GetStatus() { return m_Stats; }
+    Ptr<CTexture> GetPortraitTex() { return m_PortraitTex; }
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

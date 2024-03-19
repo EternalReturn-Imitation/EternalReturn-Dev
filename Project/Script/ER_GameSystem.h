@@ -11,6 +11,8 @@ private:
 public:
 	void SetPlayerCharacter(CGameObject* _PC) { m_pPlayerCharacter = _PC; }
 
+	CGameObject* GetPlayerCharacter() { return m_pPlayerCharacter; }
+
 public:
 	void init();
 	void progress();
