@@ -37,6 +37,15 @@ public:
     Ptr<CTexture> GetPortraitTex() { return m_PortraitTex; }
 
 public:
+    virtual void BeginOverlap(CCollider3D* _Other) override;
+    virtual void OnOverlap(CCollider3D* _Other) override;
+    virtual void EndOverlap(CCollider3D* _Other) override;
+
+    virtual void BeginRayOverlap() override;
+    virtual void OnRayOverlap() override;
+    virtual void EndRayOverlap() override;
+
+public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _FILE) override;
 

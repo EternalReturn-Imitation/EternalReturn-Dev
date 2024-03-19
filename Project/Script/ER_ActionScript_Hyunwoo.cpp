@@ -428,7 +428,7 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
 
     if (param.iData == 2 && Animator->IsFinish()) {
         SetAbleToCancle(bAbleChange::COMMON);
-        param.iData == 0;
+        param.iData = 0;
 
         ChangeState(ER_CHAR_ACT::WAIT);
     }

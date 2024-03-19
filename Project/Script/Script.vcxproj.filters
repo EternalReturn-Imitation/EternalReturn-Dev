@@ -88,6 +88,12 @@
     <Filter Include="GameSystem\UI">
       <UniqueIdentifier>{b3d03eb7-c0f4-4df1-8494-08ae342305a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameSystem\Battle">
+      <UniqueIdentifier>{9c8c5026-9c9a-4c8c-9ce5-d9043b036923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Monster">
+      <UniqueIdentifier>{74d458ac-2568-48e0-abaf-a8d9d240b711}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -171,6 +177,7 @@
     <ClInclude Include="ER_UIMgr.h">
       <Filter>GameSystem\UI</Filter>
     </ClInclude>
+    <ClInclude Include="ER_BattleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -257,5 +264,6 @@
     <ClCompile Include="ER_UIMgr.cpp">
       <Filter>GameSystem\UI</Filter>
     </ClCompile>
+    <ClCompile Include="ER_BattleSystem.cpp" />
   </ItemGroup>
 </Project>

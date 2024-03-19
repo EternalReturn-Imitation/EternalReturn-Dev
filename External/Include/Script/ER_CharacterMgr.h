@@ -21,6 +21,7 @@ public:
     void init();
 
     CGameObject* GetCharacter(const wstring& _key);
+    CGameObject* GetEnemyCharacter(const wstring& _key);
 
     friend class CharacterDataUI;
 };

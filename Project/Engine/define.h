@@ -41,7 +41,6 @@ enum class COMPONENT_TYPE
 	CAMERA,			// Camera
 
 	BEHAVIORTREE,
-	NAVIMAP,
 	FINDPATH,
 	
 	// UI
@@ -59,6 +58,21 @@ enum class COMPONENT_TYPE
 
 	// custom
 	SCRIPT,
+};
+
+enum Component_Flags_
+{
+	_NONE = 0,
+	_TRANSFORM = 1 << 0,
+	_COLLIDER2D = 1 << 1,
+	_COLLIDER3D = 1 << 2,
+	_ANIMATOR2D = 1 << 3,
+	_ANIMATOR3D = 1 << 4,
+	_LIGHT2D = 1 << 5,
+	_LIGHT3D = 1 << 6,
+	_CAMERA = 1 << 7,
+	_BEHAVIORTREE = 1 << 8,
+	_FINDPATH = 1 << 9,
 };
 
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];
