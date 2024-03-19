@@ -161,6 +161,9 @@ void CGameObject::render()
 {
 	if (nullptr != m_RenderCom)
 		m_RenderCom->render();
+
+	if (nullptr != m_TextCom)
+		m_TextCom->render();
 }
 
 void CGameObject::render_shadowmap()
@@ -203,6 +206,15 @@ void CGameObject::AddComponent(CComponent* _Component)
 			// 1개 이상의 UI 컴포넌트를 보유하고있다면 assert
 			assert(!m_UICom);
 			m_UICom = pUICom;
+		}
+
+		// TextComponent 확인
+		CText* pTextCom = dynamic_cast<CText*>(_Component);
+		if (pTextCom)
+		{
+			// 1개 이상의 UI 컴포넌트를 보유하고있다면 assert
+			assert(!m_TextCom);
+			m_TextCom = pTextCom;
 		}
 	}
 }

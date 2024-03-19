@@ -19,6 +19,8 @@ void ER_GameSystem::init()
 	ER_ItemMgr::GetInst()->init();
 	ER_CharacterMgr::GetInst()->init();
 	ER_BattleSystem::GetInst()->init();
+
+
 }
 
 void ER_GameSystem::progress()

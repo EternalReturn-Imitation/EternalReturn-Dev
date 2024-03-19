@@ -12,6 +12,7 @@ class CAnimator3D;
 class CLight2D;
 class CLight3D;
 class CCamera;
+class CText;
 class CRenderComponent;
 class CSkyBox;
 class CTileMap;
@@ -34,6 +35,9 @@ class CGameObject :
 private:
     CComponent*         m_arrCom[(UINT)COMPONENT_TYPE::END];
     CRenderComponent*   m_RenderCom;
+    CText* m_TextCom;
+
+
     CUIComponent*       m_UICom;
     vector<CScript*>    m_vecScript;
 
@@ -71,6 +75,7 @@ public:
     GET_COMPONENT(MeshRender, MESHRENDER);
     GET_COMPONENT(ParticleSystem, PARTICLESYSTEM);
     GET_COMPONENT(Camera, CAMERA);
+    GET_COMPONENT(Text, TEXTCOMP);
     GET_COMPONENT(Collider2D, COLLIDER2D);
     GET_COMPONENT(Light2D, LIGHT2D);
     GET_COMPONENT(TileMap, TILEMAP);
@@ -86,6 +91,7 @@ public:
     GET_COMPONENT(UI_Button, UI_BUTTON);
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
+    CText* GetTextComponent() const { return m_TextCom; }
     CUIComponent* GetUIComponent() const { return m_UICom; }
 
     int GetLayerIndex() { return m_iLayerIdx; }

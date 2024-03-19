@@ -22,7 +22,7 @@
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 
-
+#define FONT_RGBA(r, g, b, a) (((((BYTE)a << 24 ) | (BYTE)b << 16) | (BYTE)g << 8) | (BYTE)r)
 
 
 
@@ -39,6 +39,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2Â÷¿ø ±¤¿ø
 	LIGHT3D,		// 3Â÷¿ø ±¤¿ø
 	CAMERA,			// Camera
+	TEXTCOMP,			// Text
 
 	BEHAVIORTREE,
 	FINDPATH,
@@ -71,15 +72,16 @@ enum Component_Flags_
 	_LIGHT2D = 1 << 5,
 	_LIGHT3D = 1 << 6,
 	_CAMERA = 1 << 7,
-	_BEHAVIORTREE = 1 << 8,
-	_FINDPATH = 1 << 9,
-	_UI_BUTTON = 1 << 10,
-	_MESHRENDER = 1 << 11,
-	_PARTICLESYSTEM = 1 << 12,
-	_TILEMAP = 1 << 13,
-	_LANDSCAPE = 1 << 14,
-	_SKYBOX = 1 << 15,
-	_DECAL = 1 << 16,
+	_TEXT = 1 << 8,
+	_BEHAVIORTREE = 1 << 9,
+	_FINDPATH = 1 << 10,
+	_UI_BUTTON = 1 << 11,
+	_MESHRENDER = 1 << 12,
+	_PARTICLESYSTEM = 1 << 13,
+	_TILEMAP = 1 << 14,
+	_LANDSCAPE = 1 << 15,
+	_SKYBOX = 1 << 16,
+	_DECAL = 1 << 17,
 };
 
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];
@@ -337,5 +339,14 @@ enum class MRT_TYPE
 
 	_3DANIM_EDIT,
 
+	END,
+};
+
+enum class FONT
+{
+	KBIZM,
+	Muli_SemiBold,
+	Roboto_Regularl,
+	SairaSemiCondensed_Regular,
 	END,
 };

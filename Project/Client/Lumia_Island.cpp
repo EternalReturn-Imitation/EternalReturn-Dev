@@ -9,6 +9,7 @@
 #include <Engine\CCollisionMgr.h>
 #include <Engine\CLevelMgr.h>
 #include <Engine\CRenderMgr.h>
+#include <Engine\CFontMgr.h>
 
 // [Level&Object]
 #include <Engine\CLevel.h>
@@ -20,6 +21,7 @@
 #include <Engine\CCollider2D.h>
 #include <Engine\CCollider3D.h>
 #include <Engine\CFindPath.h>
+#include <Engine\CText.h>
 
 // [Graphic]
 #include <Engine\CSetColorShader.h>
@@ -56,6 +58,33 @@ void CreateLumiaIsland()
 	CreateTestEnemy();
 
 	LumiaIsland();
+
+	TestObject();
+}
+
+void TestObject()
+{
+	// Text Obj
+	CGameObject* testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"TextUI");
+	
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_01.png"));
+	
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 50.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+	
+	SpawnGameObject(testTextObj, Vec3(0.f, 0.f, 0.f), L"UI");
 }
 
 void SetLayer(CLevel* _Level)

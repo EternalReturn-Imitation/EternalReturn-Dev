@@ -93,6 +93,8 @@ void AddComponents(CGameObject* _Object, int CreateCompType)
 		_Object->AddComponent(new CLight3D);
 	if (CreateCompType & _CAMERA)
 		_Object->AddComponent(new CCamera);
+	if (CreateCompType & _TEXT)
+		_Object->AddComponent(new CText);
 	if (CreateCompType & _BEHAVIORTREE)
 		_Object->AddComponent(new CBehaviorTree);
 	if (CreateCompType & _FINDPATH)
