@@ -129,7 +129,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Equip_BackGround.png"));
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Equip_BackGround_Copy.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
 	SpawnGameObject(UITestObj, Vec3(-238.f, -334.f, 0.f), L"UI");
@@ -701,7 +701,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	m_aEquipList[1][0].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-286.f, -354.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-259.5f, -354.5f, -1.f), L"UI");
 
 
 	UITestObj = new CGameObject;
@@ -721,27 +721,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	m_aEquipList[1][1].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-237.5f, -354.5f, -1.f), L"UI");
-
-
-	UITestObj = new CGameObject;
-	UITestObj->SetName(L"UI_EquipSlot12");
-
-	UITestObj->AddComponent(new CTransform);
-	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
-	UITestObj->AddComponent(new CUIScript_Button);
-
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
-
-	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
-	UITestObj->MeshRender()->GetDynamicMaterial(0);
-
-	m_aEquipList[1][2].first = UITestObj;
-
-	SpawnGameObject(UITestObj, Vec3(-189.f, -354.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-211.f, -354.5f, -1.f), L"UI");
 #pragma endregion
 }
 
@@ -810,60 +790,40 @@ void ER_UIMgr::CreateEquipItem()
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(85)->Clone();
 	UITestObj->SetName(L"UI_EquipSlot10");
-
+	
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
-
+	
 	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
-
+	
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
-
+	
 	m_aEquipList[1][0].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-286.f, -354.5f, -1.1f), L"UI");
-
-
+	SpawnGameObject(UITestObj, Vec3(-259.5f, -354.5f, -1.1f), L"UI");
+	
+	
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(85)->Clone();
 	UITestObj->SetName(L"UI_EquipSlot11");
-
+	
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
-
+	
 	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
-
+	
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
-
+	
 	m_aEquipList[1][1].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-237.5f, -354.5f, -1.1f), L"UI");
-
-
-	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(85)->Clone();
-	UITestObj->SetName(L"UI_EquipSlot12");
-
-	UITestObj->AddComponent(new CTransform);
-	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
-	UITestObj->AddComponent(new CUIScript_Button);
-
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
-
-	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
-	UITestObj->MeshRender()->GetDynamicMaterial(0);
-
-	m_aEquipList[1][2].second = UITestObj;
-
-	SpawnGameObject(UITestObj, Vec3(-189.f, -354.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-211.f, -354.5f, -1.1f), L"UI");
 }
