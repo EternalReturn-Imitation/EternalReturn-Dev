@@ -2,6 +2,7 @@
 #include "ER_CharacterMgr.h"
 
 #include "ER_PlayerScript.h"
+#include "ER_GameSystem.h"
 
 ER_CharacterMgr::ER_CharacterMgr()
 {
@@ -25,6 +26,9 @@ CGameObject* ER_CharacterMgr::GetCharacter(const wstring& _key)
     Character->AddComponent(new CFindPath);
 
     Character->Transform()->SetRelativeScale(Vec3(1.1f, 1.1f, 1.1f));
+
+    //게임시스템에 플레이어의 캐릭터를 할당.
+    ER_GameSystem::GetInst()->GetInst()->SetPlayerCharacter(Character);
 
     return Character;
 }

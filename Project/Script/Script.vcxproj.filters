@@ -85,6 +85,9 @@
     <Filter Include="GameSystem\Character">
       <UniqueIdentifier>{4fbeb1f6-b219-4820-8f25-26282d0ee874}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameSystem\UI">
+      <UniqueIdentifier>{b3d03eb7-c0f4-4df1-8494-08ae342305a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -164,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="ER_ItemMgr.h">
       <Filter>GameSystem\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIMgr.h">
+      <Filter>GameSystem\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="ER_ActionScript_Character_func.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIMgr.cpp">
+      <Filter>GameSystem\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

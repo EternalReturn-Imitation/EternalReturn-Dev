@@ -21,6 +21,9 @@ public:
     virtual void tick() override;
 
 public:
+    void Calculate() { int a = 0; }
+
+public:
     CUIScript_Button();
     CUIScript_Button(const CUIScript_Button& _origin);
     ~CUIScript_Button();

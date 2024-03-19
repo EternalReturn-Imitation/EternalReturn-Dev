@@ -29,7 +29,7 @@
 
 #include "CLevelSaveLoad.h"
 
-
+#include <Script/CUIScript_Button.h>
 
 void CreateTestLevel()
 {
@@ -113,24 +113,6 @@ void CreateTestLevel()
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 
 	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), 0);
-
-
-	// UITestObj
-	CGameObject* UITestObj = new CGameObject;
-	UITestObj->SetName(L"UITestObj");
-	
-	UITestObj->AddComponent(new CTransform);
-	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
-	
-	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
-	
-	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Char_Portrait_Rio.png"));
-	
-	SpawnGameObject(UITestObj, Vec3(-300.f, -300.f, 0.f), L"UI");
-
 
 	// SkyBox
 	// CGameObject* pSkyBox = new CGameObject;
@@ -220,6 +202,7 @@ void CreateTestLevel()
 
 	LoadingBackGround();
 	LoadingItemBoxes();
+	LoadingUIs();
 
 	//CCollisionMgr::GetInst()->RayLayerCheck(L"NONERender");
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
@@ -783,4 +766,102 @@ void LoadingItemBoxes() {
 	pItemBox->MeshRender()->GetDynamicMaterial(0);
 	SpawnGameObject(pItemBox, Vec3(27.374f, -0.969f, -76.997f), L"ItemBox");
 #pragma endregion
+}
+
+void LoadingUIs() {
+	CGameObject* UITestObj = new CGameObject;
+	UITestObj->SetName(L"SubStatus_Background");
+
+	UITestObj->AddComponent(new CTransform);
+	UITestObj->AddComponent(new CMeshRender);
+	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIScript_Button);
+
+	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
+
+	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"SubStatus_Background.png"));
+
+	SpawnGameObject(UITestObj, Vec3(-1200.f, -300.f, 0.f), L"UI");
+
+	UITestObj = new CGameObject;
+	UITestObj->SetName(L"MainStatus_Background");
+
+	UITestObj->AddComponent(new CTransform);
+	UITestObj->AddComponent(new CMeshRender);
+	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIScript_Button);
+
+	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
+
+	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"MainStatus_Background.png"));
+
+	SpawnGameObject(UITestObj, Vec3(-900.f, -300.f, 0.f), L"UI");
+		
+	UITestObj = new CGameObject;
+	UITestObj->SetName(L"Equip_BackGround");
+
+	UITestObj->AddComponent(new CTransform);
+	UITestObj->AddComponent(new CMeshRender);
+	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIScript_Button);
+
+	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
+
+	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Equip_BackGround.png"));
+
+	SpawnGameObject(UITestObj, Vec3(-600.f, -300.f, 0.f), L"UI");
+
+	UITestObj = new CGameObject;
+	UITestObj->SetName(L"Player's Space");
+
+	UITestObj->AddComponent(new CTransform);
+	UITestObj->AddComponent(new CMeshRender);
+	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIScript_Button);
+
+	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
+
+	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Char_Portrait_Rio.png"));
+
+	SpawnGameObject(UITestObj, Vec3(-300.f, -300.f, 0.f), L"UI");
+
+	UITestObj = new CGameObject;
+	UITestObj->SetName(L"Skill_BackGround");
+
+	UITestObj->AddComponent(new CTransform);
+	UITestObj->AddComponent(new CMeshRender);
+	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIScript_Button);
+
+	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
+
+	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Skill_BackGround.png"));
+
+	SpawnGameObject(UITestObj, Vec3(0.f, -300.f, 0.f), L"UI");
+
+	UITestObj = new CGameObject;
+	UITestObj->SetName(L"Inventory_BackGround");
+
+	UITestObj->AddComponent(new CTransform);
+	UITestObj->AddComponent(new CMeshRender);
+	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIScript_Button);
+
+	UITestObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 1.f));
+
+	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Inventory_BackGround.png"));
+
+	SpawnGameObject(UITestObj, Vec3(300.f, -300.f, 0.f), L"UI");
 }

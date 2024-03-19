@@ -6,7 +6,10 @@ class ER_GameSystem
 {
 	SINGLE(ER_GameSystem);
 private:
-	
+	CGameObject* m_pPlayerCharacter;
+
+public:
+	void SetPlayerCharacter(CGameObject* _PC) { m_pPlayerCharacter = _PC; }
 
 public:
 	void init();
