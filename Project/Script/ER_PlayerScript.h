@@ -8,6 +8,7 @@ class ER_PlayerScript :
 {
 private:
     ER_ActionScript_Character* m_pActionScript;
+    CGameObject* m_pRangeObject;
 
 private:
     Vec3            GetFocusPoint();                // Å¸°Ù ÁöÁ¡
@@ -18,6 +19,12 @@ public:
     void init();
     virtual void begin() override;
     virtual void tick() override;
+
+public:
+    void SetRangeObject(CGameObject* _obj)
+    {
+        m_pRangeObject = _obj;
+    }
 
 public:
     ER_PlayerScript();

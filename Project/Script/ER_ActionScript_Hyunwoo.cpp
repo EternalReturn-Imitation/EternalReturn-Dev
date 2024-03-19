@@ -188,7 +188,7 @@ void ER_ActionScript_Hyunwoo::MoveEnter(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::MoveUpdate(tFSMData& param)
 {// 캐릭터 속도 얻어와서 넣어주기
-    float speed = m_Data->GetStatus().fMovementSpeed;
+    float speed = m_Data->GetStatus()->fMovementSpeed;
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))

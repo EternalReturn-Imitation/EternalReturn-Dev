@@ -232,7 +232,7 @@ void ER_ActionScript_Jackie::MoveEnter(tFSMData& param)
 void ER_ActionScript_Jackie::MoveUpdate(tFSMData& param)
 {
     // 캐릭터 속도 얻어와서 넣어주기
-    float speed = m_Data->GetStatus().fMovementSpeed;
+    float speed = m_Data->GetStatus()->fMovementSpeed;
 
     // W스킬 켜져있는경우 이동속도 증가
     if (1 == STATEDATA_GET(SKILL_W).iData)

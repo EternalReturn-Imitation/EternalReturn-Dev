@@ -189,7 +189,7 @@ void ER_ActionScript_Aya::MoveEnter(tFSMData& param)
 
 void ER_ActionScript_Aya::MoveUpdate(tFSMData& param)
 {// 캐릭터 속도 얻어와서 넣어주기
-    float speed = m_Data->GetStatus().fMovementSpeed;
+    float speed = m_Data->GetStatus()->fMovementSpeed;
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
@@ -408,7 +408,7 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
 
     //목적지 위치랑 현재 위치랑 같지 않을 때, 계속 이동함.
     if (vPos != param.v4Data) {
-        float speed = m_Data->GetStatus().fMovementSpeed;
+        float speed = m_Data->GetStatus()->fMovementSpeed;
         GetOwner()->FindPath()->PathMove(speed, false);
     }
 

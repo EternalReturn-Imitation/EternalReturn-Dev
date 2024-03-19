@@ -15,3 +15,4 @@ ER_DataScript_Item
 ER_DataScript_ItemBox
 ER_DataScript_LandMeshBase
 ER_PlayerScript
+ER_PlayerScript_Range

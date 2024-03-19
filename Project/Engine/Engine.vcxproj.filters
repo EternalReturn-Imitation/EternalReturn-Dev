@@ -161,9 +161,6 @@
       <Filter>Source\06. Component\RenderComponent\4. Decal</Filter>
     </ClInclude>
     <ClInclude Include="CFrustum.h">
-      <Filter>Source\06. Component\4. Camera\Frustum</Filter>
-    </ClInclude>
-    <ClInclude Include="CFrustum.h">
       <Filter>Source\06. Component\3. Camera\Frustum</Filter>
     </ClInclude>
     <ClInclude Include="CFBXLoader.h">
@@ -265,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="CUI_Button.h">
       <Filter>Source\06. Component\UIComponent\ButtonUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

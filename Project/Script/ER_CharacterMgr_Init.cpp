@@ -77,6 +77,15 @@ int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
     // Character Std Stats
     fwrite(&CharacterContext->m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 
+    int SkillSize = CharacterContext->m_Skill.size();
+    fwrite(&SkillSize, sizeof(int), 1, _File);
+
+    for (int i = 0; i < SkillSize; ++i)
+    {
+        CharacterContext->m_Skill[i]->Save(_File);
+        SaveResRef(CharacterContext->m_Skill[i]->TexSkill.Get(), _File);
+    }
+
     return 0;
 }
 
@@ -111,6 +120,19 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
     ActionScript += CharacterContext->m_strKey;
 
     pCharacter->AddComponent(CScriptMgr::GetScript(ActionScript));
+
+    int SkillSize = CharacterContext->m_Skill.size();
+    fread(&SkillSize, sizeof(int), 1, _File);
+    
+    for (int i = 0; i < SkillSize; ++i)
+    {
+        ER_SKILL* Skill = new ER_SKILL;
+        
+        Skill->Load(_File);
+        LoadResRef(Skill->TexSkill, _File);
+    
+        CharacterContext->m_Skill.push_back(Skill);
+    }
 
     m_mapCharacters.insert(make_pair(CharacterContext->m_strKey, pCharacter));
 

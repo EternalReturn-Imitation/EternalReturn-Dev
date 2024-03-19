@@ -25,7 +25,7 @@ struct tInitial_Character_Stats
 	float	fWpAtkRange;				// 주무기 사거리
 }typedef ER_Initial_Stats;
 
-struct tIngame_Character_Stats
+struct tIngame_Stats
 {
 	int		iLevel;					// 레벨
 	int		iExp;					// 경험치
@@ -69,6 +69,9 @@ struct tIngame_Character_Stats
 	};
 }typedef ER_Ingame_Stats;
 
+#include <Engine\ptr.h>
+#include <Engine\CTexture.h>
+
 struct tItem_Stats
 {
 	short iAttackPower;					// 공격력
@@ -95,19 +98,62 @@ struct tItem_Stats
 
 }typedef ER_ItemStats;
 
-/*
-struct tSkill_Data
+struct tSkill_Info
 {
 	wstring			strName;	// 스킬 이름
 	Ptr<CTexture>	TexSkill;	// 스킬 아이콘
+
+	int		iMaxSkillLevel;		// 최대 스킬 레벨
+
+	// 기본 스킬 정보
+	int		iValue1[5];			// Int형 인자
+	int		iValue2[5];			// Int형 인자
+	float	fValue1[5];			// float형 인자
+	float	fValue2[5];			// float형 인자
 	
-	int		iValue[2];			// Int형 인자
-	int		iValuePerLv[2];		// Int형 인자 레벨당 증감 수치
-	float	fValue[2];			// float형 인자
-	float	fValuePerLv[2];		// float형 인자 레벨당 증감 수치
-	float	fRange[2];			// 스킬 범위 인자
-	float	fRangePerLv[2];		// 스킬 범위 인자 레벨당 증감 수치
-	float	fCoolDown;			// 재사용 대기시간
-	float	fCoolDownPerLv;		// 재사용 대기시간 레벨당 증감 수치
-}typedef ER_SkillData;
-*/
+	float	fRange[5];			// 스킬 범위 인자
+	float	fMaxCoolDown[5];	// 재사용 대기시간
+
+	// 인게임 정보
+	int		iSkillLevel;		// 스킬 레벨	: value Idx
+	float	fCoolDown;			// 남은 재사용 대기시간
+
+	tSkill_Info()
+		: iMaxSkillLevel(5)	// 최대 스킬 레벨
+		, iValue1{}
+		, iValue2{}
+		, fValue1{}
+		, fValue2{}
+		, fRange{}
+		, fMaxCoolDown{}
+		, iSkillLevel(1)
+		, fCoolDown(0.f)
+	{
+		strName = L"NULL";
+	}
+
+	void Save(FILE* _File)
+	{
+		SaveWString(strName, _File);
+		fwrite(&iMaxSkillLevel, sizeof(int), 1, _File);
+		fwrite(&iValue1, sizeof(int), 5, _File);
+		fwrite(&iValue2, sizeof(int), 5, _File);
+		fwrite(&fValue1, sizeof(float), 5, _File);
+		fwrite(&fValue2, sizeof(float), 5, _File);
+		fwrite(&fRange, sizeof(float), 5, _File);
+		fwrite(&fMaxCoolDown, sizeof(float), 5, _File);
+	}
+
+	void Load(FILE* _File)
+	{
+		LoadWString(strName, _File);
+		fread(&iMaxSkillLevel, sizeof(int), 1, _File);
+		fread(&iValue1, sizeof(int), 5, _File);
+		fread(&iValue2, sizeof(int), 5, _File);
+		fread(&fValue1, sizeof(float), 5, _File);
+		fread(&fValue2, sizeof(float), 5, _File);
+		fread(&fRange, sizeof(float), 5, _File);
+		fread(&fMaxCoolDown, sizeof(float), 5, _File);
+	}
+
+}typedef ER_SKILL;

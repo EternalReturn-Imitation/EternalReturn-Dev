@@ -73,6 +73,13 @@ enum Component_Flags_
 	_CAMERA = 1 << 7,
 	_BEHAVIORTREE = 1 << 8,
 	_FINDPATH = 1 << 9,
+	_UI_BUTTON = 1 << 10,
+	_MESHRENDER = 1 << 11,
+	_PARTICLESYSTEM = 1 << 12,
+	_TILEMAP = 1 << 13,
+	_LANDSCAPE = 1 << 14,
+	_SKYBOX = 1 << 15,
+	_DECAL = 1 << 16,
 };
 
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];

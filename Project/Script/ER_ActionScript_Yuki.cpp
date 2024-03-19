@@ -115,6 +115,8 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_R()
 
 void ER_ActionScript_Yuki::Attack(tFSMData& _Data)
 {
+    const tSkill_Info* skill = GetOwner()->GetScript<ER_DataScript_Character>()->GetSkill(0);
+    BATTLE_SKILL(GetOwner(), (CGameObject*)_Data.lParam, ER_ActionScript_Yuki, SkillQ, skill);
 }
 
 void ER_ActionScript_Yuki::Wait(tFSMData& _Data)
@@ -124,7 +126,6 @@ void ER_ActionScript_Yuki::Wait(tFSMData& _Data)
 void ER_ActionScript_Yuki::Move(tFSMData& _Data)
 {
     STATEDATA_SET(MOVE, _Data);
-
     ER_ActionScript_Character::Move(_Data);
 }
 
@@ -176,7 +177,7 @@ void ER_ActionScript_Yuki::MoveEnter(tFSMData& param)
 void ER_ActionScript_Yuki::MoveUpdate(tFSMData& param)
 {
     // 캐릭터 속도 얻어와서 넣어주기
-    float speed = m_Data->GetStatus().fMovementSpeed;
+    float speed = m_Data->GetStatus()->fMovementSpeed;
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
@@ -276,8 +277,7 @@ void ER_ActionScript_Yuki::Skill_QUpdate(tFSMData& param)
 
 void ER_ActionScript_Yuki::Skill_WEnter(tFSMData& param)
 {
-    // GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillW_Upper_Wait", false);
-    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillE_Attack", false);
+    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillW_Upper_Wait", false);
 
     SetAbleToCancle(bAbleChange::ABSOUTE);
 }
@@ -460,4 +460,9 @@ void ER_ActionScript_Yuki::Skill_RExit(tFSMData& param)
 {
     // 스킬조준 대기상태 해제
     param.iData = 0;
+}
+
+int ER_ActionScript_Yuki::SkillQ(const tSkill_Info* skilldata)
+{
+    return skilldata->iValue1[0] + skilldata->fValue1[0];
 }

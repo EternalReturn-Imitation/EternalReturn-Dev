@@ -1,13 +1,19 @@
 #pragma once
 #include "UI.h"
 
+class tSkill_Info;
+
 class CharacterDataUI :
     public UI
 {
 private:
     map<wstring, CGameObject*>* m_pCharacters;
   
-    CGameObject* m_pSelectedCharacter;
+    CGameObject*    m_pSelectedCharacter;
+    int                m_iSelectedCharIdx;
+    
+    tSkill_Info*       m_pSelectedSkill;
+    int                m_iSelectedSkillIdx;
 
 public:
     void RegistCharacters();
@@ -21,7 +27,8 @@ public:
     void render_menubar();
     void render_CharacterList();
     void render_CharacterInfoData();
-    void render_ActionFuncLink();
+    void render_SkillList();
+    void render_SkillInfoData();
 
 public:
     CharacterDataUI();
