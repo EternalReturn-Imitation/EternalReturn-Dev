@@ -94,6 +94,9 @@
     <Filter Include="GameSystem\Monster">
       <UniqueIdentifier>{74d458ac-2568-48e0-abaf-a8d9d240b711}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\PlayerScript\PlayerControll">
+      <UniqueIdentifier>{8ac70603-e378-482c-9a59-41e8106b1c7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -119,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="ER_struct.h">
       <Filter>Default\ER_header</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_PlayerScript.h">
-      <Filter>Script\ER\PlayerScript</Filter>
     </ClInclude>
     <ClInclude Include="ER_DataScript_ItemBox.h">
       <Filter>Script\ER\DataScript\ItemBox</Filter>
@@ -177,7 +177,15 @@
     <ClInclude Include="ER_UIMgr.h">
       <Filter>GameSystem\UI</Filter>
     </ClInclude>
-    <ClInclude Include="ER_BattleSystem.h" />
+    <ClInclude Include="ER_BattleSystem.h">
+      <Filter>GameSystem\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_PlayerScript.h">
+      <Filter>Script\ER\PlayerScript\PlayerControll</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_PlayerScript_Range.h">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -197,9 +205,6 @@
     </ClCompile>
     <ClCompile Include="CPlanetScript.cpp">
       <Filter>Script\Default</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_PlayerScript.cpp">
-      <Filter>Script\ER\PlayerScript</Filter>
     </ClCompile>
     <ClCompile Include="ER_DataScript_ItemBox.cpp">
       <Filter>Script\ER\DataScript\ItemBox</Filter>
@@ -264,6 +269,14 @@
     <ClCompile Include="ER_UIMgr.cpp">
       <Filter>GameSystem\UI</Filter>
     </ClCompile>
-    <ClCompile Include="ER_BattleSystem.cpp" />
+    <ClCompile Include="ER_BattleSystem.cpp">
+      <Filter>GameSystem\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_PlayerScript.cpp">
+      <Filter>Script\ER\PlayerScript\PlayerControll</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_PlayerScript_Range.cpp">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

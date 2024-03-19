@@ -7,6 +7,10 @@
 #define STATEDATA_SET(State, FSMData) StateList[ER_CHAR_ACT::State]->SetData(FSMData)
 #define STATEDATA_GET(State) StateList[ER_CHAR_ACT::State]->GetData()
 
+#define BATTLE_SKILL(AttackObj, HittedObj, className, CalcFunc, SkillInfo) ER_BattleSystem::GetInst()->Battle_Skill(AttackObj, HittedObj, this, (SKILL_DMG_CALC)&className::CalcFunc, SkillInfo)
+#define BATTLE_COMMON(AttackObj, HittedObj) Battle_Common(AttackObj, HittedObj)
+
+
 enum class ER_ITEM_GRADE
 {
 	COMMON,		// ¿œπ›
@@ -83,3 +87,16 @@ enum eExpForLevelUp
 	LEVEL19 = 0,
 	LEVEL20 = 0
 };
+
+enum eSkillindex
+{
+	Q_1,
+	W_1,
+	E_1,
+	R_1,
+	Q_2,
+	W_2,
+	E_2,
+	R_2,
+	SKILLMAXSIZE,
+}typedef SKILLIDX;

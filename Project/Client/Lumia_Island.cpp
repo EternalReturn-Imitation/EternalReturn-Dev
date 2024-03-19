@@ -76,6 +76,7 @@ void SetLayer(CLevel* _Level)
 	_Level->GetLayer(12)->SetName(L"Character");
 	_Level->GetLayer(13)->SetName(L"Player");
 
+	_Level->GetLayer(28)->SetName(L"InGameUI");
 	_Level->GetLayer(29)->SetName(L"MapCollider");
 	_Level->GetLayer(30)->SetName(L"Camera");
 	_Level->GetLayer(31)->SetName(L"UI");
@@ -152,6 +153,10 @@ void SetLight()
 	pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 
+	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMaskAll(true);
+	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(28, false);	// InGameUI
+	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(31, false);	// UI
+
 	SpawnGameObject(pLightObj, Vec3(0.f, 0.f, 0.f), L"System");
 }
 void SetMapCollider()
@@ -169,13 +174,11 @@ void SetMapCollider()
 }
 void CreateTestPlayer()
 {
-	CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetCharacter(L"Rio");
-	SpawnGameObject(CharObj, Vec3(-69.32188f, 0.0f, 37.60328f), L"Player");
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Yuki", Vec3(-69.32188f, 0.0f, 37.60328f));
 }
 void CreateTestEnemy()
 {
-	CGameObject* CharObj = ER_CharacterMgr::GetInst()->GetEnemyCharacter(L"Yuki");
-	SpawnGameObject(CharObj, Vec3(-74.98286f, 0.0f, 37.60328f), L"Character");
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-74.98286f, 0.0f, 37.60328f));
 }
 
 void LumiaIsland()

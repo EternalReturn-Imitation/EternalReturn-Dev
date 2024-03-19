@@ -6,14 +6,22 @@
 #include <Engine\CCollisionMgr.h>
 #include <Engine\CUIMgr.h>
 
+#include "ER_BattleSystem.h"
+#include "ER_DataScript_Character.h"
+
 #include <Engine\CFindPath.h>
 
 #include "ER_CamControllerScript.h"
 #include "ER_ActionScript_Character.h"
 
+#define LAYER_ITEMBOX 5
+#define LAYER_MONSTER 11
+#define LAYER_CHARACTER 12
+
 ER_PlayerScript::ER_PlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT)
 	, m_pActionScript(nullptr)
+	, m_pRangeObject(nullptr)
 {
 }
 
@@ -27,10 +35,10 @@ void ER_PlayerScript::init()
 
 void ER_PlayerScript::begin()
 {
-		CGameObject* pMainCam = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
-		pMainCam->GetScript<ER_CamControllerScript>()->SetTarget(GetOwner());
+	CGameObject* pMainCam = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
+	pMainCam->GetScript<ER_CamControllerScript>()->SetTarget(GetOwner());
 
-		m_pActionScript = GetOwner()->GetScript<ER_ActionScript_Character>();
+	m_pActionScript = GetOwner()->GetScript<ER_ActionScript_Character>();
 }
 
 void ER_PlayerScript::tick()
@@ -61,28 +69,28 @@ void ER_PlayerScript::tick()
 
 		// cursor On UI
 		CGameObject* FocusedUI = CUIMgr::GetInst()->GetFocusedUI();
-		if(FocusedUI)
-		{ 
+		if (FocusedUI)
+		{
 			// UI는 UIMgr로 확인하기때문에 UIMgr에서 Focused UI가 있는지 판단.
 			// UI는 UI에서 판단하기때문에 동작하지 않고 넘어간다.
 
 			// 플레이어스크립트에서는 별도 동작 하지 않음
 		}
-		// cursor On Enemy
-		else if(pTargetObj.second == 5)
+		else if (pTargetObj.second == LAYER_ITEMBOX)
 		{
 			//몬스터인경우(Layer 이름 : ItemBox)
 			int i = 0;
 		}
-		// cursor On Box
-		else if(pTargetObj.second == 11)
+		else if (pTargetObj.second == LAYER_MONSTER)
 		{
 			//몬스터인경우(Layer 이름 : Monster)
 			int i = 0;
 		}
-		else if (pTargetObj.second == 12) {
+		else if (pTargetObj.second == LAYER_CHARACTER)
+		{
+			m_pActionScript->Attack(data);
+
 			//적 캐릭터인 경우(Layer 이름 : Character)
-			int i = 0;
 		}
 		// cursor On Land (else)
 		else

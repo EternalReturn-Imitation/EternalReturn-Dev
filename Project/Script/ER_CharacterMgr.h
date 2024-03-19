@@ -17,11 +17,12 @@ private:
     int SaveCharacterData(CGameObject* _Character, FILE* _File);
     CGameObject* LoadCharacterData(FILE* _File);
 
+    CGameObject* SpawnCharacter(const wstring& _key);
 public:
     void init();
 
-    CGameObject* GetCharacter(const wstring& _key);
-    CGameObject* GetEnemyCharacter(const wstring& _key);
+    CGameObject* SpawnCharacter_Player(const wstring& _key,Vec3 _Pos);
+    CGameObject* SpawnCharacter_Enemy(const wstring& _key, Vec3 _Pos);
 
     friend class CharacterDataUI;
 };

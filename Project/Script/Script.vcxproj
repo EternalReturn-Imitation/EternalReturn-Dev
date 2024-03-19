@@ -198,6 +198,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_GameSystem.h" />
     <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="ER_PlayerScript.h" />
+    <ClInclude Include="ER_PlayerScript_Range.h" />
     <ClInclude Include="ER_struct.h" />
     <ClInclude Include="ER_UIMgr.h" />
     <ClInclude Include="framework.h" />
@@ -231,6 +232,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_ItemMgr_Init.cpp" />
     <ClCompile Include="ER_PlayerScript.cpp" />
     <ClCompile Include="ER_UIMgr.cpp" />
+    <ClCompile Include="ER_PlayerScript_Range.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

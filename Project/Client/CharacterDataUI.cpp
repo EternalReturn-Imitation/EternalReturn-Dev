@@ -7,6 +7,9 @@
 CharacterDataUI::CharacterDataUI()
     : UI("##CharacterDataUI")
     , m_pSelectedCharacter(nullptr)
+    , m_pSelectedSkill(nullptr)
+    , m_iSelectedCharIdx(0)
+    , m_iSelectedSkillIdx(0)
 {
     SetName("CharacterDataUI");
 
@@ -70,7 +73,10 @@ int CharacterDataUI::render_update()
     render_CharacterList();
     
     render_CharacterInfoData();
-    
+
+    render_SkillList();
+
+    render_SkillInfoData();
 
     return 0;
 }
@@ -130,9 +136,8 @@ void CharacterDataUI::render_CharacterList()
 
     int CharacterCnt = 0;// (UINT)m_pCharacters->size();
     int CharacterIdx = 0;
-    static int SelectedIdx = 0;
     
-    ImGui::BeginChild("##CharacterList", ImVec2(100.f, 0.f), false, window_flags);
+    ImGui::BeginChild("##CharacterList", ImVec2(100.f, 300.f), false, window_flags);
 
     ImGuiTreeNodeFlags NodeFlag = ImGuiTreeNodeFlags_Leaf;
 
@@ -144,15 +149,17 @@ void CharacterDataUI::render_CharacterList()
      {
          CharacterIdx++;
          
-         const bool is_selected = (SelectedIdx == CharacterIdx);
+         const bool is_selected = (m_iSelectedCharIdx == CharacterIdx);
      
          if (ImGui::Selectable(ToString(iter->first).c_str(), is_selected))
          {
-             if (SelectedIdx != CharacterIdx)
+             if (m_iSelectedCharIdx != CharacterIdx)
              {
-                 SelectedIdx = CharacterIdx;
+                 m_iSelectedCharIdx = CharacterIdx;
      
                  m_pSelectedCharacter = iter->second;
+                 m_iSelectedSkillIdx = 0;
+                 m_pSelectedSkill = nullptr;
              }
          }
      
@@ -276,6 +283,220 @@ void CharacterDataUI::render_CharacterInfoData()
     ImGui::EndGroup();
 }
 
-void CharacterDataUI::render_ActionFuncLink()
+
+void CharacterDataUI::render_SkillList()
 {
+    ER_DataScript_Character* CharacterContext = m_pSelectedCharacter->GetScript<ER_DataScript_Character>();
+
+    ImGui::BeginGroup();
+
+    ImGui::Button("SkillList", ImVec2(200.f, 0.f));
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_HorizontalScrollbar;
+
+    int SkillCnt = 0;// (UINT)m_pCharacters->size();
+    int SkillIdx = 0;
+
+    ImGui::BeginChild("##SkillList", ImVec2(200.f, 176.f), false, window_flags);
+
+    ImGuiTreeNodeFlags NodeFlag = ImGuiTreeNodeFlags_Leaf;
+
+    string strFinalName;
+    
+    vector<ER_SKILL*>* vSkillList = &CharacterContext->m_Skill;
+    int SkillListSize = (int)(*vSkillList).size();
+
+    for (int i = 0; i < SkillListSize; ++i)
+    {
+        SkillIdx++;
+
+        const bool is_selected = (m_iSelectedSkillIdx == SkillIdx);
+
+        string strName = ToString((*vSkillList)[i]->strName);
+        const char* skillKey[8]{ "[Q_1]","[W_1]","[E_1]","[R_1]","[Q_2]","[W_2]","[E_2]","[R_2]" };
+        strName += skillKey[i];
+
+        if (ImGui::Selectable(strName.c_str(), is_selected))
+        {
+            if (m_iSelectedSkillIdx != SkillIdx)
+            {
+                m_iSelectedSkillIdx = SkillIdx;
+
+                m_pSelectedSkill = (*vSkillList)[i];
+            }
+        }
+    }
+
+    ImGui::EndChild();
+
+    ImGui::EndGroup();
+
+}
+
+void CharacterDataUI::render_SkillInfoData()
+{
+    ER_SKILL* SkillContext = m_pSelectedSkill;
+
+    if (!SkillContext)
+        return;
+
+    float xsize = 61.f;
+
+    // [ Full Tex ]
+    ImGui::SameLine();
+    ImGui::BeginGroup();
+    ImGui::Button("Character Tex", ImVec2(100.f, 0));
+
+    ImVec2 CsrPos = ImGui::GetCursorPos();
+
+    Ptr<CTexture> SelBgTex = CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_Empty.png");
+
+    ImVec2 BgSize = { SelBgTex.Get()->Width(),SelBgTex.Get()->Width() };
+    ImVec2 TexSize = { 100.f,100.f };
+
+    ImVec2 size = ImVec2(100.f, 100.f);
+    ImVec2 uv_min = ImVec2(0.0f, 0.0f);                 // Top-left
+    ImVec2 uv_max = ImVec2(1.0f, 1.0f);                 // Lower-right
+    ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
+    ImVec4 border_col = ImVec4(0.0f, 0.0f, 0.0f, 0.5f); // 50% opaque white
+
+    ImTextureID SelectBGID = (CTexture*)SelBgTex->GetSRV().Get();
+    ImGui::Image(SelectBGID, BgSize, uv_min, uv_max, tint_col, border_col);
+
+
+    if (SkillContext->TexSkill.Get())
+    {
+        ImGui::SetCursorPos(CsrPos);
+        ImTextureID TextureID = (CTexture*)SkillContext->TexSkill->GetSRV().Get();
+        ImGui::Image(TextureID, TexSize, uv_min, uv_max, tint_col, border_col);
+    }
+
+
+    
+
+    ImGui::EndGroup();
+
+    // [ name ]
+    ImGui::SameLine();
+    ImGui::BeginGroup();
+    ImGui::Button("Skill Info", ImVec2(250, 0));
+
+    ImGui::Button("Name", ImVec2(xsize, 0.f));
+    ImGui::SameLine();
+    ImGui::SetNextItemWidth(181.f);
+    ImGui::Text(ToString(SkillContext->strName).c_str());
+
+    // [TexKey]
+    ImGui::Button("SkillIconTex", ImVec2(xsize, 0.f)); ImGui::SetNextItemWidth(181.f); ImGui::SameLine();
+    ImGui::Text(ToString(SkillContext->TexSkill.Get()->GetKey()).c_str());
+
+    ImGui::EndGroup();
+
+    // [ SkillInfo ]
+    ImGui::SameLine();
+    ImGui::BeginGroup();
+
+    ImGui::Button("SkillInfo", ImVec2(200.f, 0.f));
+    
+    // MaxSkill Level
+    ImGui::Button("MaxLv", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    ImGui::SetNextItemWidth(xsize * 2 - 5.f);
+    if (ImGui::InputInt("##MaxSkillLevel",&SkillContext->iMaxSkillLevel))
+    {
+        SkillContext->iMaxSkillLevel = 5 < SkillContext->iMaxSkillLevel ? 5 : SkillContext->iMaxSkillLevel;
+        SkillContext->iMaxSkillLevel = 1 > SkillContext->iMaxSkillLevel ? 1 : SkillContext->iMaxSkillLevel;
+    }
+
+    // Level Text
+    ImGui::Button(" ", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    int SkillMaxLevel = SkillContext->iMaxSkillLevel;
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char level[10] = {};
+        sprintf_s(level, "Lv%d", i + 1);
+        ImGui::Button(level, ImVec2(xsize, 0.f));
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+    // [iValue1]
+    ImGui::Button("INT_1", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##iValue1_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputScalar(id, ImGuiDataType_S32, &SkillContext->iValue1[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+    // [iValue1]
+    ImGui::Button("INT_2", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##iValue2_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputScalar(id, ImGuiDataType_S32, &SkillContext->iValue2[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+    // [fValue1]
+    ImGui::Button("FLT_1", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##fValue1_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fValue1[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+    // [fValue2]
+    ImGui::Button("FLT_2", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##fValue2_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fValue2[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+    // [fRange]
+    ImGui::Button("RNG", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##fRange_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fRange[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+    
+    // [fCoolDown]
+    ImGui::Button("COOL", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##fCooldown_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fMaxCoolDown[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+    ImGui::EndGroup();
 }

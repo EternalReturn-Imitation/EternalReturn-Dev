@@ -17,10 +17,9 @@
 #include "ER_struct.h"
 
 #include "CScriptMgr.h"
-
+#include "ER_BattleSystem.h"
 
 //Comp
-
 #include <Engine\CFindPath.h>
 
 #endif //PCH_H
