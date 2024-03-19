@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "LevelMgr.h"
 
+#pragma region HEADER
+
 // [Engine Manager]
 #include <Engine\CResMgr.h>
 #include <Engine\CPathFindMgr.h>
@@ -36,6 +38,8 @@
 #include "CEditorObjMgr.h"
 #include "CLevelSaveLoad.h"
 #include "LevelMgr.h"
+
+#pragma endregion
 
 void CreateLumiaIsland()
 {
