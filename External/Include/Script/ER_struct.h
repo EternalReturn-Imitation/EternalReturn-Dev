@@ -94,3 +94,20 @@ struct tItem_Stats
 	short padding;						// 2byte 패딩
 
 }typedef ER_ItemStats;
+
+/*
+struct tSkill_Data
+{
+	wstring			strName;	// 스킬 이름
+	Ptr<CTexture>	TexSkill;	// 스킬 아이콘
+	
+	int		iValue[2];			// Int형 인자
+	int		iValuePerLv[2];		// Int형 인자 레벨당 증감 수치
+	float	fValue[2];			// float형 인자
+	float	fValuePerLv[2];		// float형 인자 레벨당 증감 수치
+	float	fRange[2];			// 스킬 범위 인자
+	float	fRangePerLv[2];		// 스킬 범위 인자 레벨당 증감 수치
+	float	fCoolDown;			// 재사용 대기시간
+	float	fCoolDownPerLv;		// 재사용 대기시간 레벨당 증감 수치
+}typedef ER_SkillData;
+*/

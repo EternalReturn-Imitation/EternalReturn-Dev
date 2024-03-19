@@ -155,13 +155,18 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     
     output.vNormal = float4(vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);
-    //아웃라이너 용 데이터
-    //마우스를 가져다 댔을때
+    // 아웃라이너 용 데이터
+    // Mouse overlap : Item
     if (g_int_3==2)
     {        
         output.vData = float4(1.f, 0.f, 0.f, 1.f);
     }
-    //마우스 안가져다 댔을때
+    // Mouse Overlap : Enemy
+    else if (g_int_3 == 3)
+    {
+        output.vData = float4(0.f, 0.f, 1.f, 1.f);
+    }
+    // Mouse Release
     else if (g_int_3 == 1)
     {
         output.vData = float4(0.f, 1.f, 0.f, 1.f);

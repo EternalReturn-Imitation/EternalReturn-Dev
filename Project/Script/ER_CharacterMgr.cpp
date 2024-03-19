@@ -22,9 +22,25 @@ CGameObject* ER_CharacterMgr::GetCharacter(const wstring& _key)
 {
     CGameObject* Character = new CGameObject(*m_mapCharacters.find(_key)->second);
     Character->AddComponent(new ER_PlayerScript);
-    Character->AddComponent(new CFindPath);
+    AddComponents(Character, _COLLIDER3D | _FINDPATH);
 
+    Character->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+    Character->Collider3D()->SetOffsetScale(Vec3(1.0f, 2.0f, 1.0f));
+    Character->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
     Character->Transform()->SetRelativeScale(Vec3(1.1f, 1.1f, 1.1f));
 
+    return Character;
+}
+
+CGameObject* ER_CharacterMgr::GetEnemyCharacter(const wstring& _key)
+{
+    CGameObject* Character = new CGameObject(*m_mapCharacters.find(_key)->second);
+    AddComponents(Character, _COLLIDER3D | _FINDPATH);
+
+    Character->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+    Character->Collider3D()->SetOffsetScale(Vec3(1.0f, 2.0f, 1.0f));
+    Character->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
+    Character->Transform()->SetRelativeScale(Vec3(1.1f, 1.1f, 1.1f));
+    
     return Character;
 }

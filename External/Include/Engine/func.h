@@ -20,6 +20,9 @@ void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 // 오브젝트 삭제
 void DestroyObject(CGameObject* _DeletObject);
 
+// 컴포넌트 추가
+void AddComponents(CGameObject* _Object, int CreateCompType);
+
 // DrawDebugShape
 void DrawDebugRect(Vec3 _vWorldPos, Vec2 _vWorldScale, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugRect(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);

@@ -11,7 +11,7 @@
 // ImGui
 #include "ImGuiMgr.h"
 
-#include "TestLevel.h"
+#include "LevelMgr.h"
 
 // 전역 변수:
 HINSTANCE   hInst;                                // 현재 인스턴스입니다.
@@ -59,7 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ImGuiMgr::GetInst()->InitGameSystem();
     
     // 테스트 용 레벨 생성
-    CreateTestLevel();
+    CreateLumiaIsland();
 
     // 메세지 루프
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));

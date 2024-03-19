@@ -36,6 +36,15 @@ public:
     const ER_Ingame_Stats& GetStatus() { return m_Stats; }
 
 public:
+    virtual void BeginOverlap(CCollider3D* _Other) override;
+    virtual void OnOverlap(CCollider3D* _Other) override;
+    virtual void EndOverlap(CCollider3D* _Other) override;
+
+    virtual void BeginRayOverlap() override;
+    virtual void OnRayOverlap() override;
+    virtual void EndRayOverlap() override;
+
+public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _FILE) override;
 
