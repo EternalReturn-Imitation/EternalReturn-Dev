@@ -164,6 +164,9 @@
     <Filter Include="Level\Lumia">
       <UniqueIdentifier>{675dde2c-c551-47f9-a4d3-75ea2e5c126c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\14. Text">
+      <UniqueIdentifier>{a78383b4-319f-4080-8605-0ea540f20edf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -342,6 +345,9 @@
     </ClInclude>
     <ClInclude Include="LevelMgr.h">
       <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="TextUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\14. Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -526,6 +532,9 @@
     </ClCompile>
     <ClCompile Include="Lumia_Island.cpp">
       <Filter>Level\Lumia</Filter>
+    </ClCompile>
+    <ClCompile Include="TextUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\14. Text</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

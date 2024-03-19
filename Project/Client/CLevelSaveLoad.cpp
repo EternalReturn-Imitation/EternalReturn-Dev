@@ -219,6 +219,9 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::CAMERA:
 			Component = new CCamera;
 			break;
+		case COMPONENT_TYPE::TEXTCOMP:
+			Component = new CText;
+			break;
 		case COMPONENT_TYPE::BEHAVIORTREE:
 			Component = new CBehaviorTree;
 			break;

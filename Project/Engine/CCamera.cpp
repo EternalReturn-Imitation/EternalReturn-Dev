@@ -954,6 +954,7 @@ void CCamera::render_ui()
 	{
 		m_vecUI[i]->render();
 	}
+
 }
 
 void CCamera::SaveToLevelFile(FILE* _File)

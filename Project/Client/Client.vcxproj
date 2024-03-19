@@ -205,6 +205,7 @@
     <ClInclude Include="ScriptUI.h" />
     <ClInclude Include="SoundUI.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TextUI.h" />
     <ClInclude Include="TextureUI.h" />
     <ClInclude Include="TileMapUI.h" />
     <ClInclude Include="TransformControllerUI.h" />
@@ -268,6 +269,7 @@
     <ClCompile Include="ResUI.cpp" />
     <ClCompile Include="ScriptUI.cpp" />
     <ClCompile Include="SoundUI.cpp" />
+    <ClCompile Include="TextUI.cpp" />
     <ClCompile Include="TextureUI.cpp" />
     <ClCompile Include="TileMapUI.cpp" />
     <ClCompile Include="TransformControllerUI.cpp" />

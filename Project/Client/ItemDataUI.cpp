@@ -332,7 +332,7 @@ void ItemDataUI::render_ItemInfoTable()
                 // wchar_t -> UTF-8
                 std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
                 char szbuffer[32] = {};
-                strcpy(szbuffer, m_vecItemName[row_n].c_str());
+                strcpy_s(szbuffer, m_vecItemName[row_n].c_str());
 
                 ImGui::InputText("##ItemName", szbuffer, sizeof(szbuffer));
 

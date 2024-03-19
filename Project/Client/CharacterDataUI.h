@@ -1,7 +1,6 @@
 #pragma once
 #include "UI.h"
-
-class tSkill_Info;
+#include <Script\ER_struct.h>
 
 class CharacterDataUI :
     public UI
