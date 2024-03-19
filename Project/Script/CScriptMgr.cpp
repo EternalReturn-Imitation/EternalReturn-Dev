@@ -18,6 +18,7 @@
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_LandMeshBase.h"
 #include "ER_PlayerScript.h"
+#include "ER_PlayerScript_Range.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -38,6 +39,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_DataScript_ItemBox");
 	_vec.push_back(L"ER_DataScript_LandMeshBase");
 	_vec.push_back(L"ER_PlayerScript");
+	_vec.push_back(L"ER_PlayerScript_Range");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -76,6 +78,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_DataScript_LandMeshBase;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
+	if (L"ER_PlayerScript_Range" == _strScriptName)
+		return new ER_PlayerScript_Range;
 	return nullptr;
 }
 
@@ -133,6 +137,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
+		return new ER_PlayerScript_Range;
 		break;
 	}
 	return nullptr;
@@ -208,6 +215,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return L"ER_PlayerScript";
+		break;
+
+	case SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
+		return L"ER_PlayerScript_Range";
 		break;
 
 	}

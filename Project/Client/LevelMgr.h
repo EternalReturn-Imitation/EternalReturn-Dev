@@ -1,7 +1,5 @@
 #pragma once
 
-void CreateLevel();
-
 // Level List
 void CreateLumiaIsland();
 

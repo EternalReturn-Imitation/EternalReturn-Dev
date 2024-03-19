@@ -401,7 +401,6 @@ void CCamera::SortObject()
 					switch (eDomain)
 					{
 					case SHADER_DOMAIN::DOMAIN_DEFERRED:
-					case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
 					case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					case SHADER_DOMAIN::DOMAIN_MASK:
 					{
@@ -409,7 +408,8 @@ void CCamera::SortObject()
 						map<ULONG64, vector<tInstObj>>* pMap = NULL;
 						Ptr<CMaterial> pMtrl = pRenderCom->GetMaterial(iMtrl);
 
-						if (pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_DEFERRED)
+						if (pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_DEFERRED
+							|| pShader->GetDomain() == SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL)
 						{
 							pMap = &m_mapInstGroup_D;
 						}
@@ -442,6 +442,7 @@ void CCamera::SortObject()
 						}
 					}
 					break;
+					case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
 					case SHADER_DOMAIN::DOMAIN_DECAL:
 						m_vecDecal.push_back(vecObject[j]);
 						break;

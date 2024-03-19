@@ -20,6 +20,7 @@ CEditorObjMgr::CEditorObjMgr()
 	: m_DebugShape{}
 	, m_pTexRenderObj(nullptr)
 	, m_bRenderTex(false)
+	, m_bDebugRender(true)
 {
 
 }
@@ -104,6 +105,9 @@ void CEditorObjMgr::progress()
 
 void CEditorObjMgr::tick()
 {
+	if (KEY_TAP(KEY::F1))
+		m_bDebugRender = !m_bDebugRender;
+
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
 		m_vecEditorObj[i]->tick();
@@ -117,6 +121,14 @@ void CEditorObjMgr::tick()
 }
 
 void CEditorObjMgr::render()
+{
+	if(m_bDebugRender)
+		DebugRender();
+
+	EditorRender();
+}
+
+void CEditorObjMgr::DebugRender()
 {
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
@@ -142,7 +154,7 @@ void CEditorObjMgr::render()
 			break;
 		case SHAPE_TYPE::SPHERE:
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::SPHERE];
-			break;		
+			break;
 		case SHAPE_TYPE::FRUSTUM:
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM];
 			break;
@@ -179,7 +191,10 @@ void CEditorObjMgr::render()
 			++iter;
 		}
 	}
+}
 
+void CEditorObjMgr::EditorRender()
+{
 	if (m_pTexRenderObj)
 	{
 		m_pTexRenderObj->tick();

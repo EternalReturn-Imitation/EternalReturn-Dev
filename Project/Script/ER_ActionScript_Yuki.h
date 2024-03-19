@@ -54,6 +54,9 @@ public:
     void Skill_RExit(tFSMData& param);
 
 public:
+    int SkillQ(const tSkill_Info* skilldata);
+
+public:
     ER_ActionScript_Yuki();
     ~ER_ActionScript_Yuki();
 

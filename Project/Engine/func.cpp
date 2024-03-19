@@ -97,6 +97,23 @@ void AddComponents(CGameObject* _Object, int CreateCompType)
 		_Object->AddComponent(new CBehaviorTree);
 	if (CreateCompType & _FINDPATH)
 		_Object->AddComponent(new CFindPath);
+
+	if (CreateCompType & _UI_BUTTON)
+		_Object->AddComponent(new CUI_Button);
+
+	if (CreateCompType & _MESHRENDER)
+		_Object->AddComponent(new CMeshRender);
+	if (CreateCompType & _PARTICLESYSTEM)
+		_Object->AddComponent(new CParticleSystem);
+	if (CreateCompType & _TILEMAP)
+		_Object->AddComponent(new CTileMap);
+	if (CreateCompType & _LANDSCAPE)
+		_Object->AddComponent(new CLandScape);
+	if (CreateCompType & _SKYBOX)
+		_Object->AddComponent(new CSkyBox);
+	if (CreateCompType & _DECAL)
+		_Object->AddComponent(new CDecal);
+
 }
 
 void DrawDebugRect(Vec3 _vWorldPos, Vec2 _vWorldScale, Vec4 _vColor
