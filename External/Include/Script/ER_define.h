@@ -4,11 +4,11 @@
 #define STATEDELEGATE_UPDATE(obj, CharacterName, func) obj->SetStateUpdate((SCRIPT_DELEGATE)&ER_ActionScript_##CharacterName::func##Update)
 #define STATEDELEGATE_EXIT(obj, CharacterName, func) obj->SetStateExit((SCRIPT_DELEGATE)&##ER_ActionScript_##CharacterName::func##Exit)
 
-#define STATEDATA_SET(State, FSMData) StateList[ER_CHAR_ACT::State]->SetData(FSMData)
-#define STATEDATA_GET(State) StateList[ER_CHAR_ACT::State]->GetData()
+#define STATEDATA_SET(State, FSMData) StateList[(UINT)ER_CHAR_ACT::State]->SetData(FSMData)
+#define STATEDATA_GET(State) StateList[(UINT)ER_CHAR_ACT::State]->GetData()
 
 #define BATTLE_SKILL(AttackObj, HittedObj, className, CalcFunc, SkillInfo) ER_BattleSystem::GetInst()->Battle_Skill(AttackObj, HittedObj, this, (SKILL_DMG_CALC)&className::CalcFunc, SkillInfo)
-#define BATTLE_COMMON(AttackObj, HittedObj) Battle_Common(AttackObj, HittedObj)
+#define BATTLE_COMMON(AttackObj, HittedObj) ER_BattleSystem::GetInst()->Battle_Common(AttackObj, (CGameObject*)HittedObj)
 
 #define GETITEMSTATS(ItemObj) ItemObj->GetScript<ER_DataScript_Item>()->GetStats()
 
@@ -118,4 +118,4 @@ enum class eStatus_Effect
 	DECREASE_APD	= 1 << 7,	// 공격속도 감소
 	FEAR			= 1 << 8,	// 공포
 	STUN			= 1 << 9,	// 기절
-}typedef BUFNDEBUF;
+}typedef BUFNDEBUF_ENUM;

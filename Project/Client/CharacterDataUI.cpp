@@ -279,6 +279,10 @@ void CharacterDataUI::render_CharacterInfoData()
     ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharMovementSpeed", ImGuiDataType_Float, &stats.fMovementSpeed);
     ImGui::Button("VRange", ImVec2(xsize, 0.f)); ImGui::SameLine();
     ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharVisionRange", ImGuiDataType_Float, &stats.fVisionRange);
+    ImGui::Button("WpAPD", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharWpAtkSpeed", ImGuiDataType_Float, &stats.fWpAtkSpd);
+    ImGui::Button("WpRNG", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharWpAtkRange", ImGuiDataType_Float, &stats.fWpAtkRange);
 
     ImGui::EndGroup();
 }
@@ -409,92 +413,119 @@ void CharacterDataUI::render_SkillInfoData()
     // Level Text
     ImGui::Button(" ", ImVec2(xsize, 0.f)); ImGui::SameLine();
     int SkillMaxLevel = SkillContext->iMaxSkillLevel;
-    for (int i = 0; i < SkillMaxLevel; ++i)
+    for (int i = 1; i <= SkillMaxLevel; ++i)
     {
         char level[10] = {};
-        sprintf_s(level, "Lv%d", i + 1);
+        sprintf_s(level, "Lv%d", i);
         ImGui::Button(level, ImVec2(xsize, 0.f));
 
-        if (i + 1 != SkillMaxLevel)
+        if (i != SkillMaxLevel)
             ImGui::SameLine();
     }
 
     // [iValue1]
     ImGui::Button("INT_1", ImVec2(xsize, 0.f)); ImGui::SameLine();
-    for (int i = 0; i < SkillMaxLevel; ++i)
+    for (int i = 1; i <= SkillMaxLevel; ++i)
     {
         char id[32] = {};
         sprintf_s(id, "##iValue1_%d", i);
 
         ImGui::SetNextItemWidth(xsize); ImGui::InputScalar(id, ImGuiDataType_S32, &SkillContext->iValue1[i]);
 
-        if (i + 1 != SkillMaxLevel)
+        if (i != SkillMaxLevel)
             ImGui::SameLine();
     }
 
-    // [iValue1]
+    // [iValue2]
     ImGui::Button("INT_2", ImVec2(xsize, 0.f)); ImGui::SameLine();
-    for (int i = 0; i < SkillMaxLevel; ++i)
+    for (int i = 1; i <= SkillMaxLevel; ++i)
     {
         char id[32] = {};
         sprintf_s(id, "##iValue2_%d", i);
 
         ImGui::SetNextItemWidth(xsize); ImGui::InputScalar(id, ImGuiDataType_S32, &SkillContext->iValue2[i]);
 
-        if (i + 1 != SkillMaxLevel)
+        if (i != SkillMaxLevel)
             ImGui::SameLine();
     }
 
     // [fValue1]
     ImGui::Button("FLT_1", ImVec2(xsize, 0.f)); ImGui::SameLine();
-    for (int i = 0; i < SkillMaxLevel; ++i)
+    for (int i = 1; i <= SkillMaxLevel; ++i)
     {
         char id[32] = {};
         sprintf_s(id, "##fValue1_%d", i);
 
         ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fValue1[i]);
 
-        if (i + 1 != SkillMaxLevel)
+        if (i != SkillMaxLevel)
             ImGui::SameLine();
     }
 
     // [fValue2]
     ImGui::Button("FLT_2", ImVec2(xsize, 0.f)); ImGui::SameLine();
-    for (int i = 0; i < SkillMaxLevel; ++i)
+    for (int i = 1; i <= SkillMaxLevel; ++i)
     {
         char id[32] = {};
         sprintf_s(id, "##fValue2_%d", i);
 
         ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fValue2[i]);
 
-        if (i + 1 != SkillMaxLevel)
+        if (i != SkillMaxLevel)
             ImGui::SameLine();
     }
 
     // [fRange]
     ImGui::Button("RNG", ImVec2(xsize, 0.f)); ImGui::SameLine();
-    for (int i = 0; i < SkillMaxLevel; ++i)
+    for (int i = 1; i <= SkillMaxLevel; ++i)
     {
         char id[32] = {};
         sprintf_s(id, "##fRange_%d", i);
 
         ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fRange[i]);
 
-        if (i + 1 != SkillMaxLevel)
+        if (i != SkillMaxLevel)
             ImGui::SameLine();
     }
 
     
     // [fCoolDown]
     ImGui::Button("COOL", ImVec2(xsize, 0.f)); ImGui::SameLine();
-    for (int i = 0; i < SkillMaxLevel; ++i)
+    for (int i = 1; i <= SkillMaxLevel; ++i)
     {
         char id[32] = {};
         sprintf_s(id, "##fCooldown_%d", i);
 
         ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fMaxCoolDown[i]);
 
-        if (i + 1 != SkillMaxLevel)
+        if (i != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+
+    // [fActionTime]
+    ImGui::Button("ActT", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 1; i <= SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##ActionTime_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fMaxActionTime[i]);
+
+        if (i != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+    
+    // [iUseSP]
+    ImGui::Button("UseSP", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 1; i <= SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##iUseSP_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputScalar(id, ImGuiDataType_S32, &SkillContext->iUseSP[i]);
+
+        if (i != SkillMaxLevel)
             ImGui::SameLine();
     }
 

@@ -13,6 +13,9 @@
 #define KEY_RELEASE(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::RELEASE
 #define KEY_PRESSED(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::PRESSED
 
+#define WHEEL_UP CKeyMgr::GetInst()->IsMouseWheelUp()
+#define WHEEL_DOWN CKeyMgr::GetInst()->IsMouseWheelDown()
+
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
 #define MAX_LAYER	32

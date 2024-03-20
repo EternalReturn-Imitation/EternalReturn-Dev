@@ -74,6 +74,9 @@ int g_arrVK[(UINT)KEY::END]
 	VK_F12,
 
 	 VK_OEM_3,
+
+	 0,
+	 0,
 };
 
 
@@ -87,7 +90,7 @@ CKeyMgr::CKeyMgr()
 
 CKeyMgr::~CKeyMgr()
 {
-
+	Release();
 }
 
 
@@ -138,7 +141,7 @@ void CKeyMgr::tick()
 		m_vPrevMousePos = m_vMousePos;
 
 		POINT ptMousePos = {};
-		GetCursorPos(&ptMousePos);		
+		GetCursorPos(&ptMousePos);
 		ScreenToClient(CEngine::GetInst()->GetMainWnd(), &ptMousePos);
 		m_vMousePos = Vec2((float)ptMousePos.x, (float)ptMousePos.y);
 
@@ -161,9 +164,78 @@ void CKeyMgr::tick()
 			else if (KEY_STATE::RELEASE == m_vecKey[i].state)
 			{
 				m_vecKey[i].state = KEY_STATE::NONE;
-			}			 
+			}
 		}
-	}	
+	}
+
+	// 마우스 휠
+	HRESULT hr = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState);
+	if (FAILED(hr))
+	{
+		// 장치 상태 손실 시 장치 재활성화
+		if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
+			m_mouse->Acquire();
+	}
+
+	mouseWheelUp = false;
+	mouseWheelDown = false;
+
+	// 마우스 휠 값 확인
+	if (m_mouseState.lZ > 0)
+		mouseWheelUp = true; // 휠을 위로 스크롤할 때의 동작
+	else if (m_mouseState.lZ < 0)
+		mouseWheelDown = true; // 휠을 아래로 스크롤할 때의 동작
+}
+
+void CKeyMgr::DinputInit(HINSTANCE _hinstance, HWND _hwnd)
+{
+	if (FAILED(DirectInput8Create(_hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL)))
+	{
+		assert(NULL);
+		return;
+	}
+
+;
+	if (FAILED(m_directInput->CreateDevice(GUID_SysMouse, &m_mouse, NULL)))
+	{
+		assert(NULL);
+		return;
+	}
+
+	;
+	if (FAILED(m_mouse->SetDataFormat(&c_dfDIMouse)))
+	{
+		assert(NULL);
+		return;
+	}
+
+	if (FAILED(m_mouse->SetCooperativeLevel(_hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)))
+	{
+		assert(NULL);
+		return;
+	}
+	
+	if (FAILED(m_mouse->Acquire()))
+	{
+		assert(NULL);
+		return;
+	}
+}
+
+void CKeyMgr::Release()
+{
+	if (m_mouse)
+	{
+		m_mouse->Unacquire();
+		m_mouse->Release();
+		m_mouse = 0;
+	}
+
+	if (m_directInput)
+	{
+		m_directInput->Release();
+		m_directInput = 0;
+	}
 }
 
 void CKeyMgr::CalcUnProjectPos()

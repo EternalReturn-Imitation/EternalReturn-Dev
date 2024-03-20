@@ -1,4 +1,5 @@
 #pragma once
+#include "ER_define.h"
 
 struct tInitial_Character_Stats
 {
@@ -114,17 +115,22 @@ struct tSkill_Info
 	int		iMaxSkillLevel;		// 최대 스킬 레벨
 
 	// 기본 스킬 정보
-	int		iValue1[5];			// Int형 인자
-	int		iValue2[5];			// Int형 인자
-	float	fValue1[5];			// float형 인자
-	float	fValue2[5];			// float형 인자
+	int		iValue1[6];			// Int형 인자
+	int		iValue2[6];			// Int형 인자
+	float	fValue1[6];			// float형 인자
+	float	fValue2[6];			// float형 인자
 	
-	float	fRange[5];			// 스킬 범위 인자
-	float	fMaxCoolDown[5];	// 재사용 대기시간
+	float	fRange[6];			// 스킬 범위
+	int		iUseSP[6];			// 사용스테미너
+	float	fMaxCoolDown[6];	// 재사용 대기시간
+	float	fMaxActionTime[6];	// 최대 지속시간
 
 	// 인게임 정보
 	int		iSkillLevel;		// 스킬 레벨	: value Idx
 	float	fCoolDown;			// 남은 재사용 대기시간
+	bool	IsUsable;			// 사용 가능 여부;
+	bool	IsAction;			// 작동중인지 여부;
+	float	fActionTime;		// 지속시간
 
 	tSkill_Info()
 		: iMaxSkillLevel(5)	// 최대 스킬 레벨
@@ -133,35 +139,167 @@ struct tSkill_Info
 		, fValue1{}
 		, fValue2{}
 		, fRange{}
+		, iUseSP{}
 		, fMaxCoolDown{}
+		, fMaxActionTime{}
 		, iSkillLevel(1)
 		, fCoolDown(0.f)
+		, IsUsable(true)
+		, IsAction(false)
+		, fActionTime(0.f)
 	{
 		strName = L"NULL";
 	}
+
+public:
+	bool Use(bool _IsBuf)
+	{
+		if (IsUsable)
+		{
+			if (_IsBuf)
+			{
+				fActionTime = fMaxActionTime[iSkillLevel];
+				IsAction = true;
+			}
+
+			fCoolDown = fMaxCoolDown[iSkillLevel];
+			IsUsable = false;
+			return true;
+		}
+
+		return false;
+	}
+
+	const int& Int1() { return iValue1[iSkillLevel]; }
+	const int& Int2() { return iValue2[iSkillLevel]; }
+	const float& Float1() { return fValue1[iSkillLevel]; } 
+	const float& Float2() { return fValue2[iSkillLevel]; } 
+	const float& Range() { return fRange[iSkillLevel]; } 
+	const float& MaxCooldown() { return fMaxCoolDown[iSkillLevel]; }
+	const float& CurCooldown() { return fCoolDown; }
+	const float& ActionTime() { return fMaxActionTime[iSkillLevel]; }
+	const float& UseSP() { return iUseSP[iSkillLevel]; }
+
+	void SkillStatusUpdate(float _Ratio)
+	{
+		if (IsAction)
+		{
+			fActionTime -= _Ratio;
+			if (fActionTime <= 0)
+			{
+				fActionTime <= 0;
+				IsAction = false;
+			}
+		}
+
+		if (IsUsable)
+			return;
+
+		fCoolDown -= _Ratio;
+
+		if (fCoolDown <= 0)
+		{
+			IsUsable = true;
+			fCoolDown = fCoolDown = fMaxCoolDown[iSkillLevel];
+		}
+
+	}
+
 
 	void Save(FILE* _File)
 	{
 		SaveWString(strName, _File);
 		fwrite(&iMaxSkillLevel, sizeof(int), 1, _File);
-		fwrite(&iValue1, sizeof(int), 5, _File);
-		fwrite(&iValue2, sizeof(int), 5, _File);
-		fwrite(&fValue1, sizeof(float), 5, _File);
-		fwrite(&fValue2, sizeof(float), 5, _File);
-		fwrite(&fRange, sizeof(float), 5, _File);
-		fwrite(&fMaxCoolDown, sizeof(float), 5, _File);
+		fwrite(&iValue1, sizeof(int), 6, _File);
+		fwrite(&iValue2, sizeof(int), 6, _File);
+		fwrite(&fValue1, sizeof(float), 6, _File);
+		fwrite(&fValue2, sizeof(float), 6, _File);
+		fwrite(&fRange, sizeof(float), 6, _File);
+		fwrite(&iUseSP, sizeof(int), 6, _File);
+		fwrite(&fMaxCoolDown, sizeof(float), 6, _File);
+		fwrite(&fMaxActionTime, sizeof(float), 6, _File);
 	}
 
 	void Load(FILE* _File)
 	{
 		LoadWString(strName, _File);
 		fread(&iMaxSkillLevel, sizeof(int), 1, _File);
-		fread(&iValue1, sizeof(int), 5, _File);
-		fread(&iValue2, sizeof(int), 5, _File);
-		fread(&fValue1, sizeof(float), 5, _File);
-		fread(&fValue2, sizeof(float), 5, _File);
-		fread(&fRange, sizeof(float), 5, _File);
-		fread(&fMaxCoolDown, sizeof(float), 5, _File);
+		fread(&iValue1, sizeof(int), 6, _File);
+		fread(&iValue2, sizeof(int), 6, _File);
+		fread(&fValue1, sizeof(float), 6, _File);
+		fread(&fValue2, sizeof(float), 6, _File);
+		fread(&fRange, sizeof(float), 6, _File);
+		fread(&iUseSP, sizeof(int), 6, _File);
+		fread(&fMaxCoolDown, sizeof(float), 6, _File);
+		fread(&fMaxActionTime, sizeof(float), 6, _File);
 	}
 
 }typedef ER_SKILL;
+
+struct tStatus_Effect
+{
+private:
+	UINT Effect;
+	float effectStats[10];
+	float fActionTime[10];
+
+public:
+	const UINT& GetCurStatus() { return Effect; }
+
+	int GetIncATK() { return (int)effectStats[0]; }
+	int GetIncDEF() { return (int)effectStats[1]; }
+	float GetIncSPD() { return effectStats[2]; }
+	float GetIncAPD() { return effectStats[3]; }
+	int GetDecATK() { return (int)effectStats[4]; }
+	int GetDecDEF() { return (int)effectStats[5]; }
+	float GetDecSPD() { return effectStats[6]; }
+	float GetDecAPD() { return effectStats[7]; }
+	bool IsFear(UINT _bufndbuf) { return _bufndbuf & (UINT)eStatus_Effect::FEAR; }
+	bool IsStun(UINT _bufndbuf) { return _bufndbuf & (UINT)eStatus_Effect::STUN; }
+
+	bool ActiveEffect(UINT ActiveEffect, float _ActionTime, float value = 0.f)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (ActiveEffect & 1 << i)
+			{
+				Effect |= ActiveEffect;			// 발견한 효과 적용
+				effectStats[i] = value;			// 효과 수치 적용
+				fActionTime[i] = _ActionTime;	// 작용시간 적용
+				return true;
+			}
+		}
+		// 아무것도 확인되지 않았으면 없는 효과
+		return false;
+	}
+
+	void ActionTiemUpdate(float timeratio)
+	{
+		// 적용된 효과 없음
+		if (0 == Effect)
+			return;
+
+		for (int i = 0; i < 10; ++i)
+		{
+			if (Effect & 1 << i)
+			{
+				fActionTime[i] -= timeratio;
+				
+				// 지속시간 종료
+				if (fActionTime[i] <= 0)
+				{
+					fActionTime[i] = 0;
+					effectStats[i] = 0;
+					Effect &= ~(1 << i);
+				}
+			}
+		}
+	}
+
+	tStatus_Effect()
+		: Effect(0)
+		, effectStats{}
+		, fActionTime{}
+	{}
+
+} typedef BUFNDEBUF_STATS;

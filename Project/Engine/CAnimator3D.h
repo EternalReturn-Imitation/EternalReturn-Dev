@@ -19,6 +19,7 @@ private:
     CAnim3D*                    m_pCurAnim;
 
     int							m_iFrameCount;              // 30
+    float                       m_fPlaySpeed;               // 재생속도 증가
 
     // default Animation
     int                         m_iFrameIdx;                // 현재 클립의 프레임
@@ -64,6 +65,8 @@ public:
     void Stop();
     void Reset();
     void SetFrame(int _Frame);
+
+    void PlaySpeedValue(float _value) { m_fPlaySpeed += _value * 0.1f; }
 
     int GetCurFrame() { return m_iFrameIdx; }
 

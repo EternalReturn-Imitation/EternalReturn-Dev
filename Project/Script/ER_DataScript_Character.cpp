@@ -6,6 +6,7 @@
 ER_DataScript_Character::ER_DataScript_Character()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 	, m_Stats(nullptr)
+	, m_StatusEffect(nullptr)
 	, m_Skill{}
 	, m_bGameDead(false)
 	, m_bOutofContorl(false)
@@ -13,10 +14,12 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_Inventory{}
 {
 	m_Stats = new tIngame_Stats;
+	m_StatusEffect = new tStatus_Effect;
 }
 
 ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& _origin)
 	: m_Stats(nullptr)
+	, m_StatusEffect(nullptr)
 	, m_strKey(_origin.m_strKey)
 	, m_strName(_origin.m_strName)
 	, m_STDStats(_origin.m_STDStats)
@@ -31,6 +34,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 {
 	m_Stats = new tIngame_Stats;
+	m_StatusEffect = new tStatus_Effect;
 
 	for (int i = 0; i < _origin.m_SkillList.size(); ++i)
 	{
@@ -50,6 +54,9 @@ ER_DataScript_Character::~ER_DataScript_Character()
 {
 	if (m_Stats)
 		delete m_Stats;
+
+	if (m_StatusEffect)
+		delete m_StatusEffect;
 
 	Safe_Del_Vec(m_SkillList);
 }
@@ -129,12 +136,7 @@ void ER_DataScript_Character::begin()
 {
 	// 캐릭터 초기능력치를 받아와 레벨 1로 초기화
 	m_Stats->Init_To_LevelOne(m_STDStats);
-
-	int a = 0;
-	if (GetOwner()->GetRenderComponent() != nullptr && GetOwner()->GetRenderComponent()->GetMaterial(0) != nullptr)
-	{
-		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
-	}
+	StatusUpdate();
 }
 
 void ER_DataScript_Character::tick()
@@ -143,9 +145,10 @@ void ER_DataScript_Character::tick()
 
 	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
 	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
-		m_SkillList[i]->CoolDownUpdate(CoolDownRatio);
+		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
 
 	// 버프디버프 쿨타임 갱신
+	m_StatusEffect->ActionTiemUpdate(DT);
 
 }
 

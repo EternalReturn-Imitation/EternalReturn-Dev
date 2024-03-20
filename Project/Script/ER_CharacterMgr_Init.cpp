@@ -77,7 +77,7 @@ int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
     // Character Std Stats
     fwrite(&CharacterContext->m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 
-    int SkillSize = CharacterContext->m_SkillList.size();
+    int SkillSize = (int)CharacterContext->m_SkillList.size();
     fwrite(&SkillSize, sizeof(int), 1, _File);
 
     for (int i = 0; i < SkillSize; ++i)
@@ -121,7 +121,7 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
 
     pCharacter->AddComponent(CScriptMgr::GetScript(ActionScript));
 
-    int SkillSize = CharacterContext->m_SkillList.size();
+    int SkillSize = (int)CharacterContext->m_SkillList.size();
     fread(&SkillSize, sizeof(int), 1, _File);
     
     for (int i = 0; i < SkillSize; ++i)

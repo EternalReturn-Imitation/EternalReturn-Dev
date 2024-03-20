@@ -19,6 +19,8 @@ FSMState* ER_ActionScript_Aya::CreateWait()
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Aya, Wait);
+    STATEDELEGATE_UPDATE(state, Aya, Wait);
+    STATEDELEGATE_EXIT(state, Aya, Wait);
 
     return state;
 }
@@ -29,6 +31,7 @@ FSMState* ER_ActionScript_Aya::CreateMove()
 
     STATEDELEGATE_ENTER(state, Aya, Move);
     STATEDELEGATE_UPDATE(state, Aya, Move);
+    STATEDELEGATE_EXIT(state, Aya, Move);
 
     return state;
 }
@@ -39,6 +42,7 @@ FSMState* ER_ActionScript_Aya::CreateCraft()
 
     STATEDELEGATE_ENTER(state, Aya, Craft);
     STATEDELEGATE_UPDATE(state, Aya, Craft);
+    STATEDELEGATE_EXIT(state, Aya, Craft);
 
     return state;
 }
@@ -49,6 +53,7 @@ FSMState* ER_ActionScript_Aya::CreateRest()
 
     STATEDELEGATE_ENTER(state, Aya, Rest);
     STATEDELEGATE_UPDATE(state, Aya, Rest);
+    STATEDELEGATE_EXIT(state, Aya, Rest);
 
     return state;
 }
@@ -56,6 +61,10 @@ FSMState* ER_ActionScript_Aya::CreateRest()
 FSMState* ER_ActionScript_Aya::CreateAttack()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Aya, Attack);
+    STATEDELEGATE_UPDATE(state, Aya, Attack);
+    STATEDELEGATE_EXIT(state, Aya, Attack);
 
     return state;
 }
@@ -66,13 +75,18 @@ FSMState* ER_ActionScript_Aya::CreateArrive()
 
     STATEDELEGATE_ENTER(state, Aya, Arrive);
     STATEDELEGATE_UPDATE(state, Aya, Arrive);
+    STATEDELEGATE_EXIT(state, Aya, Arrive);
 
     return state;
 }
 
-FSMState* ER_ActionScript_Aya::CreateDeath()
+FSMState* ER_ActionScript_Aya::CreateDead()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Aya, Dead);
+    STATEDELEGATE_UPDATE(state, Aya, Dead);
+    STATEDELEGATE_EXIT(state, Aya, Dead);
 
     return state;
 }
@@ -83,6 +97,7 @@ FSMState* ER_ActionScript_Aya::CreateSkill_Q()
 
     STATEDELEGATE_ENTER(state, Aya, Skill_Q);
     STATEDELEGATE_UPDATE(state, Aya, Skill_Q);
+    STATEDELEGATE_EXIT(state, Aya, Skill_Q);
 
     return state;
 }
@@ -93,6 +108,7 @@ FSMState* ER_ActionScript_Aya::CreateSkill_W()
 
     STATEDELEGATE_ENTER(state, Aya, Skill_W);
     STATEDELEGATE_UPDATE(state, Aya, Skill_W);
+    STATEDELEGATE_EXIT(state, Aya, Skill_W);
 
     return state;
 }
@@ -103,6 +119,7 @@ FSMState* ER_ActionScript_Aya::CreateSkill_E()
 
     STATEDELEGATE_ENTER(state, Aya, Skill_E);
     STATEDELEGATE_UPDATE(state, Aya, Skill_E);
+    STATEDELEGATE_EXIT(state, Aya, Skill_E);
 
     return state;
 }
@@ -111,17 +128,43 @@ FSMState* ER_ActionScript_Aya::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_ENTER(state, Aya, Skill_R);
     STATEDELEGATE_UPDATE(state, Aya, Skill_R);
+    STATEDELEGATE_EXIT(state, Aya, Skill_R);
 
     return state;
 }
 
 void ER_ActionScript_Aya::Attack(tFSMData& _Data)
 {
+    // 공격 추적상태가 아님
+    if (!_Data.bData[0])
+    {
+        // 공격 추적상태 전환
+        _Data.bData[0] = true;
+    }
+
+    STATEDATA_SET(ATTACK, _Data);
+
+    CGameObject* TargetObj = (CGameObject*)_Data.lParam;
+    float AtkRange = m_Data->GetStatus()->fAtakRange;
+    if (IsInRange(TargetObj, AtkRange))
+    {
+        _Data.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::ATTACK);
+    }
+    else
+    {
+        // 사정거리 밖이기때문에 타겟방향으로 이동한다.
+        tFSMData MoveData = STATEDATA_GET(MOVE);
+        MoveData.v4Data = TargetObj->Transform()->GetRelativePos();
+        Move(MoveData);
+    }
 }
 
 void ER_ActionScript_Aya::Wait(tFSMData& _Data)
 {
+    ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Aya::Move(tFSMData& _Data)
@@ -159,7 +202,7 @@ void ER_ActionScript_Aya::Skill_E(tFSMData& _Data)
 {
     STATEDATA_SET(SKILL_E, _Data);
 
-    ChangeState(ER_CHAR_ACT::SKILL_E, ABSOUTE);
+    ChangeState(ER_CHAR_ACT::SKILL_E, bAbleChange::ABSOUTE);
 }
 
 void ER_ActionScript_Aya::Skill_R(tFSMData& _Data)
@@ -167,39 +210,64 @@ void ER_ActionScript_Aya::Skill_R(tFSMData& _Data)
     ChangeState(ER_CHAR_ACT::SKILL_R);
 }
 
-void ER_ActionScript_Aya::begin()
-{
-    ER_ActionScript_Character::begin();
-    ChangeState(ER_CHAR_ACT::ARRIVE);
-}
-
 void ER_ActionScript_Aya::MoveEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Aya_Run");
+    
     SetAbleToCancle(bAbleChange::COMMON);
 
     Vec3 DestPos = param.v4Data;
 
     CFindPath* findpathcomp = GetOwner()->FindPath();
     bool bMove = findpathcomp->FindPath(DestPos);
-
-    if (!bMove)
-        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Aya::MoveUpdate(tFSMData& param)
-{// 캐릭터 속도 얻어와서 넣어주기
+{
+    tFSMData Atkdata = STATEDATA_GET(ATTACK);
+
+    // 공격추적상태라면
+    if (Atkdata.bData[0])
+    {
+        CGameObject* TargetObj = (CGameObject*)Atkdata.lParam;
+        float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+        if (IsInRange(TargetObj, AtkRange))
+        {
+            Atkdata.bData[0] = false;
+            GetOwner()->FindPath()->ClearPath();
+            ChangeState(ER_CHAR_ACT::ATTACK, bAbleChange::DISABLE);
+            return;
+        }
+    }
+
+    // 캐릭터 속도 얻어와서 넣어주기
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
     float speed = m_Data->GetStatus()->fMovementSpeed;
+    speed += (speed * statusefc->GetIncSPD()) - (speed * statusefc->GetDecSPD());
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
+void ER_ActionScript_Aya::MoveExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Aya::WaitEnter(tFSMData& param)
 {
-    GetOwner()->Animator3D()->SelectAnimation(L"Aya_Idle");
+    GetOwner()->Animator3D()->SelectAnimation(L"Aya_Idle", true);
+
     SetAbleToCancle(bAbleChange::COMMON);
+}
+
+void ER_ActionScript_Aya::WaitUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Aya::WaitExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Aya::ArriveEnter(tFSMData& param)
@@ -213,6 +281,69 @@ void ER_ActionScript_Aya::ArriveUpdate(tFSMData& param)
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
+void ER_ActionScript_Aya::ArriveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Aya::AttackEnter(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.bData[2] = false;
+
+    GetOwner()->Animator3D()->SelectAnimation(L"Aya_Attack", false);
+
+    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+}
+
+void ER_ActionScript_Aya::AttackUpdate(tFSMData& param)
+{
+    // bData[0] : 공격 대상 추적상태
+    // bData[1] : -
+    // bData[2] : Hit판정 실행여부
+    // bData[3] : - 
+
+    CAnimator3D* animator = GetOwner()->Animator3D();
+    float Atkspd = m_Data->GetStatus()->fAttackSpeed;
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
+
+    // 애니메이션 속도 증가
+    animator->PlaySpeedValue(Atkspd);
+
+    // 공격판정
+    int HitFrame = param.bData[3] ? 8 : 8;
+    if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
+    {
+        BATTLE_COMMON(GetOwner(), param.lParam);
+        param.bData[2] = true;
+    }
+
+    if (animator->IsFinish())
+    {
+        CGameObject* Target = (CGameObject*)param.lParam;
+        // 사망 판단
+        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
+
+        if (IsDead)
+            ChangeState(ER_CHAR_ACT::WAIT);
+        else
+        {
+            // 거리 판단
+            float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+            if (IsInRange(Target, AtkRange))
+                AttackEnter(param);
+            else
+                Attack(param);
+        }
+    }
+    
+}
+
+void ER_ActionScript_Aya::AttackExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Aya::CraftEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Aya_Craft", false);
@@ -220,6 +351,16 @@ void ER_ActionScript_Aya::CraftEnter(tFSMData& param)
 
 void ER_ActionScript_Aya::CraftUpdate(tFSMData& param)
 {
+    if (GetOwner()->Animator3D()->IsFinish())
+    {
+        // 아이탬 생성함수
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
+}
+
+void ER_ActionScript_Aya::CraftExit(tFSMData& param)
+{
+
 }
 
 void ER_ActionScript_Aya::RestEnter(tFSMData& param)
@@ -275,6 +416,10 @@ void ER_ActionScript_Aya::RestUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Aya::RestExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Aya::Skill_QEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Aya_SkillQ", false);
@@ -299,6 +444,10 @@ void ER_ActionScript_Aya::Skill_QUpdate(tFSMData& param)
         SetAbleToCancle(bAbleChange::COMMON);
         param.iData = 0;
     }
+}
+
+void ER_ActionScript_Aya::Skill_QExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Aya::Skill_WEnter(tFSMData& param)
@@ -423,6 +572,10 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Aya::Skill_WExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Aya::Skill_EEnter(tFSMData& param)
 {
     CAnimator3D* Animator = GetOwner()->Animator3D();
@@ -441,7 +594,7 @@ void ER_ActionScript_Aya::Skill_EEnter(tFSMData& param)
     param.v4Data[0] = 8.f;                                              // 스킬 거리
     float ClearDist = GetClearDistance(vDir, param.v4Data[0]);
     param.v4Data[1] = ClearDist;                                        // 이동 가능 거리
-    param.v4Data[2] = Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
+    param.v4Data[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
     param.v4Data[3] = 0.f;                                              // 이동한 거리 초기화.
 
     SetAbleToCancle(bAbleChange::ABSOUTE);
@@ -468,7 +621,7 @@ void ER_ActionScript_Aya::Skill_EUpdate(tFSMData& param)
         float speed = param.v4Data[0];
 
         if (param.v4Data[3] > (param.v4Data[1] / 5.f))
-            speed = param.v4Data[0] * 1.5;
+            speed = param.v4Data[0] * 1.5f;
 
         float CurFrameMoveDist = speed * param.v4Data[2] * DT;
 
@@ -496,6 +649,14 @@ void ER_ActionScript_Aya::Skill_EUpdate(tFSMData& param)
 
         ChangeState(ER_CHAR_ACT::WAIT);
     }
+}
+
+void ER_ActionScript_Aya::Skill_EExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Aya::Skill_REnter(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
@@ -536,4 +697,20 @@ void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
     default:
         break;
     }
+}
+
+void ER_ActionScript_Aya::Skill_RExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Aya::DeadEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Aya::DeadUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Aya::DeadExit(tFSMData& param)
+{
 }

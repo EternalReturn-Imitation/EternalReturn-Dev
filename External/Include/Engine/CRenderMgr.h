@@ -16,7 +16,7 @@ class CRenderMgr :
     SINGLE(CRenderMgr);
 private:
     vector<CCamera*>            m_vecCam;           // 현재 레벨 내에 존재하는 카메라를 등록 받아둠
-    CCamera* m_pEditorCam;       // 외부 에디터쪽에서 관리하는 카메라를 등록 받아둠
+    CCamera*                    m_pEditorCam;       // 외부 에디터쪽에서 관리하는 카메라를 등록 받아둠
 
     vector<tDebugShapeInfo>     m_vecShapeInfo;
 
@@ -59,7 +59,10 @@ public:
         m_vecLight3DInfo.push_back(_Info);
         return (UINT)(m_vecLight3D.size() - 1);
     }
-    void ClearCamera() { m_vecCam.clear(); }
+    void ClearCamera() 
+    { 
+        m_vecCam.clear(); 
+    }
 
     void AddDebugShapeInfo(const tDebugShapeInfo& _info) { m_vecShapeInfo.push_back(_info); }
     vector<tDebugShapeInfo>& GetDebugShapeInfo() { return m_vecShapeInfo; }
