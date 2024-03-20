@@ -43,14 +43,18 @@ struct tIngame_Stats
 	float	fCriticalStrikeChance;	// 치명타 확률
 	float	fMovementSpeed;			// 이동속도
 	float	fVisionRange;			// 시야
+	float	fAtakRange;				// 기본공격 사거리
 
+	float	fCriticalStrikeDamage;
+	float	fCooldownReduction;			// 쿨타임 감소
+	float	fOmnisyphon;					// 모든 피해 흡혈
 	int		iSkillAmplification;	// 스킬 증폭
 
 	void Init_To_LevelOne(const ER_Initial_Stats& _StdStats)
 	{
 		iLevel = 1;
 		iExp = 1;
-		iNeedExpForNextLevel = iLevel * 100;	// 임의 설정
+		iNeedExpForNextLevel = 50;	// 임의 설정
 
 		iAttackPower = _StdStats.iAttackPower;
 		iDefense = _StdStats.iDefense;
@@ -64,7 +68,11 @@ struct tIngame_Stats
 		fCriticalStrikeChance = _StdStats.fCriticalStrikeChance;
 		fMovementSpeed = _StdStats.fMovementSpeed;
 		fVisionRange = _StdStats.fVisionRange;
+		fAtakRange = _StdStats.fWpAtkRange;
 
+		fCriticalStrikeDamage = 0;
+		fCooldownReduction = 0;
+		fOmnisyphon = 0;
 		iSkillAmplification = 0;
 	};
 }typedef ER_Ingame_Stats;

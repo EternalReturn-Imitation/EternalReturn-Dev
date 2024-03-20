@@ -43,14 +43,18 @@ struct tIngame_Stats
 	float	fCriticalStrikeChance;	// 치명타 확률
 	float	fMovementSpeed;			// 이동속도
 	float	fVisionRange;			// 시야
+	float	fAtakRange;				// 기본공격 사거리
 
+	float	fCriticalStrikeDamage;
+	float	fCooldownReduction;			// 쿨타임 감소
+	float	fOmnisyphon;					// 모든 피해 흡혈
 	int		iSkillAmplification;	// 스킬 증폭
 
 	void Init_To_LevelOne(const ER_Initial_Stats& _StdStats)
 	{
 		iLevel = 1;
 		iExp = 1;
-		iNeedExpForNextLevel = iLevel * 100;	// 임의 설정
+		iNeedExpForNextLevel = 50;	// 임의 설정
 
 		iAttackPower = _StdStats.iAttackPower;
 		iDefense = _StdStats.iDefense;
@@ -64,7 +68,11 @@ struct tIngame_Stats
 		fCriticalStrikeChance = _StdStats.fCriticalStrikeChance;
 		fMovementSpeed = _StdStats.fMovementSpeed;
 		fVisionRange = _StdStats.fVisionRange;
+		fAtakRange = _StdStats.fWpAtkRange;
 
+		fCriticalStrikeDamage = 0;
+		fCooldownReduction = 0;
+		fOmnisyphon = 0;
 		iSkillAmplification = 0;
 	};
 }typedef ER_Ingame_Stats;
@@ -117,6 +125,7 @@ struct tSkill_Info
 	// 인게임 정보
 	int		iSkillLevel;		// 스킬 레벨	: value Idx
 	float	fCoolDown;			// 남은 재사용 대기시간
+	bool	IsUsable;			// 사용 가능 여부;
 
 	tSkill_Info()
 		: iMaxSkillLevel(5)	// 최대 스킬 레벨
@@ -128,9 +137,44 @@ struct tSkill_Info
 		, fMaxCoolDown{}
 		, iSkillLevel(1)
 		, fCoolDown(0.f)
+		, IsUsable(true)
 	{
 		strName = L"NULL";
 	}
+
+	bool Use()
+	{
+		if (IsUsable)
+		{
+			fCoolDown = fMaxCoolDown[iSkillLevel];
+			IsUsable = false;
+			return true;
+		}
+
+		return false;
+	}
+
+	const int& Int1() { return iValue1[iSkillLevel]; }
+	const int& Int2() { return iValue1[iSkillLevel]; }
+	const float& Float1() { return iValue1[iSkillLevel]; } 
+	const float& Float2() { return iValue1[iSkillLevel]; } 
+	const float& Range() { return iValue1[iSkillLevel]; } 
+	const float& MaxCooldown() { return iValue1[iSkillLevel]; }
+	const float& CurCooldown() { return iValue1[iSkillLevel]; }
+
+	void CoolDownUpdate(float _Ratio)
+	{
+		if (IsUsable)
+			return;
+
+		fCoolDown -= _Ratio;
+		if (fCoolDown <= 0)
+		{
+			IsUsable = true;
+			fCoolDown = fCoolDown = fMaxCoolDown[iSkillLevel];;
+		}
+	}
+
 
 	void Save(FILE* _File)
 	{
@@ -157,3 +201,72 @@ struct tSkill_Info
 	}
 
 }typedef ER_SKILL;
+
+struct tStatus_Effect
+{
+private:
+	UINT Effect;
+	float effectStats[10];
+	float fActionTime[10];
+
+public:
+	const UINT& GetCurStatus() { return Effect; }
+
+	int GetIncATK() { return (int)effectStats[0]; }
+	int GetIncDEF() { return (int)effectStats[1]; }
+	float GetIncSPD() { return effectStats[2]; }
+	float GetIncAPD() { return effectStats[3]; }
+	int GetDecATK() { return (int)effectStats[4]; }
+	int GetDecDEF() { return (int)effectStats[5]; }
+	float GetDecSPD() { return effectStats[6]; }
+	float GetDecAPD() { return effectStats[7]; }
+	bool IsFear(UINT _bufndbuf) { return _bufndbuf & (UINT)eStatus_Effect::FEAR; }
+	bool IsStun(UINT _bufndbuf) { return _bufndbuf & (UINT)eStatus_Effect::STUN; }
+
+	bool ActiveEffect(UINT ActiveEffect, float _ActionTime, float value = 0.f)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (ActiveEffect & 1 << i)
+			{
+				Effect |= ActiveEffect;			// 발견한 효과 적용
+				effectStats[i] = value;			// 효과 수치 적용
+				fActionTime[i] = _ActionTime;	// 작용시간 적용
+			}
+		}
+		// 아무것도 확인되지 않았으면 없는 효과
+		return false;
+		
+		
+	}
+
+	void ActionTiemUpdate(float timeratio)
+	{
+		// 적용된 효과 없음
+		if (0 == Effect)
+			return;
+
+		for (int i = 0; i < 10; ++i)
+		{
+			if (Effect & 1 << i)
+			{
+				fActionTime[i] -= Effect;
+				
+				// 지속시간 종료
+				if (fActionTime[i] <= 0)
+				{
+					fActionTime[i] = 0;
+					effectStats[i] = 0;
+					Effect &= ~(1 << i);
+				}
+			}
+		}
+	}
+
+	tStatus_Effect()
+		: Effect(0)
+		, effectStats{}
+		, fActionTime{}
+	{}
+
+} typedef BUFNDEBUF_STATS;
