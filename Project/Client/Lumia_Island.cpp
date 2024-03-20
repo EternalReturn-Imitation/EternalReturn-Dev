@@ -113,6 +113,8 @@ void SetLayer(CLevel* _Level)
 	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Base");
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"MapCollider");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Character");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Player");
 
 	// Ray LayerCheck
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");

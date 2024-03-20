@@ -14,31 +14,50 @@ private:
     Ptr<CTexture>               m_PortraitTex;          // 초상화 텍스쳐
     Ptr<CTexture>               m_FullTax;              // 전신 일러
     Ptr<CTexture>               m_MapTex;               // 미니맵 텍스쳐
+    vector<ER_SKILL*>           m_SkillList;            // 보유 스킬             
 
     // 실험체 최종 능력치 (초기능력치 * 레벨, + 아이템, + 스킬효과)
-    tIngame_Stats*    m_Stats;                // 게임 능력치
-    vector<ER_SKILL*>           m_Skill;                // 보유 스킬             
+    tIngame_Stats*              m_Stats;                // 게임 능력치
+    ER_SKILL*                   m_Skill[4];             // 실제사용스킬
 
-    // [인벤토리 15개]
-    // 장착 5개
-    // 인벤토리전용 10개
+    bool                        m_bGameDead;            // 캐릭터 사망판단
+    bool                        m_bOutofContorl;        // 제어불가상태
 
-    // [함수]
-    // 능력치 갱신 함수 (아이템 장착, 레벨업, 상태이상 등 상호작용시 마지막에 호출)
-    void StatusUpdate();    // Status 갱신 함수
 
-    vector<ER_SKILL*>& GetSkillList() { return m_Skill; }
+    CGameObject*                m_Equipment[(UINT)ER_ITEM_SLOT::END];   // 장비칸
+    CGameObject*                m_Inventory[10];                      // 인벤토리 10칸
 
-    CLONE(ER_DataScript_Character);
+public:
+    // [상태 개신]
+    void StatusUpdate();    // Status 갱신 함수 : 레벨업 , 아이템변경, 버프/버프
+    // 스킬 쿨타임 갱신 함수
+
 public:
     void init();
     virtual void begin() override;
     virtual void tick() override;
 
 public:
+    // [Stats]
     ER_Ingame_Stats* GetStatus() { return m_Stats; }
+
     Ptr<CTexture> GetPortraitTex() { return m_PortraitTex; }
-    const ER_SKILL* GetSkill(int _Idx) { return m_Skill[_Idx]; }
+    
+    // [Skill]
+    vector<ER_SKILL*>& GetSkillList() { return m_SkillList; }
+    const ER_SKILL* GetSkill(int _Idx) { return m_SkillList[_Idx]; }
+
+    // [Item]
+    CGameObject** GetAllEquipItem() { return m_Equipment; }
+    CGameObject* GetEquipItem(UINT _SlotType) { return m_Equipment[_SlotType]; }
+
+    CGameObject** GetAllInvenItem() { return m_Inventory; }
+    CGameObject* GetInvenItem(UINT _SlotX, UINT _SlotY) { return m_Equipment[_SlotX * 5 + _SlotY]; }
+    CGameObject* GetInvenItem(UINT _SlotType) { return m_Equipment[_SlotType]; }
+
+    CGameObject* ItemAcquisition(CGameObject* _ItemObj);
+
+    bool SwapItem(CGameObject* _DragmItem, CGameObject* _DropItem);
 
 public:
     virtual void BeginOverlap(CCollider3D* _Other) override;
@@ -57,6 +76,8 @@ public:
     ER_DataScript_Character();
     ER_DataScript_Character(const ER_DataScript_Character& _origin);
     ~ER_DataScript_Character();
+    
+    CLONE(ER_DataScript_Character);
 
     friend class ER_CharacterMgr;
     friend class CharacterDataUI;

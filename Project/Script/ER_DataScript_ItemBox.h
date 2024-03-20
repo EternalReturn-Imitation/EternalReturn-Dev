@@ -5,7 +5,7 @@ class ER_DataScript_ItemBox :
     public CScript
 {
 private:
-
+    CGameObject* m_aItemList[2][4];
 
 public:
     void init();
@@ -20,6 +20,9 @@ public:
     virtual void BeginRayOverlap() override;
     virtual void OnRayOverlap() override;
     virtual void EndRayOverlap() override;
+
+public:
+    void CreateRandomItems();
 
 public:
     ER_DataScript_ItemBox();

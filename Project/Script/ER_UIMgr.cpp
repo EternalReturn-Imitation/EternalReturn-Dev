@@ -33,12 +33,15 @@ void ER_UIMgr::init()
 
 void ER_UIMgr::tick()
 {
-	if (KEY_TAP(KEY::F)) {
-		CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
-		tRay ray = mainCam->GetRay();
-		IntersectResult result = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, CPathFindMgr::GetInst()->GetMapCollider());
-		Vec3 posResult = WorldPosToUIPos(result.vCrossPoint);
-	}
+	//if (KEY_TAP(KEY::F)) {
+	//	CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
+	//	tRay ray = mainCam->GetRay();
+	//	IntersectResult result = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, CPathFindMgr::GetInst()->GetMapCollider());
+	//	Vec3 posResult = WorldPosToUIPos(result.vCrossPoint);
+	//
+	//	m_pItemBox->SetEnable(true);
+	//	m_pItemBox->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y-80.f, -1.0f));
+	//}
 }
 
 void ER_UIMgr::GameStart()
@@ -1263,7 +1266,7 @@ void ER_UIMgr::CreateDropInventory()
 
 #pragma endregion
 
-	//m_pItemBox->SetEnable(false);
+	m_pItemBox->SetEnable(false);
 }
 
 Vec3 ER_UIMgr::WorldPosToUIPos(const Vec3& worldPos)
@@ -1285,6 +1288,8 @@ Vec3 ER_UIMgr::WorldPosToUIPos(const Vec3& worldPos)
 
 	result.x -= (vResol.x / 2.f);
 	result.y -= (vResol.y / 2.f);
+
+	result.y = -result.y;
 
 	return result;
 }
