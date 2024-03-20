@@ -20,8 +20,9 @@ void Create_Forest();
 void Create_Hotel();
 void Create_SandyBeach();
 void Create_School();
-
 void Create_Uptown();
+
+void TestObject();
 
 // func
 class CGameObject;

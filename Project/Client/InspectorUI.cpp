@@ -15,6 +15,7 @@
 #include "Light2DUI.h"
 #include "Light3DUI.h"
 #include "BoneUI.h"
+#include "TextUI.h"
 
 #include "MeshDataUI.h"
 #include "TextureUI.h"
@@ -50,6 +51,10 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA] = new CameraUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA]);
+	
+	m_arrComUI[(UINT)COMPONENT_TYPE::TEXTCOMP] = new TextUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::TEXTCOMP]->SetSize(0.f, 400.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TEXTCOMP]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D] = new Collider2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]->SetSize(0.f, 150.f);

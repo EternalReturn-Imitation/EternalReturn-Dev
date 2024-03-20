@@ -47,15 +47,15 @@ CGameObject* ER_CharacterMgr::SpawnCharacter_Player(const wstring& _key, Vec3 _P
 
 
     // SkillArea
-    CGameObject* SkillArea = new CGameObject;
-    SkillArea->AddComponent(new ER_PlayerScript_Range);
-    SkillArea->GetScript<ER_PlayerScript_Range>()->init();
-
-    SkillArea->GetScript<ER_PlayerScript_Range>()->SetOwnerObj(Player);
+    // CGameObject* SkillArea = new CGameObject;
+    // SkillArea->AddComponent(new ER_PlayerScript_Range);
+    // SkillArea->GetScript<ER_PlayerScript_Range>()->init();
+    // 
+    // SkillArea->GetScript<ER_PlayerScript_Range>()->SetOwnerObj(Player);
 
     // CurLevel Spawn
     SpawnGameObject(Player, _Pos, L"Player");
-    SpawnGameObject(SkillArea, _Pos, L"InGameUI");
+    // SpawnGameObject(SkillArea, _Pos, L"InGameUI");
 
     return Player;
 }

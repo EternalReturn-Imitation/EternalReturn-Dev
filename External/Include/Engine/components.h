@@ -7,6 +7,7 @@
 #include "CLight2D.h"
 #include "CLight3D.h"
 #include "CCamera.h"
+#include "CText.h"
 #include "CAnimator2D.h"
 #include "CAnimator3D.h"
 #include "CBehaviorTree.h"
