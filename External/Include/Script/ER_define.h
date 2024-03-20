@@ -28,22 +28,22 @@ enum class ER_ITEM_TYPE
 
 enum class ER_ITEM_SLOT
 {
-	NONE,				// 장착불가
 	WEAPONS,			// 무기
-	HEAD,				// 머리
 	CHEST,				// 옷
+	HEAD,				// 머리
 	ARM,				// 팔
 	LEG,				// 다리
+	END,				// 장착불가
 };
 
 enum class ER_WEAPON_TYPE
 {
-	NONE,				// 미설정
 	AXE,				// 도끼
 	SWORD,				// 검
 	PISTOL,				// 권총
 	GLOVE,				// 글러브
-	BOW					// 활
+	BOW,				// 활
+	END,				// 미설정
 };
 
 typedef union item_combination_pair
