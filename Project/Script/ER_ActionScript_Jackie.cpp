@@ -17,7 +17,7 @@ FSMState* ER_ActionScript_Jackie::CreateWait()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Wait);
+    STATEDELEGATE_ENTER(state, Jackie, Wait);
 
     return state;
 }
@@ -26,8 +26,8 @@ FSMState* ER_ActionScript_Jackie::CreateMove()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Move);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Jackie, Move);
+    STATEDELEGATE_ENTER(state, Jackie, Move);
+    STATEDELEGATE_UPDATE(state, Jackie, Move);
 
     return state;
 }
@@ -43,8 +43,8 @@ FSMState* ER_ActionScript_Jackie::CreateRest()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Rest);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Jackie, Rest);
+    STATEDELEGATE_ENTER(state, Jackie, Rest);
+    STATEDELEGATE_UPDATE(state, Jackie, Rest);
 
     return state;
 }
@@ -60,8 +60,8 @@ FSMState* ER_ActionScript_Jackie::CreateArrive()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Arrive);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Jackie, Arrive);
+    STATEDELEGATE_ENTER(state, Jackie, Arrive);
+    STATEDELEGATE_UPDATE(state, Jackie, Arrive);
 
     return state;
 }
@@ -77,9 +77,9 @@ FSMState* ER_ActionScript_Jackie::CreateSkill_Q()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Skill_Q);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Jackie, Skill_Q);
-    STATEDELEGATE_EXIT(state, ER_ActionScript_Jackie, Skill_Q);
+    STATEDELEGATE_ENTER(state, Jackie, Skill_Q);
+    STATEDELEGATE_UPDATE(state, Jackie, Skill_Q);
+    STATEDELEGATE_EXIT(state, Jackie, Skill_Q);
 
     return state;
 }
@@ -88,8 +88,8 @@ FSMState* ER_ActionScript_Jackie::CreateSkill_W()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Skill_W);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Jackie, Skill_W);
+    STATEDELEGATE_ENTER(state, Jackie, Skill_W);
+    STATEDELEGATE_UPDATE(state, Jackie, Skill_W);
 
     return state;
 }
@@ -98,9 +98,9 @@ FSMState* ER_ActionScript_Jackie::CreateSkill_E()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Skill_E);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Jackie, Skill_E);
-    STATEDELEGATE_EXIT(state, ER_ActionScript_Jackie, Skill_E);
+    STATEDELEGATE_ENTER(state, Jackie, Skill_E);
+    STATEDELEGATE_UPDATE(state, Jackie, Skill_E);
+    STATEDELEGATE_EXIT(state, Jackie, Skill_E);
 
     return state;
 }
@@ -109,9 +109,9 @@ FSMState* ER_ActionScript_Jackie::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Jackie, Skill_R);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Jackie, Skill_R);
-    STATEDELEGATE_EXIT(state, ER_ActionScript_Jackie, Skill_R);
+    STATEDELEGATE_ENTER(state, Jackie, Skill_R);
+    STATEDELEGATE_UPDATE(state, Jackie, Skill_R);
+    STATEDELEGATE_EXIT(state, Jackie, Skill_R);
 
     return state;
 }

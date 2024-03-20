@@ -18,7 +18,7 @@ FSMState* ER_ActionScript_Rio::CreateWait()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Wait);
+    STATEDELEGATE_ENTER(state, Rio, Wait);
 
     return state;
 }
@@ -27,8 +27,8 @@ FSMState* ER_ActionScript_Rio::CreateMove()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Move);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Move);
+    STATEDELEGATE_ENTER(state, Rio, Move);
+    STATEDELEGATE_UPDATE(state, Rio, Move);
 
     return state;
 }
@@ -44,8 +44,8 @@ FSMState* ER_ActionScript_Rio::CreateRest()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Rest);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Rest);
+    STATEDELEGATE_ENTER(state, Rio, Rest);
+    STATEDELEGATE_UPDATE(state, Rio, Rest);
 
     return state;
 }
@@ -61,8 +61,8 @@ FSMState* ER_ActionScript_Rio::CreateArrive()
 {
     FSMState* state = new FSMState(this);
     
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Arrive);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Arrive);
+    STATEDELEGATE_ENTER(state, Rio, Arrive);
+    STATEDELEGATE_UPDATE(state, Rio, Arrive);
 
     return state;
 }
@@ -78,8 +78,8 @@ FSMState* ER_ActionScript_Rio::CreateSkill_Q()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Skill_Q);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Skill_Q);
+    STATEDELEGATE_ENTER(state, Rio, Skill_Q);
+    STATEDELEGATE_UPDATE(state, Rio, Skill_Q);
 
     return state;
 }
@@ -88,8 +88,8 @@ FSMState* ER_ActionScript_Rio::CreateSkill_W()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Skill_W);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Skill_W);
+    STATEDELEGATE_ENTER(state, Rio, Skill_W);
+    STATEDELEGATE_UPDATE(state, Rio, Skill_W);
 
     return state;
 }
@@ -98,8 +98,8 @@ FSMState* ER_ActionScript_Rio::CreateSkill_E()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Skill_E);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Skill_E);
+    STATEDELEGATE_ENTER(state, Rio, Skill_E);
+    STATEDELEGATE_UPDATE(state, Rio, Skill_E);
 
     return state;
 }
@@ -108,8 +108,8 @@ FSMState* ER_ActionScript_Rio::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Rio, Skill_R);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Rio, Skill_R);
+    STATEDELEGATE_ENTER(state, Rio, Skill_R);
+    STATEDELEGATE_UPDATE(state, Rio, Skill_R);
 
     return state;
 }

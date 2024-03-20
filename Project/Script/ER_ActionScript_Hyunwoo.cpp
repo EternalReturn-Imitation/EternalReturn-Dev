@@ -17,7 +17,7 @@ FSMState* ER_ActionScript_Hyunwoo::CreateWait()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Wait);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Wait);
 
     return state;
 }
@@ -26,8 +26,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateMove()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Move);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Move);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Move);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Move);
 
     return state;
 }
@@ -36,8 +36,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateCraft()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Craft);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Craft);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Craft);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Craft);
 
     return state;
 }
@@ -46,8 +46,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateRest()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Rest);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Rest);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Rest);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Rest);
 
     return state;
 }
@@ -63,8 +63,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateArrive()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Arrive);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Arrive);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Arrive);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Arrive);
 
     return state;
 }
@@ -80,8 +80,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_Q()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Skill_Q);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Skill_Q);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Skill_Q);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_Q);
 
     return state;
 }
@@ -90,8 +90,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_W()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Skill_W);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Skill_W);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Skill_W);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_W);
 
     return state;
 }
@@ -100,8 +100,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_E()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Skill_E);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Skill_E);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Skill_E);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_E);
 
     return state;
 }
@@ -110,8 +110,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Hyunwoo, Skill_R);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Hyunwoo, Skill_R);
+    STATEDELEGATE_ENTER(state, Hyunwoo, Skill_R);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_R);
 
     return state;
 }

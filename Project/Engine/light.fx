@@ -251,7 +251,7 @@ float4 PS_MergeShader(VS_OUT _in) : SV_Target
     int iEdgeState = 0;
     for (int i = 0; i < 8; ++i)
     {
-        float4 sampleData = DataTargetTex.Sample(g_sam_0, vScreenUV + offsets[i] * 0.0011); // 0.001은 해상도에 따라 조정 필요
+        float4 sampleData = DataTargetTex.Sample(g_sam_0, vScreenUV + offsets[i] * 0.0013); // 0.001은 해상도에 따라 조정 필요
         // 초록색 오브젝트와 비-초록색(검은색) 오브젝트 사이의 경계 감지
         if (vData.g > 0.5 && sampleData.g <= 0.5)
         {

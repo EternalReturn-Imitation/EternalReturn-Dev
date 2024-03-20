@@ -18,7 +18,7 @@ FSMState* ER_ActionScript_Aya::CreateWait()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Wait);
+    STATEDELEGATE_ENTER(state, Aya, Wait);
 
     return state;
 }
@@ -27,8 +27,8 @@ FSMState* ER_ActionScript_Aya::CreateMove()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Move);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Move);
+    STATEDELEGATE_ENTER(state, Aya, Move);
+    STATEDELEGATE_UPDATE(state, Aya, Move);
 
     return state;
 }
@@ -37,8 +37,8 @@ FSMState* ER_ActionScript_Aya::CreateCraft()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Craft);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Craft);
+    STATEDELEGATE_ENTER(state, Aya, Craft);
+    STATEDELEGATE_UPDATE(state, Aya, Craft);
 
     return state;
 }
@@ -47,8 +47,8 @@ FSMState* ER_ActionScript_Aya::CreateRest()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Rest);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Rest);
+    STATEDELEGATE_ENTER(state, Aya, Rest);
+    STATEDELEGATE_UPDATE(state, Aya, Rest);
 
     return state;
 }
@@ -64,8 +64,8 @@ FSMState* ER_ActionScript_Aya::CreateArrive()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Arrive);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Arrive);
+    STATEDELEGATE_ENTER(state, Aya, Arrive);
+    STATEDELEGATE_UPDATE(state, Aya, Arrive);
 
     return state;
 }
@@ -81,8 +81,8 @@ FSMState* ER_ActionScript_Aya::CreateSkill_Q()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Skill_Q);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Skill_Q);
+    STATEDELEGATE_ENTER(state, Aya, Skill_Q);
+    STATEDELEGATE_UPDATE(state, Aya, Skill_Q);
 
     return state;
 }
@@ -91,8 +91,8 @@ FSMState* ER_ActionScript_Aya::CreateSkill_W()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Skill_W);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Skill_W);
+    STATEDELEGATE_ENTER(state, Aya, Skill_W);
+    STATEDELEGATE_UPDATE(state, Aya, Skill_W);
 
     return state;
 }
@@ -101,8 +101,8 @@ FSMState* ER_ActionScript_Aya::CreateSkill_E()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Aya, Skill_E);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Skill_E);
+    STATEDELEGATE_ENTER(state, Aya, Skill_E);
+    STATEDELEGATE_UPDATE(state, Aya, Skill_E);
 
     return state;
 }
@@ -111,7 +111,7 @@ FSMState* ER_ActionScript_Aya::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Aya, Skill_R);
+    STATEDELEGATE_UPDATE(state, Aya, Skill_R);
 
     return state;
 }
