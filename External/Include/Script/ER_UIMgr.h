@@ -12,6 +12,8 @@ private:
 	CGameObject* m_pHPBar;
 	CGameObject* m_pStemnarBar;
 	CGameObject* m_aSkillList[4];
+	CGameObject* m_pItemBox;
+	std::pair<CGameObject*, CGameObject*> m_aItemBoxList[2][4];
 
 public:
 	void init();
@@ -26,5 +28,9 @@ public:
 	void CreateInventoryItem();
 	void CreateEquipSlot();
 	void CreateEquipItem();
+	void CreateDropInventory();
+
+public:
+	Vec3 WorldPosToUIPos(const Vec3& worldPos);
 };
 

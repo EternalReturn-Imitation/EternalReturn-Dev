@@ -100,6 +100,10 @@ vector<CGameObject*> CCollisionMgr::CheckRayRangeObject(IntersectResult _interse
 			if (Objects[j]->IsEnable() == false)
 				continue;
 
+			if (Objects[j]->GetParent())
+				if (Objects[j]->GetParent()->IsEnable() == false)
+					continue;
+
 			Vec3 objTransform = Objects[j]->Transform()->GetRelativePos();
 			Vec3 objScale = Objects[j]->Transform()->GetRelativeScale();
 

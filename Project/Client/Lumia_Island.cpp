@@ -1,4 +1,4 @@
-c#include "pch.h"
+#include "pch.h"
 #include "LevelMgr.h"
 
 #pragma region HEADER
@@ -62,7 +62,7 @@ void CreateLumiaIsland()
 	LumiaIsland();
 
 	ER_UIMgr::GetInst()->GameStart();
-	TestObject();
+	//TestObject();
 }
 
 void TestObject()

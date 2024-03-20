@@ -76,8 +76,16 @@ void CCollisionMgr::CollisionBtw2DObject(CGameObject* _LeftObject, CGameObject* 
 		return;
 
 	//厚劝己拳等版快 力寇
-	if (_LeftObject->IsEnable() == false || _LeftObject->IsEnable() == false)
+	if (_LeftObject->IsEnable() == false || _RightObject->IsEnable() == false)
 		return;
+
+	if (_LeftObject->GetParent())
+		if (_LeftObject->GetParent()->IsEnable() == false)
+			return;
+
+	if (_RightObject->GetParent())
+		if (_RightObject->GetParent()->IsEnable() == false)
+			return;
 
 	// 面倒眉 ID 积己
 	CollisionID id = {};

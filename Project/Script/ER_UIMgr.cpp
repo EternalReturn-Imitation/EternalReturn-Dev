@@ -11,6 +11,13 @@
 #include "ER_DataScript_Item.h"
 #include "ER_GameSystem.h"
 #include "ER_DataScript_Character.h"
+#include <Engine\CRenderMgr.h>
+#include <Engine\CDevice.h>
+#include <Engine\CKeyMgr.h>
+
+//테스트용
+#include <Engine\CPathFindMgr.h>
+#include <Engine\CCollisionMgr.h>
 
 ER_UIMgr::ER_UIMgr()
 {
@@ -26,7 +33,12 @@ void ER_UIMgr::init()
 
 void ER_UIMgr::tick()
 {
-	int a = 0;
+	if (KEY_TAP(KEY::F)) {
+		CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
+		tRay ray = mainCam->GetRay();
+		IntersectResult result = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, CPathFindMgr::GetInst()->GetMapCollider());
+		Vec3 posResult = WorldPosToUIPos(result.vCrossPoint);
+	}
 }
 
 void ER_UIMgr::GameStart()
@@ -35,6 +47,8 @@ void ER_UIMgr::GameStart()
 
 	CreateHPBar();
 
+	CreateSkill();
+
 	CreateInventorySlot();
 
 	CreateInventoryItem();
@@ -42,6 +56,8 @@ void ER_UIMgr::GameStart()
 	CreateEquipSlot();
 
 	CreateEquipItem();
+
+	CreateDropInventory();
 }
 
 void ER_UIMgr::CreateBaseUI()
@@ -227,6 +243,73 @@ void ER_UIMgr::CreateHPBar()
 
 void ER_UIMgr::CreateSkill()
 {
+	CGameObject* skill = new CGameObject;
+	skill->SetName(L"UI_SKill_Q");
+
+	skill->AddComponent(new CTransform);
+	skill->AddComponent(new CMeshRender);
+	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIScript_Button);
+
+	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+
+	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(0)->TexSkill.Get());
+	skill->MeshRender()->GetDynamicMaterial(0);
+
+	SpawnGameObject(skill, Vec3(-126.5f, -314.5f, -1.f), L"UI");
+
+	skill = new CGameObject;
+	skill->SetName(L"UI_SKill_W");
+
+	skill->AddComponent(new CTransform);
+	skill->AddComponent(new CMeshRender);
+	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIScript_Button);
+
+	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+
+	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(1)->TexSkill.Get());
+	skill->MeshRender()->GetDynamicMaterial(0);
+
+	SpawnGameObject(skill, Vec3(-74.f, -314.5f, -1.f), L"UI");
+
+	skill = new CGameObject;
+	skill->SetName(L"UI_SKill_E");
+
+	skill->AddComponent(new CTransform);
+	skill->AddComponent(new CMeshRender);
+	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIScript_Button);
+
+	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+
+	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(2)->TexSkill.Get());
+	skill->MeshRender()->GetDynamicMaterial(0);
+
+	SpawnGameObject(skill, Vec3(-21.5f, -314.5f, -1.f), L"UI");
+
+	skill = new CGameObject;
+	skill->SetName(L"UI_SKill_R");
+
+	skill->AddComponent(new CTransform);
+	skill->AddComponent(new CMeshRender);
+	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIScript_Button);
+
+	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+
+	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(3)->TexSkill.Get());
+	skill->MeshRender()->GetDynamicMaterial(0);
+
+	SpawnGameObject(skill, Vec3(31.f, -314.5f, -1.f), L"UI");
 }
 
 void ER_UIMgr::CreateInventorySlot()
@@ -826,4 +909,382 @@ void ER_UIMgr::CreateEquipItem()
 	m_aEquipList[1][1].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-211.f, -354.5f, -1.1f), L"UI");
+}
+
+void ER_UIMgr::CreateDropInventory()
+{
+#pragma region dropInventoryBackground
+	m_pItemBox = new CGameObject();
+	m_pItemBox->SetName(L"UI_ItemBox_BackGround");
+
+	m_pItemBox->AddComponent(new CTransform);
+	m_pItemBox->AddComponent(new CMeshRender);
+	m_pItemBox->AddComponent(new CUI_Button);
+	m_pItemBox->AddComponent(new CUIScript_Button);
+
+	m_pItemBox->Transform()->SetRelativeScale(Vec3(261.02362f, 150.f, 1.f));
+
+	m_pItemBox->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	m_pItemBox->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	m_pItemBox->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBox_BackGround.png"));
+	m_pItemBox->MeshRender()->GetDynamicMaterial(0);
+
+	SpawnGameObject(m_pItemBox, Vec3(0.f, 0.f, -1.1f), L"UI");
+#pragma endregion
+	
+#pragma region dropInventorySlot
+	CGameObject* dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlotm00");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.35f, 0.06f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][0].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+	
+	
+	dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlot01");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.115f, 0.06f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][1].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlot02");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.12f, 0.06f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][2].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlot03");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.355f, 0.06f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][3].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+	dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlot10");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.35f, -0.227f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][0].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+	dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlot11");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.115f, -0.227f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][1].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlot12");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.12f, -0.227f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][2].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = new CGameObject();
+	dropItem->SetName(L"UI_ItemBoxSlot13");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.355f, -0.227f, -1.f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][3].first = dropItem;
+	m_pItemBox->AddChild(dropItem);
+#pragma endregion
+
+#pragma region dropInventoryItem
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem00");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.35f, 0.06f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][0].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem01");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.115f, 0.06f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][1].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem02");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.12f, 0.06f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][2].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem03");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.355f, 0.06f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[0][3].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem10");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.35f, -0.227f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][0].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem11");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-0.115f, -0.227f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][1].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem12");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.12f, -0.227f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][2].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+
+
+	dropItem = ER_ItemMgr::GetInst()->GetItemObj(86)->Clone();
+	dropItem->SetName(L"UI_ItemBoxITem13");
+
+	dropItem->AddComponent(new CTransform);
+	dropItem->AddComponent(new CMeshRender);
+	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIScript_Button);
+
+	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(0.355f, -0.227f, -1.1f));
+
+	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	m_aItemBoxList[1][3].second = dropItem;
+	m_pItemBox->AddChild(dropItem);
+
+#pragma endregion
+
+	//m_pItemBox->SetEnable(false);
+}
+
+Vec3 ER_UIMgr::WorldPosToUIPos(const Vec3& worldPos)
+{
+	// World 위치 벡터
+	XMVECTOR pos = XMLoadFloat3(&worldPos);
+
+	// 뷰 매트릭스와 프로젝션 매트릭스 로드
+	XMMATRIX view = CRenderMgr::GetInst()->GetMainCam()->GetViewMat();
+	XMMATRIX proj = CRenderMgr::GetInst()->GetMainCam()->GetProjMat();
+
+	Vec2 vResol = CDevice::GetInst()->GetRenderResolution();
+
+	// 스크린 좌표로 변환
+	XMVECTOR screenPos = XMVector3Project(pos, 0.0f, 0.0f, vResol.x, vResol.y, 0.0f, 1.0f, proj, view, XMMatrixIdentity());
+
+	Vec3 result;
+	XMStoreFloat3(&result, screenPos);
+
+	result.x -= (vResol.x / 2.f);
+	result.y -= (vResol.y / 2.f);
+
+	return result;
 }
