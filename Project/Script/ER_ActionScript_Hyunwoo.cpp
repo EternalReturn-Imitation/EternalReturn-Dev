@@ -18,6 +18,8 @@ FSMState* ER_ActionScript_Hyunwoo::CreateWait()
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Wait);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Wait);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Wait);
 
     return state;
 }
@@ -28,6 +30,7 @@ FSMState* ER_ActionScript_Hyunwoo::CreateMove()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Move);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Move);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Move);
 
     return state;
 }
@@ -38,6 +41,7 @@ FSMState* ER_ActionScript_Hyunwoo::CreateCraft()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Craft);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Craft);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Craft);
 
     return state;
 }
@@ -48,6 +52,7 @@ FSMState* ER_ActionScript_Hyunwoo::CreateRest()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Rest);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Rest);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Rest);
 
     return state;
 }
@@ -55,6 +60,10 @@ FSMState* ER_ActionScript_Hyunwoo::CreateRest()
 FSMState* ER_ActionScript_Hyunwoo::CreateAttack()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Hyunwoo, Attack);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Attack);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Attack);
 
     return state;
 }
@@ -65,13 +74,18 @@ FSMState* ER_ActionScript_Hyunwoo::CreateArrive()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Arrive);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Arrive);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Arrive);
 
     return state;
 }
 
-FSMState* ER_ActionScript_Hyunwoo::CreateDeath()
+FSMState* ER_ActionScript_Hyunwoo::CreateDead()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Hyunwoo, Dead);
+    STATEDELEGATE_UPDATE(state, Hyunwoo, Dead);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Dead);
 
     return state;
 }
@@ -82,6 +96,7 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_Q()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Skill_Q);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_Q);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Skill_Q);
 
     return state;
 }
@@ -92,6 +107,7 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_W()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Skill_W);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_W);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Skill_W);
 
     return state;
 }
@@ -102,6 +118,7 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_E()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Skill_E);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_E);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Skill_E);
 
     return state;
 }
@@ -112,12 +129,36 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_R()
 
     STATEDELEGATE_ENTER(state, Hyunwoo, Skill_R);
     STATEDELEGATE_UPDATE(state, Hyunwoo, Skill_R);
+    STATEDELEGATE_EXIT(state, Hyunwoo, Skill_R);
 
     return state;
 }
 
 void ER_ActionScript_Hyunwoo::Attack(tFSMData& _Data)
 {
+    // 공격 추적상태가 아님
+    if (!_Data.bData[0])
+    {
+        // 공격 추적상태 전환
+        _Data.bData[0] = true;
+    }
+
+    STATEDATA_SET(ATTACK, _Data);
+
+    CGameObject* TargetObj = (CGameObject*)_Data.lParam;
+    float AtkRange = m_Data->GetStatus()->fAtakRange;
+    if (IsInRange(TargetObj, AtkRange))
+    {
+        _Data.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::ATTACK);
+    }
+    else
+    {
+        // 사정거리 밖이기때문에 타겟방향으로 이동한다.
+        tFSMData MoveData = STATEDATA_GET(MOVE);
+        MoveData.v4Data = TargetObj->Transform()->GetRelativePos();
+        Move(MoveData);
+    }
 }
 
 void ER_ActionScript_Hyunwoo::Wait(tFSMData& _Data)
@@ -156,20 +197,14 @@ void ER_ActionScript_Hyunwoo::Skill_E(tFSMData& _Data)
 {
     STATEDATA_SET(SKILL_E, _Data);
 
-    ChangeState(ER_CHAR_ACT::SKILL_E, ABSOUTE);
+    ChangeState(ER_CHAR_ACT::SKILL_E, bAbleChange::ABSOUTE);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_R(tFSMData& _Data)
 {
     STATEDATA_SET(SKILL_R, _Data);
 
-    ChangeState(ER_CHAR_ACT::SKILL_R, ABSOUTE);
-}
-
-void ER_ActionScript_Hyunwoo::begin()
-{
-    ER_ActionScript_Character::begin();
-    ChangeState(ER_CHAR_ACT::ARRIVE);
+    ChangeState(ER_CHAR_ACT::SKILL_R, bAbleChange::ABSOUTE);
 }
 
 void ER_ActionScript_Hyunwoo::MoveEnter(tFSMData& param)
@@ -180,25 +215,56 @@ void ER_ActionScript_Hyunwoo::MoveEnter(tFSMData& param)
     Vec3 DestPos = param.v4Data;
 
     CFindPath* findpathcomp = GetOwner()->FindPath();
-    bool bMove = findpathcomp->FindPath(DestPos);
-
-    if (!bMove)
-        ChangeState(ER_CHAR_ACT::WAIT);
+    findpathcomp->FindPath(DestPos);
 }
 
 void ER_ActionScript_Hyunwoo::MoveUpdate(tFSMData& param)
-{// 캐릭터 속도 얻어와서 넣어주기
+{
+    tFSMData Atkdata = STATEDATA_GET(ATTACK);
+
+    // 공격추적상태라면
+    if (Atkdata.bData[0])
+    {
+        CGameObject* TargetObj = (CGameObject*)Atkdata.lParam;
+        float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+        if (IsInRange(TargetObj, AtkRange))
+        {
+            Atkdata.bData[0] = false;
+            GetOwner()->FindPath()->ClearPath();
+            ChangeState(ER_CHAR_ACT::ATTACK, bAbleChange::DISABLE);
+            return;
+        }
+    }
+
+    // 캐릭터 속도 얻어와서 넣어주기
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
     float speed = m_Data->GetStatus()->fMovementSpeed;
+    speed += (speed * statusefc->GetIncSPD()) - (speed * statusefc->GetDecSPD());
+
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
+void ER_ActionScript_Hyunwoo::MoveExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Wait");
+
     SetAbleToCancle(bAbleChange::COMMON);
+}
+
+void ER_ActionScript_Hyunwoo::WaitUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::WaitExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Hyunwoo::ArriveEnter(tFSMData& param)
@@ -212,12 +278,85 @@ void ER_ActionScript_Hyunwoo::ArriveUpdate(tFSMData& param)
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
+void ER_ActionScript_Hyunwoo::ArriveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.bData[2] = false;
+    param.bData[3] = !param.bData[3];
+
+    if (param.bData[3])
+        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Attack0", false);
+    else
+        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Attack1", false);
+
+
+    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+    // 공격모션 2개 번갈아가면서
+}
+
+void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
+{
+    // bData[0] : 공격 대상 추적상태
+    // bData[1] : -
+    // bData[2] : Hit판정 실행여부
+    // bData[3] : 공격모션 변경
+
+    CAnimator3D* animator = GetOwner()->Animator3D();
+    float Atkspd = m_Data->GetStatus()->fAttackSpeed;
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
+
+    // 애니메이션 속도 증가
+    animator->PlaySpeedValue(Atkspd);
+
+    // 공격판정
+    int HitFrame = param.bData[3] ? 8 : 8;
+    if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
+    {
+        BATTLE_COMMON(GetOwner(), param.lParam);
+        param.bData[2] = true;
+    }
+
+
+    if (animator->IsFinish())
+    {
+        CGameObject* Target = (CGameObject*)param.lParam;
+        // 사망 판단
+        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
+
+        if (IsDead)
+            ChangeState(ER_CHAR_ACT::WAIT);
+        else
+        {
+            // 거리 판단
+            float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+            if (IsInRange(Target, AtkRange))
+                AttackEnter(param);
+            else
+                Attack(param);
+        }
+    }
+}
+
+void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
 }
 
 void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)
 {
 }
 
@@ -274,6 +413,10 @@ void ER_ActionScript_Hyunwoo::RestUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Hyunwoo::RestExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Hyunwoo::Skill_QEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_SkillQ", false);
@@ -302,11 +445,19 @@ void ER_ActionScript_Hyunwoo::Skill_QUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Hyunwoo::Skill_QExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Hyunwoo::Skill_WEnter(tFSMData& param)
 {
 }
 
 void ER_ActionScript_Hyunwoo::Skill_WUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::Skill_WExit(tFSMData& param)
 {
 }
 
@@ -386,6 +537,10 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
    }
 }
 
+void ER_ActionScript_Hyunwoo::Skill_EExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Hyunwoo::Skill_REnter(tFSMData& param)
 {
     CAnimator3D* Animator = GetOwner()->Animator3D();
@@ -432,4 +587,20 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
 
         ChangeState(ER_CHAR_ACT::WAIT);
     }
+}
+
+void ER_ActionScript_Hyunwoo::Skill_RExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::DeadEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::DeadUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::DeadExit(tFSMData& param)
+{
 }

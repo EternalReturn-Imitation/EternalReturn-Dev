@@ -279,6 +279,10 @@ void CharacterDataUI::render_CharacterInfoData()
     ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharMovementSpeed", ImGuiDataType_Float, &stats.fMovementSpeed);
     ImGui::Button("VRange", ImVec2(xsize, 0.f)); ImGui::SameLine();
     ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharVisionRange", ImGuiDataType_Float, &stats.fVisionRange);
+    ImGui::Button("WpAPD", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharWpAtkSpeed", ImGuiDataType_Float, &stats.fWpAtkSpd);
+    ImGui::Button("WpRNG", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    ImGui::SetNextItemWidth(xsize); ImGui::InputScalar("##CharWpAtkRange", ImGuiDataType_Float, &stats.fWpAtkRange);
 
     ImGui::EndGroup();
 }
@@ -432,7 +436,7 @@ void CharacterDataUI::render_SkillInfoData()
             ImGui::SameLine();
     }
 
-    // [iValue1]
+    // [iValue2]
     ImGui::Button("INT_2", ImVec2(xsize, 0.f)); ImGui::SameLine();
     for (int i = 0; i < SkillMaxLevel; ++i)
     {
@@ -493,6 +497,33 @@ void CharacterDataUI::render_SkillInfoData()
         sprintf_s(id, "##fCooldown_%d", i);
 
         ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fMaxCoolDown[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+
+
+    // [fActionTime]
+    ImGui::Button("ActT", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##ActionTime_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputFloat(id, &SkillContext->fMaxActionTime[i]);
+
+        if (i + 1 != SkillMaxLevel)
+            ImGui::SameLine();
+    }
+    
+    // [iValue1]
+    ImGui::Button("UseSP", ImVec2(xsize, 0.f)); ImGui::SameLine();
+    for (int i = 0; i < SkillMaxLevel; ++i)
+    {
+        char id[32] = {};
+        sprintf_s(id, "##iUseSP_%d", i);
+
+        ImGui::SetNextItemWidth(xsize); ImGui::InputScalar(id, ImGuiDataType_S32, &SkillContext->iUseSP[i]);
 
         if (i + 1 != SkillMaxLevel)
             ImGui::SameLine();

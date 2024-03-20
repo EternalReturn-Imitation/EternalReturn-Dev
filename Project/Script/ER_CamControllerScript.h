@@ -9,8 +9,11 @@ private:
 
     float   m_fCamSpeed;
     bool    m_bFollowToPlayer; // Player
+    float   m_fCurFOV;
+    
 
 public:
+    virtual void begin() override;
     virtual void tick() override;
     void SetTarget(CGameObject* _Target);
     void CameraFixToggle() {
@@ -19,6 +22,7 @@ public:
     }
 
     void FollowPlayerCamera();
+    float AccelLerp(float _CurFOV, float Acceleration);
 
 private:
     void CameraMove();

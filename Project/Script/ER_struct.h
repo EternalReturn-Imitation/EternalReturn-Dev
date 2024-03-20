@@ -1,4 +1,5 @@
 #pragma once
+#include "ER_define.h"
 
 struct tInitial_Character_Stats
 {
@@ -119,13 +120,17 @@ struct tSkill_Info
 	float	fValue1[5];			// float형 인자
 	float	fValue2[5];			// float형 인자
 	
-	float	fRange[5];			// 스킬 범위 인자
+	float	fRange[5];			// 스킬 범위
+	int		iUseSP[5];			// 사용스테미너
 	float	fMaxCoolDown[5];	// 재사용 대기시간
+	float	fMaxActionTime[5];	// 최대 지속시간
 
 	// 인게임 정보
 	int		iSkillLevel;		// 스킬 레벨	: value Idx
 	float	fCoolDown;			// 남은 재사용 대기시간
 	bool	IsUsable;			// 사용 가능 여부;
+	bool	IsAction;			// 작동중인지 여부;
+	float	fActionTime;		// 지속시간
 
 	tSkill_Info()
 		: iMaxSkillLevel(5)	// 최대 스킬 레벨
@@ -134,18 +139,29 @@ struct tSkill_Info
 		, fValue1{}
 		, fValue2{}
 		, fRange{}
+		, iUseSP{}
 		, fMaxCoolDown{}
+		, fMaxActionTime{}
 		, iSkillLevel(1)
 		, fCoolDown(0.f)
 		, IsUsable(true)
+		, IsAction(false)
+		, fActionTime(0.f)
 	{
 		strName = L"NULL";
 	}
 
-	bool Use()
+public:
+	bool Use(bool _IsBuf)
 	{
 		if (IsUsable)
 		{
+			if (_IsBuf)
+			{
+				fActionTime = fMaxActionTime[iSkillLevel];
+				IsAction = true;
+			}
+
 			fCoolDown = fMaxCoolDown[iSkillLevel];
 			IsUsable = false;
 			return true;
@@ -155,24 +171,38 @@ struct tSkill_Info
 	}
 
 	const int& Int1() { return iValue1[iSkillLevel]; }
-	const int& Int2() { return iValue1[iSkillLevel]; }
-	const float& Float1() { return iValue1[iSkillLevel]; } 
-	const float& Float2() { return iValue1[iSkillLevel]; } 
-	const float& Range() { return iValue1[iSkillLevel]; } 
-	const float& MaxCooldown() { return iValue1[iSkillLevel]; }
-	const float& CurCooldown() { return iValue1[iSkillLevel]; }
+	const int& Int2() { return iValue2[iSkillLevel]; }
+	const float& Float1() { return fValue1[iSkillLevel]; } 
+	const float& Float2() { return fValue2[iSkillLevel]; } 
+	const float& Range() { return fRange[iSkillLevel]; } 
+	const float& MaxCooldown() { return fMaxCoolDown[iSkillLevel]; }
+	const float& CurCooldown() { return fCoolDown; }
+	const float& ActionTime() { return fMaxActionTime[iSkillLevel]; }
+	const float& UseSP() { return iUseSP[iSkillLevel]; }
 
-	void CoolDownUpdate(float _Ratio)
+	void SkillStatusUpdate(float _Ratio)
 	{
+		if (IsAction)
+		{
+			fActionTime -= _Ratio;
+			if (fActionTime <= 0)
+			{
+				fActionTime <= 0;
+				IsAction = false;
+			}
+		}
+
 		if (IsUsable)
 			return;
 
 		fCoolDown -= _Ratio;
+
 		if (fCoolDown <= 0)
 		{
 			IsUsable = true;
-			fCoolDown = fCoolDown = fMaxCoolDown[iSkillLevel];;
+			fCoolDown = fCoolDown = fMaxCoolDown[iSkillLevel];
 		}
+
 	}
 
 
@@ -185,7 +215,9 @@ struct tSkill_Info
 		fwrite(&fValue1, sizeof(float), 5, _File);
 		fwrite(&fValue2, sizeof(float), 5, _File);
 		fwrite(&fRange, sizeof(float), 5, _File);
+		fwrite(&iUseSP, sizeof(int), 5, _File);
 		fwrite(&fMaxCoolDown, sizeof(float), 5, _File);
+		fwrite(&fMaxActionTime, sizeof(float), 5, _File);
 	}
 
 	void Load(FILE* _File)
@@ -197,7 +229,9 @@ struct tSkill_Info
 		fread(&fValue1, sizeof(float), 5, _File);
 		fread(&fValue2, sizeof(float), 5, _File);
 		fread(&fRange, sizeof(float), 5, _File);
+		fread(&iUseSP, sizeof(int), 5, _File);
 		fread(&fMaxCoolDown, sizeof(float), 5, _File);
+		fread(&fMaxActionTime, sizeof(float), 5, _File);
 	}
 
 }typedef ER_SKILL;
@@ -232,12 +266,11 @@ public:
 				Effect |= ActiveEffect;			// 발견한 효과 적용
 				effectStats[i] = value;			// 효과 수치 적용
 				fActionTime[i] = _ActionTime;	// 작용시간 적용
+				return true;
 			}
 		}
 		// 아무것도 확인되지 않았으면 없는 효과
 		return false;
-		
-		
 	}
 
 	void ActionTiemUpdate(float timeratio)
@@ -250,7 +283,7 @@ public:
 		{
 			if (Effect & 1 << i)
 			{
-				fActionTime[i] -= Effect;
+				fActionTime[i] -= timeratio;
 				
 				// 지속시간 종료
 				if (fActionTime[i] <= 0)

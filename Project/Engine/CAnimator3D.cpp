@@ -17,6 +17,7 @@
 CAnimator3D::CAnimator3D()
 	: m_pCurAnim(nullptr)
 	, m_iFrameCount(30)
+	, m_fPlaySpeed(0.f)
 	, m_iFrameIdx(0)
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
@@ -41,6 +42,7 @@ CAnimator3D::CAnimator3D()
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: m_pCurAnim(nullptr)
 	, m_iFrameCount(_origin.m_iFrameCount)
+	, m_fPlaySpeed(0.f)
 	, m_iFrameIdx(0)
 	, m_iNextFrameIdx(0)
 	, m_fRatio(0.f)
@@ -91,7 +93,7 @@ void CAnimator3D::finaltick()
 
 			if (m_bPlay)
 			{
-				m_dTransitionUpdateTime += DT;
+				m_dTransitionUpdateTime += DT * m_fPlaySpeed;
 
 				if (m_fTransitionTime <= (float)m_dTransitionUpdateTime)	// 전환시간을 넘어가면 전환블렌딩 종료.
 				{
@@ -117,7 +119,7 @@ void CAnimator3D::finaltick()
 			// 현재 재생중인 Clip 의 시간을 진행한다.
 			if (!m_bFinish)
 			{
-				pCurAnim->m_tMTAnimClip.fUpdateTime += DT;
+				pCurAnim->m_tMTAnimClip.fUpdateTime += DT * m_fPlaySpeed;
 
 				// // EndTime에 도달했을 때
 				// if (pCurAnim->m_tMTAnimClip.fUpdateTime >= pCurAnim->m_tMTAnimClip.dEndTime)
@@ -170,6 +172,7 @@ void CAnimator3D::finaltick()
 			m_bFinalMatUpdate = false;
 		}
 	}
+	m_fPlaySpeed = 1.f;
 }
 
 // void CAnimator3D::SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip)

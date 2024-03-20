@@ -22,6 +22,7 @@ ER_PlayerScript::ER_PlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT)
 	, m_pActionScript(nullptr)
 	, m_pRangeObject(nullptr)
+	, m_AttackCsr(false)
 {
 }
 
@@ -97,29 +98,30 @@ void ER_PlayerScript::tick()
 		{
 			m_pActionScript->Move(data);
 		}
-	}
-	else if (KEY_PRESSED(KEY::RBTN))
-	{
-		m_pActionScript->Move(data);
+		m_AttackCsr = false;
 	}
 	
 	if (KEY_TAP(KEY::A))
 	{
+		m_AttackCsr = true;
+		// 타겟오브젝트가 업없는경우  마우스 누르고있기로 이동 가능
+		
 		// 공격
 		// 공격 상태가 아닌경우 공격대기상태설정
 		// 공격대기상태는 마우스커서변경만 영향
 	}
 
 
-	if (KEY_TAP(KEY::LBTN))
+	if (m_AttackCsr && KEY_TAP(KEY::LBTN))
 	{
 		// KEY_TAP 앞에 공격명령상태 판단 참거짓 값 추가하여 (true && KEY_TAP(KEY::LBTN)) 으로 조건 생성
 		// 공격대기상태 해제
 		// pTargetObj가 Enemy인 경우 Attack 명령 실행
-		if (false)
+		if (pTargetObj.second == LAYER_CHARACTER)
 		{
 			m_pActionScript->Attack(data);
 		}
+		m_AttackCsr = false;
 	}
 
 
@@ -129,18 +131,22 @@ void ER_PlayerScript::tick()
 	if (KEY_TAP(KEY::Q))
 	{
 		m_pActionScript->Skill_Q(data);
+		m_AttackCsr = false;
 	}
 	if (KEY_TAP(KEY::W))
 	{
 		m_pActionScript->Skill_W(data);
+		m_AttackCsr = false;
 	}
 	if (KEY_TAP(KEY::E))
 	{
 		m_pActionScript->Skill_E(data);
+		m_AttackCsr = false;
 	}
 	if (KEY_TAP(KEY::R))
 	{
 		m_pActionScript->Skill_R(data);
+		m_AttackCsr = false;
 	}
 	
 
@@ -149,17 +155,20 @@ void ER_PlayerScript::tick()
 	{
 		// 목적 경로 초기화
 		GetOwner()->FindPath()->ClearPath();
+		m_AttackCsr = false;
 	}
 	
 	// 휴식
 	if (KEY_TAP(KEY::X))
 	{
 		m_pActionScript->Rest(data);
+		m_AttackCsr = false;
 	}
 
 	// 제작(CRAFT)
 	if (KEY_TAP(KEY::APOSTROPHE)) {
 		m_pActionScript->Craft(data);
+		m_AttackCsr = false;
 	}
 
 	// UI
@@ -167,6 +176,7 @@ void ER_PlayerScript::tick()
 	{
 		// 게임메뉴
 		// 종료, 설정 등
+		m_AttackCsr = false;
 	}
 	
 	if (KEY_TAP(KEY::TAB))

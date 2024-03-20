@@ -18,81 +18,91 @@ FSMState* ER_ActionScript_Yuki::CreateWait()
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Yuki, Wait);
+    STATEDELEGATE_UPDATE(state, Yuki, Wait);
+    STATEDELEGATE_EXIT(state, Yuki, Wait);
 
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateMove()
 {
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Yuki, Move);
     STATEDELEGATE_UPDATE(state, Yuki, Move);
+    STATEDELEGATE_EXIT(state, Yuki, Move);
 
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateCraft()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_ENTER(state, Yuki, Craft);
+    STATEDELEGATE_UPDATE(state, Yuki, Craft);
+    STATEDELEGATE_EXIT(state, Yuki, Craft);
+
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateRest()
 {
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Yuki, Rest);
     STATEDELEGATE_UPDATE(state, Yuki, Rest);
+    STATEDELEGATE_EXIT(state, Yuki, Rest);
 
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateAttack()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_ENTER(state, Yuki, Attack);
+    STATEDELEGATE_UPDATE(state, Yuki, Attack);
+    STATEDELEGATE_EXIT(state, Yuki, Attack);
+
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateArrive()
 {
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Yuki, Arrive);
     STATEDELEGATE_UPDATE(state, Yuki, Arrive);
+    STATEDELEGATE_EXIT(state, Yuki, Arrive);
 
     return state;
 }
-
-FSMState* ER_ActionScript_Yuki::CreateDeath()
+FSMState* ER_ActionScript_Yuki::CreateDead()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_ENTER(state, Yuki, Dead);
+    STATEDELEGATE_UPDATE(state, Yuki, Dead);
+    STATEDELEGATE_EXIT(state, Yuki, Dead);
+
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateSkill_Q()
 {
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Yuki, Skill_Q);
     STATEDELEGATE_UPDATE(state, Yuki, Skill_Q);
+    STATEDELEGATE_EXIT(state, Yuki, Skill_Q);
 
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateSkill_W()
 {
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Yuki, Skill_W);
     STATEDELEGATE_UPDATE(state, Yuki, Skill_W);
+    STATEDELEGATE_EXIT(state, Yuki, Skill_W);
 
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateSkill_E()
 {
     FSMState* state = new FSMState(this);
@@ -103,7 +113,6 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_E()
 
     return state;
 }
-
 FSMState* ER_ActionScript_Yuki::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
@@ -117,8 +126,29 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_R()
 
 void ER_ActionScript_Yuki::Attack(tFSMData& _Data)
 {
-    const tSkill_Info* skill = GetOwner()->GetScript<ER_DataScript_Character>()->GetSkill(0);
-    BATTLE_SKILL(GetOwner(), (CGameObject*)_Data.lParam, ER_ActionScript_Yuki, SkillQ, skill);
+    // 공격 추적상태가 아님
+    if (!_Data.bData[0])
+    {
+        // 공격 추적상태 전환
+        _Data.bData[0] = true;
+    }
+
+    STATEDATA_SET(ATTACK, _Data);
+
+    CGameObject* TargetObj = (CGameObject*)_Data.lParam;
+    float AtkRange = m_Data->GetStatus()->fAtakRange;
+    if (IsInRange(TargetObj, AtkRange))
+    {
+        _Data.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::ATTACK);
+    }
+    else
+    {
+        // 사정거리 밖이기때문에 타겟방향으로 이동한다.
+        tFSMData MoveData = STATEDATA_GET(MOVE);
+        MoveData.v4Data = TargetObj->Transform()->GetRelativePos();
+        Move(MoveData);
+    }
 }
 
 void ER_ActionScript_Yuki::Wait(tFSMData& _Data)
@@ -178,12 +208,47 @@ void ER_ActionScript_Yuki::MoveEnter(tFSMData& param)
 
 void ER_ActionScript_Yuki::MoveUpdate(tFSMData& param)
 {
+    tFSMData Atkdata = STATEDATA_GET(ATTACK);
+
+    // 공격추적상태라면
+    if (Atkdata.bData[0])
+    {
+        CGameObject* TargetObj = (CGameObject*)Atkdata.lParam;
+        float AtkRange = m_Data->GetStatus()->fAtakRange;
+        
+        if (IsInRange(TargetObj, AtkRange))
+        {
+            Atkdata.bData[0] = false;
+            GetOwner()->FindPath()->ClearPath();
+            ChangeState(ER_CHAR_ACT::ATTACK,bAbleChange::DISABLE);
+            return;
+        }
+    }
+
     // 캐릭터 속도 얻어와서 넣어주기
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
     float speed = m_Data->GetStatus()->fMovementSpeed;
+    speed += (speed * statusefc->GetIncSPD()) - (speed * statusefc->GetDecSPD());
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
         ChangeState(ER_CHAR_ACT::WAIT);
+}
+
+void ER_ActionScript_Yuki::MoveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Yuki::CraftEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Yuki::CraftUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Yuki::CraftExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Yuki::WaitEnter(tFSMData& param)
@@ -191,6 +256,14 @@ void ER_ActionScript_Yuki::WaitEnter(tFSMData& param)
     GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Wait", true);
 
     SetAbleToCancle(bAbleChange::COMMON);
+}
+
+void ER_ActionScript_Yuki::WaitUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Yuki::WaitExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Yuki::ArriveEnter(tFSMData& param)
@@ -202,6 +275,75 @@ void ER_ActionScript_Yuki::ArriveUpdate(tFSMData& param)
 {
     if (GetOwner()->Animator3D()->IsFinish())
         ChangeState(ER_CHAR_ACT::WAIT);
+}
+
+void ER_ActionScript_Yuki::ArriveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Yuki::AttackEnter(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.bData[2] = false;
+    param.bData[3] = !param.bData[3];
+
+    if (param.bData[3])
+        GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Attack0", false);
+    else
+        GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Attack1", false);
+
+    
+    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+    // 공격모션 2개 번갈아가면서
+}
+
+void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
+{
+    // bData[0] : 공격 대상 추적상태
+    // bData[1] : -
+    // bData[2] : Hit판정 실행여부
+    // bData[3] : 공격모션 변경
+    
+    CAnimator3D* animator = GetOwner()->Animator3D();
+    float Atkspd = m_Data->GetStatus()->fAttackSpeed;
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
+
+    // 애니메이션 속도 증가
+    animator->PlaySpeedValue(Atkspd);
+
+    // 공격판정
+    int HitFrame = param.bData[3] ? 8 : 8;
+    if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
+    {
+        BATTLE_COMMON(GetOwner(), param.lParam);
+        param.bData[2] = true;
+    }
+
+
+    if (animator->IsFinish())
+    {
+        CGameObject* Target = (CGameObject*)param.lParam;
+        // 사망 판단
+        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
+
+        if (IsDead)
+            ChangeState(ER_CHAR_ACT::WAIT);
+        else
+        {
+            // 거리 판단
+            float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+            if (IsInRange(Target, AtkRange))
+                AttackEnter(param);
+            else
+                Attack(param);
+        }
+    }
+}
+
+void ER_ActionScript_Yuki::AttackExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Yuki::RestEnter(tFSMData& param)
@@ -257,6 +399,10 @@ void ER_ActionScript_Yuki::RestUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Yuki::RestExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Yuki::Skill_QEnter(tFSMData& param)
 {
     // 강화 평타 전달
@@ -271,10 +417,14 @@ void ER_ActionScript_Yuki::Skill_QUpdate(tFSMData& param)
 
     SetAbleToCancle(bAbleChange::COMMON);
 
-    if (ER_CHAR_ACT::MOVE == m_iPrevState)
+    if ((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
         ChangeState(ER_CHAR_ACT::MOVE);
     else
         ChangeState(ER_CHAR_ACT::WAIT);
+}
+
+void ER_ActionScript_Yuki::Skill_QExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Yuki::Skill_WEnter(tFSMData& param)
@@ -291,7 +441,11 @@ void ER_ActionScript_Yuki::Skill_WUpdate(tFSMData& param)
         SetAbleToCancle(bAbleChange::COMMON);
         ChangeState(ER_CHAR_ACT::WAIT);
     }
-};
+}
+void ER_ActionScript_Yuki::Skill_WExit(tFSMData& param)
+{
+}
+;
 
 void ER_ActionScript_Yuki::Skill_EEnter(tFSMData& param)
 {
@@ -464,7 +618,19 @@ void ER_ActionScript_Yuki::Skill_RExit(tFSMData& param)
     param.iData = 0;
 }
 
+void ER_ActionScript_Yuki::DeadEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Yuki::DeadUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Yuki::DeadExit(tFSMData& param)
+{
+}
+
 int ER_ActionScript_Yuki::SkillQ(const tSkill_Info* skilldata)
 {
-    return skilldata->iValue1[0] + skilldata->fValue1[0];
+    return skilldata->iValue1[0] + (int)skilldata->fValue1[0];
 }

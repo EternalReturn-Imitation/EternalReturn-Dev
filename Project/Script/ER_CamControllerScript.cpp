@@ -16,11 +16,17 @@ ER_CamControllerScript::ER_CamControllerScript()
 	, m_pTargetObj(nullptr)
 	, m_fCamSpeed(10.f)
 	, m_bFollowToPlayer(false) // Player
+	, m_fCurFOV(0.f)
 {
 }
 
 ER_CamControllerScript::~ER_CamControllerScript()
 {
+}
+
+void ER_CamControllerScript::begin()
+{
+	m_fCurFOV = Camera()->GetFOV();
 }
 
 void ER_CamControllerScript::tick()
@@ -41,6 +47,22 @@ void ER_CamControllerScript::tick()
 	{
 		CameraMove();
 	}
+
+	float fCurFOV = Camera()->GetFOV();
+	
+	if (WHEEL_UP)
+	{
+		m_fCurFOV -= 0.0524f;
+		m_fCurFOV = m_fCurFOV < 0.0872f ? 0.0872f : m_fCurFOV;
+	}
+	else if (WHEEL_DOWN)
+	{
+		m_fCurFOV += 0.0524f;
+		m_fCurFOV = 0.698f < m_fCurFOV ? 0.698f : m_fCurFOV;
+	}
+	
+	fCurFOV = AccelLerp(fCurFOV, 2.f);
+	Camera()->SetFOV(fCurFOV);
 }
 
 void ER_CamControllerScript::SetTarget(CGameObject* _Target)
@@ -89,6 +111,18 @@ void ER_CamControllerScript::FollowPlayerCamera()
 	Vec3 FinalPos = CalculateCamPos_ForTarget(vPos, vTargetPos, vFront);
 
 	Transform()->SetRelativePos(FinalPos);
+}
+
+float ER_CamControllerScript::AccelLerp(float _CurFOV, float Acceleration)
+{
+	// 가속도 값을 적용한 t 값 계산
+	float t = 0.1f;
+	float adjustedT = 1.0f - pow(1.0f - t, Acceleration);
+
+	// 보간된 값을 변환
+	float res = _CurFOV + adjustedT * (m_fCurFOV - _CurFOV);
+	
+	return res;
 }
 
 Vec3 ER_CamControllerScript::CalculateCamPos_ForTarget(Vec3 _CamPos, Vec3 _vTargetPos, Vec3 _CamFrontDir)
