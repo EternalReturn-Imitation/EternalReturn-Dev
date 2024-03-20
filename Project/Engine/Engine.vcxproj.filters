@@ -210,31 +210,31 @@
       <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourStatus.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourAlloc.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourAssert.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourCommon.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourMath.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMesh.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMeshBuilder.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMeshQuery.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNode.h">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="CPathFindMgr.h">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
@@ -260,12 +260,12 @@
     <ClInclude Include="CUI_Button.h">
       <Filter>Source\06. Component\UIComponent\ButtonUI</Filter>
     </ClInclude>
-    <ClInclude Include="CFrustum.h">
-      <Filter>Source\06. Component\4. Camera\Frustum</Filter>
-    </ClInclude>
     <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CText.h">
       <Filter>Source\06. Component\11. Text</Filter>
+    </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -471,25 +471,25 @@
       <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourAlloc.cpp">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourAssert.cpp">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourCommon.cpp">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMesh.cpp">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMeshBuilder.cpp">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMeshQuery.cpp">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNode.cpp">
-      <Filter>NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="CPathFindMgr.cpp">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
@@ -712,9 +712,6 @@
     <Filter Include="Source\08. ShaderCode\Compute\NaviMap">
       <UniqueIdentifier>{5031d0ca-7e57-4455-b01a-3b411e02a580}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NaviMesh">
-      <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\03. Manager\13. PathFindMgr">
       <UniqueIdentifier>{96d812ea-6676-4ea1-90de-90fc6de37f86}</UniqueIdentifier>
     </Filter>
@@ -771,6 +768,9 @@
     </Filter>
     <Filter Include="Source\06. Component\11. Text">
       <UniqueIdentifier>{fb3ba9b6-c3f5-43ba-8656-0f8800c81b40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\09. Module\NaviMesh">
+      <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

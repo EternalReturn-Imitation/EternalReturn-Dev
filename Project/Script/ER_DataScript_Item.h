@@ -20,6 +20,10 @@ private:
 
 	ER_ItemStats	m_tItemStats;	// 아이템 스탯
 
+	// 장착
+	UINT			m_CurSlotType;	// 0 : 없음, 1 : 장비, 2 : 인벤토리
+	int				m_SlotIdx;		// -1: 없음, 1~10;
+
 private:
 	void SetItemName(const wchar_t* _strName) { m_strItemName = _strName; }
 	void SetItemName(wstring _strName) { m_strItemName = _strName; }
@@ -56,6 +60,12 @@ public:
 	ER_RECIPE GetRecipe() { return m_uniRecipe; }
 
 	const ER_ItemStats& GetStats() { return m_tItemStats; }
+
+	UINT GetCurSlot() { return m_CurSlotType; }
+	int GetCurSlotIdx() { return m_SlotIdx; }
+
+	void SetSlot(UINT _slottype) { m_CurSlotType = _slottype; if (_slottype == 0) m_SlotIdx = -1; }
+	void SetSlotIdx(UINT _SlotIdx) { m_SlotIdx = _SlotIdx; }
 
 	CLONE(ER_DataScript_Item);
 public:

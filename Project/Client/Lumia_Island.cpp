@@ -59,7 +59,7 @@ void CreateLumiaIsland()
 
 	LumiaIsland();
 
-	TestObject();
+	// TestObject();
 }
 
 void TestObject()
