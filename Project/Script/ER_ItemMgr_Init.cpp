@@ -99,7 +99,7 @@ int ER_ItemMgr::SaveItemData(CGameObject* _Item, FILE* _File)
 		fwrite(&ItemContext->m_uniRecipe, sizeof(DWORD_PTR), 1, _File);
 
 	// ItemStat
-	if ((UINT)ER_ITEM_SLOT::NONE == ItemContext->m_eSlot && (UINT)ER_ITEM_TYPE::CONSUMABLES != ItemContext->m_eType)
+	if ((UINT)ER_ITEM_SLOT::END == ItemContext->m_eSlot && (UINT)ER_ITEM_TYPE::CONSUMABLES != ItemContext->m_eType)
 	{
 		ER_ItemStats tmp = {};
 		fwrite(&tmp, sizeof(ER_ItemStats), 1, _File);
