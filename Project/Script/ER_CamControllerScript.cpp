@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ER_CamControllerScript.h"
 
-
+#include <Engine\CEngine.h>
 #include <Engine\CRenderMgr.h>
 #include <Engine\CTransform.h>
 #include <Engine\CCamera.h>
@@ -14,10 +14,13 @@
 ER_CamControllerScript::ER_CamControllerScript()
 	: CScript((UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT)
 	, m_pTargetObj(nullptr)
-	, m_fCamSpeed(10.f)
+	, m_fCamSpeed(30.f)
 	, m_bFollowToPlayer(false) // Player
 	, m_fCurFOV(0.f)
+	, m_vResolution{}
+	, m_Window{}
 {
+	GetClientRect(CEngine::GetInst()->GetMainWnd(), &m_Window);
 }
 
 ER_CamControllerScript::~ER_CamControllerScript()
@@ -48,21 +51,8 @@ void ER_CamControllerScript::tick()
 		CameraMove();
 	}
 
-	float fCurFOV = Camera()->GetFOV();
-	
-	if (WHEEL_UP)
-	{
-		m_fCurFOV -= 0.0524f;
-		m_fCurFOV = m_fCurFOV < 0.0872f ? 0.0872f : m_fCurFOV;
-	}
-	else if (WHEEL_DOWN)
-	{
-		m_fCurFOV += 0.0524f;
-		m_fCurFOV = 0.698f < m_fCurFOV ? 0.698f : m_fCurFOV;
-	}
-	
-	fCurFOV = AccelLerp(fCurFOV, 2.f);
-	Camera()->SetFOV(fCurFOV);
+	// 카메라 줌인아웃
+	ZoomInOut();
 }
 
 void ER_CamControllerScript::SetTarget(CGameObject* _Target)
@@ -75,6 +65,7 @@ void ER_CamControllerScript::CameraMove()
 {
 	Vec3 vPos = Transform()->GetRelativePos();
 	Vec3 vRot = Transform()->GetRelativeRot();
+	Vec2 vMousePos = CKeyMgr::GetInst()->GetMousePos();
 
 	Vec3 vFront = Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 	Vec3 vRight = Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
@@ -84,13 +75,23 @@ void ER_CamControllerScript::CameraMove()
 	float fSpeed = m_fCamSpeed;
 
 	if (KEY_PRESSED(KEY::LSHIFT))
-		fSpeed *= 10.f;
+		fSpeed *= 2.f;
 
+	// 방향키
 	if (KEY_PRESSED(KEY::UP)) { vPos += DT * vFront * fSpeed; };
 	if (KEY_PRESSED(KEY::DOWN)) { vPos -= DT * vFront * fSpeed; };
 	if (KEY_PRESSED(KEY::RIGHT)) { vPos += DT * vRight * fSpeed; };
 	if (KEY_PRESSED(KEY::LEFT)) { vPos -= DT * vRight * fSpeed; };
 
+	// Mouse
+	float pad = 5.f;
+
+	if (vMousePos.y < m_Window.top		+ pad) { vPos += DT * vFront * fSpeed; };
+	if (vMousePos.y > m_Window.bottom	- pad) { vPos -= DT * vFront * fSpeed; };
+	if (vMousePos.x > m_Window.right	- pad) { vPos += DT * vRight * fSpeed; };
+	if (vMousePos.x < m_Window.left		+ pad) { vPos -= DT * vRight * fSpeed; };
+
+	// 마우스 회전
 	if (KEY_PRESSED(KEY::LCTRL) && KEY_PRESSED(KEY::RBTN))
 	{
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
@@ -100,6 +101,25 @@ void ER_CamControllerScript::CameraMove()
 
 	Transform()->SetRelativePos(vPos);
 	Transform()->SetRelativeRot(vRot);
+}
+
+void ER_CamControllerScript::ZoomInOut()
+{
+	float fCurFOV = Camera()->GetFOV();
+
+	if (WHEEL_UP)
+	{
+		m_fCurFOV -= 0.0524f;
+		m_fCurFOV = m_fCurFOV < 0.0872f ? 0.0872f : m_fCurFOV;
+	}
+	else if (WHEEL_DOWN)
+	{
+		m_fCurFOV += 0.0524f;
+		m_fCurFOV = 0.698f < m_fCurFOV ? 0.698f : m_fCurFOV;
+	}
+
+	fCurFOV = AccelLerp(fCurFOV, 2.f);
+	Camera()->SetFOV(fCurFOV);
 }
 
 void ER_CamControllerScript::FollowPlayerCamera()

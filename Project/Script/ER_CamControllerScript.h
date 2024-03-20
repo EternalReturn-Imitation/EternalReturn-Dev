@@ -6,11 +6,15 @@ class ER_CamControllerScript :
 {
 private:
     CGameObject* m_pTargetObj;
+    CGameObject* m_pShadowCam;
 
+    Vec2    m_vResolution;
+    RECT    m_Window;
+    
     float   m_fCamSpeed;
     bool    m_bFollowToPlayer; // Player
-    float   m_fCurFOV;
     
+    float   m_fCurFOV;
 
 public:
     virtual void begin() override;
@@ -26,6 +30,7 @@ public:
 
 private:
     void CameraMove();
+    void ZoomInOut();
 
 private:
     Vec3 CalculateCamPos_ForTarget(Vec3 _CamPos, Vec3 _vTargetPos, Vec3 _CamFrontDir);

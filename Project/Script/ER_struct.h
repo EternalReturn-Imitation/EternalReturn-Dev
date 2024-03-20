@@ -115,15 +115,15 @@ struct tSkill_Info
 	int		iMaxSkillLevel;		// 최대 스킬 레벨
 
 	// 기본 스킬 정보
-	int		iValue1[5];			// Int형 인자
-	int		iValue2[5];			// Int형 인자
-	float	fValue1[5];			// float형 인자
-	float	fValue2[5];			// float형 인자
+	int		iValue1[6];			// Int형 인자
+	int		iValue2[6];			// Int형 인자
+	float	fValue1[6];			// float형 인자
+	float	fValue2[6];			// float형 인자
 	
-	float	fRange[5];			// 스킬 범위
-	int		iUseSP[5];			// 사용스테미너
-	float	fMaxCoolDown[5];	// 재사용 대기시간
-	float	fMaxActionTime[5];	// 최대 지속시간
+	float	fRange[6];			// 스킬 범위
+	int		iUseSP[6];			// 사용스테미너
+	float	fMaxCoolDown[6];	// 재사용 대기시간
+	float	fMaxActionTime[6];	// 최대 지속시간
 
 	// 인게임 정보
 	int		iSkillLevel;		// 스킬 레벨	: value Idx
@@ -210,28 +210,28 @@ public:
 	{
 		SaveWString(strName, _File);
 		fwrite(&iMaxSkillLevel, sizeof(int), 1, _File);
-		fwrite(&iValue1, sizeof(int), 5, _File);
-		fwrite(&iValue2, sizeof(int), 5, _File);
-		fwrite(&fValue1, sizeof(float), 5, _File);
-		fwrite(&fValue2, sizeof(float), 5, _File);
-		fwrite(&fRange, sizeof(float), 5, _File);
-		fwrite(&iUseSP, sizeof(int), 5, _File);
-		fwrite(&fMaxCoolDown, sizeof(float), 5, _File);
-		fwrite(&fMaxActionTime, sizeof(float), 5, _File);
+		fwrite(&iValue1, sizeof(int), 6, _File);
+		fwrite(&iValue2, sizeof(int), 6, _File);
+		fwrite(&fValue1, sizeof(float), 6, _File);
+		fwrite(&fValue2, sizeof(float), 6, _File);
+		fwrite(&fRange, sizeof(float), 6, _File);
+		fwrite(&iUseSP, sizeof(int), 6, _File);
+		fwrite(&fMaxCoolDown, sizeof(float), 6, _File);
+		fwrite(&fMaxActionTime, sizeof(float), 6, _File);
 	}
 
 	void Load(FILE* _File)
 	{
 		LoadWString(strName, _File);
 		fread(&iMaxSkillLevel, sizeof(int), 1, _File);
-		fread(&iValue1, sizeof(int), 5, _File);
-		fread(&iValue2, sizeof(int), 5, _File);
-		fread(&fValue1, sizeof(float), 5, _File);
-		fread(&fValue2, sizeof(float), 5, _File);
-		fread(&fRange, sizeof(float), 5, _File);
-		fread(&iUseSP, sizeof(int), 5, _File);
-		fread(&fMaxCoolDown, sizeof(float), 5, _File);
-		fread(&fMaxActionTime, sizeof(float), 5, _File);
+		fread(&iValue1, sizeof(int), 6, _File);
+		fread(&iValue2, sizeof(int), 6, _File);
+		fread(&fValue1, sizeof(float), 6, _File);
+		fread(&fValue2, sizeof(float), 6, _File);
+		fread(&fRange, sizeof(float), 6, _File);
+		fread(&iUseSP, sizeof(int), 6, _File);
+		fread(&fMaxCoolDown, sizeof(float), 6, _File);
+		fread(&fMaxActionTime, sizeof(float), 6, _File);
 	}
 
 }typedef ER_SKILL;
