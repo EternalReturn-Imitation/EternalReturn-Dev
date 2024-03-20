@@ -14,6 +14,8 @@
 #include "ER_CamControllerScript.h"
 #include "ER_ActionScript_Character.h"
 
+#include "ER_UIMgr.h"
+
 #define LAYER_ITEMBOX 5
 #define LAYER_MONSTER 11
 #define LAYER_CHARACTER 12
@@ -79,7 +81,7 @@ void ER_PlayerScript::tick()
 		else if (pTargetObj.second == LAYER_ITEMBOX)
 		{
 			//몬스터인경우(Layer 이름 : ItemBox)
-			int i = 0;
+			m_pActionScript->Farming(data);
 		}
 		else if (pTargetObj.second == LAYER_MONSTER)
 		{
@@ -96,12 +98,14 @@ void ER_PlayerScript::tick()
 		else
 		{
 			m_pActionScript->Move(data);
+			
 		}
 	}
-	else if (KEY_PRESSED(KEY::RBTN))
+	else if (KEY_PRESSED(KEY::RBTN) && m_pActionScript->GetCurState() != ER_ActionScript_Character::eCharacterActionState::FARMING)
 	{
 		m_pActionScript->Move(data);
 	}
+	
 	
 	if (KEY_TAP(KEY::A))
 	{

@@ -5,7 +5,8 @@ class ER_DataScript_ItemBox :
     public CScript
 {
 private:
-    CGameObject* m_aItemList[2][4];
+    vector<CGameObject*> m_vItemList;
+    CGameObject* m_pBoxIcon;
 
 public:
     void init();
@@ -23,6 +24,10 @@ public:
 
 public:
     void CreateRandomItems();
+    void CreateBoxIcon();
+
+public:
+    vector<CGameObject*> GetItemList() { return m_vItemList; }
 
 public:
     ER_DataScript_ItemBox();

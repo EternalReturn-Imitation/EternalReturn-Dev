@@ -204,7 +204,7 @@ void SetMapCollider()
 }
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Yuki", Vec3(-69.32188f, 0.0f, 37.60328f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Yuki", Vec3(-102.f, 0.0f, 49.f));
 }
 void CreateTestEnemy()
 {

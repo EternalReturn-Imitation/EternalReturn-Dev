@@ -2,6 +2,10 @@
 #include "ER_ActionScript_Rio.h"
 #include "ER_DataScript_Character.h"
 
+#include "ER_UIMgr.h"
+#include "ER_DataScript_ItemBox.h"
+#include "ER_DataScript_Item.h"
+
 #include <Engine\CAnim3D.h>
 
 ER_ActionScript_Rio::ER_ActionScript_Rio()
@@ -29,6 +33,17 @@ FSMState* ER_ActionScript_Rio::CreateMove()
 
     STATEDELEGATE_ENTER(state, Rio, Move);
     STATEDELEGATE_UPDATE(state, Rio, Move);
+
+    return state;
+}
+
+FSMState* ER_ActionScript_Rio::CreateFarming()
+{
+    FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Rio, Farming);
+    STATEDELEGATE_UPDATE(state, Rio, Farming);
+    STATEDELEGATE_EXIT(state, Rio, Farming);
 
     return state;
 }
@@ -129,6 +144,13 @@ void ER_ActionScript_Rio::Move(tFSMData& _Data)
     ER_ActionScript_Character::Move(_Data);
 }
 
+void ER_ActionScript_Rio::Farming(tFSMData& _Data)
+{
+    STATEDATA_SET(FARMING, _Data);
+
+    ChangeState(ER_CHAR_ACT::FARMING);
+}
+
 void ER_ActionScript_Rio::Craft(tFSMData& _Data)
 {
 }
@@ -183,7 +205,77 @@ void ER_ActionScript_Rio::MoveUpdate(tFSMData& param)
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
         ChangeState(ER_CHAR_ACT::WAIT);
-} 
+}
+void ER_ActionScript_Rio::FarmingEnter(tFSMData& param)
+{
+    if (m_BowType)
+        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Run", true);
+    else
+        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Run", true);
+
+    SetAbleToCancle(bAbleChange::COMMON);
+
+    Vec3 DestPos = param.v4Data;
+
+    CFindPath* findpathcomp = GetOwner()->FindPath();
+    findpathcomp->FindPath(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+
+    m_bFarmingTrigger = true;
+}
+
+void ER_ActionScript_Rio::FarmingUpdate(tFSMData& param)
+{
+    float speed = m_Data->GetStatus()->fMovementSpeed;
+
+    // 다음 이동지점이 없다면 대기상태로 전환
+    if (!GetOwner()->FindPath()->PathMove(speed))
+        if (m_BowType)
+            GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Wait", true);
+        else
+            GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Wait", true);
+
+    Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
+    Vec3 ObjectPos = ((CGameObject*)param.lParam)->Transform()->GetRelativePos();
+
+    XMVECTOR vRangeScale = XMVector3Length(ownerPos - ObjectPos);
+    float rangeScale = XMVectorGetX(vRangeScale);
+
+    if (abs(rangeScale) < 2.0f && m_bFarmingTrigger) {
+        Vec3 posResult = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
+        ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(true);
+        ER_UIMgr::GetInst()->GetItemBoxBackground()->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y - 100.f, -1.0f));
+
+        vector<CGameObject*> itemList = ((CGameObject*)param.lParam)->GetScript<ER_DataScript_ItemBox>()->GetItemList();
+        for (int i = 0; i < itemList.size(); ++i) {
+            if (itemList[i]) {
+                std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList((int)i / 4, (int)i % 4);
+
+                itemLists.first->SetEnable(true);
+                itemLists.second->SetEnable(true);
+
+                itemLists.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(itemList[i]->GetScript<ER_DataScript_Item>()->GetGrade()));
+                itemLists.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, itemList[i]->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+            }
+        }
+
+        m_bFarmingTrigger = false;
+    }
+}
+
+void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
+{
+    ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(false);
+
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList(i, j);
+
+            itemLists.first->SetEnable(false);
+            itemLists.second->SetEnable(false);
+        }
+    }
+}
+
 
 void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
 {

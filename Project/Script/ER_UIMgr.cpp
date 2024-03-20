@@ -14,6 +14,8 @@
 #include <Engine\CRenderMgr.h>
 #include <Engine\CDevice.h>
 #include <Engine\CKeyMgr.h>
+#include <FontEngine\FW1FontWrapper.h>
+#include "ER_struct.h"
 
 //테스트용
 #include <Engine\CPathFindMgr.h>
@@ -46,6 +48,12 @@ void ER_UIMgr::tick()
 
 void ER_UIMgr::GameStart()
 {
+	m_pGradeTexture[0] = CResMgr::GetInst()->FindRes<CTexture>(L"ItemBg_Common.png");
+	m_pGradeTexture[1] = CResMgr::GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png");
+	m_pGradeTexture[2] = CResMgr::GetInst()->FindRes<CTexture>(L"ItemBg_Rare.png");
+	m_pGradeTexture[3] = CResMgr::GetInst()->FindRes<CTexture>(L"ItemBg_Epic.png");
+	m_pGradeTexture[4] = CResMgr::GetInst()->FindRes<CTexture>(L"ItemBg_Legendary.png");
+
 	CreateBaseUI();
 
 	CreateHPBar();
@@ -61,6 +69,10 @@ void ER_UIMgr::GameStart()
 	CreateEquipItem();
 
 	CreateDropInventory();
+
+	CreateStatText();
+
+	UpdateStat();
 }
 
 void ER_UIMgr::CreateBaseUI()
@@ -95,7 +107,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"MainStatus_Background.png"));
+	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"MainStatus_Background_Copy.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
 	SpawnGameObject(UITestObj, Vec3(-520.f, -334.f, 0.f), L"UI");
@@ -705,6 +717,13 @@ void ER_UIMgr::CreateInventoryItem()
 
 	SpawnGameObject(UITestObj, Vec3(423.f, -363.5f, -1.1f), L"UI");
 #pragma endregion
+
+	for (int i = 0; i < 2; ++i) {
+		for (int j = 0; j < 5; ++j) {
+			m_aInventoryList[i][j].first->SetEnable(false);
+			m_aInventoryList[i][j].second->SetEnable(false);
+		}
+	}
 }
 
 void ER_UIMgr::CreateEquipSlot()
@@ -912,6 +931,22 @@ void ER_UIMgr::CreateEquipItem()
 	m_aEquipList[1][1].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-211.f, -354.5f, -1.1f), L"UI");
+
+
+	m_aEquipList[0][0].first->SetEnable(false);
+	m_aEquipList[0][0].second->SetEnable(false);
+
+	m_aEquipList[0][1].first->SetEnable(false);
+	m_aEquipList[0][1].second->SetEnable(false);
+
+	m_aEquipList[0][2].first->SetEnable(false);
+	m_aEquipList[0][2].second->SetEnable(false);
+
+	m_aEquipList[1][0].first->SetEnable(false);
+	m_aEquipList[1][0].second->SetEnable(false);
+
+	m_aEquipList[1][1].first->SetEnable(false);
+	m_aEquipList[1][1].second->SetEnable(false);
 }
 
 void ER_UIMgr::CreateDropInventory()
@@ -929,7 +964,9 @@ void ER_UIMgr::CreateDropInventory()
 
 	m_pItemBox->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	m_pItemBox->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	m_pItemBox->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBox_BackGround.png"));
+	m_pItemBox->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBox_BackGround_Copy.png"));
+	int a = 2;
+	m_pItemBox->MeshRender()->GetMaterial(0)->SetScalarParam(INT_2, &a);
 	m_pItemBox->MeshRender()->GetDynamicMaterial(0);
 
 	SpawnGameObject(m_pItemBox, Vec3(0.f, 0.f, -1.1f), L"UI");
@@ -1267,6 +1304,222 @@ void ER_UIMgr::CreateDropInventory()
 #pragma endregion
 
 	m_pItemBox->SetEnable(false);
+
+	for (int i = 0; i < 2; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			m_aItemBoxList[i][j].first->SetEnable(false);
+			m_aItemBoxList[i][j].second->SetEnable(false);
+		}
+	}
+}
+
+void ER_UIMgr::CreateStatText()
+{
+	// Text Obj
+	CGameObject* testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat00");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+	
+	m_pStatText[0][0] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-542.f, -300.f, 0.f), L"UI");
+
+
+	testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat01");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+
+	m_pStatText[0][1] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-474.f, -300.f, 0.f), L"UI");
+
+
+	testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat00");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+
+	m_pStatText[1][0] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-542.f, -322.5f, 0.f), L"UI");
+
+
+	testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat01");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+
+	m_pStatText[1][1] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-474.f, -322.5f, 0.f), L"UI");
+
+	testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat00");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+
+	m_pStatText[2][0] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-542.f, -345.f, 0.f), L"UI");
+
+
+	testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat01");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+
+	m_pStatText[2][1] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-474.f, -345.f, 0.f), L"UI");
+
+	testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat00");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+
+	m_pStatText[3][0] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-542.f, -367.5f, 0.f), L"UI");
+
+
+	testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	testTextObj->SetName(L"UI_stat01");
+
+	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(10.f, 10.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Empty_Text.png"));
+
+
+	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
+	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
+	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->InputString(L"테스트");
+
+	m_pStatText[3][1] = testTextObj;
+
+	SpawnGameObject(testTextObj, Vec3(-474.f, -367.5f, 0.f), L"UI");
+
+
+}
+
+void ER_UIMgr::UpdateStat()
+{
+	ER_Ingame_Stats* status = ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetStatus();
+
+	m_pStatText[0][0]->Text()->InputString(std::to_wstring(status->iAttackPower));			//공격력
+	m_pStatText[0][1]->Text()->InputString(std::to_wstring(status->iDefense));				//방어력
+	m_pStatText[1][0]->Text()->InputString(std::to_wstring(status->fAttackSpeed));			//공격속도
+	m_pStatText[1][1]->Text()->InputString(std::to_wstring(status->fMovementSpeed));		//이동속도
+	m_pStatText[2][0]->Text()->InputString(std::to_wstring(status->fCriticalStrikeChance));	//치명타 확률
+	m_pStatText[2][1]->Text()->InputString(std::to_wstring(status->fVisionRange));			//시야
+	m_pStatText[3][0]->Text()->InputString(std::to_wstring(status->fHPRegen));				//체력 재생
+	m_pStatText[3][1]->Text()->InputString(std::to_wstring(status->fSPRegen));				//스태미너 재생
 }
 
 Vec3 ER_UIMgr::WorldPosToUIPos(const Vec3& worldPos)

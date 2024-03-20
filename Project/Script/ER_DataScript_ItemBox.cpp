@@ -5,6 +5,11 @@
 #include <Engine\CTexture.h>
 #include <Engine\define.h>
 #include "ER_ItemMgr.h"
+#include "ER_ActionScript_Character.h"
+#include "ER_UIMgr.h"
+#include "ER_DataScript_Item.h"
+
+#include "CUIScript_Button.h"
 
 ER_DataScript_ItemBox::ER_DataScript_ItemBox()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_ITEMBOX)
@@ -28,10 +33,16 @@ void ER_DataScript_ItemBox::begin()
 	}
 
 	CreateRandomItems();
+
+	CreateBoxIcon();
 }
 
 void ER_DataScript_ItemBox::tick()
 {
+	if (m_pBoxIcon) {
+		Vec3 resultPos = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
+		m_pBoxIcon->Transform()->SetRelativePos(Vec3(resultPos.x, resultPos.y + 120.f, -1.1f));
+	}
 }
 
 void ER_DataScript_ItemBox::BeginOverlap(CCollider3D* _Other)
@@ -85,9 +96,36 @@ void ER_DataScript_ItemBox::CreateRandomItems()
 			if (i == 1 && j > random_number02)
 				break;
 
-			m_aItemList[i][j] = ER_ItemMgr::GetInst()->GetItemObj(random_number01);
+			m_vItemList.push_back(ER_ItemMgr::GetInst()->GetItemObj(random_number01)->Clone());
 
 			random_number01 = dis01(gen);
 		}
 	}
+
+	int a = 0;
+}
+
+void ER_DataScript_ItemBox::CreateBoxIcon()
+{
+	m_pBoxIcon = ER_ItemMgr::GetInst()->GetItemObj(85)->Clone();
+	m_pBoxIcon->SetName(L"UI_BoxIcon");
+	
+	m_pBoxIcon->AddComponent(new CTransform);
+	m_pBoxIcon->AddComponent(new CMeshRender);
+	m_pBoxIcon->AddComponent(new CUI_Button);
+	m_pBoxIcon->AddComponent(new CUIScript_Button);
+	
+	m_pBoxIcon->Transform()->SetRelativeScale(Vec3(100.f, 150.f, 1.f));
+	//m_pBoxIcon->Transform()->SetRelativeScale(Vec3(2.f, 3.f, 1.f));
+	//m_pBoxIcon->Transform()->SetRelativeRot(Vec3(XMConvertToRadians(54.f), XMConvertToRadians(-45.f), 0.f));
+	
+	m_pBoxIcon->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	m_pBoxIcon->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	m_pBoxIcon->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Img_ItemBox_Icon_Copy.png"));
+	m_pBoxIcon->MeshRender()->GetDynamicMaterial(0);
+	
+	Vec3 resultPos = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
+	
+	SpawnGameObject(m_pBoxIcon, Vec3(resultPos.x, resultPos.y + 120.f, -1.1f), L"UI");
+	//SpawnGameObject(m_pBoxIcon, Vec3(GetOwner()->Transform()->GetRelativePos().x, GetOwner()->Transform()->GetRelativePos().y+4.f, GetOwner()->Transform()->GetRelativePos().z), L"ItemBox");
 }

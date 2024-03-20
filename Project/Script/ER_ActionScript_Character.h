@@ -13,6 +13,7 @@ public:
     {
         WAIT,       // 대기
         MOVE,       // 이동
+        FARMING,    // 파밍
         CRAFT,      // 제작
         REST,       // 휴식
         ATTACK,     // 공격
@@ -42,9 +43,12 @@ protected:
 
     bAbleChange m_bAbleChange;              // 동작 변경 가능 여부
 
+    bool        m_bFarmingTrigger;
+
     // FSMState에 Delegate를 생성해서 연결해주는 함수
     virtual FSMState* CreateWait() = 0;
     virtual FSMState* CreateMove() = 0;
+    virtual FSMState* CreateFarming() = 0;
     virtual FSMState* CreateCraft() = 0;
     virtual FSMState* CreateRest() = 0;
     virtual FSMState* CreateAttack() = 0;
@@ -54,12 +58,13 @@ protected:
     virtual FSMState* CreateSkill_W() = 0;
     virtual FSMState* CreateSkill_E() = 0;
     virtual FSMState* CreateSkill_R() = 0;
-
+    
 protected:
     Vec3 GetFocusPoint();                // 타겟 지점
     Vec3 GetClearPoint(const Vec3& vDir, float dist);
     float GetClearDistance(const Vec3& vDir, float dist);
     float GetClearDistanceByWall(const Vec3& vDir, float dist);
+
     Vec3 SetRotationToTarget(const Vec3& vTarget);
 
 public:
@@ -70,6 +75,7 @@ public:
     virtual void Attack(tFSMData& _Data) = 0;   // 기본공격
     virtual void Wait(tFSMData& _Data);         // 대기
     virtual void Move(tFSMData& _Data);         // 이동
+    virtual void Farming(tFSMData& _Data) {}      // 이동
     virtual void Craft(tFSMData& _Data) {}      // 제작
     virtual void Rest(tFSMData& _Data) {}       // 휴식
     virtual void Skill_Q(tFSMData& _Data) = 0;  // Q Skill
@@ -83,6 +89,16 @@ public:
     
     void SetAbleToCancle(bAbleChange _Grade) { m_bAbleChange = _Grade; }
     bool IsAbleChange(bAbleChange _Grade);
+
+    bool GetFarmingTrigger() { return m_bFarmingTrigger; }
+    bool SetFarmingTrigger(bool _b) { m_bFarmingTrigger = _b; }
+
+    eCharacterActionState GetCurState() { return (eCharacterActionState)m_iCurState; }
+
+public:
+    virtual void BeginOverlap(CCollider3D* _Other);
+    virtual void OnOverlap(CCollider3D* _Other);
+    virtual void EndOverlap(CCollider3D* _Other);
 
 public:
     ER_ActionScript_Character(SCRIPT_TYPE _type);
