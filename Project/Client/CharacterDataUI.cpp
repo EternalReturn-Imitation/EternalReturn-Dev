@@ -302,7 +302,7 @@ void CharacterDataUI::render_SkillList()
 
     string strFinalName;
     
-    vector<ER_SKILL*>* vSkillList = &CharacterContext->m_Skill;
+    vector<ER_SKILL*>* vSkillList = &CharacterContext->m_SkillList;
     int SkillListSize = (int)(*vSkillList).size();
 
     for (int i = 0; i < SkillListSize; ++i)

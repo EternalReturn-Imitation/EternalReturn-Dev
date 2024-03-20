@@ -5,6 +5,11 @@
 ER_DataScript_Character::ER_DataScript_Character()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 	, m_Stats(nullptr)
+	, m_Skill{}
+	, m_bGameDead(false)
+	, m_bOutofContorl(false)
+	, m_Equipment{}
+	, m_Inventory{}
 {
 	m_Stats = new tIngame_Stats;
 }
@@ -17,17 +22,27 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_PortraitTex(_origin.m_PortraitTex)
 	, m_FullTax(_origin.m_FullTax)
 	, m_MapTex(_origin.m_MapTex)
+	, m_Skill{}
+	, m_bGameDead(false)
+	, m_bOutofContorl(false)
+	, m_Equipment{}
+	, m_Inventory{}
 	, CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 {
 	m_Stats = new tIngame_Stats;
 
-	for(int i = 0; i < _origin.m_Skill.size(); ++i)
+	for (int i = 0; i < _origin.m_SkillList.size(); ++i)
 	{
 		tSkill_Info* tmp = new tSkill_Info;
-		*tmp = *_origin.m_Skill[i];
+		*tmp = *_origin.m_SkillList[i];
 
-		m_Skill.push_back(tmp);
+		m_SkillList.push_back(tmp);
 	}
+
+	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
+	m_Skill[SKILLIDX::W_1] = m_SkillList[SKILLIDX::W_1];
+	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
+	m_Skill[SKILLIDX::R_1] = m_SkillList[SKILLIDX::R_1];
 }
 
 ER_DataScript_Character::~ER_DataScript_Character()
@@ -35,11 +50,21 @@ ER_DataScript_Character::~ER_DataScript_Character()
 	if (m_Stats)
 		delete m_Stats;
 
-	Safe_Del_Vec(m_Skill);
+	Safe_Del_Vec(m_SkillList);
 }
 
 void ER_DataScript_Character::StatusUpdate()
 {
+	// 1. 기본 스테이터스 + 아이템 추가 스테이터스
+
+
+
+	// 2. 레벨 연산
+
+	
+	// 3. 버프/디버프 효과
+
+
 }
 
 void ER_DataScript_Character::init()
@@ -75,6 +100,16 @@ void ER_DataScript_Character::begin()
 
 void ER_DataScript_Character::tick()
 {
+}
+
+CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)
+{
+	return nullptr;
+}
+
+bool ER_DataScript_Character::SwapItem(CGameObject* _DragmItem, CGameObject* _DropItem)
+{
+	return false;
 }
 
 void ER_DataScript_Character::BeginOverlap(CCollider3D* _Other)
@@ -121,13 +156,13 @@ void ER_DataScript_Character::SaveToLevelFile(FILE* _File)
 	SaveResRef(m_FullTax.Get(), _File);
 	SaveResRef(m_MapTex.Get(), _File);
 
-	int SkillSize = m_Skill.size();
+	int SkillSize = m_SkillList.size();
 	fwrite(&SkillSize, sizeof(int), 1, _File);
 
 	for (int i = 0; i < SkillSize; ++i)
 	{
-		m_Skill[i]->Save(_File);
-		SaveResRef(m_Skill[i]->TexSkill.Get(), _File);
+		m_SkillList[i]->Save(_File);
+		SaveResRef(m_SkillList[i]->TexSkill.Get(), _File);
 	}
 }
 
@@ -140,7 +175,7 @@ void ER_DataScript_Character::LoadFromLevelFile(FILE* _File)
 	LoadResRef(m_FullTax, _File);
 	LoadResRef(m_MapTex, _File);
 
-	int SkillSize = m_Skill.size();
+	int SkillSize = m_SkillList.size();
 	fread(&SkillSize, sizeof(int), 1, _File);
 
 	for (int i = 0; i < SkillSize; ++i)
@@ -149,6 +184,11 @@ void ER_DataScript_Character::LoadFromLevelFile(FILE* _File)
 		Skill->Load(_File);
 		LoadResRef(Skill->TexSkill, _File);
 
-		m_Skill.push_back(Skill);
+		m_SkillList.push_back(Skill);
 	}
+
+	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
+	m_Skill[SKILLIDX::W_1] = m_SkillList[SKILLIDX::W_1];
+	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
+	m_Skill[SKILLIDX::R_1] = m_SkillList[SKILLIDX::R_1];
 }

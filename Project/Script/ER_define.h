@@ -1,8 +1,8 @@
 #pragma once
 
-#define STATEDELEGATE_ENTER(obj, className, func) obj->SetStateEnter((SCRIPT_DELEGATE)&className::func##Enter)
-#define STATEDELEGATE_UPDATE(obj, className, func) obj->SetStateUpdate((SCRIPT_DELEGATE)&className::func##Update)
-#define STATEDELEGATE_EXIT(obj, className, func) obj->SetStateExit((SCRIPT_DELEGATE)&className::func##Exit)
+#define STATEDELEGATE_ENTER(obj, CharacterName, func) obj->SetStateEnter((SCRIPT_DELEGATE)&##ER_ActionScript_##CharacterName::func##Enter)
+#define STATEDELEGATE_UPDATE(obj, CharacterName, func) obj->SetStateUpdate((SCRIPT_DELEGATE)&ER_ActionScript_##CharacterName::func##Update)
+#define STATEDELEGATE_EXIT(obj, CharacterName, func) obj->SetStateExit((SCRIPT_DELEGATE)&##ER_ActionScript_##CharacterName::func##Exit)
 
 #define STATEDATA_SET(State, FSMData) StateList[ER_CHAR_ACT::State]->SetData(FSMData)
 #define STATEDATA_GET(State) StateList[ER_CHAR_ACT::State]->GetData()
@@ -28,22 +28,22 @@ enum class ER_ITEM_TYPE
 
 enum class ER_ITEM_SLOT
 {
-	NONE,				// 장착불가
 	WEAPONS,			// 무기
-	HEAD,				// 머리
 	CHEST,				// 옷
+	HEAD,				// 머리
 	ARM,				// 팔
 	LEG,				// 다리
+	END,				// 장착불가
 };
 
 enum class ER_WEAPON_TYPE
 {
-	NONE,				// 미설정
 	AXE,				// 도끼
 	SWORD,				// 검
 	PISTOL,				// 권총
 	GLOVE,				// 글러브
-	BOW					// 활
+	BOW,				// 활
+	END,				// 미설정
 };
 
 typedef union item_combination_pair

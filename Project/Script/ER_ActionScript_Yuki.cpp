@@ -17,7 +17,7 @@ FSMState* ER_ActionScript_Yuki::CreateWait()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Wait);
+    STATEDELEGATE_ENTER(state, Yuki, Wait);
 
     return state;
 }
@@ -26,8 +26,8 @@ FSMState* ER_ActionScript_Yuki::CreateMove()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Move);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Yuki, Move);
+    STATEDELEGATE_ENTER(state, Yuki, Move);
+    STATEDELEGATE_UPDATE(state, Yuki, Move);
 
     return state;
 }
@@ -43,8 +43,8 @@ FSMState* ER_ActionScript_Yuki::CreateRest()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Rest);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Yuki, Rest);
+    STATEDELEGATE_ENTER(state, Yuki, Rest);
+    STATEDELEGATE_UPDATE(state, Yuki, Rest);
 
     return state;
 }
@@ -60,8 +60,8 @@ FSMState* ER_ActionScript_Yuki::CreateArrive()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Arrive);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Yuki, Arrive);
+    STATEDELEGATE_ENTER(state, Yuki, Arrive);
+    STATEDELEGATE_UPDATE(state, Yuki, Arrive);
 
     return state;
 }
@@ -77,8 +77,8 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_Q()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Skill_Q);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Yuki, Skill_Q);
+    STATEDELEGATE_ENTER(state, Yuki, Skill_Q);
+    STATEDELEGATE_UPDATE(state, Yuki, Skill_Q);
 
     return state;
 }
@@ -87,8 +87,8 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_W()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Skill_W);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Yuki, Skill_W);
+    STATEDELEGATE_ENTER(state, Yuki, Skill_W);
+    STATEDELEGATE_UPDATE(state, Yuki, Skill_W);
 
     return state;
 }
@@ -97,8 +97,9 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_E()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Skill_E);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Yuki, Skill_E);
+    STATEDELEGATE_ENTER(state, Yuki, Skill_E);
+    STATEDELEGATE_UPDATE(state, Yuki, Skill_E);
+    STATEDELEGATE_EXIT(state, Yuki, Skill_E);
 
     return state;
 }
@@ -107,8 +108,9 @@ FSMState* ER_ActionScript_Yuki::CreateSkill_R()
 {
     FSMState* state = new FSMState(this);
 
-    STATEDELEGATE_ENTER(state, ER_ActionScript_Yuki, Skill_R);
-    STATEDELEGATE_UPDATE(state, ER_ActionScript_Yuki, Skill_R);
+    STATEDELEGATE_ENTER(state, Yuki, Skill_R);
+    STATEDELEGATE_UPDATE(state, Yuki, Skill_R);
+    STATEDELEGATE_EXIT(state, Yuki, Skill_R);
 
     return state;
 }
@@ -313,7 +315,7 @@ void ER_ActionScript_Yuki::Skill_EEnter(tFSMData& param)
     param.v4Data[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;    // 전체 애니메이션 재생 시간
     param.v4Data[3] = 0.f;                                                      // 이동한 거리 초기화.
 
-    param.iData = 1;                                                    // 적 개체 충돌여부
+    param.iData = 1;                                                            // 적 개체 충돌여부
 
     SetAbleToCancle(bAbleChange::DISABLE);
 }
