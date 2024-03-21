@@ -83,7 +83,7 @@ void CText::SaveToLevelFile(FILE* _File)
 	SaveWString(m_str, _File);
 	fwrite(&m_vFontPos, sizeof(Vec2), 1, _File);
 	fwrite(&m_vOffsetPos, sizeof(Vec2), 1, _File);
-	fwrite(&m_Font, sizeof(UINT), 1, _File);
+	SaveWString(m_Font, _File);
 	fwrite(&m_fFontSize, sizeof(float), 1, _File);
 	fwrite(&m_FontColor, sizeof(UINT), 1, _File);
 	fwrite(&m_Flags, sizeof(UINT), 1, _File);
@@ -94,7 +94,7 @@ void CText::LoadFromLevelFile(FILE* _FILE)
 	LoadWString(m_str, _FILE);
 	fread(&m_vFontPos, sizeof(Vec2), 1, _FILE);
 	fread(&m_vOffsetPos, sizeof(Vec2), 1, _FILE);
-	fread(&m_Font, sizeof(UINT), 1, _FILE);
+	LoadWString(m_Font, _FILE);
 	fread(&m_fFontSize, sizeof(float), 1, _FILE);
 	fread(&m_FontColor, sizeof(UINT), 1, _FILE);
 	fread(&m_Flags, sizeof(UINT), 1, _FILE);

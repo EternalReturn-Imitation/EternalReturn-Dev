@@ -14,6 +14,9 @@
 #include "ER_CamControllerScript.h"
 #include "ER_ActionScript_Character.h"
 
+#include "ER_UIMgr.h"
+#include "CUIScript_Button.h"
+
 #define LAYER_ITEMBOX 5
 #define LAYER_MONSTER 11
 #define LAYER_CHARACTER 12
@@ -70,17 +73,19 @@ void ER_PlayerScript::tick()
 
 		// cursor On UI
 		CGameObject* FocusedUI = CUIMgr::GetInst()->GetFocusedUI();
+		CGameObject* FocusedUIs = CUIMgr::GetInst()->GetFocusedPriorityUI();
 		if (FocusedUI)
 		{
 			// UI는 UIMgr로 확인하기때문에 UIMgr에서 Focused UI가 있는지 판단.
 			// UI는 UI에서 판단하기때문에 동작하지 않고 넘어간다.
 
 			// 플레이어스크립트에서는 별도 동작 하지 않음
+			int a = 0;
 		}
 		else if (pTargetObj.second == LAYER_ITEMBOX)
 		{
 			//몬스터인경우(Layer 이름 : ItemBox)
-			int i = 0;
+			m_pActionScript->Farming(data);
 		}
 		else if (pTargetObj.second == LAYER_MONSTER)
 		{
@@ -97,9 +102,11 @@ void ER_PlayerScript::tick()
 		else
 		{
 			m_pActionScript->Move(data);
+			
 		}
 		m_AttackCsr = false;
 	}
+	
 	
 	if (KEY_TAP(KEY::A))
 	{

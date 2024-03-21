@@ -9,4 +9,5 @@ ER_ActionScript_Character.h
 ER_GameSystem.h
 ER_ItemMgr.h
 ER_CharacterMgr.h
+ER_UIMgr.h
 ER_BattleSystem.h

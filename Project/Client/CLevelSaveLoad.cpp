@@ -255,6 +255,11 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		pObject->AddComponent(Component);
 	}
 
+	if (pObject->MeshRender() && pObject->UI_Button()) {
+		Ptr<CTexture> tex = pObject->UI_Button()->GetOrigintex();
+		pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, pObject->UI_Button()->GetOrigintex().Get());
+		pObject->MeshRender()->GetDynamicMaterial(0);
+	}
 
 	// 스크립트	
 	size_t ScriptCount = 0;

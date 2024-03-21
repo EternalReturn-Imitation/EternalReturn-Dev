@@ -41,6 +41,8 @@
 #include "CLevelSaveLoad.h"
 #include "LevelMgr.h"
 
+#include <Script\ER_UIMgr.h>
+
 #pragma endregion
 
 void CreateLumiaIsland()
@@ -58,6 +60,8 @@ void CreateLumiaIsland()
 	CreateTestEnemy();
 
 	LumiaIsland();
+
+	ER_UIMgr::GetInst()->GameStart();
 
 	TestObject();
 }
@@ -120,6 +124,8 @@ void SetLayer(CLevel* _Level)
 	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Base");
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"MapCollider");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Character");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Player");
 
 	// Ray LayerCheck
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
@@ -166,7 +172,7 @@ void SetCamera()
 	UICamera->Camera()->SetLayerMaskAll(false);
 	UICamera->Camera()->SetLayerMask(31, true);
 
-	SpawnGameObject(UICamera, Vec3(0.f, 0.f, 0.f), L"Camera");
+	SpawnGameObject(UICamera, Vec3(0.f, 0.f, -5.f), L"Camera");
 }
 void SetLight()
 {

@@ -21,6 +21,7 @@ public:
     void tick();
 
     CGameObject* GetFocusedUI() { return m_pFocusedUI; }
+    CGameObject* GetFocusedPriorityUI() { return m_pPriorityUI; }
 
     void CloseUI(CGameObject* pParentUI) {}
     void OpenUI(CGameObject* pParentUI) {}

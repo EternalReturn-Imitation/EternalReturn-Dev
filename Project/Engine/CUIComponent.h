@@ -35,7 +35,7 @@ public:
     bool IsCsrPressed() { return m_bCsrPressed; }
 
 public:
-    void SetUIScript(const CScript* _UIScript) { m_pUIScript; }
+    void SetUIScript(CScript* _UIScript) { m_pUIScript = _UIScript; }
     
     void SetUIFunc_CsrOn(CUI_DELEGATE _func) { m_CsrOnFunc = _func; }
     void SetUIFunc_CsrTap(CUI_DELEGATE _func) { m_CsrTapFunc = _func; }

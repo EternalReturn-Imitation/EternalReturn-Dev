@@ -31,9 +31,14 @@ void CUI_Button::finaltick()
 
 void CUI_Button::SaveToLevelFile(FILE* _File)
 {
+	m_pOriginTex = GetOwner()->MeshRender()->GetMaterial(0)->GetTexParam(TEX_PARAM::TEX_0);
+	SaveResRef(m_pOriginTex.Get(), _File);
+	int a = 0;
 }
 
 void CUI_Button::LoadFromLevelFile(FILE* _FILE)
 {
+	LoadResRef(m_pOriginTex, _FILE);
+	int i = 0;
 }
 

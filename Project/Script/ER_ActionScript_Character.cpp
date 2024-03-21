@@ -2,8 +2,6 @@
 #include "ER_ActionScript_Character.h"
 #include "ER_DataScript_Character.h"
 
-
-
 ER_ActionScript_Character::ER_ActionScript_Character(SCRIPT_TYPE _type)
 	: CScript((UINT)_type)
 	, FSMContext(nullptr)
@@ -12,6 +10,7 @@ ER_ActionScript_Character::ER_ActionScript_Character(SCRIPT_TYPE _type)
 	, m_iCurState(0)
 	, m_iPrevState(0)
 	, m_bAbleChange(bAbleChange::COMMON)
+	, m_bFarmingTrigger(false)
 {
 }
 
@@ -70,6 +69,7 @@ void ER_ActionScript_Character::StateInit()
 {
 	StateList[(UINT)ER_CHAR_ACT::WAIT] = CreateWait();
 	StateList[(UINT)ER_CHAR_ACT::MOVE] = CreateMove();
+	StateList[(UINT)ER_CHAR_ACT::FARMING] = CreateFarming();
 	StateList[(UINT)ER_CHAR_ACT::CRAFT] = CreateCraft();
 	StateList[(UINT)ER_CHAR_ACT::REST] = CreateRest();
 	StateList[(UINT)ER_CHAR_ACT::ATTACK] = CreateAttack();
@@ -80,11 +80,12 @@ void ER_ActionScript_Character::StateInit()
 	StateList[(UINT)ER_CHAR_ACT::SKILL_E] = CreateSkill_E();
 	StateList[(UINT)ER_CHAR_ACT::SKILL_R] = CreateSkill_R();
 
-
 	if (StateList[(UINT)ER_CHAR_ACT::WAIT])
 		StateList[(UINT)ER_CHAR_ACT::WAIT]->SetName(L"WAIT");
 	if (StateList[(UINT)ER_CHAR_ACT::MOVE])
 		StateList[(UINT)ER_CHAR_ACT::MOVE]->SetName(L"MOVE");
+	if (StateList[(UINT)ER_CHAR_ACT::FARMING])
+		StateList[(UINT)ER_CHAR_ACT::FARMING]->SetName(L"FARMING");
 	if (StateList[(UINT)ER_CHAR_ACT::CRAFT])
 		StateList[(UINT)ER_CHAR_ACT::CRAFT]->SetName(L"CRAFT");
 	if (StateList[(UINT)ER_CHAR_ACT::REST])
@@ -128,4 +129,16 @@ bool ER_ActionScript_Character::IsAbleChange(bAbleChange _Grade)
 	// 현재설정된 동작변경가능 수준과 같거나 높아야 true 반환.
 	
 	return m_bAbleChange <= _Grade;
+}
+
+void ER_ActionScript_Character::BeginOverlap(CCollider3D* _Other)
+{
+}
+
+void ER_ActionScript_Character::OnOverlap(CCollider3D* _Other)
+{
+}
+
+void ER_ActionScript_Character::EndOverlap(CCollider3D* _Other)
+{
 }

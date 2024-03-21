@@ -2,6 +2,7 @@
 #include "ER_CharacterMgr.h"
 
 #include "ER_PlayerScript.h"
+#include "ER_GameSystem.h"
 #include "ER_PlayerScript_Range.h"
 
 ER_CharacterMgr::ER_CharacterMgr()
@@ -30,6 +31,7 @@ CGameObject* ER_CharacterMgr::SpawnCharacter(const wstring& _key)
     Character->Collider3D()->SetOffsetScale(Vec3(1.0f, 2.0f, 1.0f));
     Character->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
 
+
     return Character;
 }
 
@@ -50,6 +52,9 @@ CGameObject* ER_CharacterMgr::SpawnCharacter_Player(const wstring& _key, Vec3 _P
     // CurLevel Spawn
     SpawnGameObject(Player, _Pos, L"Player");
     SpawnGameObject(RangeView, _Pos, L"InGameUI");
+
+    //게임시스템에 플레이어의 캐릭터를 할당.
+    ER_GameSystem::GetInst()->GetInst()->SetPlayerCharacter(Player);
 
     return Player;
 }
