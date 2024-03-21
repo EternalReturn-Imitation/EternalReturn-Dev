@@ -68,3 +68,19 @@ Vec3 ER_ActionScript_Character::SetRotationToTarget(const Vec3& vTarget)
 
 	return FinalDir;
 }
+
+bool ER_ActionScript_Character::IsInRange(CGameObject* Target, float _fRange)
+{
+	// 사거리판단
+	Vec3 TargetPos = Target->Transform()->GetRelativePos();
+	Vec3 OwnerPos = GetOwner()->Transform()->GetRelativePos();
+	TargetPos.y = 0;
+	OwnerPos.y = 0;
+
+	float fDist = Vec3::Distance(TargetPos, OwnerPos);
+
+	if (fDist <= _fRange)
+		return true;
+
+	return false;
+}

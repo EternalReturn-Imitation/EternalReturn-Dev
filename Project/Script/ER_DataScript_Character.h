@@ -20,36 +20,46 @@ private:
     tIngame_Stats*              m_Stats;                // 게임 능력치
     ER_SKILL*                   m_Skill[4];             // 실제사용스킬
 
+    // 상태판단
+    tStatus_Effect*             m_StatusEffect;         // 상태효과 구조체
     bool                        m_bGameDead;            // 캐릭터 사망판단
     bool                        m_bOutofContorl;        // 제어불가상태
 
 
+    // 장비창
     CGameObject*                m_Equipment[(UINT)ER_ITEM_SLOT::END];   // 장비칸
-    CGameObject*                m_Inventory[10];                      // 인벤토리 10칸
+    CGameObject*                m_Inventory[10];                        // 인벤토리 10칸
 
     CGameObject*                m_aStatBar[4];          //[0] : HPBAR, [1] : ReturnBar, [2] : SteminarBar, [3] : LevelText
     float                       m_aStatPosOffset[4];    //스탯들의 x 위치 오프셋들.
     bool                        m_bHPChangeTrigger;     //HP 변경시 트리거
 
 public:
-    // [상태 개신]
+    // [상태 갱신]
     void StatusUpdate();    // Status 갱신 함수 : 레벨업 , 아이템변경, 버프/버프
     // 스킬 쿨타임 갱신 함수
+
 
 public:
     void init();
     virtual void begin() override;
     virtual void tick() override;
 
+    const wstring& GetCharacterName() { return m_strKey; }
+
 public:
-    // [Stats]
+    // [Status]
     ER_Ingame_Stats* GetStatus() { return m_Stats; }
 
     Ptr<CTexture> GetPortraitTex() { return m_PortraitTex; }
     
+    tStatus_Effect* GetStatusEffect() { return m_StatusEffect; }
+    const bool IsDeadState() { return m_bGameDead; }
+    const bool IsOutofControl() { return m_bOutofContorl; }
+
     // [Skill]
     vector<ER_SKILL*>& GetSkillList() { return m_SkillList; }
-    const ER_SKILL* GetSkill(int _Idx) { return m_SkillList[_Idx]; }
+    ER_SKILL* GetSkill(int _Idx) { return m_SkillList[_Idx]; }
 
     // [Item]
     CGameObject** GetAllEquipItem() { return m_Equipment; }

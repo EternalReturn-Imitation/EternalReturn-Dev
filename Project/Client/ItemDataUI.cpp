@@ -368,7 +368,7 @@ void ItemDataUI::render_ItemInfoTable()
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Slot);
                 ImGui::PushItemWidth(-FLT_MIN);
                 ImGui::BeginDisabled((UINT)ER_ITEM_TYPE::EQUIPMENT != CurItemType);
-                const char* Slots[] = { u8"ÀåÂøºÒ°¡",u8"¹«±â",u8"¸Ó¸®",u8"¿Ê",u8"ÆÈ",u8"´Ù¸®"};
+                const char* Slots[] = { u8"¹«±â",u8"¿Ê",u8"¸Ó¸®",u8"ÆÈ",u8"´Ù¸®",u8"ÀåÂøºÒ°¡" };
                 int CurItemSlot = itemcontext->GetSlot();
                 ImGui::Combo("##ItemSlot", &CurItemSlot, Slots, 6);
                 itemcontext->SetItemSlot(CurItemSlot);

@@ -28,7 +28,7 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 
 	int CriticalDmg = IsCritical(AtkInfo);
 
-	int FinalDmg = (AtkPower * 100) / (100 + Def) * (CriticalDmg * 0.65);
+	int FinalDmg = (int)(AtkPower * 100) / (100 + Def) * (CriticalDmg * 0.65);
 }
 
 void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker
@@ -46,7 +46,7 @@ int ER_BattleSystem::IsCritical(tIngame_Stats* _info)
 	// 난수생성 초기화
 	std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
-	int CriChance	= _info->fCriticalStrikeChance * 100;
+	int CriChance	= (int)_info->fCriticalStrikeChance * 100;
 	int Probability = std::rand() % 100;
 
 	// 크리티컬 발생

@@ -16,5 +16,7 @@
 
 #include "global.h"
 
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
 
 #endif //PCH_H

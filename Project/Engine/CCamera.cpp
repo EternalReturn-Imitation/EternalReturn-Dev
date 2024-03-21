@@ -999,7 +999,7 @@ void CCamera::LoadFromLevelFile(FILE* _File)
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
 	fread(&m_bMainCamera, sizeof(bool), 1, _File);
 	fread(&m_OrthoWidth, sizeof(float), 1, _File);
-	fread(&m_OrthoHeight, sizeof(float), 1, _File);	
+	fread(&m_OrthoHeight, sizeof(float), 1, _File);
 }
 
 bool CCamera::IsDebugFrustumView()

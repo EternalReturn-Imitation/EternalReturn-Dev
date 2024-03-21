@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ER_DataScript_Character.h"
+#include "ER_DataScript_Item.h"
 #include "ER_struct.h"
 #include "ER_UIMgr.h"
 #include <FontEngine\FW1FontWrapper.h>
@@ -8,6 +9,7 @@
 ER_DataScript_Character::ER_DataScript_Character()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 	, m_Stats(nullptr)
+	, m_StatusEffect(nullptr)
 	, m_Skill{}
 	, m_bGameDead(false)
 	, m_bOutofContorl(false)
@@ -16,10 +18,12 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_bHPChangeTrigger(false)
 {
 	m_Stats = new tIngame_Stats;
+	m_StatusEffect = new tStatus_Effect;
 }
 
 ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& _origin)
 	: m_Stats(nullptr)
+	, m_StatusEffect(nullptr)
 	, m_strKey(_origin.m_strKey)
 	, m_strName(_origin.m_strName)
 	, m_STDStats(_origin.m_STDStats)
@@ -35,6 +39,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_bHPChangeTrigger(false)
 {
 	m_Stats = new tIngame_Stats;
+	m_StatusEffect = new tStatus_Effect;
 
 	for (int i = 0; i < _origin.m_SkillList.size(); ++i)
 	{
@@ -44,10 +49,10 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 		m_SkillList.push_back(tmp);
 	}
 
-	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
-	m_Skill[SKILLIDX::W_1] = m_SkillList[SKILLIDX::W_1];
-	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
-	m_Skill[SKILLIDX::R_1] = m_SkillList[SKILLIDX::R_1];
+	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
+	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
+	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
+	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }
 
 ER_DataScript_Character::~ER_DataScript_Character()
@@ -55,21 +60,62 @@ ER_DataScript_Character::~ER_DataScript_Character()
 	if (m_Stats)
 		delete m_Stats;
 
+	if (m_StatusEffect)
+		delete m_StatusEffect;
+
 	Safe_Del_Vec(m_SkillList);
 }
 
 void ER_DataScript_Character::StatusUpdate()
 {
-	// 1. 기본 스테이터스 + 아이템 추가 스테이터스
+	ER_Ingame_Stats Updatetmp = *m_Stats;
+	// 레벨,경험치,HP,SP 는 갱신하지 않는다.
+	// 1. 기본 스테이터스
+	Updatetmp.iAttackPower = m_STDStats.iAttackPower + (Updatetmp.iLevel * m_STDStats.iAttackPowerPerLevel);
+	Updatetmp.iDefense = m_STDStats.iDefense + (Updatetmp.iLevel * m_STDStats.iDefensePerLevel);
+	Updatetmp.iMaxHP = m_STDStats.iMaxHP + (Updatetmp.iLevel * m_STDStats.iMaxHPPerLevel);
+	Updatetmp.fHPRegen = m_STDStats.fHPRegen + (Updatetmp.iLevel * m_STDStats.fHPRegenPerLevel);
+	Updatetmp.iMaxSP = m_STDStats.iMaxSP + (Updatetmp.iLevel * m_STDStats.iMaxSPPerLevel);
+	Updatetmp.fSPRegen = m_STDStats.fSPRegen + (Updatetmp.iLevel * m_STDStats.fSPRegenPerLevel);
+	Updatetmp.fAttackSpeed = m_STDStats.fAttackSpeed + m_STDStats.fWpAtkSpd;
+	Updatetmp.fCriticalStrikeChance = m_STDStats.fCriticalStrikeChance;
+	Updatetmp.fMovementSpeed = m_STDStats.fMovementSpeed;
+	Updatetmp.fVisionRange = m_STDStats.fVisionRange;
+	Updatetmp.iSkillAmplification = m_STDStats.iAttackPower + (Updatetmp.iLevel * m_STDStats.iAttackPowerPerLevel);
+	Updatetmp.fAtakRange = m_STDStats.fWpAtkRange;
+	Updatetmp.fCriticalStrikeDamage = 0;
+	Updatetmp.fCooldownReduction = 0;
+	Updatetmp.fOmnisyphon = 0;
+	Updatetmp.iSkillAmplification = 0;
 
+	// 2. 아이템 추가 스테이터스
+	for (int i = 0; i < (UINT)ER_ITEM_SLOT::END; ++i)
+	{
+		// 아이템이 장착되어있지 않다
+		if (m_Equipment[i] == nullptr)
+			continue;
 
+		// 아이템 정보를 얻어와 업데이트
+		tItem_Stats Itemtmp = GETITEMSTATS(m_Equipment[i]);
 
-	// 2. 레벨 연산
+		Updatetmp.iAttackPower += Itemtmp.iAttackPower + (Updatetmp.iLevel * Itemtmp.iAttackPowerPerLevel);
+		Updatetmp.iDefense += Itemtmp.iDefense;
+		Updatetmp.iMaxHP += Itemtmp.iMaxHP + (Updatetmp.iLevel * Itemtmp.iMaxHPPerLevel);
+		Updatetmp.fHPRegen += Itemtmp.fHPRegen + (Updatetmp.iLevel * Itemtmp.fHPRegenPerLevel);
+		Updatetmp.iMaxSP += Itemtmp.iMaxSP + (Updatetmp.iLevel * Itemtmp.iMaxSPPerLevel);
+		Updatetmp.fSPRegen += Itemtmp.fSPRegen + (Updatetmp.iLevel * Itemtmp.fSPRegenPerLevel);
+		Updatetmp.fAttackSpeed += Itemtmp.fAttackSpeed;
+		Updatetmp.fCriticalStrikeChance += Itemtmp.fCriticalStrikeChance;
+		Updatetmp.fCriticalStrikeDamage += Itemtmp.fCriticalStrikeDamage;
+		Updatetmp.fMovementSpeed += Itemtmp.fMovementSpeed;
+		Updatetmp.fVisionRange += Itemtmp.fVisionRange;
+		Updatetmp.fCooldownReduction += Itemtmp.fCooldownReduction;
+		Updatetmp.fOmnisyphon += Itemtmp.fOmnisyphon;
+		Updatetmp.iSkillAmplification += Itemtmp.iSkillAmplification + (Updatetmp.iLevel * Itemtmp.iSkillAmplificationPerLevel);
+	}
 
-	
-	// 3. 버프/디버프 효과
-
-
+	// 최종스탯 반영
+	*m_Stats = Updatetmp;
 }
 
 void ER_DataScript_Character::init()
@@ -103,6 +149,7 @@ void ER_DataScript_Character::begin()
 	}
 
 	CreateStatBar();
+	StatusUpdate();
 }
 
 void ER_DataScript_Character::tick()
@@ -117,6 +164,15 @@ void ER_DataScript_Character::tick()
 	if (KEY_TAP(KEY::F)) {
 		ChangeStatBar();
 	}
+	// 스킬 쿨타임 갱신
+
+	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
+	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
+		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
+
+	// 버프디버프 쿨타임 갱신
+	m_StatusEffect->ActionTiemUpdate(DT);
+
 }
 
 CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)
@@ -377,8 +433,8 @@ void ER_DataScript_Character::LoadFromLevelFile(FILE* _File)
 		m_SkillList.push_back(Skill);
 	}
 
-	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
-	m_Skill[SKILLIDX::W_1] = m_SkillList[SKILLIDX::W_1];
-	m_Skill[SKILLIDX::E_1] = m_SkillList[SKILLIDX::E_1];
-	m_Skill[SKILLIDX::R_1] = m_SkillList[SKILLIDX::R_1];
+	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
+	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
+	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
+	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }

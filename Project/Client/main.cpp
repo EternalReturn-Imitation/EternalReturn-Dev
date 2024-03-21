@@ -8,6 +8,8 @@
 #include <Script\ER_GameSystem.h>
 #include "CEditorObjMgr.h"
 
+
+
 // ImGui
 #include "ImGuiMgr.h"
 
@@ -16,6 +18,8 @@
 // 전역 변수:
 HINSTANCE   hInst;                                // 현재 인스턴스입니다.
 HWND        g_hWnd;
+
+
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -39,11 +43,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
+
     // CEngine 초기화
-    if (FAILED(CEngine::GetInst()->init(g_hWnd, 1280, 768)))
+    if (FAILED(CEngine::GetInst()->init(g_hWnd, 1600, 900)))
     {
         return 0;
     }
+
+    // DirectInput 초기화
+    CKeyMgr::GetInst()->DinputInit(hInstance, g_hWnd);
 
     // Editor 초기화
     CEditorObjMgr::GetInst()->init();
@@ -95,8 +103,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     return (int) msg.wParam;
 }
-
-
 
 //
 //  함수: MyRegisterClass()

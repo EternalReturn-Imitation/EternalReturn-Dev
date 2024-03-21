@@ -9,7 +9,7 @@ class ER_ActionScript_Character :
     public CScript
 {
 public:
-    enum eCharacterActionState
+    enum class eCharacterActionState
     {
         WAIT,       // ´ë±â
         MOVE,       // ÀÌµ¿
@@ -18,7 +18,7 @@ public:
         REST,       // ÈÞ½Ä
         ATTACK,     // °ø°Ý
         ARRIVE,     // »ý¼º
-        DEATH,      // »ç¸Á
+        DEAD,       // »ç¸Á
         SKILL_Q,    // Q
         SKILL_W,    // W
         SKILL_E,    // E
@@ -26,7 +26,7 @@ public:
         END,
     }typedef ER_CHAR_ACT;
 
-    enum bAbleChange
+    enum class bAbleChange
     {
         COMMON,     // ÀÏ¹Ý¸í·É
         ABSOUTE,    // Äµ½½±â
@@ -36,7 +36,7 @@ public:
 
 protected:
     FSM* FSMContext;
-    FSMState* StateList[ER_CHAR_ACT::END];  // State List
+    FSMState* StateList[(UINT)ER_CHAR_ACT::END];  // State List
     UINT m_iPrevState;                      // Prev State
     UINT m_iCurState;                       // Cur State
     ER_DataScript_Character* m_Data;        // Cur Character Data
@@ -55,7 +55,7 @@ protected:
     virtual FSMState* CreateRest() = 0;
     virtual FSMState* CreateAttack() = 0;
     virtual FSMState* CreateArrive() = 0;
-    virtual FSMState* CreateDeath() = 0;
+    virtual FSMState* CreateDead() = 0;
     virtual FSMState* CreateSkill_Q() = 0;
     virtual FSMState* CreateSkill_W() = 0;
     virtual FSMState* CreateSkill_E() = 0;
@@ -68,6 +68,10 @@ protected:
     float GetClearDistanceByWall(const Vec3& vDir, float dist);
 
     Vec3 SetRotationToTarget(const Vec3& vTarget);
+
+    ER_DataScript_Character* GetCharacterData() { return GetOwner()->GetScript<ER_DataScript_Character>(); }
+
+    bool IsInRange(CGameObject* Target, float _fRange);
 
 public:
     virtual void begin() override;

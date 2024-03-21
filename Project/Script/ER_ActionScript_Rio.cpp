@@ -23,6 +23,8 @@ FSMState* ER_ActionScript_Rio::CreateWait()
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Rio, Wait);
+    STATEDELEGATE_UPDATE(state, Rio, Wait);
+    STATEDELEGATE_EXIT(state, Rio, Wait);
 
     return state;
 }
@@ -33,6 +35,7 @@ FSMState* ER_ActionScript_Rio::CreateMove()
 
     STATEDELEGATE_ENTER(state, Rio, Move);
     STATEDELEGATE_UPDATE(state, Rio, Move);
+    STATEDELEGATE_EXIT(state, Rio, Move);
 
     return state;
 }
@@ -52,6 +55,10 @@ FSMState* ER_ActionScript_Rio::CreateCraft()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_ENTER(state, Rio, Craft);
+    STATEDELEGATE_UPDATE(state, Rio, Craft);
+    STATEDELEGATE_EXIT(state, Rio, Craft);
+
     return state;
 }
 
@@ -61,6 +68,7 @@ FSMState* ER_ActionScript_Rio::CreateRest()
 
     STATEDELEGATE_ENTER(state, Rio, Rest);
     STATEDELEGATE_UPDATE(state, Rio, Rest);
+    STATEDELEGATE_EXIT(state, Rio, Rest);
 
     return state;
 }
@@ -68,6 +76,10 @@ FSMState* ER_ActionScript_Rio::CreateRest()
 FSMState* ER_ActionScript_Rio::CreateAttack()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Rio, Attack);
+    STATEDELEGATE_UPDATE(state, Rio, Attack);
+    STATEDELEGATE_EXIT(state, Rio, Attack);
 
     return state;
 }
@@ -78,13 +90,18 @@ FSMState* ER_ActionScript_Rio::CreateArrive()
     
     STATEDELEGATE_ENTER(state, Rio, Arrive);
     STATEDELEGATE_UPDATE(state, Rio, Arrive);
+    STATEDELEGATE_EXIT(state, Rio, Arrive);
 
     return state;
 }
 
-FSMState* ER_ActionScript_Rio::CreateDeath()
+FSMState* ER_ActionScript_Rio::CreateDead()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Rio, Dead);
+    STATEDELEGATE_UPDATE(state, Rio, Dead);
+    STATEDELEGATE_EXIT(state, Rio, Dead);
 
     return state;
 }
@@ -95,6 +112,7 @@ FSMState* ER_ActionScript_Rio::CreateSkill_Q()
 
     STATEDELEGATE_ENTER(state, Rio, Skill_Q);
     STATEDELEGATE_UPDATE(state, Rio, Skill_Q);
+    STATEDELEGATE_EXIT(state, Rio, Skill_Q);
 
     return state;
 }
@@ -105,6 +123,7 @@ FSMState* ER_ActionScript_Rio::CreateSkill_W()
 
     STATEDELEGATE_ENTER(state, Rio, Skill_W);
     STATEDELEGATE_UPDATE(state, Rio, Skill_W);
+    STATEDELEGATE_EXIT(state, Rio, Skill_W);
 
     return state;
 }
@@ -115,6 +134,7 @@ FSMState* ER_ActionScript_Rio::CreateSkill_E()
 
     STATEDELEGATE_ENTER(state, Rio, Skill_E);
     STATEDELEGATE_UPDATE(state, Rio, Skill_E);
+    STATEDELEGATE_EXIT(state, Rio, Skill_E);
 
     return state;
 }
@@ -125,12 +145,36 @@ FSMState* ER_ActionScript_Rio::CreateSkill_R()
 
     STATEDELEGATE_ENTER(state, Rio, Skill_R);
     STATEDELEGATE_UPDATE(state, Rio, Skill_R);
+    STATEDELEGATE_EXIT(state, Rio, Skill_R);
 
     return state;
 }
 
 void ER_ActionScript_Rio::Attack(tFSMData& _Data)
 {
+    // 공격 추적상태가 아님
+    if (!_Data.bData[0])
+    {
+        // 공격 추적상태 전환
+        _Data.bData[0] = true;
+    }
+
+    STATEDATA_SET(ATTACK, _Data);
+
+    CGameObject* TargetObj = (CGameObject*)_Data.lParam;
+    float AtkRange = m_Data->GetStatus()->fAtakRange;
+    if (IsInRange(TargetObj, AtkRange))
+    {
+        _Data.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::ATTACK);
+    }
+    else
+    {
+        // 사정거리 밖이기때문에 타겟방향으로 이동한다.
+        tFSMData MoveData = STATEDATA_GET(MOVE);
+        MoveData.v4Data = TargetObj->Transform()->GetRelativePos();
+        Move(MoveData);
+    }
 }
 
 void ER_ActionScript_Rio::Wait(tFSMData& _Data)
@@ -199,13 +243,38 @@ void ER_ActionScript_Rio::MoveEnter(tFSMData& param)
 
 void ER_ActionScript_Rio::MoveUpdate(tFSMData& param)
 {
+    tFSMData Atkdata = STATEDATA_GET(ATTACK);
+
+    // 공격추적상태라면
+    if (Atkdata.bData[0])
+    {
+        CGameObject* TargetObj = (CGameObject*)Atkdata.lParam;
+        float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+        if (IsInRange(TargetObj, AtkRange))
+        {
+            Atkdata.bData[0] = false;
+            GetOwner()->FindPath()->ClearPath();
+            ChangeState(ER_CHAR_ACT::ATTACK, bAbleChange::DISABLE);
+            return;
+        }
+    }
+
     // 캐릭터 속도 얻어와서 넣어주기
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
     float speed = m_Data->GetStatus()->fMovementSpeed;
+    speed += (speed * statusefc->GetIncSPD()) - (speed * statusefc->GetDecSPD());
+
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
         ChangeState(ER_CHAR_ACT::WAIT);
 }
+
+void ER_ActionScript_Rio::MoveExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Rio::FarmingEnter(tFSMData& param)
 {
     if (m_BowType)
@@ -280,6 +349,18 @@ void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
     m_pFarmingObject = nullptr;
 }
 
+void ER_ActionScript_Rio::CraftEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::CraftUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::CraftExit(tFSMData& param)
+{
+}
+
 
 void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
 {
@@ -291,6 +372,14 @@ void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
     SetAbleToCancle(bAbleChange::COMMON);
 }
 
+void ER_ActionScript_Rio::WaitUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::WaitExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Rio::ArriveEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Rio_Arrive", false);
@@ -300,6 +389,75 @@ void ER_ActionScript_Rio::ArriveUpdate(tFSMData& param)
 {
     if (GetOwner()->Animator3D()->IsFinish())
         ChangeState(ER_CHAR_ACT::WAIT);
+}
+
+void ER_ActionScript_Rio::ArriveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::AttackEnter(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.bData[2] = false;
+
+    // 활 폼
+    if (m_BowType)
+        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Attack", false);
+    else
+        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Attack", false);
+
+
+    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+}
+
+void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
+{
+    // bData[0] : 공격 대상 추적상태
+    // bData[1] : -
+    // bData[2] : Hit판정 실행여부
+    // bData[3] : -
+
+    CAnimator3D* animator = GetOwner()->Animator3D();
+    float Atkspd = m_Data->GetStatus()->fAttackSpeed;
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
+
+    // 애니메이션 속도 증가
+    animator->PlaySpeedValue(Atkspd);
+
+
+     // 공격판정
+    int HitFrame = m_BowType ? 8 : 8;
+    if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
+    {
+        BATTLE_COMMON(GetOwner(), param.lParam);
+        param.bData[2] = true;
+    }
+
+
+    if (animator->IsFinish())
+    {
+        CGameObject* Target = (CGameObject*)param.lParam;
+        // 사망 판단
+        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
+
+        if (IsDead)
+            ChangeState(ER_CHAR_ACT::WAIT);
+        else
+        {
+            // 거리 판단
+            float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+            if (IsInRange(Target, AtkRange))
+                AttackEnter(param);
+            else
+                Attack(param);
+        }
+    }
+}
+
+void ER_ActionScript_Rio::AttackExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Rio::RestEnter(tFSMData& param)
@@ -355,6 +513,10 @@ void ER_ActionScript_Rio::RestUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Rio::RestExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Rio::Skill_QEnter(tFSMData& param)
 {
     // Bow 타입 전환
@@ -370,7 +532,7 @@ void ER_ActionScript_Rio::Skill_QEnter(tFSMData& param)
 
 void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
 {
-    if (ER_CHAR_ACT::MOVE == m_iPrevState)
+    if ((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
     {
         if (7 <= GetOwner()->Animator3D()->GetCurFrame())
         {
@@ -384,6 +546,10 @@ void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
 
         ChangeState(ER_CHAR_ACT::WAIT);
     }
+}
+
+void ER_ActionScript_Rio::Skill_QExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Rio::Skill_WEnter(tFSMData& param)
@@ -409,6 +575,10 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
         SetAbleToCancle(bAbleChange::COMMON);
         ChangeState(ER_CHAR_ACT::WAIT);
     }
+}
+
+void ER_ActionScript_Rio::Skill_WExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Rio::Skill_EEnter(tFSMData& param)
@@ -502,6 +672,10 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Rio::Skill_EExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
 {
     if (m_BowType)
@@ -571,4 +745,20 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
         }
         }
     }
+}
+
+void ER_ActionScript_Rio::Skill_RExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::DeadEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::DeadUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::DeadExit(tFSMData& param)
+{
 }

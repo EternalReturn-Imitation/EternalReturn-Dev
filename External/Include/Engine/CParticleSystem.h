@@ -16,6 +16,10 @@ private:
     
     tParticleModule             m_ModuleData;
     Ptr<CParticleUpdateShader>  m_UpdateCS;
+
+    bool                        m_bPosCustom;
+
+    Vec3                        m_PointPos;
    
     float                       m_AccTime;
 
@@ -40,6 +44,11 @@ public:
     // 파티클 데이터 얻기
     const tParticleModule& GetParticleData() { return m_ModuleData; }
 
+public:
+    void SetPosCustom(Vec3 _relativePos) { m_PointPos = _relativePos; }
+
+    void GetRayPos();
+    Vec3 GetWorldPos(Vec3 _relativePos, Vec3 _relrativeRot);
 
 public:
     virtual void finaltick() override;

@@ -22,6 +22,8 @@ FSMState* ER_ActionScript_Jackie::CreateWait()
     FSMState* state = new FSMState(this);
 
     STATEDELEGATE_ENTER(state, Jackie, Wait);
+    STATEDELEGATE_UPDATE(state, Jackie, Wait);
+    STATEDELEGATE_EXIT(state, Jackie, Wait);
 
     return state;
 }
@@ -32,6 +34,7 @@ FSMState* ER_ActionScript_Jackie::CreateMove()
 
     STATEDELEGATE_ENTER(state, Jackie, Move);
     STATEDELEGATE_UPDATE(state, Jackie, Move);
+    STATEDELEGATE_EXIT(state, Jackie, Move);
 
     return state;
 }
@@ -51,6 +54,10 @@ FSMState* ER_ActionScript_Jackie::CreateCraft()
 {
     FSMState* state = new FSMState(this);
 
+    STATEDELEGATE_ENTER(state, Jackie, Craft);
+    STATEDELEGATE_UPDATE(state, Jackie, Craft);
+    STATEDELEGATE_EXIT(state, Jackie, Craft);
+
     return state;
 }
 
@@ -60,6 +67,7 @@ FSMState* ER_ActionScript_Jackie::CreateRest()
 
     STATEDELEGATE_ENTER(state, Jackie, Rest);
     STATEDELEGATE_UPDATE(state, Jackie, Rest);
+    STATEDELEGATE_EXIT(state, Jackie, Rest);
 
     return state;
 }
@@ -67,6 +75,10 @@ FSMState* ER_ActionScript_Jackie::CreateRest()
 FSMState* ER_ActionScript_Jackie::CreateAttack()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Jackie, Attack);
+    STATEDELEGATE_UPDATE(state, Jackie, Attack);
+    STATEDELEGATE_EXIT(state, Jackie, Attack);
 
     return state;
 }
@@ -77,13 +89,18 @@ FSMState* ER_ActionScript_Jackie::CreateArrive()
 
     STATEDELEGATE_ENTER(state, Jackie, Arrive);
     STATEDELEGATE_UPDATE(state, Jackie, Arrive);
+    STATEDELEGATE_EXIT(state, Jackie, Attack);
 
     return state;
 }
 
-FSMState* ER_ActionScript_Jackie::CreateDeath()
+FSMState* ER_ActionScript_Jackie::CreateDead()
 {
     FSMState* state = new FSMState(this);
+
+    STATEDELEGATE_ENTER(state, Jackie, Dead);
+    STATEDELEGATE_UPDATE(state, Jackie, Dead);
+    STATEDELEGATE_EXIT(state, Jackie, Dead);
 
     return state;
 }
@@ -105,6 +122,7 @@ FSMState* ER_ActionScript_Jackie::CreateSkill_W()
 
     STATEDELEGATE_ENTER(state, Jackie, Skill_W);
     STATEDELEGATE_UPDATE(state, Jackie, Skill_W);
+    STATEDELEGATE_EXIT(state, Jackie, Skill_W);
 
     return state;
 }
@@ -131,57 +149,31 @@ FSMState* ER_ActionScript_Jackie::CreateSkill_R()
     return state;
 }
 
-void ER_ActionScript_Jackie::tick()
-{
-    // W스킬 지속시간 체크
-    {
-        tFSMData skillW = STATEDATA_GET(SKILL_W);
-        tFSMData skillR = STATEDATA_GET(SKILL_R);
-
-        if (skillW.iData)
-        {
-            skillW.fData -= DT;
-            
-            // W스킬 지속시간이 끝난 경우
-            if (skillW.fData <= 0)
-            {
-                skillW.iData = 0;
-                skillW.fData = 0.f;
-                
-                // 스킬 지속시간이 끝났을 때 MOVE 상태라면 이동모션 변경
-                if(m_iCurState == ER_CHAR_ACT::MOVE)
-                    GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Run", true);
-            }
-
-            STATEDATA_SET(SKILL_W, skillW);
-        }
-
-        if (skillR.iData)
-        {
-            skillR.fData -= DT;
-
-            // W스킬 지속시간이 끝난 경우
-            if (skillR.fData <= 0)
-            {
-                skillR.iData = 0;
-                skillR.fData = 0.f;
-
-                // 스킬 지속시간이 끝났을 때 MOVE 상태라면 이동모션 변경
-                if (m_iCurState == ER_CHAR_ACT::MOVE)
-                    GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Run", true);
-            }
-
-            STATEDATA_SET(SKILL_R, skillR);
-        }
-
-
-    }
-
-    ER_ActionScript_Character::tick();
-}
-
 void ER_ActionScript_Jackie::Attack(tFSMData& _Data)
 {
+    // 공격 추적상태가 아님
+    if (!_Data.bData[0])
+    {
+        // 공격 추적상태 전환
+        _Data.bData[0] = true;
+    }
+
+    STATEDATA_SET(ATTACK, _Data);
+
+    CGameObject* TargetObj = (CGameObject*)_Data.lParam;
+    float AtkRange = m_Data->GetStatus()->fAtakRange;
+    if (IsInRange(TargetObj, AtkRange))
+    {
+        _Data.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::ATTACK);
+    }
+    else
+    {
+        // 사정거리 밖이기때문에 타겟방향으로 이동한다.
+        tFSMData MoveData = STATEDATA_GET(MOVE);
+        MoveData.v4Data = TargetObj->Transform()->GetRelativePos();
+        Move(MoveData);
+    }
 }
 
 void ER_ActionScript_Jackie::Wait(tFSMData& _Data)
@@ -205,6 +197,7 @@ void ER_ActionScript_Jackie::Farming(tFSMData& _Data)
 
 void ER_ActionScript_Jackie::Craft(tFSMData& _Data)
 {
+    ChangeState(ER_CHAR_ACT::CRAFT);
 }
 
 void ER_ActionScript_Jackie::Rest(tFSMData& _Data)
@@ -214,18 +207,22 @@ void ER_ActionScript_Jackie::Rest(tFSMData& _Data)
 
 void ER_ActionScript_Jackie::Skill_Q(tFSMData& _Data)
 {
+    STATEDATA_SET(SKILL_Q, _Data);
+
     ChangeState(ER_CHAR_ACT::SKILL_Q);
 }
 
 void ER_ActionScript_Jackie::Skill_W(tFSMData& _Data)
 {
+    STATEDATA_SET(SKILL_W, _Data);
+
     ChangeState(ER_CHAR_ACT::SKILL_W);
 }
 
 void ER_ActionScript_Jackie::Skill_E(tFSMData& _Data)
 {
     // 시전중이 아니라면
-    if (!STATEDATA_GET(SKILL_E).iData)
+    if (!STATEDATA_GET(SKILL_E).bData[0])
         STATEDATA_SET(SKILL_E, _Data);
 
     ChangeState(ER_CHAR_ACT::SKILL_E);
@@ -238,10 +235,12 @@ void ER_ActionScript_Jackie::Skill_R(tFSMData& _Data)
 
 void ER_ActionScript_Jackie::MoveEnter(tFSMData& param)
 {
-    if(0 == STATEDATA_GET(SKILL_W).iData)
-        GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Run", true);
-    else
+    tSkill_Info* WSkill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+
+    if(WSkill->IsAction)
         GetOwner()->Animator3D()->SelectAnimation(L"Jackie_SkillW", true);
+    else
+        GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Run", true);
 
     SetAbleToCancle(bAbleChange::COMMON);
 
@@ -253,16 +252,42 @@ void ER_ActionScript_Jackie::MoveEnter(tFSMData& param)
 
 void ER_ActionScript_Jackie::MoveUpdate(tFSMData& param)
 {
-    // 캐릭터 속도 얻어와서 넣어주기
-    float speed = m_Data->GetStatus()->fMovementSpeed;
+    tFSMData Atkdata = STATEDATA_GET(ATTACK);
 
-    // W스킬 켜져있는경우 이동속도 증가
-    if (1 == STATEDATA_GET(SKILL_W).iData)
-        speed *= 1.3f;
+    // 스킬정보 얻어오고 지금 스킬상태 따라서 세팅해주기.
+    tSkill_Info* WSkill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+    bool DefaultRun = GetOwner()->Animator3D()->GetCurAnim()->GetName() != "Jackie_Run";
+    
+    if (DefaultRun && !WSkill->IsAction)
+        GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Run", true);
+
+    // 공격추적상태라면
+    if (Atkdata.bData[0])
+    {
+        CGameObject* TargetObj = (CGameObject*)Atkdata.lParam;
+        float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+        if (IsInRange(TargetObj, AtkRange))
+        {
+            Atkdata.bData[0] = false;
+            GetOwner()->FindPath()->ClearPath();
+            ChangeState(ER_CHAR_ACT::ATTACK, bAbleChange::DISABLE);
+            return;
+        }
+    }
+
+    // 캐릭터 속도 얻어와서 넣어주기
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
+    float speed = m_Data->GetStatus()->fMovementSpeed;
+    speed += (speed * statusefc->GetIncSPD()) - (speed * statusefc->GetDecSPD());
 
     // 다음 이동지점이 없다면 대기상태로 전환
     if (!GetOwner()->FindPath()->PathMove(speed))
         ChangeState(ER_CHAR_ACT::WAIT);
+}
+
+void ER_ActionScript_Jackie::MoveExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Jackie::FarmingEnter(tFSMData& param)
@@ -336,11 +361,32 @@ void ER_ActionScript_Jackie::FarmingExit(tFSMData& param)
     m_pFarmingObject = nullptr;
 }
 
+
+void ER_ActionScript_Jackie::CraftEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Jackie::CraftUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Jackie::CraftExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Jackie::WaitEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Wait", true);
 
     SetAbleToCancle(bAbleChange::COMMON);
+}
+
+void ER_ActionScript_Jackie::WaitUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Jackie::WaitExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Jackie::ArriveEnter(tFSMData& param)
@@ -352,6 +398,85 @@ void ER_ActionScript_Jackie::ArriveUpdate(tFSMData& param)
 {
     if (GetOwner()->Animator3D()->IsFinish())
         ChangeState(ER_CHAR_ACT::WAIT);
+}
+
+void ER_ActionScript_Jackie::ArriveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Jackie::AttackEnter(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.bData[2] = false;
+    param.bData[3] = !param.bData[3];
+
+
+    if (STATEDATA_GET(SKILL_R).bData[0])
+    {
+        if (param.bData[3])
+            GetOwner()->Animator3D()->SelectAnimation(L"Jackie_R_Attack0", false);
+        else
+            GetOwner()->Animator3D()->SelectAnimation(L"Jackie_R_Attack1", false);
+    }
+    else
+    {
+        if (param.bData[3])
+            GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Attack0", false);
+        else
+            GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Attack1", false);
+    }
+
+
+    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+}
+
+void ER_ActionScript_Jackie::AttackUpdate(tFSMData& param)
+{
+    // bData[0] : 공격 대상 추적상태
+    // bData[1] : -
+    // bData[2] : Hit판정 실행여부
+    // bData[3] : 공격모션 변경
+
+    CAnimator3D* animator = GetOwner()->Animator3D();
+    float Atkspd = m_Data->GetStatus()->fAttackSpeed;
+    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
+
+    // 애니메이션 속도 증가
+    animator->PlaySpeedValue(Atkspd);
+
+    // 공격판정
+    int HitFrame = param.bData[3] ? 8 : 8;
+    if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
+    {
+        BATTLE_COMMON(GetOwner(), param.lParam);
+        param.bData[2] = true;
+    }
+
+
+    if (animator->IsFinish())
+    {
+        CGameObject* Target = (CGameObject*)param.lParam;
+        // 사망 판단
+        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
+
+        if (IsDead)
+            ChangeState(ER_CHAR_ACT::WAIT);
+        else
+        {
+            // 거리 판단
+            float AtkRange = m_Data->GetStatus()->fAtakRange;
+
+            if (IsInRange(Target, AtkRange))
+                AttackEnter(param);
+            else
+                Attack(param);
+        }
+    }
+}
+
+void ER_ActionScript_Jackie::AttackExit(tFSMData& param)
+{
 }
 
 void ER_ActionScript_Jackie::RestEnter(tFSMData& param)
@@ -407,8 +532,14 @@ void ER_ActionScript_Jackie::RestUpdate(tFSMData& param)
     }
 }
 
+void ER_ActionScript_Jackie::RestExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Jackie::Skill_QEnter(tFSMData& param)
 {
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+
     GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Wait", true);
     param.iData = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 공격
 }
@@ -454,22 +585,33 @@ void ER_ActionScript_Jackie::Skill_QExit(tFSMData& param)
 
 void ER_ActionScript_Jackie::Skill_WEnter(tFSMData& param)
 {
-    param.iData = 1;    // 스킬 ON
-    param.fData = 3.f;  // 지속시간
+    // 스킬사용
+    tSkill_Info* WSkill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+    if (WSkill->Use(true))
+    {
+        float SpdValue = WSkill->Float1();
+        float Time = WSkill->fActionTime;
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_SPD, Time, SpdValue);
+    }
 }
 
 void ER_ActionScript_Jackie::Skill_WUpdate(tFSMData& param)
 {
     SetAbleToCancle(bAbleChange::COMMON);
 
-    if (ER_CHAR_ACT::MOVE == m_iPrevState)
+    if ((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
         ChangeState(ER_CHAR_ACT::MOVE);
     else
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
+void ER_ActionScript_Jackie::Skill_WExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Jackie::Skill_EEnter(tFSMData& param)
 {
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
     GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Wait", true);
     param.iData = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 공격
 }
@@ -577,8 +719,15 @@ void ER_ActionScript_Jackie::Skill_EExit(tFSMData& param)
 
 void ER_ActionScript_Jackie::Skill_REnter(tFSMData& param)
 {
-    param.iData = 1;    // 스킬 ON
-    param.fData = 5.f;  // 지속시간
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+
+    if (Skill->Use(true))
+    {
+        float SpdValue = (float)Skill->Int1();
+        float Time = Skill->Float1();
+    }
+
+    param.bData[0] = 1;    // 스킬 ON
 }
 
 void ER_ActionScript_Jackie::Skill_RUpdate(tFSMData& param)
@@ -586,5 +735,17 @@ void ER_ActionScript_Jackie::Skill_RUpdate(tFSMData& param)
 }
 
 void ER_ActionScript_Jackie::Skill_RExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Jackie::DeadEnter(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Jackie::DeadUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Jackie::DeadExit(tFSMData& param)
 {
 }

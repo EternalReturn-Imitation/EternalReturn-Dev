@@ -4,12 +4,13 @@
 #define STATEDELEGATE_UPDATE(obj, CharacterName, func) obj->SetStateUpdate((SCRIPT_DELEGATE)&ER_ActionScript_##CharacterName::func##Update)
 #define STATEDELEGATE_EXIT(obj, CharacterName, func) obj->SetStateExit((SCRIPT_DELEGATE)&##ER_ActionScript_##CharacterName::func##Exit)
 
-#define STATEDATA_SET(State, FSMData) StateList[ER_CHAR_ACT::State]->SetData(FSMData)
-#define STATEDATA_GET(State) StateList[ER_CHAR_ACT::State]->GetData()
+#define STATEDATA_SET(State, FSMData) StateList[(UINT)ER_CHAR_ACT::State]->SetData(FSMData)
+#define STATEDATA_GET(State) StateList[(UINT)ER_CHAR_ACT::State]->GetData()
 
 #define BATTLE_SKILL(AttackObj, HittedObj, className, CalcFunc, SkillInfo) ER_BattleSystem::GetInst()->Battle_Skill(AttackObj, HittedObj, this, (SKILL_DMG_CALC)&className::CalcFunc, SkillInfo)
-#define BATTLE_COMMON(AttackObj, HittedObj) Battle_Common(AttackObj, HittedObj)
+#define BATTLE_COMMON(AttackObj, HittedObj) ER_BattleSystem::GetInst()->Battle_Common(AttackObj, (CGameObject*)HittedObj)
 
+#define GETITEMSTATS(ItemObj) ItemObj->GetScript<ER_DataScript_Item>()->GetStats()
 
 enum class ER_ITEM_GRADE
 {
@@ -64,7 +65,7 @@ typedef struct item_combination_slot
 	UINT iAssemblyItem;
 }ER_CMB_SLOT;
 
-enum eExpForLevelUp
+enum class eExpForLevelUp
 {
 	LEVEL1 = 0,
 	LEVEL2 = 0,
@@ -88,7 +89,7 @@ enum eExpForLevelUp
 	LEVEL20 = 0
 };
 
-enum eSkillindex
+enum class eSkillindex
 {
 	Q_1,
 	W_1,
@@ -100,3 +101,21 @@ enum eSkillindex
 	R_2,
 	SKILLMAXSIZE,
 }typedef SKILLIDX;
+
+enum class eStatus_Effect
+{
+	// 버프
+	DEFALUT			= 0,
+	INCREASE_ATK	= 1 << 0,	// 공격력 증가
+	INCREASE_DEF	= 1 << 1,	// 방어력 증가
+	INCREASE_SPD	= 1 << 2,	// 이동속도 증가
+	INCREASE_APD	= 1 << 3,	// 공격속도 증가
+	
+	// 디버프
+	DECREASE_ATK	= 1 << 4,	// 공격력 감소
+	DECREASE_DEF	= 1 << 5,	// 방어력 감소
+	DECREASE_SPD	= 1 << 6,	// 이동속도 감소
+	DECREASE_APD	= 1 << 7,	// 공격속도 감소
+	FEAR			= 1 << 8,	// 공포
+	STUN			= 1 << 9,	// 기절
+}typedef BUFNDEBUF_ENUM;

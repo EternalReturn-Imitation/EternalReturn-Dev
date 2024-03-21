@@ -19,7 +19,7 @@ ER_ActionScript_Character::~ER_ActionScript_Character()
 	if (FSMContext)
 		delete FSMContext;
 
-	for (int i = 0; i < ER_CHAR_ACT::END; ++i)
+	for (int i = 0; i < (UINT)ER_CHAR_ACT::END; ++i)
 	{
 		if (StateList[i])
 			delete StateList[i];
@@ -29,7 +29,7 @@ ER_ActionScript_Character::~ER_ActionScript_Character()
 void ER_ActionScript_Character::begin()
 {
 	StateInit();
-	FSMContext = new FSM(StateList[ER_CHAR_ACT::WAIT]);
+	FSMContext = new FSM(StateList[(UINT)ER_CHAR_ACT::WAIT]);
 	m_Data = GetOwner()->GetScript<ER_DataScript_Character>();
 
 	ChangeState(ER_CHAR_ACT::ARRIVE);
@@ -52,10 +52,10 @@ void ER_ActionScript_Character::Move(tFSMData& _Data)
 {
 	if (IsAbleChange(bAbleChange::COMMON))
 	{
-		if (m_iCurState != ER_CHAR_ACT::MOVE)
+		if (m_iCurState != (UINT)ER_CHAR_ACT::MOVE)
 			ChangeState(ER_CHAR_ACT::MOVE);
 		
-		else if (m_iCurState == ER_CHAR_ACT::MOVE)
+		else if (m_iCurState == (UINT)ER_CHAR_ACT::MOVE)
 		{
 			// 플레이어블 캐릭터 특성으로 지속명령이기때문에 이곳에서 목적지 경로 설정 진행
 			CFindPath* findpathcomp = GetOwner()->FindPath();
@@ -67,58 +67,56 @@ void ER_ActionScript_Character::Move(tFSMData& _Data)
 
 void ER_ActionScript_Character::StateInit()
 {
-	StateList[ER_CHAR_ACT::WAIT] = CreateWait();
-	StateList[ER_CHAR_ACT::MOVE] = CreateMove();
-	StateList[ER_CHAR_ACT::FARMING] = CreateFarming();
-	StateList[ER_CHAR_ACT::CRAFT] = CreateCraft();
-	StateList[ER_CHAR_ACT::REST] = CreateRest();
-	StateList[ER_CHAR_ACT::ATTACK] = CreateAttack();
-	StateList[ER_CHAR_ACT::ARRIVE] = CreateArrive();
-	StateList[ER_CHAR_ACT::DEATH] = CreateDeath();
-	StateList[ER_CHAR_ACT::SKILL_Q] = CreateSkill_Q();
-	StateList[ER_CHAR_ACT::SKILL_W] = CreateSkill_W();
-	StateList[ER_CHAR_ACT::SKILL_E] = CreateSkill_E();
-	StateList[ER_CHAR_ACT::SKILL_R] = CreateSkill_R();
+	StateList[(UINT)ER_CHAR_ACT::WAIT] = CreateWait();
+	StateList[(UINT)ER_CHAR_ACT::MOVE] = CreateMove();
+	StateList[(UINT)ER_CHAR_ACT::FARMING] = CreateFarming();
+	StateList[(UINT)ER_CHAR_ACT::CRAFT] = CreateCraft();
+	StateList[(UINT)ER_CHAR_ACT::REST] = CreateRest();
+	StateList[(UINT)ER_CHAR_ACT::ATTACK] = CreateAttack();
+	StateList[(UINT)ER_CHAR_ACT::ARRIVE] = CreateArrive();
+	StateList[(UINT)ER_CHAR_ACT::DEAD] = CreateDead();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_Q] = CreateSkill_Q();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_W] = CreateSkill_W();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_E] = CreateSkill_E();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_R] = CreateSkill_R();
 
-
-	if (StateList[ER_CHAR_ACT::WAIT])
-		StateList[ER_CHAR_ACT::WAIT]->SetName(L"WAIT");
-	if (StateList[ER_CHAR_ACT::MOVE])
-		StateList[ER_CHAR_ACT::MOVE]->SetName(L"MOVE");
-	if (StateList[ER_CHAR_ACT::FARMING])
-		StateList[ER_CHAR_ACT::FARMING]->SetName(L"FARMING");
-	if (StateList[ER_CHAR_ACT::CRAFT])
-		StateList[ER_CHAR_ACT::CRAFT]->SetName(L"CRAFT");
-	if (StateList[ER_CHAR_ACT::REST])
-		StateList[ER_CHAR_ACT::REST]->SetName(L"REST");
-	if (StateList[ER_CHAR_ACT::ATTACK])
-		StateList[ER_CHAR_ACT::ATTACK]->SetName(L"ATTACK");
-	if (StateList[ER_CHAR_ACT::ARRIVE])
-		StateList[ER_CHAR_ACT::ARRIVE]->SetName(L"ARRIVE");
-	if (StateList[ER_CHAR_ACT::DEATH])
-		StateList[ER_CHAR_ACT::DEATH]->SetName(L"DEATH");
-	if (StateList[ER_CHAR_ACT::SKILL_Q])
-		StateList[ER_CHAR_ACT::SKILL_Q]->SetName(L"SKILL_Q");
-	if (StateList[ER_CHAR_ACT::SKILL_W])
-		StateList[ER_CHAR_ACT::SKILL_W]->SetName(L"SKILL_W");
-	if (StateList[ER_CHAR_ACT::SKILL_E])
-		StateList[ER_CHAR_ACT::SKILL_E]->SetName(L"SKILL_E");
-	if (StateList[ER_CHAR_ACT::SKILL_R])
-		StateList[ER_CHAR_ACT::SKILL_R]->SetName(L"SKILL_R");
+	if (StateList[(UINT)ER_CHAR_ACT::WAIT])
+		StateList[(UINT)ER_CHAR_ACT::WAIT]->SetName(L"WAIT");
+	if (StateList[(UINT)ER_CHAR_ACT::MOVE])
+		StateList[(UINT)ER_CHAR_ACT::MOVE]->SetName(L"MOVE");
+	if (StateList[(UINT)ER_CHAR_ACT::FARMING])
+		StateList[(UINT)ER_CHAR_ACT::FARMING]->SetName(L"FARMING");
+	if (StateList[(UINT)ER_CHAR_ACT::CRAFT])
+		StateList[(UINT)ER_CHAR_ACT::CRAFT]->SetName(L"CRAFT");
+	if (StateList[(UINT)ER_CHAR_ACT::REST])
+		StateList[(UINT)ER_CHAR_ACT::REST]->SetName(L"REST");
+	if (StateList[(UINT)ER_CHAR_ACT::ATTACK])
+		StateList[(UINT)ER_CHAR_ACT::ATTACK]->SetName(L"ATTACK");
+	if (StateList[(UINT)ER_CHAR_ACT::ARRIVE])
+		StateList[(UINT)ER_CHAR_ACT::ARRIVE]->SetName(L"ARRIVE");
+	if (StateList[(UINT)ER_CHAR_ACT::DEAD])
+		StateList[(UINT)ER_CHAR_ACT::DEAD]->SetName(L"DEAD");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_Q])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_Q]->SetName(L"SKILL_Q");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_W])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_W]->SetName(L"SKILL_W");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_E])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_E]->SetName(L"SKILL_E");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_R])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_R]->SetName(L"SKILL_R");
 }
 
 bool ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade)
 {
-	if (m_iCurState == _state)
+	if (m_iCurState == (UINT)_state)
 		return false;
 
 	// 변경 가능 수준 검사
 	if (IsAbleChange(_Grade))
 	{
 		m_iPrevState = m_iCurState;
-		FSMContext->ChangeState(StateList[_state]);
-		m_iCurState = _state;
-
+		FSMContext->ChangeState(StateList[(UINT)_state]);
+		m_iCurState = (UINT)_state;
 	}
 
 	return true;
