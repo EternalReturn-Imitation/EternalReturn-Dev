@@ -77,6 +77,9 @@ void CUIMgr::tick()
 	{
 		CGameObject* pOwner = vecUI[i];
 
+		if (pOwner->GetName() == L"UI_ItemBox_BackGround" && KEY_TAP(KEY::RBTN))
+			int a = 0;
+
 		m_pPriorityUI = GetPriorityUI(pOwner); // 현재 UI에 우선순위 UI가 있는지 확인한다.
 
 

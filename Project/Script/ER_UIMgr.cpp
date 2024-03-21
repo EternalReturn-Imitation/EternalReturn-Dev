@@ -16,34 +16,53 @@
 #include <Engine\CKeyMgr.h>
 #include <FontEngine\FW1FontWrapper.h>
 #include "ER_struct.h"
+#include <Engine\CPathMgr.h>
+#include <Engine\CEngine.h>
 
 //테스트용
 #include <Engine\CPathFindMgr.h>
 #include <Engine\CCollisionMgr.h>
+#include <tchar.h>
 
 ER_UIMgr::ER_UIMgr()
+	:m_bHPChangeTrigger(false)
 {
+	if (Gdiplus::GdiplusStartup(&m_uGdiplusToken, &m_gGdiplusStartupInput, NULL) != Gdiplus::Ok)
+		assert(false);
 }
 
 ER_UIMgr::~ER_UIMgr()
 {
+	// 사용 후 정리
+	DeleteObject(m_hBitmap); // 비트맵 리소스 해제
+	Gdiplus::GdiplusShutdown(m_uGdiplusToken); // GDI+ 정리
 }
 
 void ER_UIMgr::init()
 {
+	wstring ws = CPathMgr::GetInst()->GetContentPath();
+	ws += L"texture\\UI\\cursor\\Cursor_01.png";
+
+	m_hBitmap = LoadPNGAsBitmap(ws.c_str());	
 }
 
 void ER_UIMgr::tick()
 {
-	//if (KEY_TAP(KEY::F)) {
-	//	CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
-	//	tRay ray = mainCam->GetRay();
-	//	IntersectResult result = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, CPathFindMgr::GetInst()->GetMapCollider());
-	//	Vec3 posResult = WorldPosToUIPos(result.vCrossPoint);
-	//
-	//	m_pItemBox->SetEnable(true);
-	//	m_pItemBox->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y-80.f, -1.0f));
-	//}
+	if (KEY_TAP(KEY::F)) {
+		UpdateHP();
+	}
+
+	//HPReturnBar업데이트
+	if (m_bHPChangeTrigger) {
+		UpdateHPReturnBar();
+	}
+
+	if (m_hBitmap)
+	{
+		HWND hWnd = CEngine::GetInst()->GetMainWnd();
+		HCURSOR hCursor = BitmapToCursor(hWnd, m_hBitmap);
+		SetCursor(hCursor);
+	}
 }
 
 void ER_UIMgr::GameStart()
@@ -236,7 +255,24 @@ void ER_UIMgr::CreateHPBar()
 	m_pHPBar->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"HPBar_UI.png"));
 	m_pHPBar->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_pHPBar, Vec3(1.f, -356.5f, -1.f), L"UI");
+	SpawnGameObject(m_pHPBar, Vec3(1.f, -356.5f, -1.1f), L"UI");
+
+	m_pHPReturnBar = new CGameObject;
+	m_pHPReturnBar->SetName(L"UI_HPReturnBar");
+
+	m_pHPReturnBar->AddComponent(new CTransform);
+	m_pHPReturnBar->AddComponent(new CMeshRender);
+	m_pHPReturnBar->AddComponent(new CUI_Button);
+	m_pHPReturnBar->AddComponent(new CUIScript_Button);
+
+	m_pHPReturnBar->Transform()->SetRelativeScale(Vec3(300.f, 12.f, 1.f));
+
+	m_pHPReturnBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	m_pHPReturnBar->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
+	m_pHPReturnBar->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ReturnBar_UI.png"));
+	m_pHPReturnBar->MeshRender()->GetDynamicMaterial(0);
+
+	SpawnGameObject(m_pHPReturnBar, Vec3(1.f, -356.5f, -1.f), L"UI");
 
 	m_pStemnarBar = new CGameObject;
 	m_pStemnarBar->SetName(L"UI_SteminarBar");
@@ -253,7 +289,7 @@ void ER_UIMgr::CreateHPBar()
 	m_pStemnarBar->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"SPBar_UI.png"));
 	m_pStemnarBar->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_pStemnarBar, Vec3(1.f, -372.f, -1.f), L"UI");
+	SpawnGameObject(m_pStemnarBar, Vec3(1.f, -372.f, -1.1f), L"UI");
 }
 
 void ER_UIMgr::CreateSkill()
@@ -345,6 +381,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(0);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[0][0].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(195.f, -325.f, -1.f), L"UI");
@@ -365,6 +404,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(1);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[0][1].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(252.f, -325.f, -1.f), L"UI");
@@ -383,6 +425,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(2);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[0][2].first = UITestObj;
 
@@ -403,6 +448,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(3);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[0][3].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(366.f, -325.f, -1.f), L"UI");
@@ -421,6 +469,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(4);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[0][4].first = UITestObj;
 
@@ -441,6 +492,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(5);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[1][0].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(195.f, -363.5f, -1.f), L"UI");
@@ -459,6 +513,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(6);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[1][1].first = UITestObj;
 
@@ -479,6 +536,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(7);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[1][2].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(309.f, -363.5f, -1.f), L"UI");
@@ -498,6 +558,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(8);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[1][3].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(366.f, -363.5f, -1.f), L"UI");
@@ -516,6 +579,9 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(9);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[1][4].first = UITestObj;
 
@@ -543,6 +609,9 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[0][0].second = UITestObj;
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(0);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	SpawnGameObject(UITestObj, Vec3(195.f, -325.f, -1.1f), L"UI");
 
 
@@ -560,6 +629,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(1);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[0][1].second = UITestObj;
 
@@ -580,6 +652,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(2);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[0][2].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(309.f, -325.f, -1.1f), L"UI");
@@ -598,6 +673,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(3);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[0][3].second = UITestObj;
 
@@ -618,6 +696,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(4);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[0][4].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(423.f, -325.f, -1.1f), L"UI");
@@ -636,6 +717,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(5);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[1][0].second = UITestObj;
 
@@ -656,6 +740,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(6);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[1][1].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(252.f, -363.5f, -1.1f), L"UI");
@@ -674,6 +761,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(7);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[1][2].second = UITestObj;
 
@@ -694,6 +784,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(8);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
+
 	m_aInventoryList[1][3].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(366.f, -363.5f, -1.1f), L"UI");
@@ -712,6 +805,9 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(9);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
 	m_aInventoryList[1][4].second = UITestObj;
 
@@ -744,6 +840,9 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(0);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[0][0].first = UITestObj;
 
 
@@ -763,6 +862,9 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(1);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
 
 	m_aEquipList[0][1].first = UITestObj;
 
@@ -784,6 +886,9 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(2);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[0][2].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-189.f, -313.f, -1.f), L"UI");
@@ -804,6 +909,9 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(3);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[1][0].first = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-259.5f, -354.5f, -1.f), L"UI");
@@ -823,6 +931,9 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_04.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(4);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
 
 	m_aEquipList[1][1].first = UITestObj;
 
@@ -847,6 +958,9 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(0);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[0][0].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-286.f, -313.f, -1.1f), L"UI");
@@ -868,6 +982,9 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(1);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[0][1].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-237.5f, -313.f, -1.1f), L"UI");
@@ -888,6 +1005,9 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(2);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[0][2].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-189.f, -313.f, -1.1f), L"UI");
@@ -907,7 +1027,10 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
-	
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(3);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[1][0].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-259.5f, -354.5f, -1.1f), L"UI");
@@ -927,7 +1050,10 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, UITestObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
-	
+
+	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(4);
+	UITestObj->GetScript<CUIScript_Button>()->SetUICase(2);
+
 	m_aEquipList[1][1].second = UITestObj;
 
 	SpawnGameObject(UITestObj, Vec3(-211.f, -354.5f, -1.1f), L"UI");
@@ -981,13 +1107,19 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(-0.35f, 0.06f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-92.f, 8.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(0);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
 
 	m_aItemBoxList[0][0].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1001,13 +1133,19 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(-0.115f, 0.06f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-30.f, 8.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(1);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
 
 	m_aItemBoxList[0][1].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1022,13 +1160,19 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(0.12f, 0.06f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(32.f, 8.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(2);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
 
 	m_aItemBoxList[0][2].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1043,13 +1187,19 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(0.355f, 0.06f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(94.f, 8.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(3);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
 
 	m_aItemBoxList[0][3].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1063,16 +1213,24 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(-0.35f, -0.227f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-92.f, -34.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
 
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(4);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
+
 	m_aItemBoxList[1][0].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
+
+
 
 	dropItem = new CGameObject();
 	dropItem->SetName(L"UI_ItemBoxSlot11");
@@ -1082,13 +1240,19 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(-0.115f, -0.227f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(-30.f, -34.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(5);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
 
 	m_aItemBoxList[1][1].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1103,13 +1267,19 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(0.12f, -0.227f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(32.f, -34.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(6);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
 
 	m_aItemBoxList[1][2].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1124,13 +1294,19 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->AddComponent(new CUI_Button);
 	dropItem->AddComponent(new CUIScript_Button);
 
-	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
-	dropItem->Transform()->SetRelativePos(Vec3(0.355f, -0.227f, -1.f));
+	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
+	dropItem->Transform()->SetRelativePos(Vec3(94.f, -34.f, -1.f));
 
 	dropItem->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ItemBg_UnCommon.png"));
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(7);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
+	dropItem->Transform()->SetAbsolute(true);
 
 	m_aItemBoxList[1][3].first = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1153,6 +1329,10 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
 
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(0);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
 	m_aItemBoxList[0][0].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
 
@@ -1172,6 +1352,10 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(1);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
 
 	m_aItemBoxList[0][1].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1194,6 +1378,10 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
 
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(2);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
 	m_aItemBoxList[0][2].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
 
@@ -1215,6 +1403,10 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
 
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(3);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
 	m_aItemBoxList[0][3].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
 
@@ -1234,6 +1426,10 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(4);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
 
 	m_aItemBoxList[1][0].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1256,6 +1452,10 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
 
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(5);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
 	m_aItemBoxList[1][1].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
 
@@ -1276,6 +1476,10 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
+
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(6);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
 
 	m_aItemBoxList[1][2].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
@@ -1298,13 +1502,17 @@ void ER_UIMgr::CreateDropInventory()
 	dropItem->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, dropItem->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 	dropItem->MeshRender()->GetDynamicMaterial(0);
 
+	dropItem->GetScript<CUIScript_Button>()->SetUIPos(7);
+	dropItem->GetScript<CUIScript_Button>()->SetUICase(0);
+	dropItem->GetScript<CUIScript_Button>()->SetBtnCase(1);
+
 	m_aItemBoxList[1][3].second = dropItem;
 	m_pItemBox->AddChild(dropItem);
 
 #pragma endregion
 
 	m_pItemBox->SetEnable(false);
-
+	
 	for (int i = 0; i < 2; ++i) {
 		for (int j = 0; j < 4; ++j) {
 			m_aItemBoxList[i][j].first->SetEnable(false);
@@ -1334,6 +1542,7 @@ void ER_UIMgr::CreateStatText()
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
 	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"테스트");
+	testTextObj->Text()->SetName(L"테스트00");
 	
 	m_pStatText[0][0] = testTextObj;
 
@@ -1366,7 +1575,7 @@ void ER_UIMgr::CreateStatText()
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	testTextObj->SetName(L"UI_stat00");
+	testTextObj->SetName(L"UI_stat10");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
 	// Std2DUIMtrl 사용
@@ -1390,7 +1599,7 @@ void ER_UIMgr::CreateStatText()
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	testTextObj->SetName(L"UI_stat01");
+	testTextObj->SetName(L"UI_stat11");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
 	// Std2DUIMtrl 사용
@@ -1413,7 +1622,7 @@ void ER_UIMgr::CreateStatText()
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	testTextObj->SetName(L"UI_stat00");
+	testTextObj->SetName(L"UI_stat20");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
 	// Std2DUIMtrl 사용
@@ -1437,7 +1646,7 @@ void ER_UIMgr::CreateStatText()
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	testTextObj->SetName(L"UI_stat01");
+	testTextObj->SetName(L"UI_stat21");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
 	// Std2DUIMtrl 사용
@@ -1460,7 +1669,7 @@ void ER_UIMgr::CreateStatText()
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	testTextObj->SetName(L"UI_stat00");
+	testTextObj->SetName(L"UI_stat30");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
 	// Std2DUIMtrl 사용
@@ -1484,7 +1693,7 @@ void ER_UIMgr::CreateStatText()
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	testTextObj->SetName(L"UI_stat01");
+	testTextObj->SetName(L"UI_stat31");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
 	// Std2DUIMtrl 사용
@@ -1522,7 +1731,94 @@ void ER_UIMgr::UpdateStat()
 	m_pStatText[3][1]->Text()->InputString(std::to_wstring(status->fSPRegen));				//스태미너 재생
 }
 
-Vec3 ER_UIMgr::WorldPosToUIPos(const Vec3& worldPos)
+void ER_UIMgr::UpdateHP()
+{
+	ER_Ingame_Stats* stat = ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetStatus();
+	float maxHP = stat->iMaxHP;
+	float curHP = stat->iHP;
+
+	//흰 바 먼저 초기화
+	m_pHPReturnBar->Transform()->SetRelativePos(m_pHPBar->Transform()->GetRelativePos());
+	m_pHPReturnBar->Transform()->SetRelativeScale(m_pHPBar->Transform()->GetRelativeScale());
+		
+	//실제 체력바 계산
+	float decreaseRate = ((curHP) / maxHP) * 300.f;
+
+	Vec3 pos = m_pHPBar->Transform()->GetRelativePos();
+	pos.x = 1.f;
+	pos.x = pos.x - ((300-decreaseRate) / 2);
+	Vec3 scale = m_pHPBar->Transform()->GetRelativeScale();
+	scale.x = decreaseRate;
+
+	m_pHPBar->Transform()->SetRelativePos(pos);
+	m_pHPBar->Transform()->SetRelativeScale(scale);
+
+	m_bHPChangeTrigger = true;
+}
+
+void ER_UIMgr::UpdateHPReturnBar()
+{
+	Vec3 pos = m_pHPReturnBar->Transform()->GetRelativePos();
+	Vec3 scale = m_pHPReturnBar->Transform()->GetRelativeScale();
+
+	if (scale.x > m_pHPBar->Transform()->GetRelativeScale().x) {
+		float decreaseRate = (75.f * DT);
+		scale.x -= decreaseRate;
+		pos.x -= (decreaseRate / 2);
+		m_pHPReturnBar->Transform()->SetRelativePos(pos);
+		m_pHPReturnBar->Transform()->SetRelativeScale(scale);
+	}
+	else {
+		m_bHPChangeTrigger = false;
+	}
+}
+
+void ER_UIMgr::UpdateSteminar()
+{
+	ER_Ingame_Stats* stat = ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetStatus();
+	float maxSR = stat->iMaxSP;
+	float curSR = stat->iSP;
+
+	float decreaseRate = ((curSR) / maxSR) * 300.f;
+
+	Vec3 pos = m_pHPBar->Transform()->GetRelativePos();
+	pos.x = 1.f;
+	pos.x = pos.x - ((300 - decreaseRate) / 2);
+	Vec3 scale = m_pHPBar->Transform()->GetRelativeScale();
+	scale.x = decreaseRate;
+
+	m_pHPBar->Transform()->SetRelativePos(pos);
+	m_pHPBar->Transform()->SetRelativeScale(scale);
+}
+
+HBITMAP ER_UIMgr::LoadPNGAsBitmap(LPCTSTR szFilename)
+{
+	Gdiplus::Bitmap* pImage = Gdiplus::Bitmap::FromFile(szFilename, FALSE);
+	HBITMAP hBmp = NULL;
+
+	if (pImage && pImage->GetLastStatus() == Gdiplus::Ok)
+	{
+		pImage->GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hBmp);
+	}
+
+	delete pImage;
+	return hBmp;
+}
+
+HCURSOR ER_UIMgr::BitmapToCursor(HWND hWnd, HBITMAP hBitmap)
+{
+	ICONINFO iconInfo = {};
+	iconInfo.fIcon = FALSE; // 커서로 사용하기 위해 FALSE로 설정
+	iconInfo.xHotspot = 0;  // 커서의 핫스팟 X 좌표
+	iconInfo.yHotspot = 0;  // 커서의 핫스팟 Y 좌표
+	iconInfo.hbmMask = hBitmap;  // 마스크 비트맵
+	iconInfo.hbmColor = hBitmap; // 컬러 비트맵
+
+	HCURSOR hCursor = CreateIconIndirect(&iconInfo);
+	return hCursor;
+}
+
+Vec3 ER_UIMgr::WorldPosToUIPos(Vec3 worldPos)
 {
 	// World 위치 벡터
 	XMVECTOR pos = XMLoadFloat3(&worldPos);
@@ -1532,17 +1828,19 @@ Vec3 ER_UIMgr::WorldPosToUIPos(const Vec3& worldPos)
 	XMMATRIX proj = CRenderMgr::GetInst()->GetMainCam()->GetProjMat();
 
 	Vec2 vResol = CDevice::GetInst()->GetRenderResolution();
-
+	
 	// 스크린 좌표로 변환
 	XMVECTOR screenPos = XMVector3Project(pos, 0.0f, 0.0f, vResol.x, vResol.y, 0.0f, 1.0f, proj, view, XMMatrixIdentity());
-
+	
 	Vec3 result;
 	XMStoreFloat3(&result, screenPos);
-
+	
 	result.x -= (vResol.x / 2.f);
 	result.y -= (vResol.y / 2.f);
-
+	
 	result.y = -result.y;
-
+	
+	result.z = 0.f;
+	
 	return result;
 }

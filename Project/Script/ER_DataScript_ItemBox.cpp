@@ -33,7 +33,7 @@ void ER_DataScript_ItemBox::begin()
 	}
 
 	CreateRandomItems();
-
+	
 	CreateBoxIcon();
 }
 
@@ -102,7 +102,9 @@ void ER_DataScript_ItemBox::CreateRandomItems()
 		}
 	}
 
-	int a = 0;
+	for (int i = 0; i < m_vItemList.size(); ++i) {
+		m_vItemList[i]->GetScript<ER_DataScript_Item>()->SetSlotIdx(i);
+	}
 }
 
 void ER_DataScript_ItemBox::CreateBoxIcon()

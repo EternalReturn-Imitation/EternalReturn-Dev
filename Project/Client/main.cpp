@@ -45,7 +45,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return 0;
     }
 
-
     // Editor 초기화
     CEditorObjMgr::GetInst()->init();
     

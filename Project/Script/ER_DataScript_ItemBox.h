@@ -28,6 +28,9 @@ public:
 
 public:
     vector<CGameObject*> GetItemList() { return m_vItemList; }
+    CGameObject* GetItem(int _i) { return m_vItemList[_i]; }
+    
+    void SetEmptyItem(int _i) { m_vItemList[_i] = nullptr; }
 
 public:
     ER_DataScript_ItemBox();

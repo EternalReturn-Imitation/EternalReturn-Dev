@@ -80,7 +80,7 @@ void CTransform::finaltick()
 			Matrix matParentWorld = pParent->Transform()->m_matWorld;
 			Matrix matParentScale = pParent->Transform()->m_matWorldScale;
 			Matrix matParentScaleInv = XMMatrixInverse(nullptr, matParentScale);
-
+			
 			// 월드 = 로컬월드 * 부모크기 역 * 부모 월드(크기/회전/이동)
 			m_matWorld = m_matWorld * matParentScaleInv * matParentWorld;
 		}

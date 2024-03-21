@@ -27,6 +27,10 @@ private:
     CGameObject*                m_Equipment[(UINT)ER_ITEM_SLOT::END];   // 장비칸
     CGameObject*                m_Inventory[10];                      // 인벤토리 10칸
 
+    CGameObject*                m_aStatBar[4];          //[0] : HPBAR, [1] : ReturnBar, [2] : SteminarBar, [3] : LevelText
+    float                       m_aStatPosOffset[4];    //스탯들의 x 위치 오프셋들.
+    bool                        m_bHPChangeTrigger;     //HP 변경시 트리거
+
 public:
     // [상태 개신]
     void StatusUpdate();    // Status 갱신 함수 : 레벨업 , 아이템변경, 버프/버프
@@ -58,6 +62,12 @@ public:
     CGameObject* ItemAcquisition(CGameObject* _ItemObj);
 
     bool SwapItem(CGameObject* _DragmItem, CGameObject* _DropItem);
+
+public:
+    void CreateStatBar();
+    void UpdateStatBar(); // 매 틱 업데이트
+    void ChangeStatBar(); // 변환이 필요할 때만 호출
+    void ChangeHPReturnBar(); //HPReturnBar 변경시 호출
 
 public:
     virtual void BeginOverlap(CCollider3D* _Other) override;

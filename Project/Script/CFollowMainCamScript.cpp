@@ -17,6 +17,7 @@ CFollowMainCamScript::~CFollowMainCamScript()
 
 void CFollowMainCamScript::begin()
 {
+	CCamera* camera = CRenderMgr::GetInst()->GetMainCam();
 	pTargetObject = CRenderMgr::GetInst()->GetMainCam()->GetOwner();
 }
 

@@ -228,6 +228,8 @@ void ER_ActionScript_Hyunwoo::FarmingEnter(tFSMData& param)
     CFindPath* findpathcomp = GetOwner()->FindPath();
     findpathcomp->FindPath(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
 
+    m_pFarmingObject = (CGameObject*)param.lParam;
+
     m_bFarmingTrigger = true;
 }
 
@@ -279,6 +281,8 @@ void ER_ActionScript_Hyunwoo::FarmingExit(tFSMData& param)
             itemLists.second->SetEnable(false);
         }
     }
+
+    m_pFarmingObject = nullptr;
 }
 
 void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)

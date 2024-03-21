@@ -43,7 +43,9 @@ protected:
 
     bAbleChange m_bAbleChange;              // 동작 변경 가능 여부
 
-    bool        m_bFarmingTrigger;
+    CGameObject* m_pFarmingObject;          // 파밍중인 오브젝트
+    bool        m_bFarmingTrigger;          // 파밍 트리거
+
 
     // FSMState에 Delegate를 생성해서 연결해주는 함수
     virtual FSMState* CreateWait() = 0;
@@ -94,6 +96,7 @@ public:
     bool SetFarmingTrigger(bool _b) { m_bFarmingTrigger = _b; }
 
     eCharacterActionState GetCurState() { return (eCharacterActionState)m_iCurState; }
+    CGameObject* GetFarmingObject() { return m_pFarmingObject; }
 
 public:
     virtual void BeginOverlap(CCollider3D* _Other);
