@@ -142,7 +142,7 @@ struct tSkill_Info
 		, iUseSP{}
 		, fMaxCoolDown{}
 		, fMaxActionTime{}
-		, iSkillLevel(1)
+		, iSkillLevel(5)
 		, fCoolDown(0.f)
 		, IsUsable(true)
 		, IsAction(false)
@@ -152,8 +152,13 @@ struct tSkill_Info
 	}
 
 public:
-	bool Use(bool _IsBuf)
+	bool Use(int* _CharacterSP, bool _IsBuf = false)
 	{
+		float UsedSP = *_CharacterSP - iUseSP[iSkillLevel];
+		
+		if (UsedSP < 0)
+			return false;
+
 		if (IsUsable)
 		{
 			if (_IsBuf)
@@ -164,6 +169,8 @@ public:
 
 			fCoolDown = fMaxCoolDown[iSkillLevel];
 			IsUsable = false;
+
+			*_CharacterSP = UsedSP;
 			return true;
 		}
 
@@ -187,7 +194,7 @@ public:
 			fActionTime -= _Ratio;
 			if (fActionTime <= 0)
 			{
-				fActionTime <= 0;
+				fActionTime = 0;
 				IsAction = false;
 			}
 		}

@@ -28,7 +28,7 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 
 	int CriticalDmg = IsCritical(AtkInfo);
 
-	int FinalDmg = (int)(AtkPower * 100) / (100 + Def) * (CriticalDmg * 0.65);
+	int FinalDmg = (int)((AtkPower * 100) / (100 + Def) * (CriticalDmg * 0.65));
 }
 
 void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker

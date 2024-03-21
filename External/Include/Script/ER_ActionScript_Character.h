@@ -55,6 +55,9 @@ protected:
     virtual FSMState* CreateSkill_E() = 0;
     virtual FSMState* CreateSkill_R() = 0;
 
+    tIngame_Stats* GetStatus();
+    tStatus_Effect* GetStatusEffect();
+
 protected:
     Vec3 GetFocusPoint();                // Å¸°Ù ÁöÁ¡
     Vec3 GetClearPoint(const Vec3& vDir, float dist);

@@ -36,12 +36,13 @@ AnimEditUI::AnimEditUI()
     SetName("AnimEditUI");
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
     // window_flags |= ImGuiWindowFlags_NoBackground;
 
     SetFlags(window_flags);
     SetModal(false);
+    
 }
 
 AnimEditUI::~AnimEditUI()
@@ -68,14 +69,12 @@ void AnimEditUI::tick()
 
 void AnimEditUI::finaltick()
 {
-    render_window();
-
+    ImGui::SetNextWindowSize(ImVec2(1280.f, 780.f));
     UI::finaltick();
 }
 
 int AnimEditUI::render_update()
 {
-
     render_menubar();
 
     ImGui::BeginGroup();
@@ -514,28 +513,6 @@ void AnimEditUI::render_TimeLine()
 void AnimEditUI::render_CamController()
 {
     ImGui::Button("Cam Contorller", ImVec2(0, 0));
-}
-
-void AnimEditUI::render_window()
-{
-    // 에디터 윈도우 세팅
-    {
-        const ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->WorkPos);
-        ImGui::SetNextWindowSize(viewport->WorkSize);
-        ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    }
-
-    const ImGuiViewport* viewport = ImGui::GetMainViewport();
-
-    SetPopupPos(viewport->WorkPos);
-    SetSize(viewport->WorkSize.x, viewport->WorkSize.y);
-
-    // 반투명 배경
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::PopStyleVar(3);
 }
 
 void AnimEditUI::render_SavePopUp()

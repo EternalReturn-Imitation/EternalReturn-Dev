@@ -137,6 +137,8 @@ Vec3 CParticleSystem::GetWorldPos(Vec3 _relativePos, Vec3 _relativeRot)
 
 void CParticleSystem::finaltick()
 {
+	
+
 	// 스폰 레이트 계산
 	// 1개 스폰 시간
 	float fTimePerCount = 1.f / (float)m_ModuleData.SpawnRate;
@@ -165,13 +167,22 @@ void CParticleSystem::finaltick()
 	m_UpdateCS->SetModuleData(m_ModuleDataBuffer);
 	m_UpdateCS->SetNoiseTexture(CResMgr::GetInst()->FindRes<CTexture>(L"noise_01.png"));
 	
-	m_UpdateCS->SetParticleObjectPos(Transform()->GetWorldPos());
+	// m_UpdateCS->SetParticleObjectPos(Transform()->GetWorldPos());
 	
-	// if(KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::LBTN))
-	// 	GetRayPos();
-	// 
-	// Vec3 worldpos = GetWorldPos(m_PointPos,Transform()->GetRelativeRot());
-	// m_UpdateCS->SetParticleObjectPos(worldpos);
+	// 마우스클릭지점 : MouseUIScript로 이동 예정
+	
+	if (KEY_TAP(KEY::RBTN))
+	{
+		GetRayPos();
+		m_ModuleData.SpawnRate = 2;
+	}
+	else
+		m_ModuleData.SpawnRate = 0;
+
+	Vec3 worldpos = GetWorldPos(m_PointPos, Transform()->GetRelativeRot());
+	worldpos.y += 1.f;
+	m_UpdateCS->SetParticleObjectPos(worldpos);
+	
 
 	m_UpdateCS->Execute();
 }
@@ -187,7 +198,7 @@ void CParticleSystem::render()
 	m_ModuleDataBuffer->UpdateData(21, PIPELINE_STAGE::PS_GEOMETRY);
 
 	// Particle Render	
-	Ptr<CTexture> pParticleTex = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire.png");
+	Ptr<CTexture> pParticleTex = CResMgr::GetInst()->FindRes<CTexture>(L"Img_Tutorial_Arrow_003.png");
 	GetMaterial(0)->SetTexParam(TEX_0, pParticleTex);
 
 	GetMaterial(0)->UpdateData();

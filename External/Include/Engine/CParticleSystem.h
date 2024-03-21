@@ -39,7 +39,7 @@ public:
     void SetSpawnRate(int _SpawnRate) { m_ModuleData.SpawnRate = _SpawnRate; }                      // 초당 생성 개수 설정
     
 
-    void SetMaxParticleCound(int _SpawnCnt) { m_ModuleData.iMaxParticleCount = _SpawnCnt; }         // 최대 파티클 최대 생성 개수
+    void SetMaxParticleCount(int _SpawnCnt) { m_ModuleData.iMaxParticleCount = _SpawnCnt; }         // 최대 파티클 최대 생성 개수
 
     // 파티클 데이터 얻기
     const tParticleModule& GetParticleData() { return m_ModuleData; }

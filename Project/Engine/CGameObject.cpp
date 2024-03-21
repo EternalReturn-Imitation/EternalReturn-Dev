@@ -25,6 +25,7 @@ CGameObject::CGameObject()
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
 	, m_bEnable(true)
+	, m_bOutofLayer(false)
 {
 }
 
@@ -40,6 +41,7 @@ CGameObject::CGameObject(const CGameObject& _Other)
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
 	, m_bEnable(true)
+	, m_bOutofLayer(false)
 {
 	// Component บนป็
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)

@@ -107,6 +107,7 @@ int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
     // 상수버퍼 생성
     CreateConstBuffer();
 
+
     return S_OK; // E_FAIL;
 }
 

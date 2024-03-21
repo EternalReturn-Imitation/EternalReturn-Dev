@@ -69,7 +69,6 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                                                       , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * 0.5f);
                         particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
                         
-                        
                         // 스폰 크기 범위내에서 랜덤 크기로 지정 (Min, Max 가 일치하면 고정크기)
                         float4 vSpawnScale = ModuleData.vSpawnScaleMin + (ModuleData.vSpawnScaleMax - ModuleData.vSpawnScaleMin) * vOut3.x;                                                
                         particle.vWorldScale.xyz = vSpawnScale.xyz;

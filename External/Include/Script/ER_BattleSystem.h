@@ -1,8 +1,8 @@
 #pragma once
 #include <Engine\CSingleton.h>
+#include "ER_struct.h"
 
 class ER_ActionScript;
-class tIngame_Stats;
 
 typedef int (CScript::* SKILL_DMG_CALC)(const tSkill_Info*);
 

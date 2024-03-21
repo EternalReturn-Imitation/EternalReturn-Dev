@@ -8,6 +8,7 @@
 #include <Engine\CScript.h>
 #include <Engine\CLevelMgr.h>
 #include <Engine\CCollisionMgr.h>
+#include <Engine\CDevice.h>
 
 #include <Engine\CPathFindMgr.h>
 
@@ -69,6 +70,12 @@ int MenuUI::render_update()
 
                 ImGuiMgr::GetInst()->InitInspector();
             }
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("GameClose"))
+            {
+                DestroyWindow(CEngine::GetInst()->GetMainWnd());
+            }
 
             ImGui::EndMenu();
         }
@@ -98,19 +105,19 @@ int MenuUI::render_update()
             ImGui::Separator();
 
 
-            if (ImGui::BeginMenu("Add Component"))
-            {
-                for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
-                {
-                    if (ImGui::MenuItem(ToString((COMPONENT_TYPE)i)))
-                    {
-                        AddComponent(COMPONENT_TYPE(i));
-                    }
-                }
-                ImGui::EndMenu();
-            }
+            // if (ImGui::BeginMenu("Add Component"))
+            // {
+            //     for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+            //     {
+            //         if (ImGui::MenuItem(ToString((COMPONENT_TYPE)i)))
+            //         {
+            //             AddComponent(COMPONENT_TYPE(i));
+            //         }
+            //     }
+            //     ImGui::EndMenu();
+            // }
 
-            ImGui::Separator();
+            // ImGui::Separator();
 
             if (ImGui::BeginMenu("Add Script"))
             {
@@ -299,7 +306,7 @@ void MenuUI::CreateEmptyObject()
 void MenuUI::CreateEmptyMaterial()
 {
     Ptr<CMaterial> pNewMtrl = new CMaterial;
-    CResMgr::GetInst()->AddRes<CMaterial>(L"EmptyMtrl", L"material\\Custom\\", L".mtrl", pNewMtrl);
+    CResMgr::GetInst()->AddRes<CMaterial>(L"EmptyMtrl", L"material\\", L".mtrl", pNewMtrl);
     pNewMtrl->Save(pNewMtrl->GetRelativePath());
 }
 

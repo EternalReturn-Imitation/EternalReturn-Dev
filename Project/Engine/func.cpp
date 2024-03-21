@@ -13,6 +13,7 @@
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 {
 	_NewObject->Transform()->SetRelativePos(_vWorldPos);
+	_NewObject->SetOutOfLayer(false);
 
 	tEvent evn = {};
 
@@ -25,6 +26,7 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 
 void SpawnGameObject(CGameObject* _NewObject, const wstring& _LayerName)
 {
+	_NewObject->SetOutOfLayer(false);
 	tEvent evn = {};
 
 	evn.Type = EVENT_TYPE::CREATE_OBJECT;
@@ -36,6 +38,7 @@ void SpawnGameObject(CGameObject* _NewObject, const wstring& _LayerName)
 
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName)
 {
+	_NewObject->SetOutOfLayer(false);
 	_NewObject->Transform()->SetRelativePos(_vWorldPos);
 
 	tEvent evn = {};
@@ -56,6 +59,7 @@ void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 	for (int i = 0; i < iChildCnt; ++i)
 	{
 		SpawnChlidGameObject(vecChildObj[i], _LayerName);
+		vecChildObj[i]->SetOutOfLayer(false);
 	}
 
 	SpawnGameObject(_ParentObject,_LayerName);
@@ -72,6 +76,19 @@ void DestroyObject(CGameObject* _DeletObject)
 	evn.Type = EVENT_TYPE::DELETE_OBJECT;
 	evn.wParam = (DWORD_PTR)_DeletObject;
 	
+	CEventMgr::GetInst()->AddEvent(evn);
+}
+
+void EraseObject(CGameObject* _EraseObject)
+{
+	if (!_EraseObject->IsOutofLayer())
+		return;
+
+	tEvent evn = {};
+
+	evn.Type = EVENT_TYPE::ERASE_OBJECT;
+	evn.wParam = (DWORD_PTR)_EraseObject;
+
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 

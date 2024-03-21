@@ -273,5 +273,4 @@ float GetTessFactor(float _Length, int _iMinLevel, int _iMaxLevel, float _MinDis
     }
 }
 
-
 #endif

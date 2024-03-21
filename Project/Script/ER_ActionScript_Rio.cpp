@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ER_ActionScript_Rio.h"
 #include "ER_DataScript_Character.h"
+#include "ER_ProjectilePool.h"
+#include "ER_ProjectileScript.h"
 
 #include <Engine\CAnim3D.h>
 
@@ -333,6 +335,18 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
     int HitFrame = m_BowType ? 8 : 8;
     if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
     {
+        ER_ProjectileScript* Arrow = ER_ProjectilePool::GetInst()->GetProjectile(ER_ProjectilePool::eProjType::ARROW);
+        
+        Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+        Vec3 vUP = GetOwner()->Transform()->GetWorldDir(DIR_TYPE::UP).Normalize();
+        Vec3 vFront = GetOwner()->Transform()->GetWorldDir(DIR_TYPE::FRONT).Normalize();
+
+        vPos += vUP * 0.2f;
+        vPos += vFront * 0.2f;
+
+        Arrow->ShotTarget(GetOwner(), (CGameObject*)param.lParam, vPos, ER_ProjectileScript::eDmgType::COMMON, 20.f);
+        Arrow->Shot();
+
         BATTLE_COMMON(GetOwner(), param.lParam);
         param.bData[2] = true;
     }

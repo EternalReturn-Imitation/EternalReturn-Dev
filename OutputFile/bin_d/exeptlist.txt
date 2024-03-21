@@ -10,3 +10,4 @@ ER_GameSystem.h
 ER_ItemMgr.h
 ER_CharacterMgr.h
 ER_BattleSystem.h
+ER_ProjectilePool.h

@@ -149,6 +149,25 @@ void CKeyMgr::tick()
 
 		m_vMouseDir = m_vMousePos - m_vPrevMousePos;
 		m_vMouseDir.y *= -1;
+
+		// 마우스 휠
+		HRESULT hr = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState);
+		if (FAILED(hr))
+		{
+			// 장치 상태 손실 시 장치 재활성화
+			if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
+				m_mouse->Acquire();
+		}
+
+		mouseWheelUp = false;
+		mouseWheelDown = false;
+
+		// 마우스 휠 값 확인
+		if (m_mouseState.lZ > 0)
+			mouseWheelUp = true; // 휠을 위로 스크롤할 때의 동작
+		else if (m_mouseState.lZ < 0)
+			mouseWheelDown = true; // 휠을 아래로 스크롤할 때의 동작
+
 	}
 
 	// Window 가 focus 상태가 아니다
@@ -168,23 +187,7 @@ void CKeyMgr::tick()
 		}
 	}
 
-	// 마우스 휠
-	HRESULT hr = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState);
-	if (FAILED(hr))
-	{
-		// 장치 상태 손실 시 장치 재활성화
-		if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
-			m_mouse->Acquire();
-	}
-
-	mouseWheelUp = false;
-	mouseWheelDown = false;
-
-	// 마우스 휠 값 확인
-	if (m_mouseState.lZ > 0)
-		mouseWheelUp = true; // 휠을 위로 스크롤할 때의 동작
-	else if (m_mouseState.lZ < 0)
-		mouseWheelDown = true; // 휠을 아래로 스크롤할 때의 동작
+	
 }
 
 void CKeyMgr::DinputInit(HINSTANCE _hinstance, HWND _hwnd)
@@ -217,9 +220,15 @@ void CKeyMgr::DinputInit(HINSTANCE _hinstance, HWND _hwnd)
 	
 	if (FAILED(m_mouse->Acquire()))
 	{
-		assert(NULL);
-		return;
+		HRESULT hr = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState);
+		if (FAILED(hr))
+		{
+			// 장치 상태 손실 시 장치 재활성화
+			if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
+				m_mouse->Acquire();
+		}
 	}
+
 }
 
 void CKeyMgr::Release()

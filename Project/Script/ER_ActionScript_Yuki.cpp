@@ -287,7 +287,11 @@ void ER_ActionScript_Yuki::AttackEnter(tFSMData& param)
     param.bData[2] = false;
     param.bData[3] = !param.bData[3];
 
-    if (param.bData[3])
+    // 스킬정보 얻어오고 지금 스킬상태 따라서 세팅해주기.
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    if(Skill->IsAction)
+        GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillQ", false);
+    else if (param.bData[3])
         GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Attack0", false);
     else
         GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Attack1", false);
@@ -309,6 +313,9 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
     tStatus_Effect* statusefc = m_Data->GetStatusEffect();
     Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
 
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    
+
     // 애니메이션 속도 증가
     animator->PlaySpeedValue(Atkspd);
 
@@ -316,7 +323,14 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
     int HitFrame = param.bData[3] ? 8 : 8;
     if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
     {
-        BATTLE_COMMON(GetOwner(), param.lParam);
+        if (Skill->IsAction)
+        {
+            // 스킬판정으로 공격
+        }
+        else
+        {
+            BATTLE_COMMON(GetOwner(), param.lParam);
+        }
         param.bData[2] = true;
     }
 
@@ -406,9 +420,8 @@ void ER_ActionScript_Yuki::RestExit(tFSMData& param)
 void ER_ActionScript_Yuki::Skill_QEnter(tFSMData& param)
 {
     // 강화 평타 전달
-    tFSMData AttackData = STATEDATA_GET(ATTACK);
-    AttackData.iData = 1;
-    STATEDATA_SET(ATTACK, AttackData);
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    Skill->Use(&GetStatus()->iSP, true);
 }
 
 void ER_ActionScript_Yuki::Skill_QUpdate(tFSMData& param)
@@ -429,8 +442,10 @@ void ER_ActionScript_Yuki::Skill_QExit(tFSMData& param)
 
 void ER_ActionScript_Yuki::Skill_WEnter(tFSMData& param)
 {
-    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillW_Upper_Wait", false);
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+    Skill->Use(&GetStatus()->iSP, true);
 
+    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillW_Upper_Wait", false);
     SetAbleToCancle(bAbleChange::ABSOUTE);
 }
 
@@ -449,6 +464,9 @@ void ER_ActionScript_Yuki::Skill_WExit(tFSMData& param)
 
 void ER_ActionScript_Yuki::Skill_EEnter(tFSMData& param)
 {
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+    Skill->Use(&GetStatus()->iSP);
+
     CAnimator3D* Animator = GetOwner()->Animator3D();
     Animator->SelectAnimation(L"Yuki_SkillE_Move", false);
 

@@ -709,9 +709,6 @@
     <Filter Include="Source\07. Resource\8. Bone">
       <UniqueIdentifier>{42ead4ff-48ef-486e-a638-2997be65c251}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\Compute\NaviMap">
-      <UniqueIdentifier>{5031d0ca-7e57-4455-b01a-3b411e02a580}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\03. Manager\13. PathFindMgr">
       <UniqueIdentifier>{96d812ea-6676-4ea1-90de-90fc6de37f86}</UniqueIdentifier>
     </Filter>
