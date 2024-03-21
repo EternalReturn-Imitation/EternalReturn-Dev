@@ -41,7 +41,7 @@ void ER_DataScript_ItemBox::tick()
 {
 	if (m_pBoxIcon) {
 		Vec3 resultPos = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
-		m_pBoxIcon->Transform()->SetRelativePos(Vec3(resultPos.x, resultPos.y + 120.f, -1.1f));
+		m_pBoxIcon->Transform()->SetRelativePos(Vec3(resultPos.x, resultPos.y + 150.f, -1.1f));
 	}
 }
 

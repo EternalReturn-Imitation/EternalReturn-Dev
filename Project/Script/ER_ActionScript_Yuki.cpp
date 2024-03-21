@@ -258,6 +258,10 @@ void ER_ActionScript_Yuki::MoveUpdate(tFSMData& param)
         ChangeState(ER_CHAR_ACT::WAIT);
 }
 
+void ER_ActionScript_Yuki::MoveExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Yuki::FarmingEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Run", true);

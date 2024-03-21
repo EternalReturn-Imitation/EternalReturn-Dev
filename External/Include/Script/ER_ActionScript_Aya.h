@@ -54,11 +54,6 @@ private:
     void FarmingUpdate(tFSMData& param);
     void FarmingExit(tFSMData& param);
 
-    void WaitEnter(tFSMData& param);
-
-    void ArriveEnter(tFSMData& param);
-    void ArriveUpdate(tFSMData& param);
-
     void CraftEnter(tFSMData& param);
     void CraftUpdate(tFSMData& param);
     void CraftExit(tFSMData& param);

@@ -45,14 +45,14 @@ private:
     void WaitEnter(tFSMData& param);
     void WaitUpdate(tFSMData& param);
     void WaitExit(tFSMData& param);
-    
-    void MoveEnter(tFSMData& param);
-    void MoveUpdate(tFSMData& param);
-    void MoveExit(tFSMData& param);
 
     void FarmingEnter(tFSMData& param);
     void FarmingUpdate(tFSMData& param);
     void FarmingExit(tFSMData& param);
+
+    void MoveEnter(tFSMData& param);
+    void MoveUpdate(tFSMData& param);
+    void MoveExit(tFSMData& param);
 
     void CraftEnter(tFSMData& param);
     void CraftUpdate(tFSMData& param);

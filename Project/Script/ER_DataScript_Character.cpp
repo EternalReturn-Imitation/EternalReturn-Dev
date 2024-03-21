@@ -161,11 +161,11 @@ void ER_DataScript_Character::tick()
 		ChangeHPReturnBar();
 	}
 	
-	if (KEY_TAP(KEY::F)) {
-		ChangeStatBar();
-	}
+	//if (KEY_TAP(KEY::F)) {
+	//	ChangeStatBar();
+	//}
+	
 	// 스킬 쿨타임 갱신
-
 	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
 	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
 		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
@@ -224,7 +224,7 @@ void ER_DataScript_Character::CreateStatBar()
 	Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
 	Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
 	
-	SpawnGameObject(m_aStatBar[0], Vec3(pos.x, pos.y+50.f, -1.1f), L"UI");
+	SpawnGameObject(m_aStatBar[0], Vec3(pos.x, pos.y+ 62.5f, -1.1f), L"UI");
 
 
 
@@ -242,7 +242,7 @@ void ER_DataScript_Character::CreateStatBar()
 	m_aStatBar[1]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ReturnBar_UI.png"));
 	m_aStatBar[1]->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_aStatBar[1], Vec3(pos.x, pos.y + 50.f, -1.f), L"UI");
+	SpawnGameObject(m_aStatBar[1], Vec3(pos.x, pos.y + 62.5f, -1.f), L"UI");
 
 
 
@@ -260,7 +260,7 @@ void ER_DataScript_Character::CreateStatBar()
 	m_aStatBar[2]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"SPBar_UI.png"));
 	m_aStatBar[2]->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_aStatBar[2], Vec3(pos.x, pos.y + 30.f, -1.1f), L"UI");
+	SpawnGameObject(m_aStatBar[2], Vec3(pos.x, pos.y + 42.5f, -1.1f), L"UI");
 
 	// Text Obj
 	m_aStatBar[3] = new CGameObject;
@@ -291,10 +291,10 @@ void ER_DataScript_Character::UpdateStatBar()
 	Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
 	Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
 
-	m_aStatBar[0]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[0], pos.y + 140.f, -1.1f));
-	m_aStatBar[1]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[1], pos.y + 140.f, -1.f));
-	m_aStatBar[2]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[2], pos.y + 130.f, -1.1f));
-	m_aStatBar[3]->Transform()->SetRelativePos(Vec3(pos.x-75.f + m_aStatPosOffset[3], pos.y + 137.f, -1.2f));
+	m_aStatBar[0]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[0], pos.y + 175.f, -1.1f));
+	m_aStatBar[1]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[1], pos.y + 175.f, -1.f));
+	m_aStatBar[2]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[2], pos.y + 165.f, -1.1f));
+	m_aStatBar[3]->Transform()->SetRelativePos(Vec3(pos.x-75.f + m_aStatPosOffset[3], pos.y + 171.25f, -1.2f));
 }
 
 void ER_DataScript_Character::ChangeStatBar()
@@ -330,8 +330,7 @@ void ER_DataScript_Character::ChangeStatBar()
 	decreaseRate = ((curSR) / maxSR) * 120.f;
 	m_aStatPosOffset[2] = -((120 - decreaseRate) / 2);
 	
-	pos = m_aStatBar[2]->Transform()->GetRelativePos();
-	 
+	pos = m_aStatBar[2]->Transform()->GetRelativePos();	 
 	pos.x = pos.x - ((120 - decreaseRate) / 2);
 	scale = m_aStatBar[2]->Transform()->GetRelativeScale();
 	scale.x = decreaseRate;

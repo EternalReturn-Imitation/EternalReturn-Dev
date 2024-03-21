@@ -48,9 +48,9 @@ void ER_UIMgr::init()
 
 void ER_UIMgr::tick()
 {
-	if (KEY_TAP(KEY::F)) {
-		UpdateHP();
-	}
+	//if (KEY_TAP(KEY::F)) {
+	//	UpdateSteminar();
+	//}
 
 	//HPReturnBar¾÷µ¥ÀÌÆ®
 	if (m_bHPChangeTrigger) {
@@ -122,14 +122,14 @@ void ER_UIMgr::CreateBaseUI()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(156.097560f, 100.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(195.12195f, 125.f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"MainStatus_Background_Copy.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(UITestObj, Vec3(-520.f, -334.f, 0.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-624.f, -386.f, 0.f), L"UI");
 
 
 	//UITestObj = new CGameObject;
@@ -158,13 +158,13 @@ void ER_UIMgr::CreateBaseUI()
 	m_pPCFace->AddComponent(new CUI_Button);
 	m_pPCFace->AddComponent(new CUIScript_Button);
 
-	m_pPCFace->Transform()->SetRelativeScale(Vec3(100.f, 130.158730f, 1.f));
+	m_pPCFace->Transform()->SetRelativeScale(Vec3(125.f, 162.6984125f, 1.f));
 	m_pPCFace->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	m_pPCFace->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	m_pPCFace->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetPortraitTex().Get());
 	m_pPCFace->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_pPCFace, Vec3(-379.f, -318.f, 0.f), L"UI");
+	SpawnGameObject(m_pPCFace, Vec3(-460.f, -368.f, 0.f), L"UI");
 
 
 	UITestObj = new CGameObject;
@@ -175,14 +175,14 @@ void ER_UIMgr::CreateBaseUI()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(158.536585f, 100.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(198.17073125f, 125.f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Equip_BackGround_Copy.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(UITestObj, Vec3(-238.f, -334.f, 0.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-297.f, -386.5f, 0.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_Skill_BackGround");
@@ -192,14 +192,14 @@ void ER_UIMgr::CreateBaseUI()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(314.634146f, 100.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(393.2926825f, 125.f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Skill_BackGround.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(UITestObj, Vec3(0.f, -334.f, 0.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(0.f, -387.f, 0.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_Inventory_BackGround");
@@ -209,14 +209,14 @@ void ER_UIMgr::CreateBaseUI()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(331.32530f, 100.0f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(414.156625f, 125.0f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Inventory_BackGround.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(UITestObj, Vec3(325.f, -334.f, 0.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(405.f, -386.5f, 0.f), L"UI");
 
 
 	UITestObj = new CGameObject;
@@ -227,14 +227,14 @@ void ER_UIMgr::CreateBaseUI()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(204.34782f, 50.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(255.434775f, 62.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	UITestObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"UI_TimeBg.png"));
 	UITestObj->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(UITestObj, Vec3(0.f, 336.f, 0.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(0.f, 396.f, -3.f), L"UI");
 #pragma endregion
 }
 
@@ -248,14 +248,14 @@ void ER_UIMgr::CreateHPBar()
 	m_pHPBar->AddComponent(new CUI_Button);
 	m_pHPBar->AddComponent(new CUIScript_Button);
 
-	m_pHPBar->Transform()->SetRelativeScale(Vec3(300.f, 12.f, 1.f));
+	m_pHPBar->Transform()->SetRelativeScale(Vec3(375.f, 15.f, 1.f));
 
 	m_pHPBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	m_pHPBar->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	m_pHPBar->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"HPBar_UI.png"));
 	m_pHPBar->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_pHPBar, Vec3(1.f, -356.5f, -1.1f), L"UI");
+	SpawnGameObject(m_pHPBar, Vec3(1.f, -415.5f, -1.2f), L"UI");
 
 	m_pHPReturnBar = new CGameObject;
 	m_pHPReturnBar->SetName(L"UI_HPReturnBar");
@@ -265,14 +265,14 @@ void ER_UIMgr::CreateHPBar()
 	m_pHPReturnBar->AddComponent(new CUI_Button);
 	m_pHPReturnBar->AddComponent(new CUIScript_Button);
 
-	m_pHPReturnBar->Transform()->SetRelativeScale(Vec3(300.f, 12.f, 1.f));
+	m_pHPReturnBar->Transform()->SetRelativeScale(Vec3(375.f, 15.f, 1.f));
 
 	m_pHPReturnBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	m_pHPReturnBar->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	m_pHPReturnBar->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ReturnBar_UI.png"));
 	m_pHPReturnBar->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_pHPReturnBar, Vec3(1.f, -356.5f, -1.f), L"UI");
+	SpawnGameObject(m_pHPReturnBar, Vec3(1.f, -415.5f, -1.f), L"UI");
 
 	m_pStemnarBar = new CGameObject;
 	m_pStemnarBar->SetName(L"UI_SteminarBar");
@@ -282,14 +282,14 @@ void ER_UIMgr::CreateHPBar()
 	m_pStemnarBar->AddComponent(new CUI_Button);
 	m_pStemnarBar->AddComponent(new CUIScript_Button);
 
-	m_pStemnarBar->Transform()->SetRelativeScale(Vec3(300.f, 12.f, 1.f));
+	m_pStemnarBar->Transform()->SetRelativeScale(Vec3(375.f, 15.f, 1.f));
 
 	m_pStemnarBar->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	m_pStemnarBar->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	m_pStemnarBar->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"SPBar_UI.png"));
 	m_pStemnarBar->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_pStemnarBar, Vec3(1.f, -372.f, -1.1f), L"UI");
+	SpawnGameObject(m_pStemnarBar, Vec3(1.f, -435.f, -1.1f), L"UI");
 }
 
 void ER_UIMgr::CreateSkill()
@@ -302,14 +302,14 @@ void ER_UIMgr::CreateSkill()
 	skill->AddComponent(new CUI_Button);
 	skill->AddComponent(new CUIScript_Button);
 
-	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
 
 	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(0)->TexSkill.Get());
 	skill->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(skill, Vec3(-126.5f, -314.5f, -1.f), L"UI");
+	SpawnGameObject(skill, Vec3(-157.5f, -362.5f, -1.f), L"UI");
 
 	skill = new CGameObject;
 	skill->SetName(L"UI_SKill_W");
@@ -319,14 +319,14 @@ void ER_UIMgr::CreateSkill()
 	skill->AddComponent(new CUI_Button);
 	skill->AddComponent(new CUIScript_Button);
 
-	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
 
 	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(1)->TexSkill.Get());
 	skill->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(skill, Vec3(-74.f, -314.5f, -1.f), L"UI");
+	SpawnGameObject(skill, Vec3(-92.f, -362.5f, -1.f), L"UI");
 
 	skill = new CGameObject;
 	skill->SetName(L"UI_SKill_E");
@@ -336,14 +336,14 @@ void ER_UIMgr::CreateSkill()
 	skill->AddComponent(new CUI_Button);
 	skill->AddComponent(new CUIScript_Button);
 
-	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
 
 	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(2)->TexSkill.Get());
 	skill->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(skill, Vec3(-21.5f, -314.5f, -1.f), L"UI");
+	SpawnGameObject(skill, Vec3(-26.5f, -362.5f, -1.f), L"UI");
 
 	skill = new CGameObject;
 	skill->SetName(L"UI_SKill_R");
@@ -353,14 +353,14 @@ void ER_UIMgr::CreateSkill()
 	skill->AddComponent(new CUI_Button);
 	skill->AddComponent(new CUIScript_Button);
 
-	skill->Transform()->SetRelativeScale(Vec3(46.f, 46.f, 1.f));
+	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
 
 	skill->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	skill->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
 	skill->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetSkill(3)->TexSkill.Get());
 	skill->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(skill, Vec3(31.f, -314.5f, -1.f), L"UI");
+	SpawnGameObject(skill, Vec3(39.f, -362.5f, -1.f), L"UI");
 }
 
 void ER_UIMgr::CreateInventorySlot()
@@ -374,7 +374,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -386,7 +386,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[0][0].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(195.f, -325.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(242.5f, -375.5f, -1.f), L"UI");
 
 
 	UITestObj = new CGameObject;
@@ -397,7 +397,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -409,7 +409,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[0][1].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(252.f, -325.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(313.5f, -375.5f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot02");
@@ -419,7 +419,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -431,7 +431,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[0][2].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(309.f, -325.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(384.5f, -375.5f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot03");
@@ -441,7 +441,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -453,7 +453,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[0][3].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(366.f, -325.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(455.5f, -375.5f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot04");
@@ -463,7 +463,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -475,7 +475,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[0][4].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(423.f, -325.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(526.5f, -375.5f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot10");
@@ -485,7 +485,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -497,7 +497,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[1][0].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(195.f, -363.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(242.5f, -423.f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot11");
@@ -507,7 +507,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -519,7 +519,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[1][1].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(252.f, -363.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(313.5f, -423.f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot12");
@@ -529,7 +529,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -541,7 +541,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[1][2].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(309.f, -363.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(384.5f, -423.f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot13");
@@ -551,7 +551,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -563,7 +563,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[1][3].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(366.f, -363.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(455.5f, -423.f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_InvenSlot14");
@@ -573,7 +573,7 @@ void ER_UIMgr::CreateInventorySlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -585,7 +585,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	m_aInventoryList[1][4].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(423.f, -363.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(526.5f, -423.f, -1.f), L"UI");
 #pragma endregion
 }
 
@@ -600,7 +600,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -612,7 +612,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->GetScript<CUIScript_Button>()->SetUIPos(0);
 	UITestObj->GetScript<CUIScript_Button>()->SetUICase(1);
 
-	SpawnGameObject(UITestObj, Vec3(195.f, -325.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(242.5f, -375.5f, -1.1f), L"UI");
 
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
@@ -623,7 +623,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -635,7 +635,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[0][1].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(252.f, -325.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(313.5f, -375.5f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg02");
@@ -645,7 +645,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -657,7 +657,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[0][2].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(309.f, -325.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(384.5f, -375.5f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg03");
@@ -667,7 +667,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -679,7 +679,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[0][3].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(366.f, -325.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(455.5f, -375.5f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg04");
@@ -689,7 +689,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -701,7 +701,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[0][4].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(423.f, -325.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(526.5f, -375.5f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg10");
@@ -711,7 +711,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -723,7 +723,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[1][0].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(195.f, -363.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(242.5f, -423.f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg11");
@@ -733,7 +733,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -745,7 +745,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[1][1].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(252.f, -363.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(313.5f, -423.f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg12");
@@ -755,7 +755,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -767,7 +767,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[1][2].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(309.f, -363.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(384.5f, -423.f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg13");
@@ -777,7 +777,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -789,7 +789,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[1][3].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(366.f, -363.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(455.5f, -423.f, -1.1f), L"UI");
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(84)->Clone();
 	UITestObj->SetName(L"UI_InvenItemImg14");
@@ -799,7 +799,7 @@ void ER_UIMgr::CreateInventoryItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(54.731707f, 34.f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -811,7 +811,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	m_aInventoryList[1][4].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(423.f, -363.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(526.5f, -423.f, -1.1f), L"UI");
 #pragma endregion
 
 	for (int i = 0; i < 2; ++i) {
@@ -833,7 +833,7 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -846,7 +846,7 @@ void ER_UIMgr::CreateEquipSlot()
 	m_aEquipList[0][0].first = UITestObj;
 
 
-	SpawnGameObject(UITestObj, Vec3(-286.f, -313.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-358.f, -361.f, -1.f), L"UI");
 
 	UITestObj = new CGameObject;
 	UITestObj->SetName(L"UI_EquipSlot01");
@@ -856,7 +856,7 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -868,7 +868,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	m_aEquipList[0][1].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-237.5f, -313.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-297.f, -361.f, -1.f), L"UI");
 
 
 	UITestObj = new CGameObject;
@@ -879,7 +879,7 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -891,7 +891,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	m_aEquipList[0][2].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-189.f, -313.f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-236.f, -361.f, -1.f), L"UI");
 
 
 	UITestObj = new CGameObject;
@@ -902,7 +902,7 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -914,7 +914,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	m_aEquipList[1][0].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-259.5f, -354.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-325.f, -411.5f, -1.f), L"UI");
 
 
 	UITestObj = new CGameObject;
@@ -925,7 +925,7 @@ void ER_UIMgr::CreateEquipSlot()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -937,7 +937,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	m_aEquipList[1][1].first = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-211.f, -354.5f, -1.f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-264.f, -411.5f, -1.f), L"UI");
 #pragma endregion
 }
 
@@ -951,7 +951,7 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -963,7 +963,7 @@ void ER_UIMgr::CreateEquipItem()
 
 	m_aEquipList[0][0].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-286.f, -313.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-358.f, -361.f, -1.f), L"UI");
 
 
 
@@ -975,7 +975,7 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -987,7 +987,7 @@ void ER_UIMgr::CreateEquipItem()
 
 	m_aEquipList[0][1].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-237.5f, -313.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-297.f, -361.f, -1.f), L"UI");
 
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(85)->Clone();
@@ -998,7 +998,7 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -1010,7 +1010,7 @@ void ER_UIMgr::CreateEquipItem()
 
 	m_aEquipList[0][2].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-189.f, -313.f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-236.f, -361.f, -1.f), L"UI");
 
 
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(85)->Clone();
@@ -1021,7 +1021,7 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 	
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 	
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -1033,7 +1033,7 @@ void ER_UIMgr::CreateEquipItem()
 
 	m_aEquipList[1][0].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-259.5f, -354.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-325.f, -411.5f, -1.f), L"UI");
 	
 	
 	UITestObj = ER_ItemMgr::GetInst()->GetItemObj(85)->Clone();
@@ -1044,7 +1044,7 @@ void ER_UIMgr::CreateEquipItem()
 	UITestObj->AddComponent(new CUI_Button);
 	UITestObj->AddComponent(new CUIScript_Button);
 	
-	UITestObj->Transform()->SetRelativeScale(Vec3(47.f, 29.196969f, 1.f));
+	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
 	
 	UITestObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	UITestObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
@@ -1056,21 +1056,21 @@ void ER_UIMgr::CreateEquipItem()
 
 	m_aEquipList[1][1].second = UITestObj;
 
-	SpawnGameObject(UITestObj, Vec3(-211.f, -354.5f, -1.1f), L"UI");
+	SpawnGameObject(UITestObj, Vec3(-264.f, -411.5f, -1.f), L"UI");
 
 
 	m_aEquipList[0][0].first->SetEnable(false);
 	m_aEquipList[0][0].second->SetEnable(false);
-
+	
 	m_aEquipList[0][1].first->SetEnable(false);
 	m_aEquipList[0][1].second->SetEnable(false);
-
+	
 	m_aEquipList[0][2].first->SetEnable(false);
 	m_aEquipList[0][2].second->SetEnable(false);
-
+	
 	m_aEquipList[1][0].first->SetEnable(false);
 	m_aEquipList[1][0].second->SetEnable(false);
-
+	
 	m_aEquipList[1][1].first->SetEnable(false);
 	m_aEquipList[1][1].second->SetEnable(false);
 }
@@ -1540,13 +1540,13 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 	testTextObj->Text()->SetName(L"Å×½ºÆ®00");
 	
 	m_pStatText[0][0] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-542.f, -300.f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-655.f, -342.5f, 0.f), L"UI");
 
 
 	testTextObj = new CGameObject;
@@ -1565,12 +1565,12 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 
 	m_pStatText[0][1] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-474.f, -300.f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-567.f, -342.5f, 0.f), L"UI");
 
 
 	testTextObj = new CGameObject;
@@ -1589,12 +1589,12 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 
 	m_pStatText[1][0] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-542.f, -322.5f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-655.f, -372.f, 0.f), L"UI");
 
 
 	testTextObj = new CGameObject;
@@ -1613,12 +1613,12 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 
 	m_pStatText[1][1] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-474.f, -322.5f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-567.f, -372.f, 0.f), L"UI");
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
@@ -1636,12 +1636,12 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 
 	m_pStatText[2][0] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-542.f, -345.f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-655.f, -401.5f, 0.f), L"UI");
 
 
 	testTextObj = new CGameObject;
@@ -1660,12 +1660,12 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 
 	m_pStatText[2][1] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-474.f, -345.f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-567.f, -401.5f, 0.f), L"UI");
 
 	testTextObj = new CGameObject;
 	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
@@ -1683,12 +1683,12 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 
 	m_pStatText[3][0] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-542.f, -367.5f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-655.f, -431.f, 0.f), L"UI");
 
 
 	testTextObj = new CGameObject;
@@ -1707,12 +1707,12 @@ void ER_UIMgr::CreateStatText()
 
 	// ÆùÆ® ³Ø½¼Lv2°íµñ °ú, FW1_CENTER | FW1_VCENTER Flags´Â ±âº»°ªÀ¸·Î¼³Á¤ÇØ³õÀ½.
 	// ¿¹½Ã : ÆùÆ® ÆÐ¹Ð¸®ÀÌ¸§(ÆÄÀÏÀÌ¸§¾Æ´Ô), OffsetPos, FontSize, RGBA°ª, ÆùÆ®Ãâ·Â Flag.
-	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 12.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	testTextObj->Text()->TextInit(L"³Ø½¼Lv2°íµñ", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
 	testTextObj->Text()->InputString(L"Å×½ºÆ®");
 
 	m_pStatText[3][1] = testTextObj;
 
-	SpawnGameObject(testTextObj, Vec3(-474.f, -367.5f, 0.f), L"UI");
+	SpawnGameObject(testTextObj, Vec3(-567.f, -431.f, 0.f), L"UI");
 
 
 }
@@ -1742,11 +1742,11 @@ void ER_UIMgr::UpdateHP()
 	m_pHPReturnBar->Transform()->SetRelativeScale(m_pHPBar->Transform()->GetRelativeScale());
 		
 	//½ÇÁ¦ Ã¼·Â¹Ù °è»ê
-	float decreaseRate = ((curHP) / maxHP) * 300.f;
+	float decreaseRate = ((curHP) / maxHP) * 375.f;
 
 	Vec3 pos = m_pHPBar->Transform()->GetRelativePos();
 	pos.x = 1.f;
-	pos.x = pos.x - ((300-decreaseRate) / 2);
+	pos.x = pos.x - ((375-decreaseRate) / 2);
 	Vec3 scale = m_pHPBar->Transform()->GetRelativeScale();
 	scale.x = decreaseRate;
 
@@ -1779,16 +1779,16 @@ void ER_UIMgr::UpdateSteminar()
 	float maxSR = stat->iMaxSP;
 	float curSR = stat->iSP;
 
-	float decreaseRate = ((curSR) / maxSR) * 300.f;
+	float decreaseRate = ((curSR) / maxSR) * 375.f;
 
-	Vec3 pos = m_pHPBar->Transform()->GetRelativePos();
+	Vec3 pos = m_pStemnarBar->Transform()->GetRelativePos();
 	pos.x = 1.f;
-	pos.x = pos.x - ((300 - decreaseRate) / 2);
-	Vec3 scale = m_pHPBar->Transform()->GetRelativeScale();
+	pos.x = pos.x - ((375 - decreaseRate) / 2);
+	Vec3 scale = m_pStemnarBar->Transform()->GetRelativeScale();
 	scale.x = decreaseRate;
 
-	m_pHPBar->Transform()->SetRelativePos(pos);
-	m_pHPBar->Transform()->SetRelativeScale(scale);
+	m_pStemnarBar->Transform()->SetRelativePos(pos);
+	m_pStemnarBar->Transform()->SetRelativeScale(scale);
 }
 
 HBITMAP ER_UIMgr::LoadPNGAsBitmap(LPCTSTR szFilename)
