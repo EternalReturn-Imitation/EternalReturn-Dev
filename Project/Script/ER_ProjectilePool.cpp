@@ -2,6 +2,7 @@
 #include "ER_ProjectilePool.h"
 
 #include "ER_ProjectileScript.h"
+#include <Engine\CMeshRender.h>
 
 #define PROJECTILECNT 50
 
@@ -53,18 +54,19 @@ ER_ProjectileScript* ER_ProjectilePool::GetProjectile(eProjType _type)
 	ER_ProjectileScript* projectile = nullptr;
 
 	// GetProjectil
-	for (int i = m_iLastIdx + 1; i <= PROJECTILECNT; ++i)
+	int StartIdx = m_iLastIdx;
+	for (int i = StartIdx; i < PROJECTILECNT; ++i)
 	{
 		// 사용중이지 않다면 ProjectileScript를 얻어온다.
 		if (!m_vecProjectilePool[i].first)
 		{
 			projectile = m_vecProjectilePool[i].second->GetScript<ER_ProjectileScript>();
-			m_iLastIdx = i;
+			m_iLastIdx = 50 <= i + 1 ? 0 : i + 1;
 			break;
 		}
 
 		// 마지막 순서까지 돌았지만 찾지 못했을때 첫번재로 돌아간다.
-		if (PROJECTILECNT <= i + 1)
+		if (i + 1 == PROJECTILECNT)
 		{
 			i = 0;
 		}
@@ -72,6 +74,7 @@ ER_ProjectileScript* ER_ProjectilePool::GetProjectile(eProjType _type)
 		// 풀사이즈를 늘리는 방법도 있지만 구현하지 않을 예정
 		else if (i == m_iLastIdx)
 		{
+			assert(NULL);
 			return nullptr;
 		}
 	}
@@ -81,6 +84,7 @@ ER_ProjectileScript* ER_ProjectilePool::GetProjectile(eProjType _type)
 	case ER_ProjectilePool::eProjType::ARROW:
 	{
 		projectile->SetMeshData(m_pProjMesh[(UINT)eProjType::ARROW], m_pProjMtrl[(UINT)eProjType::ARROW]);
+		projectile->MeshRender()->GetDynamicMaterial(0);
 		projectile->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
 		projectile->Transform()->SetRelativeScale(m_pProjScale[(UINT)eProjType::ARROW]);
 		projectile->SetFrontDir(-1.f);
@@ -89,6 +93,7 @@ ER_ProjectileScript* ER_ProjectilePool::GetProjectile(eProjType _type)
 	case ER_ProjectilePool::eProjType::BULLET:
 	{
 		projectile->SetMeshData(m_pProjMesh[(UINT)eProjType::BULLET], m_pProjMtrl[(UINT)eProjType::BULLET]);
+		projectile->MeshRender()->GetDynamicMaterial(0);
 		projectile->Transform()->SetRelativeRot(Vec3(Deg2Rad(-90.f), 0.f, 0.f));
 		projectile->Transform()->SetRelativeScale(m_pProjScale[(UINT)eProjType::BULLET]);
 		projectile->SetFrontDir(1.f);

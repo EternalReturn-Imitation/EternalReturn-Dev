@@ -140,14 +140,21 @@ FSMState* ER_ActionScript_Rio::CreateSkill_R()
 void ER_ActionScript_Rio::Attack(tFSMData& _Data)
 {
     tFSMData Prevdata = STATEDATA_GET(ATTACK);
-    if (Prevdata.bData[3])
-        return;
 
     // 공격 추적상태가 아님
     if (!_Data.bData[0])
     {
         // 공격 추적상태 전환
         _Data.bData[0] = true;
+    }
+
+    if (Prevdata.bData[3])
+    {
+        _Data.iData = Prevdata.iData;
+        _Data.bData[2] = Prevdata.bData[2];
+        _Data.bData[3] = Prevdata.bData[3];
+        STATEDATA_SET(ATTACK, _Data);
+        return;
     }
 
     CGameObject* TargetObj = (CGameObject*)_Data.lParam;
@@ -164,6 +171,7 @@ void ER_ActionScript_Rio::Attack(tFSMData& _Data)
         tFSMData MoveData = STATEDATA_GET(MOVE);
         MoveData.v4Data = TargetObj->Transform()->GetRelativePos();
         Move(MoveData);
+        STATEDATA_SET(ATTACK, _Data);
     }
 }
 
@@ -349,9 +357,15 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
     {
         ER_ProjectileScript* Arrow = ER_ProjectilePool::GetInst()->GetProjectile(ER_ProjectilePool::eProjType::ARROW);
         Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+        Vec3 vTargetPos = ((CGameObject*)param.lParam)->Transform()->GetRelativePos();
+        Vec3 vDir = { vPos.x, 0.f, vPos.z };
+        vTargetPos.y = 0.f;
+        vDir = (vTargetPos - vDir).Normalize();
+
         vPos.y += 1.f;
+        vPos += vDir * 0.3f;
         
-        Arrow->ShotTarget(GetOwner(), (CGameObject*)param.lParam, vPos, ER_ProjectileScript::eDmgType::COMMON, 20.f);
+        Arrow->ShotTarget(GetOwner(), (CGameObject*)param.lParam, vPos, ER_ProjectileScript::eDmgType::COMMON, 15.f);
 
         Arrow->Shot();
         BATTLE_COMMON(GetOwner(), param.lParam);
@@ -367,7 +381,7 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
 
     if (animator->IsFinish())
     {
-        
+        param.bData[3] = false;
         DEBUG_LOG_COMMAND("rio", "attack", "animCompleat");
 
         CGameObject* Target = (CGameObject*)param.lParam;

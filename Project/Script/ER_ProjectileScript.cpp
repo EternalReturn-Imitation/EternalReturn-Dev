@@ -33,7 +33,7 @@ ER_ProjectileScript::~ER_ProjectileScript()
 void ER_ProjectileScript::SetMeshData(Ptr<CMesh> _pMesh, Ptr<CMaterial> _pMtrl)
 {
 	MeshRender()->SetMesh(_pMesh.Get());
-	MeshRender()->SetMaterial(_pMtrl, 0);
+	MeshRender()->SetMaterial(_pMtrl.Get(), 0);
 }
 
 void ER_ProjectileScript::Dead()
@@ -125,47 +125,15 @@ void ER_ProjectileScript::tick()
 	Vec3 vPos = Transform()->GetRelativePos();
 	Vec3 vRot = Transform()->GetRelativeRot();
 	Vec3 vTargetPos = m_pTarget->Transform()->GetRelativePos();
-	
-	// Vec3 vFrontDir = Transform()->GetWorldDir(DIR_TYPE::UP);	// 메시의 UP방향이 앞쪽방향임
-	// vFrontDir *= 1.f * m_fFrontDir;
+	vTargetPos.y = m_vSpawnPos.y;
 
-	/*
-	switch (m_ProjectileType)
-	{
-	case ER_ProjectileScript::USELIFETIME:
-	{
-		m_fLifetTime -= DT;
-		if (m_fLifetTime <= 0)
-		{
-			Dead();
-			return;
-		}
-
-		break;
-	}
-	case ER_ProjectileScript::GUIDED:
-	{
-		// if (!m_pTarget || !m_pTarget->IsEnable())
-		// {
-		// 	Dead();
-		// 	return;
-		// }
-		
-
-		// 타겟 포인트
-		break;
-	}
-	};*/
 
 	// if (m_pTarget)
 	vRot.y = SetRotationToTaret(m_vSpawnPos, vTargetPos);
 	Transform()->SetRelativeRot(vRot);
 	vPos += (vTargetPos - vPos).Normalize() * DT * m_fSpeed;
-	
-	vPos.y = m_vSpawnPos.y;
 
 	Transform()->SetRelativePos(vPos);
-	
 }
 
 void ER_ProjectileScript::BeginOverlap(CCollider3D* _Other)
