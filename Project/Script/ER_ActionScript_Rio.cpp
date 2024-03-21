@@ -139,6 +139,10 @@ FSMState* ER_ActionScript_Rio::CreateSkill_R()
 
 void ER_ActionScript_Rio::Attack(tFSMData& _Data)
 {
+    tFSMData Prevdata = STATEDATA_GET(ATTACK);
+    if (Prevdata.bData[3])
+        return;
+
     // 공격 추적상태가 아님
     if (!_Data.bData[0])
     {
@@ -146,13 +150,12 @@ void ER_ActionScript_Rio::Attack(tFSMData& _Data)
         _Data.bData[0] = true;
     }
 
-    STATEDATA_SET(ATTACK, _Data);
-
     CGameObject* TargetObj = (CGameObject*)_Data.lParam;
     float AtkRange = m_Data->GetStatus()->fAtakRange;
     if (IsInRange(TargetObj, AtkRange))
     {
         _Data.bData[0] = false;
+        STATEDATA_SET(ATTACK, _Data);
         ChangeState(ER_CHAR_ACT::ATTACK);
     }
     else
@@ -307,9 +310,17 @@ void ER_ActionScript_Rio::AttackEnter(tFSMData& param)
 
     // 활 폼
     if (m_BowType)
+    {
         GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Attack", false);
+        param.bData[3] = true;
+        param.iData = 9;
+    }
     else
+    {
         GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Attack", false);
+        param.bData[3] = true;
+        param.iData = 6;
+    }
 
 
     SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
@@ -320,7 +331,7 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
     // bData[0] : 공격 대상 추적상태
     // bData[1] : -
     // bData[2] : Hit판정 실행여부
-    // bData[3] : -
+    // bData[3] : 애니메이션 재생여부;
 
     CAnimator3D* animator = GetOwner()->Animator3D();
     float Atkspd = m_Data->GetStatus()->fAttackSpeed;
@@ -332,28 +343,33 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
 
 
      // 공격판정
-    int HitFrame = m_BowType ? 8 : 8;
-    if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
+    int HitFrame = param.iData;
+    
+    if (!param.bData[2] && HitFrame < animator->GetCurFrame())
     {
         ER_ProjectileScript* Arrow = ER_ProjectilePool::GetInst()->GetProjectile(ER_ProjectilePool::eProjType::ARROW);
-        
         Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
-        Vec3 vUP = GetOwner()->Transform()->GetWorldDir(DIR_TYPE::UP).Normalize();
-        Vec3 vFront = GetOwner()->Transform()->GetWorldDir(DIR_TYPE::FRONT).Normalize();
-
-        vPos += vUP * 0.2f;
-        vPos += vFront * 0.2f;
-
+        vPos.y += 1.f;
+        
         Arrow->ShotTarget(GetOwner(), (CGameObject*)param.lParam, vPos, ER_ProjectileScript::eDmgType::COMMON, 20.f);
-        Arrow->Shot();
 
+        Arrow->Shot();
         BATTLE_COMMON(GetOwner(), param.lParam);
         param.bData[2] = true;
+
+        if (param.iData < 11 && !m_BowType)
+        {
+            param.iData = 11;
+            param.bData[2] = false;
+        }
     }
 
 
     if (animator->IsFinish())
     {
+        
+        DEBUG_LOG_COMMAND("rio", "attack", "animCompleat");
+
         CGameObject* Target = (CGameObject*)param.lParam;
         // 사망 판단
         bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
@@ -375,6 +391,7 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
 
 void ER_ActionScript_Rio::AttackExit(tFSMData& param)
 {
+    param.bData[3] = false;
 }
 
 void ER_ActionScript_Rio::RestEnter(tFSMData& param)

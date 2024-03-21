@@ -62,12 +62,11 @@ void ER_ProjectileScript::Dead()
 	m_SkiilFunc = nullptr;
 }
 
-float ER_ProjectileScript::SetRotationToTaret(Vec3 _TargetPos)
+float ER_ProjectileScript::SetRotationToTaret(Vec3 _OwnerPos, Vec3 _TargetPos)
 {
-	Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
-	Vec3 vTargetPos = _TargetPos; //  m_pTarget->Transform()->GetRelativePos();
-	Vec3 vTargetDir = (vTargetPos - vPos).Normalize();	// 다음 방향 벡터
-
+	Vec3 vPos = _OwnerPos;
+	Vec3 vTargetDir = (_TargetPos - vPos).Normalize();	// 다음 방향 벡터
+	
 	// 앞쪽 방향 계산
 	float yRad = atan2(-DirectX::XMVectorGetX(vTargetDir),
 		sqrt(DirectX::XMVectorGetY(vTargetDir) *
@@ -86,6 +85,11 @@ void ER_ProjectileScript::Shot()
 {
 	// 프로젝타일 스크립트에서 본인 사용으로 변경
 	ER_ProjectilePool::GetInst()->SetUse(m_iPoolIdx);
+
+	Vec3 vTargetPos = m_pTarget->Transform()->GetRelativePos();
+	Vec3 vRot = Transform()->GetRelativeRot();
+	vRot.y = SetRotationToTaret(m_vSpawnPos, vTargetPos);
+	Transform()->SetRelativeRot(vRot);
 
 	// 레이어에 본인 추가
 	SpawnGameObject(GetOwner(), m_vSpawnPos, PROJECTILE_LAYER);
@@ -120,8 +124,10 @@ void ER_ProjectileScript::tick()
 
 	Vec3 vPos = Transform()->GetRelativePos();
 	Vec3 vRot = Transform()->GetRelativeRot();
-	Vec3 vFrontDir = Transform()->GetWorldDir(DIR_TYPE::UP);	// 메시의 UP방향이 앞쪽방향임
-	vFrontDir *= 1.f * m_fFrontDir;
+	Vec3 vTargetPos = m_pTarget->Transform()->GetRelativePos();
+	
+	// Vec3 vFrontDir = Transform()->GetWorldDir(DIR_TYPE::UP);	// 메시의 UP방향이 앞쪽방향임
+	// vFrontDir *= 1.f * m_fFrontDir;
 
 	/*
 	switch (m_ProjectileType)
@@ -151,16 +157,15 @@ void ER_ProjectileScript::tick()
 	}
 	};*/
 
-	if (m_pTarget)
-	{
-		// 방향전환
-		float fdir = SetRotationToTaret(m_pTarget->Transform()->GetRelativePos());
-		vRot.y = fdir;
-	}
-	vPos += vFrontDir.Normalize() * DT * m_fSpeed;
+	// if (m_pTarget)
+	vRot.y = SetRotationToTaret(m_vSpawnPos, vTargetPos);
+	Transform()->SetRelativeRot(vRot);
+	vPos += (vTargetPos - vPos).Normalize() * DT * m_fSpeed;
+	
+	vPos.y = m_vSpawnPos.y;
 
 	Transform()->SetRelativePos(vPos);
-	Transform()->SetRelativeRot(vRot);
+	
 }
 
 void ER_ProjectileScript::BeginOverlap(CCollider3D* _Other)

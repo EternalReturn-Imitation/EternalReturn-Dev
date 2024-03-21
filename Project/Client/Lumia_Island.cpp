@@ -80,16 +80,15 @@ void CreateTestEnemy()
 
 void TestObject()
 {
-	/*
 	// Ptr<CMeshData> bulletMdat = CResMgr::GetInst()->FindRes<CMeshData>(L"bullet.mdat");
-	CGameObject* bullet = new CGameObject;
-	AddComponents(bullet, _TRANSFORM | _MESHRENDER);
-	bullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rozzi_Bullet.mesh").Get());
-	bullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BulletMtrl.mtrl").Get(), 0);
-	bullet->MeshRender()->GetDynamicMaterial(0);
-	
-	bullet->Transform()->SetRelativeScale(Vec3(2.f, 2.f, 2.f));
-	SpawnGameObject(bullet, Vec3(-69.3f, 0.0f, 37.6f), 0);
+	// CGameObject* bullet = new CGameObject;
+	// AddComponents(bullet, _TRANSFORM | _MESHRENDER);
+	// bullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rozzi_Bullet.mesh").Get());
+	// bullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BulletMtrl.mtrl").Get(), 0);
+	// bullet->MeshRender()->GetDynamicMaterial(0);
+	// 
+	// bullet->Transform()->SetRelativeScale(Vec3(2.f, 2.f, 2.f));
+	// SpawnGameObject(bullet, Vec3(-69.3f, 0.0f, 37.6f), 0);
 
 	// // Text Obj
 	// CGameObject* testTextObj = new CGameObject;
@@ -145,16 +144,15 @@ void TestObject()
 	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
 	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
 	
-	Particle->SetMaxParticleCount(1);
+	Particle->SetMaxParticleCount(20);
 
 	particle_data.AddVelocityType = 2;
-	particle_data.vVelocityDir = Vec3(0.f, -1.f, 0.f);
+	particle_data.vVelocityDir = Vec3(0.f, 1.f, 0.f);
 	particle_data.Speed = 2.5f;
 	
 	Particle->SetParticleInfo(particle_data);	// 파티클 데이터 세팅
 
 	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-	*/
 }
 
 void SetLayer(CLevel* _Level)

@@ -53,7 +53,7 @@ ER_ProjectileScript* ER_ProjectilePool::GetProjectile(eProjType _type)
 	ER_ProjectileScript* projectile = nullptr;
 
 	// GetProjectil
-	for (int i = m_iLastIdx++; i <= PROJECTILECNT; ++i)
+	for (int i = m_iLastIdx + 1; i <= PROJECTILECNT; ++i)
 	{
 		// 사용중이지 않다면 ProjectileScript를 얻어온다.
 		if (!m_vecProjectilePool[i].first)

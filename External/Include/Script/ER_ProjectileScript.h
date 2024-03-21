@@ -43,7 +43,8 @@ private:
     void Dead();
     void SetPoolIdx(int _idx) { m_iPoolIdx = _idx; }
     void SetFrontDir(float _front) { m_fFrontDir = _front; }
-    float SetRotationToTaret(Vec3 _TargetPos);
+    
+    float SetRotationToTaret(Vec3 _OwnerPos, Vec3 _TargetPos);
 
 public:
     void SetMeshData(Ptr<CMesh> _pMesh, Ptr<CMaterial> _pMtrl);
