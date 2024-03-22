@@ -1,10 +1,22 @@
 #include "pch.h"
 #include "ER_ActionScript_Character.h"
 #include "ER_DataScript_Character.h"
+#include "ER_ProjectilePool.h"
+#include "ER_ProjectileScript.h"
 
 #include <Engine/CPathFindMgr.h>
 #include <Engine/CRenderMgr.h>
 #include <Engine/CCollisionMgr.h>
+
+tIngame_Stats* ER_ActionScript_Character::GetStatus()
+{
+	return m_Data->GetStatus();
+}
+
+tStatus_Effect* ER_ActionScript_Character::GetStatusEffect()
+{
+	return m_Data->GetStatusEffect();
+}
 
 Vec3 ER_ActionScript_Character::GetFocusPoint()
 {

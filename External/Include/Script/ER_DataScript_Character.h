@@ -54,6 +54,7 @@ public:
     Ptr<CTexture> GetPortraitTex() { return m_PortraitTex; }
     
     tStatus_Effect* GetStatusEffect() { return m_StatusEffect; }
+    void SetGameDead() { m_bGameDead = true; }
     const bool IsDeadState() { return m_bGameDead; }
     const bool IsOutofControl() { return m_bOutofContorl; }
 

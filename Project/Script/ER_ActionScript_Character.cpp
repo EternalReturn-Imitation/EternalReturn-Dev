@@ -65,6 +65,13 @@ void ER_ActionScript_Character::Move(tFSMData& _Data)
 	}
 }
 
+void ER_ActionScript_Character::Dead(tFSMData& _Data)
+{
+	m_Data->SetGameDead();
+	ChangeState(ER_CHAR_ACT::DEAD,bAbleChange::DISABLE);
+	SetAbleToCancle(bAbleChange::DISABLE);
+}
+
 void ER_ActionScript_Character::StateInit()
 {
 	StateList[(UINT)ER_CHAR_ACT::WAIT] = CreateWait();

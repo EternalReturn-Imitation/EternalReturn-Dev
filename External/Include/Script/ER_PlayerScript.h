@@ -2,11 +2,13 @@
 #include <Engine\CScript.h>
 
 class ER_ActionScript_Character;
+class ER_DataScript_Character;
 
 class ER_PlayerScript :
     public CScript
 {
 private:
+    ER_DataScript_Character* m_Character;
     ER_ActionScript_Character* m_pActionScript;
     CGameObject* m_pRangeObject;
 

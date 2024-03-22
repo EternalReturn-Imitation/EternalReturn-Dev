@@ -14,7 +14,7 @@ CharacterDataUI::CharacterDataUI()
     SetName("CharacterDataUI");
 
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-    window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize;
     window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
     SetFlags(window_flags);
@@ -41,25 +41,7 @@ void CharacterDataUI::tick()
 
 void CharacterDataUI::finaltick()
 {
-    // 에디터 윈도우 세팅
-    {
-        const ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->WorkPos);
-        ImGui::SetNextWindowSize(viewport->WorkSize);
-        ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    }
-
-    const ImGuiViewport* viewport = ImGui::GetMainViewport();
-
-    SetPopupPos(viewport->WorkPos);
-    SetSize(viewport->WorkSize.x, viewport->WorkSize.y);
-
-    // 반투명 배경
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::PopStyleVar(3);
-
+    ImGui::SetNextWindowSize(ImVec2(980.f, 710.f));
     UI::finaltick();
 }
 
@@ -212,7 +194,7 @@ void CharacterDataUI::render_CharacterInfoData()
     // [ name ]
     ImGui::SameLine();
     ImGui::BeginGroup();
-    ImGui::Button("Character Info", ImVec2(250, 0));
+    ImGui::Button("Character Info", ImVec2(300.f, 0));
 
     // wchar_t -> UTF-8
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
@@ -348,8 +330,6 @@ void CharacterDataUI::render_SkillInfoData()
     // [ Full Tex ]
     ImGui::SameLine();
     ImGui::BeginGroup();
-    ImGui::Button("Character Tex", ImVec2(100.f, 0));
-
     ImVec2 CsrPos = ImGui::GetCursorPos();
 
     Ptr<CTexture> SelBgTex = CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_Empty.png");
@@ -382,7 +362,7 @@ void CharacterDataUI::render_SkillInfoData()
     // [ name ]
     ImGui::SameLine();
     ImGui::BeginGroup();
-    ImGui::Button("Skill Info", ImVec2(250, 0));
+    ImGui::Button("Skill Info", ImVec2(230, 0));
 
     ImGui::Button("Name", ImVec2(xsize, 0.f));
     ImGui::SameLine();
@@ -393,15 +373,6 @@ void CharacterDataUI::render_SkillInfoData()
     ImGui::Button("SkillIconTex", ImVec2(xsize, 0.f)); ImGui::SetNextItemWidth(181.f); ImGui::SameLine();
     ImGui::Text(ToString(SkillContext->TexSkill.Get()->GetKey()).c_str());
 
-    ImGui::EndGroup();
-
-    // [ SkillInfo ]
-    ImGui::SameLine();
-    ImGui::BeginGroup();
-
-    ImGui::Button("SkillInfo", ImVec2(200.f, 0.f));
-    
-    // MaxSkill Level
     ImGui::Button("MaxLv", ImVec2(xsize, 0.f)); ImGui::SameLine();
     ImGui::SetNextItemWidth(xsize * 2 - 5.f);
     if (ImGui::InputInt("##MaxSkillLevel",&SkillContext->iMaxSkillLevel))
@@ -409,7 +380,13 @@ void CharacterDataUI::render_SkillInfoData()
         SkillContext->iMaxSkillLevel = 5 < SkillContext->iMaxSkillLevel ? 5 : SkillContext->iMaxSkillLevel;
         SkillContext->iMaxSkillLevel = 1 > SkillContext->iMaxSkillLevel ? 1 : SkillContext->iMaxSkillLevel;
     }
+    ImGui::EndGroup();
 
+    
+    ImGui::SameLine();
+    // [ SkillInfo ]
+    ImGui::BeginGroup();
+    
     // Level Text
     ImGui::Button(" ", ImVec2(xsize, 0.f)); ImGui::SameLine();
     int SkillMaxLevel = SkillContext->iMaxSkillLevel;

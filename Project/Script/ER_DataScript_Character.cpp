@@ -169,7 +169,7 @@ void ER_DataScript_Character::tick()
 	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
 	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
 		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
-
+	
 	// 버프디버프 쿨타임 갱신
 	m_StatusEffect->ActionTiemUpdate(DT);
 
@@ -401,7 +401,7 @@ void ER_DataScript_Character::SaveToLevelFile(FILE* _File)
 	SaveResRef(m_FullTax.Get(), _File);
 	SaveResRef(m_MapTex.Get(), _File);
 
-	int SkillSize = m_SkillList.size();
+	int SkillSize = (int)m_SkillList.size();
 	fwrite(&SkillSize, sizeof(int), 1, _File);
 
 	for (int i = 0; i < SkillSize; ++i)
@@ -420,7 +420,7 @@ void ER_DataScript_Character::LoadFromLevelFile(FILE* _File)
 	LoadResRef(m_FullTax, _File);
 	LoadResRef(m_MapTex, _File);
 
-	int SkillSize = m_SkillList.size();
+	int SkillSize = (int)m_SkillList.size();
 	fread(&SkillSize, sizeof(int), 1, _File);
 
 	for (int i = 0; i < SkillSize; ++i)

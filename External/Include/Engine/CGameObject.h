@@ -50,6 +50,7 @@ private:
     float                   m_CurLifeTime;
     bool                    m_bLifeSpan;
     bool                    m_bEnable;
+    bool                    m_bOutofLayer;
 
 public:
     // 레벨이 시작될 때 호출 or 시작 된 레벨에 합류할 때 호출
@@ -113,8 +114,10 @@ public:
     bool IsDead() { return m_bDead; }
     bool IsAncestor(CGameObject* _Target);
     bool IsEnable() { return m_bEnable; }
-
+    bool IsOutofLayer() { return m_bOutofLayer; }
+    
     void SetEnable(bool _b) { m_bEnable = _b; }
+    void SetOutOfLayer(bool _b) { m_bOutofLayer = _b; }
 
 private:
     void DisconnectFromParent();

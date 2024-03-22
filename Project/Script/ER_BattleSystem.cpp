@@ -2,6 +2,8 @@
 #include "ER_BattleSystem.h"
 
 #include "ER_DataScript_Character.h"
+#include "ER_ActionScript_Character.h"
+#include "ER_UIMgr.h"
 
 ER_BattleSystem::ER_BattleSystem()
 {
@@ -28,7 +30,27 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 
 	int CriticalDmg = IsCritical(AtkInfo);
 
-	int FinalDmg = (int)(AtkPower * 100) / (100 + Def) * (CriticalDmg * 0.65);
+	int FinalDmg = (int)(((AtkPower * 100) / (100 + Def)) + (CriticalDmg * 0.65));
+
+	// 사망처리
+	if (HitInfo->iHP - FinalDmg <= 0)
+	{
+		// 타겟의 HP를 0으로 만든다.
+		HitInfo->iHP = 0;
+
+		tFSMData deaddata = {};
+		HitObj->GetScript<ER_ActionScript_Character>()->Dead(deaddata);
+		return;
+	}
+	HitInfo->iHP -= FinalDmg;
+
+	// UI Update부분
+	AtkObj->GetScript<ER_DataScript_Character>()->ChangeStatBar();
+	HitObj->GetScript<ER_DataScript_Character>()->ChangeStatBar();
+	
+	ER_UIMgr::GetInst()->UpdateStat();
+	ER_UIMgr::GetInst()->UpdateHP();
+	// 데미지 폰트 출력
 }
 
 void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker
