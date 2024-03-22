@@ -64,7 +64,8 @@ void CreateLumiaIsland()
 	LumiaIsland();
 
 	ER_UIMgr::GetInst()->GameStart();
-	TestObject();
+	
+	// TestObject();
 }
 
 void CreateTestPlayer()

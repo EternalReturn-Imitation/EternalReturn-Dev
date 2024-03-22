@@ -178,7 +178,6 @@ struct tFSMData
 	float		fData;
 	int			iData;
 	Vec4		v4Data;
-	Vec4		v4Data2;
 	bool		bData[4];
 	DWORD_PTR	lParam;
 	DWORD_PTR	RParam;
