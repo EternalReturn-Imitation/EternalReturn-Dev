@@ -20,6 +20,7 @@
 
 ER_PlayerScript::ER_PlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT)
+	, m_Character(nullptr)
 	, m_pActionScript(nullptr)
 	, m_pRangeObject(nullptr)
 	, m_AttackCsr(false)
@@ -40,12 +41,16 @@ void ER_PlayerScript::begin()
 	pMainCam->GetScript<ER_CamControllerScript>()->SetTarget(GetOwner());
 
 	m_pActionScript = GetOwner()->GetScript<ER_ActionScript_Character>();
+	m_Character = GetOwner()->GetScript <ER_DataScript_Character>();
 }
 
 void ER_PlayerScript::tick()
 {
+	// 캐릭터가 사망상태면 리턴
+	if (m_Character->IsDeadState())
+		return;
+	
 	// [ Mouse ]
-
 	std::pair<CGameObject*,int> pTargetObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vCsrPoint = GetFocusPoint();	// 타겟 지점
 

@@ -138,8 +138,17 @@ void ER_ProjectileScript::tick()
 
 void ER_ProjectileScript::BeginOverlap(CCollider3D* _Other)
 {
+	// 레이어에서 지워질 예정
+	if (GetOwner()->IsOutofLayer())
+		return;
+
+	// 타겟오브젝트와 충돌한 오브젝트가 일치한다.
+	CGameObject* Target = _Other->GetOwner();
 	if (_Other->GetOwner() == m_pTarget)
 	{
+		// 데미지연산함수
+		BATTLE_COMMON(m_pShooter, m_pTarget);
+		// 레이어에서 삭제예정으로 지정
 		GetOwner()->SetOutOfLayer(true);
 	}
 }

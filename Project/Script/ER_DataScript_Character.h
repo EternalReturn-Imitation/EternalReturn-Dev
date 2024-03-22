@@ -48,6 +48,7 @@ public:
     ER_Ingame_Stats* GetStatus() { return m_Stats; }
     
     tStatus_Effect* GetStatusEffect() { return m_StatusEffect; }
+    void SetGameDead() { m_bGameDead = true; }
     const bool IsDeadState() { return m_bGameDead; }
     const bool IsOutofControl() { return m_bOutofContorl; }
 

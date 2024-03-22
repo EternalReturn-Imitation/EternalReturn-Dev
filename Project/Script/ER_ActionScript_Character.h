@@ -84,6 +84,8 @@ public:
     virtual void Skill_E(tFSMData& _Data) = 0;  // E Skill
     virtual void Skill_R(tFSMData& _Data) = 0;  // R Skill
 
+    virtual void Dead(tFSMData& _Data);  // Dead
+
     void StateInit();
 
     bool ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade = bAbleChange::COMMON);

@@ -605,6 +605,7 @@ void ER_ActionScript_Hyunwoo::Skill_RExit(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::DeadEnter(tFSMData& param)
 {
+    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Death", false);
 }
 
 void ER_ActionScript_Hyunwoo::DeadUpdate(tFSMData& param)

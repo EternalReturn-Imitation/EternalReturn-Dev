@@ -638,6 +638,7 @@ void ER_ActionScript_Yuki::Skill_RExit(tFSMData& param)
 
 void ER_ActionScript_Yuki::DeadEnter(tFSMData& param)
 {
+    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Death", false);
 }
 
 void ER_ActionScript_Yuki::DeadUpdate(tFSMData& param)

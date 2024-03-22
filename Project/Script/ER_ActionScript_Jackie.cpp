@@ -647,6 +647,7 @@ void ER_ActionScript_Jackie::Skill_RExit(tFSMData& param)
 
 void ER_ActionScript_Jackie::DeadEnter(tFSMData& param)
 {
+    GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Death", true);
 }
 
 void ER_ActionScript_Jackie::DeadUpdate(tFSMData& param)

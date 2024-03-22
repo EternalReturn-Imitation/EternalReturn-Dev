@@ -701,6 +701,7 @@ void ER_ActionScript_Rio::Skill_RExit(tFSMData& param)
 
 void ER_ActionScript_Rio::DeadEnter(tFSMData& param)
 {
+    GetOwner()->Animator3D()->SelectAnimation(L"Rio_Death", false);
 }
 
 void ER_ActionScript_Rio::DeadUpdate(tFSMData& param)
