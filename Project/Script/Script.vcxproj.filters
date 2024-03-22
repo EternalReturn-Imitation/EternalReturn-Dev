@@ -290,5 +290,8 @@
     <ClCompile Include="ER_ProjectileScript.cpp">
       <Filter>Script\ER\SystemScript\Projectile</Filter>
     </ClCompile>
+    <ClCompile Include="ER_ActionScript_Init.cpp">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

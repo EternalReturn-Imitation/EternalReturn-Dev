@@ -17,6 +17,307 @@ ER_ActionScript_Hyunwoo::~ER_ActionScript_Hyunwoo()
 {
 }
 
+
+void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Hyunwoo_Wait");
+    SetStateGrade(eAccessGrade::BASIC);
+    param.fData = 0.f;
+}
+void ER_ActionScript_Hyunwoo::WaitUpdate(tFSMData& param)
+{
+    // 0.5초마다 체력회복
+    param.fData += DT;
+
+    if (0.5f <= param.fData)
+    {
+        // HP/SP 자연 회복
+        m_Data->HPRegen();
+        m_Data->SPRegen();
+
+        // 체력재생 카운트 초기화
+        param.fData -= 0.5f;
+    }
+}
+void ER_ActionScript_Hyunwoo::WaitExit(tFSMData& param)
+{
+    // 기능 없음
+}
+
+void ER_ActionScript_Hyunwoo::MoveEnter(tFSMData& param)
+{
+    /*
+    [MOVE]
+    bData[0]	: 타겟 추적 여부
+    bData[1]    : 이동속도 버프스킬 작용 여부
+    fData		: 공격 가능 거리 / 파밍 가능 거리
+    iData[0]	: 타겟 타입 : 1 - 공격대상 / 2 - 아이템박스
+    v4Data		: 목표 이동 좌표
+    */
+
+    Animator3D()->SelectAnimation(L"Hyunwoo_Run", true);
+    FindPath()->FindPath(param.v4Data);
+}
+void ER_ActionScript_Hyunwoo::MoveUpdate(tFSMData& param)
+{
+    /*
+    [MOVE]
+    bData[0]	: 타겟 추적 여부
+    bData[1]    : 이동속도 버프스킬 작용 여부
+    fData		: 공격 가능 거리 / 파밍 가능 거리
+    iData[0]	: 타겟 타입 : 1 - 공격대상 / 2 - 아이템박스
+    v4Data		: 목표 이동 좌표
+    */
+
+    // 타겟 추적중
+    if (param.bData[0])
+    {
+        if (IsInRange((CGameObject*)param.lParam, param.fData))
+        {
+            param.bData[0] = false;     // 추적 종료    
+            FindPath()->ClearPath();    // 이동 경로 초기화
+            switch (param.iData[0])
+            {
+            case 1: // 공격 대상
+                ChangeState(ER_CHAR_ACT::ATTACK);
+                break;
+            case 2: // 아이템 박스
+                ChangeState(ER_CHAR_ACT::FARMING);
+                break;
+            }
+            return; // 상태전환 후 작업 완료
+        }
+    }
+
+    // 애니메이션 변경 판단
+
+    // 버프/디버프 효과 반영
+    tStatus_Effect* SpeedEfc = m_Data->GetStatusEffect();
+
+    // 이동속도 설정
+    float fMoveSpeed = GetStatus()->fMovementSpeed;
+    fMoveSpeed += (fMoveSpeed * SpeedEfc->GetIncSPD()) - (fMoveSpeed * SpeedEfc->GetDecSPD());
+
+    // 다음 이동지점이 없다면 대기상태로 전환
+    if (!FindPath()->PathMove(fMoveSpeed))
+        ChangeState(ER_CHAR_ACT::WAIT);
+}
+void ER_ActionScript_Hyunwoo::MoveExit(tFSMData& param)
+{
+    // 기능 없음
+}
+
+void ER_ActionScript_Hyunwoo::RestEnter(tFSMData& param)
+{
+    /*
+   iData[0] = 휴식 애니메이션 재생판단
+   fData    = 체력재생시간 카운트
+   */
+    param.iData[0] = 0;
+    param.fData = 0.f;
+    Animator3D()->SelectAnimation(L"Hyunwoo_Rest_Start", false);
+}
+void ER_ActionScript_Hyunwoo::RestUpdate(tFSMData& param)
+{
+    switch (param.iData[0])
+    {
+    case 0: // 시작 동작
+    {
+        // 애니메이션 길이만큼 시전게이지 UI 출력
+
+        if (Animator3D()->IsFinish())
+        {
+            Animator3D()->SelectAnimation(L"Hyunwoo_Rest_Loop");
+
+            // 상태변경불가
+            SetStateGrade(eAccessGrade::UTMOST);
+            param.iData[0]++;
+        }
+        break;
+    }
+    case 1: // 시전 중
+    {
+        // 캔슬 불가
+        // 0.5초마다 회복
+        param.fData += DT;
+
+        if (0.5f <= param.fData)
+        {
+            // HP/SP 자연 회복 5배 빠르게 회복
+            m_Data->HPRegen(5.f);
+            m_Data->SPRegen(5.f);
+
+            // 자원재생 카운트 초기화
+            param.fData -= 0.5f;
+        }
+
+        if (KEY_TAP(KEY::RBTN) || KEY_TAP(KEY::X))
+        {
+            Animator3D()->SelectAnimation(L"Hyunwoo_Rest_End", false);
+            param.iData[0]++;
+        }
+        break;
+    }
+    case 2: // 종료 동작
+    {
+        // 애니메이션 길이만큼 시전게이지 UI 출력
+        if (Animator3D()->IsFinish())
+        {
+            SetStateGrade(eAccessGrade::BASIC);
+            ChangeState(ER_CHAR_ACT::WAIT);
+        }
+        break;
+    }
+    }
+}
+void ER_ActionScript_Hyunwoo::RestExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::ArriveEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Hyunwoo_Arrive", false);
+}
+void ER_ActionScript_Hyunwoo::ArriveUpdate(tFSMData& param)
+{
+    if (Animator3D()->IsFinish())
+        ChangeState(ER_CHAR_ACT::WAIT);
+}
+void ER_ActionScript_Hyunwoo::ArriveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::DeadEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Hyunwoo_Death", false);
+}
+void ER_ActionScript_Hyunwoo::DeadUpdate(tFSMData& param)
+{
+}
+void ER_ActionScript_Hyunwoo::DeadExit(tFSMData& param)
+{
+}
+
+
+void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
+{
+    /*
+    [ATTACK]
+    bData[0]	: 공격동작 진행중인지 여부
+    bData[1]	: Battle Event 실행 여부
+    bData[2]	: 다음 타겟 지정 여부
+    bData[3]    : 공격모션 변경
+    iData[0]	: 타격지점 애니메이션 프레임 = Hit Frame
+    lParam		: 타겟 오브젝트
+    RParam		: 타겟 예정 오브젝트
+    */
+
+    // 공격 시작단계 초기화
+    param.bData[0] = true;
+    param.bData[1] = false;
+    param.bData[3] = !param.bData[3];
+
+    if (param.bData[0])
+    {
+        Animator3D()->SelectAnimation(L"Hyunwoo_Attack0", false);
+        param.iData[0] = 6;
+    }
+    else
+    {
+        Animator3D()->SelectAnimation(L"Hyunwoo_Attack1", false);
+        param.iData[0] = 6;
+    }
+
+    // 타겟방향으로 회전
+    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+    SetStateGrade(eAccessGrade::UTMOST);
+}
+void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
+{
+    /*
+     [ATTACK]
+     bData[0]	: 공격동작 진행중인지 여부
+     bData[1]	: Battle Event 실행 여부
+     bData[2]	: 다음 타겟 지정 여부
+     bData[3]    : 공격모션 변경
+     iData[0]	: 타격지점 애니메이션 프레임 = Hit Frame
+     lParam		: 타겟 오브젝트
+     RParam		: 타겟 예정 오브젝트
+     */
+
+    float Atkspd = GetStatus()->fAttackSpeed;
+
+    // 버프/디버프 확인
+    tStatus_Effect* statusefc = GetStatusEffect();
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
+
+    // 애니메이션 속도 증가
+    Animator3D()->PlaySpeedValue(Atkspd);
+
+
+    if (!param.bData[1] && param.iData[0] < Animator3D()->GetCurFrame())
+    {
+        // 사운드 재생
+
+        // 캐릭터 고유 공격 알고리즘
+        BATTLE_COMMON(GetOwner(), param.lParam);
+        param.bData[1] = true;
+
+        SetStateGrade(eAccessGrade::BASIC);
+    }
+
+
+    if (Animator3D()->IsFinish())
+    {
+        param.bData[0] = false;         // 공격 동작 완료
+
+        // 공격중 타겟이 변경되었다
+        if (param.bData[2])
+        {
+            param.lParam = param.RParam;
+            param.bData[2] = false;
+            param.RParam = 0;
+        }
+
+        CGameObject* Target = (CGameObject*)param.lParam;
+
+        // 사망 판단
+        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
+
+        if (IsDead)
+            ChangeState(ER_CHAR_ACT::WAIT);
+        else
+        {
+            // 거리 판단
+            float AtkRange = GetStatus()->fAtkRange;
+
+            if (IsInRange(Target, AtkRange))
+                AttackEnter(param);
+            else
+                Attack(param);
+        }
+    }
+}
+void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.bData[1] = false;
+    SetStateGrade(eAccessGrade::BASIC);
+}
+
+void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
+{
+    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
+}
+
+void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)
+{
+}
+
 void ER_ActionScript_Hyunwoo::Skill_Q(tFSMData& _Data)
 {
     STATEDATA_SET(SKILL_Q, _Data);
@@ -42,286 +343,6 @@ void ER_ActionScript_Hyunwoo::Skill_R(tFSMData& _Data)
     ChangeState(ER_CHAR_ACT::SKILL_R, eAccessGrade::ADVANCED);
 }
 
-void ER_ActionScript_Hyunwoo::MoveEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Run");
-    SetStateGrade(eAccessGrade::BASIC);
-
-    Vec3 DestPos = param.v4Data;
-
-    CFindPath* findpathcomp = GetOwner()->FindPath();
-    findpathcomp->FindPath(DestPos);
-}
-
-void ER_ActionScript_Hyunwoo::MoveExit(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::MoveUpdate(tFSMData& param)
-{
-    tFSMData Atkdata = STATEDATA_GET(ATTACK);
-
-    // 공격추적상태라면
-    if (Atkdata.bData[0])
-    {
-        CGameObject* TargetObj = (CGameObject*)Atkdata.lParam;
-        float AtkRange = m_Data->GetStatus()->fAtakRange;
-
-        if (IsInRange(TargetObj, AtkRange))
-        {
-            Atkdata.bData[0] = false;
-            GetOwner()->FindPath()->ClearPath();
-            ChangeState(ER_CHAR_ACT::ATTACK, eAccessGrade::DISABLE);
-            return;
-        }
-    }
-
-    // 캐릭터 속도 얻어와서 넣어주기
-    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
-    float speed = m_Data->GetStatus()->fMovementSpeed;
-    speed += (speed * statusefc->GetIncSPD()) - (speed * statusefc->GetDecSPD());
-
-
-    // 다음 이동지점이 없다면 대기상태로 전환
-    if (!GetOwner()->FindPath()->PathMove(speed))
-        ChangeState(ER_CHAR_ACT::WAIT);
-}
-
-void ER_ActionScript_Hyunwoo::FarmingEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Run", true);
-
-    SetStateGrade(eAccessGrade::BASIC);
-
-    Vec3 DestPos = param.v4Data;
-
-    CFindPath* findpathcomp = GetOwner()->FindPath();
-    findpathcomp->FindPath(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
-
-    m_pFarmingObject = (CGameObject*)param.lParam;
-
-    m_bFarmingTrigger = true;
-}
-
-void ER_ActionScript_Hyunwoo::FarmingUpdate(tFSMData& param)
-{
-    float speed = m_Data->GetStatus()->fMovementSpeed;
-
-    // 다음 이동지점이 없다면 대기상태로 전환
-    if (!GetOwner()->FindPath()->PathMove(speed))
-        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Wait", true);
-
-    Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
-    Vec3 ObjectPos = ((CGameObject*)param.lParam)->Transform()->GetRelativePos();
-
-    XMVECTOR vRangeScale = XMVector3Length(ownerPos - ObjectPos);
-    float rangeScale = XMVectorGetX(vRangeScale);
-
-    if (abs(rangeScale) < 2.0f && m_bFarmingTrigger) {
-        Vec3 posResult = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
-        ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(true);
-        ER_UIMgr::GetInst()->GetItemBoxBackground()->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y - 100.f, -1.0f));
-
-        vector<CGameObject*> itemList = ((CGameObject*)param.lParam)->GetScript<ER_DataScript_ItemBox>()->GetItemList();
-        for (int i = 0; i < itemList.size(); ++i) {
-            if (itemList[i]) {
-                std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList((int)i / 4, (int)i % 4);
-
-                itemLists.first->SetEnable(true);
-                itemLists.second->SetEnable(true);
-
-                itemLists.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(itemList[i]->GetScript<ER_DataScript_Item>()->GetGrade()));
-                itemLists.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, itemList[i]->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
-            }
-        }
-
-        m_bFarmingTrigger = false;
-    }
-}
-
-void ER_ActionScript_Hyunwoo::FarmingExit(tFSMData& param)
-{
-    ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(false);
-
-    for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList(i, j);
-
-            itemLists.first->SetEnable(false);
-            itemLists.second->SetEnable(false);
-        }
-    }
-
-    m_pFarmingObject = nullptr;
-}
-
-
-
-void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Wait");
-
-    SetStateGrade(eAccessGrade::BASIC);
-}
-
-void ER_ActionScript_Hyunwoo::WaitUpdate(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::WaitExit(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::ArriveEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Arrive", false);
-}
-
-void ER_ActionScript_Hyunwoo::ArriveUpdate(tFSMData& param)
-{
-    if (GetOwner()->Animator3D()->IsFinish())
-        ChangeState(ER_CHAR_ACT::WAIT);
-}
-
-void ER_ActionScript_Hyunwoo::ArriveExit(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
-{
-    param.bData[0] = false;
-    param.bData[2] = false;
-    param.bData[3] = !param.bData[3];
-
-    if (param.bData[3])
-        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Attack0", false);
-    else
-        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Attack1", false);
-
-
-    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
-    // 공격모션 2개 번갈아가면서
-}
-
-void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
-{
-    // bData[0] : 공격 대상 추적상태
-    // bData[1] : -
-    // bData[2] : Hit판정 실행여부
-    // bData[3] : 공격모션 변경
-
-    CAnimator3D* animator = GetOwner()->Animator3D();
-    float Atkspd = m_Data->GetStatus()->fAttackSpeed;
-    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
-    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
-
-    // 애니메이션 속도 증가
-    animator->PlaySpeedValue(Atkspd);
-
-    // 공격판정
-    int HitFrame = param.bData[3] ? 8 : 8;
-    if (!param.bData[2] && animator->GetCurFrame() < HitFrame)
-    {
-        BATTLE_COMMON(GetOwner(), param.lParam);
-        param.bData[2] = true;
-    }
-
-
-    if (animator->IsFinish())
-    {
-        CGameObject* Target = (CGameObject*)param.lParam;
-        // 사망 판단
-        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
-
-        if (IsDead)
-            ChangeState(ER_CHAR_ACT::WAIT);
-        else
-        {
-            // 거리 판단
-            float AtkRange = m_Data->GetStatus()->fAtakRange;
-
-            if (IsInRange(Target, AtkRange))
-                AttackEnter(param);
-            else
-                Attack(param);
-        }
-    }
-}
-
-void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
-}
-
-void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::RestEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Rest_Start", false);
-
-    param.iData = 0;
-}
-
-void ER_ActionScript_Hyunwoo::RestUpdate(tFSMData& param)
-{
-    CAnimator3D* animator = GetOwner()->Animator3D();
-
-    switch (param.iData)
-    {
-    case 0: // 시작 동작
-    {
-        // 시전 캔슬가능
-        // 애니메이션 길이만큼 시전게이지 UI 출력
-
-        if (animator->IsFinish())
-        {
-            animator->SelectAnimation(L"Hyunwoo_Rest_Loop");
-
-            // 상태변경불가
-            SetStateGrade(eAccessGrade::DISABLE);
-            param.iData++;
-        }
-        break;
-    }
-    case 1: // 시전 중
-    {
-        // 캔슬 불가
-        if (KEY_TAP(KEY::RBTN) || KEY_TAP(KEY::X))
-        {
-            animator->SelectAnimation(L"Hyunwoo_Rest_End", false);
-            param.iData++;
-        }
-        break;
-    }
-    case 2: // 종료 동작
-    {
-        // 캔슬 가능
-        // 애니메이션 길이만큼 시전게이지 UI 출력
-        if (animator->IsFinish())
-        {
-            SetStateGrade(eAccessGrade::BASIC);
-            ChangeState(ER_CHAR_ACT::WAIT);
-            param.iData = 0;
-        }
-        break;
-    }
-    }
-}
-
-void ER_ActionScript_Hyunwoo::RestExit(tFSMData& param)
-{
-}
-
 void ER_ActionScript_Hyunwoo::Skill_QEnter(tFSMData& param)
 {
     tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
@@ -336,7 +357,7 @@ void ER_ActionScript_Hyunwoo::Skill_QEnter(tFSMData& param)
         GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Wait", false);
 
     SetRotationToTarget(param.v4Data);
-    SetStateGrade(eAccessGrade::DISABLE);
+    SetStateGrade(eAccessGrade::UTMOST);
 
     SetRotationToTarget(param.v4Data);
 }
@@ -351,12 +372,12 @@ void ER_ActionScript_Hyunwoo::Skill_QUpdate(tFSMData& param)
     {
         SetStateGrade(eAccessGrade::BASIC);
         ChangeState(ER_CHAR_ACT::WAIT);
-        param.iData = 0;
+        param.iData[0] = 0;
     }
 
     if (curFrame > 10) {
         SetStateGrade(eAccessGrade::BASIC);
-        param.iData = 0;
+        param.iData[0] = 0;
     }
 }
 
@@ -437,7 +458,7 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
         SetStateGrade(eAccessGrade::BASIC);
         param.v4Data = Vec4();
         param.v4Data = Vec2();
-        param.iData = 0;
+        param.iData[0] = 0;
         ChangeState(ER_CHAR_ACT::WAIT);
     }
 
@@ -463,9 +484,9 @@ void ER_ActionScript_Hyunwoo::Skill_REnter(tFSMData& param)
 
     SetRotationToTarget(param.v4Data);
 
-    param.iData = 0;
+    param.iData[0] = 0;
 
-    SetStateGrade(eAccessGrade::DISABLE);
+    SetStateGrade(eAccessGrade::UTMOST);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
@@ -476,29 +497,29 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
     if (KEY_PRESSED(KEY::R)) {
         if (Animator->IsFinish()) {
             //Start가 끝났을때,
-            if (param.iData == 0) {
+            if (param.iData[0] == 0) {
                 Animator->SelectAnimation(L"Hyunwoo_SkillR_Loop", false);
             }
-            else if (param.iData == 1) {
+            else if (param.iData[0] == 1) {
                 Animator->SelectAnimation(L"Hyunwoo_SkillR_End", false);
             }
-            ++param.iData;
+            ++param.iData[0];
         }
     }
     else {
-        if (param.iData != 2) {
+        if (param.iData[0] != 2) {
             Animator->SelectAnimation(L"Hyunwoo_SkillR_End", false);
-            param.iData = 2;
+            param.iData[0] = 2;
         }
     }
 
-    if (param.iData == 2 && curFrame > 16) {
+    if (param.iData[0] == 2 && curFrame > 16) {
         SetStateGrade(eAccessGrade::BASIC);
     }
 
-    if (param.iData == 2 && Animator->IsFinish()) {
+    if (param.iData[0] == 2 && Animator->IsFinish()) {
         SetStateGrade(eAccessGrade::BASIC);
-        param.iData = 0;
+        param.iData[0] = 0;
 
         ChangeState(ER_CHAR_ACT::WAIT);
     }
@@ -508,18 +529,7 @@ void ER_ActionScript_Hyunwoo::Skill_RExit(tFSMData& param)
 {
 }
 
-void ER_ActionScript_Hyunwoo::DeadEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Death", false);
-}
 
-void ER_ActionScript_Hyunwoo::DeadUpdate(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::DeadExit(tFSMData& param)
-{
-}
 
 
 FSMState* ER_ActionScript_Hyunwoo::CreateWait()

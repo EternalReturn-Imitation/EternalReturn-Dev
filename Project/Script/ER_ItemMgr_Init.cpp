@@ -90,7 +90,7 @@ int ER_ItemMgr::SaveItemData(CGameObject* _Item, FILE* _File)
 	fwrite(&ItemContext->m_eWeapon_type, sizeof(UINT), 1, _File);
 
 	// ItemRecipe
-	if ((UINT)ER_ITEM_GRADE::COMMON == ItemContext->m_eGrade)
+	if ((UINT)ER_ITEM_GRADE::NORMAL == ItemContext->m_eGrade)
 	{	
 		DWORD_PTR tmp = 0;
 		fwrite(&tmp, sizeof(DWORD_PTR), 1, _File);

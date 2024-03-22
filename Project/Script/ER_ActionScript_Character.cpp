@@ -12,7 +12,6 @@ ER_ActionScript_Character::ER_ActionScript_Character(SCRIPT_TYPE _type)
 	, m_AccessGrade(eAccessGrade::BASIC)
 {
 }
-
 ER_ActionScript_Character::~ER_ActionScript_Character()
 {
 	if (FSMContext)
@@ -24,7 +23,6 @@ ER_ActionScript_Character::~ER_ActionScript_Character()
 			delete StateList[i];
 	}
 }
-
 void ER_ActionScript_Character::begin()
 {
 	StateInit();
@@ -33,12 +31,36 @@ void ER_ActionScript_Character::begin()
 
 	ChangeState(ER_CHAR_ACT::ARRIVE);
 }
-
 void ER_ActionScript_Character::tick()
 {
 	FSMContext->UpdateState();
 }
 
+void ER_ActionScript_Character::Wait(tFSMData& _Data)
+{
+	// 기본 대기상태
+	if (IsAbleChange(eAccessGrade::BASIC))
+		ChangeState(ER_CHAR_ACT::WAIT);
+}
+void ER_ActionScript_Character::Move(tFSMData& _Data)
+{
+	// 이동가능 상태 판단
+	if (IsAbleChange(eAccessGrade::BASIC))
+	{
+		if (m_iCurState != (UINT)ER_CHAR_ACT::MOVE)
+		{
+			STATEDATA_SET(MOVE, _Data);
+			ChangeState(ER_CHAR_ACT::MOVE);				// 이동중이 아니었다면 이동상태 변환
+		}
+		else
+			FindPath()->FindPath(_Data.v4Data);			// 이동중이었다면 목표지점 갱신
+	}
+}
+void ER_ActionScript_Character::Rest(tFSMData& _Data)
+{
+	if (IsAbleChange(eAccessGrade::BASIC))
+		ChangeState(ER_CHAR_ACT::REST);
+}
 void ER_ActionScript_Character::Attack(tFSMData& _Data)
 {
 	/*
@@ -73,7 +95,7 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 		_Data.iData[0]  = PrevData.iData[0];		// HitFrame 유지
 
 		// 새로운 타겟을 지정했는가
-		if (_Data.lParam != PrevData.lParam)
+		if (!(PrevData.lParam) && _Data.lParam != PrevData.lParam)
 		{
 			_Data.RParam	= _Data.lParam;			// 새로운 타겟을 다음 타겟으로 지정
 			_Data.lParam	= PrevData.lParam;		// 현재타겟 유지
@@ -86,7 +108,7 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 	// 타겟 추적중이다
 	else
 	{
-		_Data.fData = GetStatus()->fAtakRange;		// 일반공격 가능 거리;
+		_Data.fData = GetStatus()->fAtkRange;		// 일반공격 가능 거리;
 
 		// 공격 사정거리 범위 판단
 		if (IsInRange((CGameObject*)_Data.lParam, _Data.fData))
@@ -98,6 +120,7 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 		else
 		{
 			tFSMData MoveData = {};
+			MoveData.lParam		= _Data.lParam;		// 타겟
 			MoveData.bData[0]	= true;				// 타겟 추적중
 			MoveData.fData		= _Data.fData;		// 공격 가능 거리
 			MoveData.iData[0]	= 1;				// 타겟 타입 : 1 공격대상
@@ -106,23 +129,6 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 		}
 	}
 
-}
-void ER_ActionScript_Character::Wait(tFSMData& _Data)
-{
-	// 기본 대기상태
-	if (IsAbleChange(eAccessGrade::BASIC))
-		ChangeState(ER_CHAR_ACT::WAIT);
-}
-void ER_ActionScript_Character::Move(tFSMData& _Data)
-{
-	// 이동가능 상태 판단
-	if (IsAbleChange(eAccessGrade::BASIC))
-	{
-		if (m_iCurState != (UINT)ER_CHAR_ACT::MOVE)
-			ChangeState(ER_CHAR_ACT::MOVE);				// 이동중이 아니었다면 이동상태 변환
-		else
-			FindPath()->FindPath(_Data.v4Data);			// 이동중이었다면 목표지점 갱신
-	}
 }
 void ER_ActionScript_Character::Farming(tFSMData& _Data)
 {
@@ -224,24 +230,8 @@ void ER_ActionScript_Character::Craft(tFSMData& _Data)
 		ChangeState(ER_CHAR_ACT::CRAFT);
 	};
 }
-void ER_ActionScript_Character::Rest(tFSMData& _Data)
-{
-	/*
-	[REST]
-	bData[0]	: 휴식중 동작중인지
-	*/
-
-	tFSMData PrevData = STATEDATA_GET(REST);
-
-	// 현재 휴식중인가
-	if (PrevData.bData[0])
-		return;						// 상태를 변경하지 않고 종료
-
-	if (IsAbleChange(eAccessGrade::BASIC))
-		ChangeState(ER_CHAR_ACT::REST);
-}
 void ER_ActionScript_Character::Dead(tFSMData& _Data)
 {
-	ChangeState(ER_CHAR_ACT::DEAD,eAccessGrade::DISABLE);
+	ChangeState(ER_CHAR_ACT::DEAD,eAccessGrade::UTMOST);
 	m_Data->SetGameDead();	// 캐릭터 사망상태 처리 : 타겟지정불가, tick 수행하지 않음
 }

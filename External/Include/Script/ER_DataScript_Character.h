@@ -19,6 +19,7 @@ private:
     // 실험체 최종 능력치 (초기능력치 * 레벨, + 아이템, + 스킬효과)
     tIngame_Stats*              m_Stats;                // 게임 능력치
     ER_SKILL*                   m_Skill[4];             // 실제사용스킬
+    float                       m_fSPRegenTime;         // SPRegen Tiem
 
     // 상태판단
     tStatus_Effect*             m_StatusEffect;         // 상태효과 구조체
@@ -36,8 +37,9 @@ private:
 
 public:
     // [상태 갱신]
-    void StatusUpdate();    // Status 갱신 함수 : 레벨업 , 아이템변경, 버프/버프
-    // 스킬 쿨타임 갱신 함수
+    void StatusUpdate();                            // Status 갱신 함수 : 레벨업 , 아이템변경, 버프/버프
+    void HPRegen(float _magnification = 1.f);      // 자연체력회복. 기본 1배율
+    void SPRegen(float _magnification = 1.f);      // 자연스테미너회복. 기본 1배율
 
 
 public:

@@ -12,9 +12,13 @@
 
 #define GETITEMSTATS(ItemObj) ItemObj->GetScript<ER_DataScript_Item>()->GetStats()
 
+#define GETPROJECTILE(Type) ER_ProjectilePool::GetInst()->GetProjectile(ER_ProjectilePool::eProjType::Type)
+
+#define ERCHARSOUND(Key) m_pSounds[(UINT)CharacterSound::Key]->Play(1,0.5,true)
+
 enum class ER_ITEM_GRADE
 {
-	COMMON,		// ¿œπ›
+	NORMAL,		// ¿œπ›
 	UNCOMMONE,	// ∞Ì±ﬁ
 	RARE,		// »Ò±Õ
 	EPIC,		// øµøı

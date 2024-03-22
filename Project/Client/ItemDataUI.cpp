@@ -369,7 +369,7 @@ void ItemDataUI::render_ItemInfoTable()
                 // Item Recipe
                 ImGui::TableSetColumnIndex((UINT)ItemDataListColumnID_Recipe);
                 ImGui::SetNextItemWidth(NameSlotWidth);
-                ImGui::BeginDisabled((UINT)ER_ITEM_GRADE::COMMON == CurItemGrade);
+                ImGui::BeginDisabled((UINT)ER_ITEM_GRADE::NORMAL == CurItemGrade);
                 ER_RECIPE CurItemRecipe = itemcontext->GetRecipe();
                 int Ingr1 = CurItemRecipe.ingredient_1;
                 int Ingr2 = CurItemRecipe.ingredient_2;

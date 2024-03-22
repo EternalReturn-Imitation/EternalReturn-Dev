@@ -8,7 +8,7 @@ class ER_ProjectileScript :
 public:
     enum class eDmgType
     {
-        COMMON,
+        NORMAL,
         SKILL,
         END,
     };

@@ -219,6 +219,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_ActionScript_Character_func.cpp" />
     <ClCompile Include="ER_ActionScript_Hyunwoo.cpp" />
     <ClCompile Include="ER_ActionScript_Jackie.cpp" />
+    <ClCompile Include="ER_ActionScript_Init.cpp" />
     <ClCompile Include="ER_ActionScript_Rio.cpp" />
     <ClCompile Include="ER_ActionScript_Yuki.cpp" />
     <ClCompile Include="ER_BattleSystem.cpp" />

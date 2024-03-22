@@ -4,8 +4,14 @@
 class ER_ActionScript_Aya :
     public ER_ActionScript_Character
 {
+    enum class CharacterSound
+    {
+        END,
+    };
+
 private:
     float m_fSec;
+    Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
 protected:
     virtual FSMState* CreateWait();
@@ -22,12 +28,6 @@ protected:
     virtual FSMState* CreateSkill_R();
 
 public:
-    virtual void Attack(tFSMData& _Data);         // 기본공격
-    virtual void Wait(tFSMData& _Data);           // 대기
-    virtual void Move(tFSMData& _Data);           // 이동
-    virtual void Farming(tFSMData& _Data);        // 파밍
-    virtual void Craft(tFSMData& _Data);          // 제작
-    virtual void Rest(tFSMData& _Data);           // 휴식
     virtual void Skill_Q(tFSMData& _Data);        // Q Skill
     virtual void Skill_W(tFSMData& _Data);        // W Skill
     virtual void Skill_E(tFSMData& _Data);        // E Skill
@@ -50,9 +50,9 @@ private:
     void MoveUpdate(tFSMData& param);
     void MoveExit(tFSMData& param);
 
-    void FarmingEnter(tFSMData& param);
-    void FarmingUpdate(tFSMData& param);
-    void FarmingExit(tFSMData& param);
+    void FarmingEnter(tFSMData& param) {}
+    void FarmingUpdate(tFSMData& param) {}
+    void FarmingExit(tFSMData& param) {}
 
     void CraftEnter(tFSMData& param);
     void CraftUpdate(tFSMData& param);
@@ -81,6 +81,8 @@ private:
     void DeadEnter(tFSMData& param);
     void DeadUpdate(tFSMData& param);
     void DeadExit(tFSMData& param);
+
+    virtual bool SoundLoad();
 
 public:
     ER_ActionScript_Aya();

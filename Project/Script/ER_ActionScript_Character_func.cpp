@@ -22,6 +22,11 @@ ER_DataScript_Character* ER_ActionScript_Character::GetCharacterData()
 	return GetOwner()->GetScript<ER_DataScript_Character>();
 }
 
+bool ER_ActionScript_Character::IsSkillOn(SKILLIDX _idx)
+{
+	return m_Data->GetSkill((UINT)_idx)->IsAction;
+}
+
 // [ Transform Func ]
 Vec3 ER_ActionScript_Character::GetFocusPoint()
 {
@@ -97,6 +102,21 @@ bool ER_ActionScript_Character::IsInRange(CGameObject* Target, float _fRange)
 	return false;
 }
 
+Vec3 ER_ActionScript_Character::GetProjSpawnPos(DWORD_PTR _Target)
+{
+	Vec3 vPos = Transform()->GetRelativePos();
+	Vec3 vTargetPos = ((CGameObject*)_Target)->Transform()->GetRelativePos();
+	vTargetPos.y = 0.f;
+	
+	Vec3 vDir = { vPos.x, 0.f, vPos.z };
+	vDir = (vTargetPos - vDir).Normalize();
+
+	vPos.y += 1.1f;
+	vPos += vDir * 0.5f;
+
+	return vPos;
+}
+
 // [ State Manage ]
 void ER_ActionScript_Character::StateInit()
 {
@@ -137,6 +157,8 @@ void ER_ActionScript_Character::StateInit()
 		StateList[(UINT)ER_CHAR_ACT::SKILL_E]->SetName(L"SKILL_E");
 	if (StateList[(UINT)ER_CHAR_ACT::SKILL_R])
 		StateList[(UINT)ER_CHAR_ACT::SKILL_R]->SetName(L"SKILL_R");
+
+	SoundLoad();
 }
 bool ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, eAccessGrade _Grade)
 {

@@ -1,5 +1,7 @@
 #pragma once
 #include <Engine\CScript.h>
+#include <Engine\CSound.h>
+#include <Engine\ptr.h>
 
 class FSM;
 class FSMState;
@@ -58,10 +60,14 @@ protected:
     virtual FSMState* CreateSkill_E() = 0;
     virtual FSMState* CreateSkill_R() = 0;
 
+    virtual bool SoundLoad() = 0;
+
     // [ Status Func ]
     tIngame_Stats* GetStatus();                                     // 캐릭터 스탯 확인
     tStatus_Effect* GetStatusEffect();                              // 캐릭터 상태효과 확인
     ER_DataScript_Character* GetCharacterData();                    // 캐릭터 데이터스크립트 확인
+
+    bool IsSkillOn(SKILLIDX _idx);                                  // 지속스킬 동작 판단
 
     // [ Transform Func ]
     Vec3 GetFocusPoint();                                           // 타겟 좌표 확인
@@ -71,6 +77,8 @@ protected:
     Vec3 SetRotationToTarget(const Vec3& vTarget);                  // 타겟 방향 회전
 
     bool IsInRange(CGameObject* Target, float _fRange);             // 거리범위 확인
+    Vec3 GetProjSpawnPos(DWORD_PTR _Target);
+
 
     // [ State Manage ]
     void StateInit();                                                                // 상태 초기화 세팅

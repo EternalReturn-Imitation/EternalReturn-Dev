@@ -20,75 +20,314 @@ ER_ActionScript_Rio::~ER_ActionScript_Rio()
 {
 }
 
-void ER_ActionScript_Rio::Skill_Q(tFSMData& _Data)
+void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
 {
-    ChangeState(ER_CHAR_ACT::SKILL_Q);
+    /*
+    fData   : 재생시간 카운트
+    */
+    if (m_BowType)
+        Animator3D()->SelectAnimation(L"Rio_Long_Wait", true);
+    else
+        Animator3D()->SelectAnimation(L"Rio_Short_Wait", true);
+
+    SetStateGrade(eAccessGrade::BASIC);
+    param.fData = 0.f;
 }
-
-void ER_ActionScript_Rio::Skill_W(tFSMData& _Data)
+void ER_ActionScript_Rio::WaitUpdate(tFSMData& param)
 {
-    ChangeState(ER_CHAR_ACT::SKILL_W);
+    // 0.5초마다 회복
+    param.fData += DT;
+    
+    if (0.5f <= param.fData)
+    {
+        // HP/SP 자연 회복
+        m_Data->HPRegen();
+        m_Data->SPRegen();
+
+        // 자원재생 카운트 초기화
+        param.fData -= 0.5f;
+    }
 }
-
-void ER_ActionScript_Rio::Skill_E(tFSMData& _Data)
+void ER_ActionScript_Rio::WaitExit(tFSMData& param)
 {
-    STATEDATA_SET(SKILL_E, _Data);
-
-    ChangeState(ER_CHAR_ACT::SKILL_E);
-}
-
-void ER_ActionScript_Rio::Skill_R(tFSMData& _Data)
-{
-    ChangeState(ER_CHAR_ACT::SKILL_R);
+    // 기능 없음
 }
 
 void ER_ActionScript_Rio::MoveEnter(tFSMData& param)
 {
     if (m_BowType)
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Run", true);
+        Animator3D()->SelectAnimation(L"Rio_Long_Run", true);
     else
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Run", true);
+        Animator3D()->SelectAnimation(L"Rio_Short_Run", true);
 
-    SetStateGrade(eAccessGrade::BASIC);
-
-    Vec3 DestPos = param.v4Data;
-
-    CFindPath* findpathcomp = GetOwner()->FindPath();
-    findpathcomp->FindPath(DestPos);
+    FindPath()->FindPath(param.v4Data);
 }
-
 void ER_ActionScript_Rio::MoveUpdate(tFSMData& param)
 {
-    tFSMData Atkdata = STATEDATA_GET(ATTACK);
-
-    // 공격추적상태라면
-    if (Atkdata.bData[0])
+    /*
+    [MOVE]
+	bData[0]	: 타겟 추적 여부
+    bData[1]    : 이동속도 버프스킬 작용 여부
+	fData		: 공격 가능 거리 / 파밍 가능 거리
+	iData[0]	: 타겟 타입 : 1 - 공격대상 / 2 - 아이템박스
+	v4Data		: 목표 이동 좌표
+    */
+    
+    // 타겟 추적중
+    if (param.bData[0])
     {
-        CGameObject* TargetObj = (CGameObject*)Atkdata.lParam;
-        float AtkRange = m_Data->GetStatus()->fAtakRange;
-
-        if (IsInRange(TargetObj, AtkRange))
+        if (IsInRange((CGameObject*)param.lParam, param.fData))
         {
-            Atkdata.bData[0] = false;
-            GetOwner()->FindPath()->ClearPath();
-            ChangeState(ER_CHAR_ACT::ATTACK, eAccessGrade::DISABLE);
-            return;
+            param.bData[0] = false;     // 추적 종료    
+            FindPath()->ClearPath();    // 이동 경로 초기화
+            switch (param.iData[0])
+            {
+            case 1: // 공격 대상
+                ChangeState(ER_CHAR_ACT::ATTACK);
+                break;
+            case 2: // 아이템 박스
+                ChangeState(ER_CHAR_ACT::FARMING);
+                break;
+            }
+            return; // 상태전환 후 작업 완료
         }
     }
 
-    // 캐릭터 속도 얻어와서 넣어주기
-    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
-    float speed = m_Data->GetStatus()->fMovementSpeed;
-    speed += (speed * statusefc->GetIncSPD()) - (speed * statusefc->GetDecSPD());
-
+    // 애니메이션 변경 판단
+    
+    // 버프/디버프 효과 반영
+    tStatus_Effect* SpeedEfc = m_Data->GetStatusEffect();
+    
+    // 이동속도 설정
+    float fMoveSpeed = GetStatus()->fMovementSpeed;
+    fMoveSpeed += (fMoveSpeed * SpeedEfc->GetIncSPD()) - (fMoveSpeed * SpeedEfc->GetDecSPD());
 
     // 다음 이동지점이 없다면 대기상태로 전환
-    if (!GetOwner()->FindPath()->PathMove(speed))
+    if (!FindPath()->PathMove(fMoveSpeed))
         ChangeState(ER_CHAR_ACT::WAIT);
 }
-
 void ER_ActionScript_Rio::MoveExit(tFSMData& param)
 {
+    // 기능 없음
+}
+
+void ER_ActionScript_Rio::RestEnter(tFSMData& param)
+{
+    /*
+    iData[0] = 휴식 애니메이션 재생판단
+    fData    = 체력재생시간 카운트
+    */
+    param.iData[0] = 0;
+    param.fData = 0.f;
+    Animator3D()->SelectAnimation(L"Rio_Rest_Start", false);
+}
+void ER_ActionScript_Rio::RestUpdate(tFSMData& param)
+{
+    switch (param.iData[0])
+    {
+    case 0: // 시작 동작
+    {
+        // 애니메이션 길이만큼 시전게이지 UI 출력
+
+        if (Animator3D()->IsFinish())
+        {
+            Animator3D()->SelectAnimation(L"Rio_Rest_Loop");
+            
+            // 상태변경불가
+            SetStateGrade(eAccessGrade::UTMOST);
+            param.iData[0]++;
+        }
+        break;
+    }
+    case 1: // 시전 중
+    {
+        // 캔슬 불가
+        // 0.5초마다 회복
+        param.fData += DT;
+
+        if (0.5f <= param.fData)
+        {
+            // HP/SP 자연 회복 5배 빠르게 회복
+            m_Data->HPRegen(5.f);
+            m_Data->SPRegen(5.f);
+
+            // 자원재생 카운트 초기화
+            param.fData -= 0.5f;
+        }
+
+        if (KEY_TAP(KEY::RBTN) || KEY_TAP(KEY::X))
+        {
+            Animator3D()->SelectAnimation(L"Rio_Rest_End", false);
+            param.iData[0]++;
+        }
+        break;
+    }
+    case 2: // 종료 동작
+    {
+        // 애니메이션 길이만큼 시전게이지 UI 출력
+        if (Animator3D()->IsFinish())
+        {
+            SetStateGrade(eAccessGrade::BASIC);
+            ChangeState(ER_CHAR_ACT::WAIT);
+        }
+        break;
+    }
+    }
+}
+void ER_ActionScript_Rio::RestExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::ArriveEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Rio_Arrive", false);
+}
+void ER_ActionScript_Rio::ArriveUpdate(tFSMData& param)
+{
+    if (Animator3D()->IsFinish())
+        ChangeState(ER_CHAR_ACT::WAIT);
+}
+void ER_ActionScript_Rio::ArriveExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::DeadEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Rio_Death", false);
+}
+void ER_ActionScript_Rio::DeadUpdate(tFSMData& param)
+{
+}
+void ER_ActionScript_Rio::DeadExit(tFSMData& param)
+{
+}
+
+void ER_ActionScript_Rio::AttackEnter(tFSMData& param)
+{
+    /*
+    [ATTACK]
+    bData[0]	: 공격동작 진행중인지 여부
+    bData[1]	: Battle Event 실행 여부
+    bData[2]	: 다음 타겟 지정 여부
+    bData[3]    : 공격모션 변경
+    iData[0]	: 타격지점 애니메이션 프레임 = Hit Frame
+    lParam		: 타겟 오브젝트
+    RParam		: 타겟 예정 오브젝트
+    */
+
+    // 공격 시작단계 초기화
+    param.bData[0] = true;
+    param.bData[1] = false;
+    
+    // 활 폼
+    if (m_BowType)
+    {
+        Animator3D()->SelectAnimation(L"Rio_Long_Attack", false);
+        param.iData[0] = 9;
+    }
+    else
+    {
+        Animator3D()->SelectAnimation(L"Rio_Short_Attack", false);
+        param.iData[0] = 6;
+    }
+
+    // 타겟방향으로 회전
+    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
+    SetStateGrade(eAccessGrade::UTMOST);
+}
+void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
+{
+    /*
+    [ATTACK]
+    bData[0]	: 공격동작 진행중인지 여부
+    bData[1]	: Battle Event 실행 여부
+    bData[2]	: 다음 타겟 지정 여부
+    bData[3]    : 공격모션 변경
+    iData[0]	: 타격지점 애니메이션 프레임 = Hit Frame
+    lParam		: 타겟 오브젝트
+    RParam		: 타겟 예정 오브젝트
+    */
+
+    float Atkspd = GetStatus()->fAttackSpeed;
+    
+    // 버프/디버프 확인
+    tStatus_Effect* statusefc = GetStatusEffect();
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
+
+    // 애니메이션 속도 증가
+    Animator3D()->PlaySpeedValue(Atkspd);
+
+
+    if (!param.bData[1] && param.iData[0] < Animator3D()->GetCurFrame())
+    {
+        // 사운드 재생
+        if (m_BowType)
+            ERCHARSOUND(LONG_NORMAL_ATTACK);
+        else
+            ERCHARSOUND(SHORT_NORMAL_ATTACK);
+
+        // 캐릭터 고유 공격 알고리즘
+
+        // 투사체 생성
+        ER_ProjectileScript* Arrow = GETPROJECTILE(ARROW);
+        
+        Arrow->ShotTarget(GetOwner(),                   // 공격 오브젝트
+            (CGameObject*)param.lParam,                 // 타겟 오브젝트
+            GetProjSpawnPos(param.lParam),              // 투사체 생성 위치
+            ER_ProjectileScript::eDmgType::NORMAL,      // 데미지 타입
+            15.f);                                      // 투사체 속도
+        
+        Arrow->Shot();                                  // 투사체 발사
+
+        param.bData[1] = true;                          // Battle Event 완료
+
+
+        // 리오 고유 2타 공격
+        if (param.iData[0] < 11 && !m_BowType)
+        {
+            param.iData[0] = 11;
+            param.bData[1] = false;
+        }
+        SetStateGrade(eAccessGrade::BASIC);
+    }
+
+
+    if (Animator3D()->IsFinish())
+    {
+        param.bData[0] = false;         // 공격 동작 완료
+
+        // 공격중 타겟이 변경되었다
+        if (param.bData[2])
+        {
+            param.lParam    = param.RParam;
+            param.bData[2]  = false;
+            param.RParam    = 0;
+        }
+
+        CGameObject* Target = (CGameObject*)param.lParam; 
+        
+        // 사망 판단
+        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
+
+        if (IsDead)
+            ChangeState(ER_CHAR_ACT::WAIT);
+        else
+        {
+            // 거리 판단
+            float AtkRange = GetStatus()->fAtkRange;
+
+            if (IsInRange(Target, AtkRange))
+                AttackEnter(param);
+            else
+                Attack(param);
+        }
+    }
+}
+void ER_ActionScript_Rio::AttackExit(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.bData[1] = false;
+    SetStateGrade(eAccessGrade::BASIC);
 }
 
 void ER_ActionScript_Rio::FarmingEnter(tFSMData& param)
@@ -109,7 +348,6 @@ void ER_ActionScript_Rio::FarmingEnter(tFSMData& param)
 
     m_bFarmingTrigger = true;
 }
-
 void ER_ActionScript_Rio::FarmingUpdate(tFSMData& param)
 {
     float speed = m_Data->GetStatus()->fMovementSpeed;
@@ -148,7 +386,6 @@ void ER_ActionScript_Rio::FarmingUpdate(tFSMData& param)
         m_bFarmingTrigger = false;
     }
 }
-
 void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
 {
     ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(false);
@@ -168,201 +405,31 @@ void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
 void ER_ActionScript_Rio::CraftEnter(tFSMData& param)
 {
 }
-
 void ER_ActionScript_Rio::CraftUpdate(tFSMData& param)
 {
 }
-
 void ER_ActionScript_Rio::CraftExit(tFSMData& param)
 {
 }
 
 
-void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
+void ER_ActionScript_Rio::Skill_Q(tFSMData& _Data)
 {
-    if (m_BowType)
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Wait", true);
-    else
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Wait", true);
-
-    SetStateGrade(eAccessGrade::BASIC);
+    ChangeState(ER_CHAR_ACT::SKILL_Q);
 }
-
-void ER_ActionScript_Rio::WaitUpdate(tFSMData& param)
+void ER_ActionScript_Rio::Skill_W(tFSMData& _Data)
 {
+    ChangeState(ER_CHAR_ACT::SKILL_W);
 }
-
-void ER_ActionScript_Rio::WaitExit(tFSMData& param)
+void ER_ActionScript_Rio::Skill_E(tFSMData& _Data)
 {
+    STATEDATA_SET(SKILL_E, _Data);
+
+    ChangeState(ER_CHAR_ACT::SKILL_E);
 }
-
-void ER_ActionScript_Rio::ArriveEnter(tFSMData& param)
+void ER_ActionScript_Rio::Skill_R(tFSMData& _Data)
 {
-    GetOwner()->Animator3D()->SelectAnimation(L"Rio_Arrive", false);
-}
-
-void ER_ActionScript_Rio::ArriveUpdate(tFSMData& param)
-{
-    if (GetOwner()->Animator3D()->IsFinish())
-        ChangeState(ER_CHAR_ACT::WAIT);
-}
-
-void ER_ActionScript_Rio::ArriveExit(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Rio::AttackEnter(tFSMData& param)
-{
-    param.bData[0] = false;
-    param.bData[2] = false;
-
-    // 활 폼
-    if (m_BowType)
-    {
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Attack", false);
-        param.bData[3] = true;
-        param.iData = 9;
-    }
-    else
-    {
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Attack", false);
-        param.bData[3] = true;
-        param.iData = 6;
-    }
-
-
-    SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
-}
-
-void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
-{
-    // bData[0] : 공격 대상 추적상태
-    // bData[1] : -
-    // bData[2] : Hit판정 실행여부
-    // bData[3] : 애니메이션 재생여부;
-
-    CAnimator3D* animator = GetOwner()->Animator3D();
-    float Atkspd = m_Data->GetStatus()->fAttackSpeed;
-    tStatus_Effect* statusefc = m_Data->GetStatusEffect();
-    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
-
-    // 애니메이션 속도 증가
-    animator->PlaySpeedValue(Atkspd);
-
-
-     // 공격판정
-    int HitFrame = param.iData;
-    
-    if (!param.bData[2] && HitFrame < animator->GetCurFrame())
-    {
-        ER_ProjectileScript* Arrow = ER_ProjectilePool::GetInst()->GetProjectile(ER_ProjectilePool::eProjType::ARROW);
-        Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
-        Vec3 vTargetPos = ((CGameObject*)param.lParam)->Transform()->GetRelativePos();
-        Vec3 vDir = { vPos.x, 0.f, vPos.z };
-        vTargetPos.y = 0.f;
-        vDir = (vTargetPos - vDir).Normalize();
-
-        vPos.y += 1.f;
-        vPos += vDir * 0.3f;
-        
-        Arrow->ShotTarget(GetOwner(), (CGameObject*)param.lParam, vPos, ER_ProjectileScript::eDmgType::BASIC, 15.f);
-
-        Arrow->Shot();
-        BATTLE_COMMON(GetOwner(), param.lParam);
-        param.bData[2] = true;
-
-        if (param.iData < 11 && !m_BowType)
-        {
-            param.iData = 11;
-            param.bData[2] = false;
-        }
-    }
-
-
-    if (animator->IsFinish())
-    {
-        param.bData[3] = false;
-        DEBUG_LOG_COMMAND("rio", "attack", "animCompleat");
-
-        CGameObject* Target = (CGameObject*)param.lParam;
-        // 사망 판단
-        bool IsDead = Target->GetScript<ER_DataScript_Character>()->IsDeadState();
-
-        if (IsDead)
-            ChangeState(ER_CHAR_ACT::WAIT);
-        else
-        {
-            // 거리 판단
-            float AtkRange = m_Data->GetStatus()->fAtakRange;
-
-            if (IsInRange(Target, AtkRange))
-                AttackEnter(param);
-            else
-                Attack(param);
-        }
-    }
-}
-
-void ER_ActionScript_Rio::AttackExit(tFSMData& param)
-{
-    param.bData[3] = false;
-}
-
-void ER_ActionScript_Rio::RestEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Rio_Rest_Start", false);
-    
-    param.iData = 0;
-}
-
-void ER_ActionScript_Rio::RestUpdate(tFSMData& param)
-{
-    CAnimator3D* animator = GetOwner()->Animator3D();
-    
-    switch (param.iData)
-    {
-    case 0: // 시작 동작
-    {
-        // 시전 캔슬가능
-        // 애니메이션 길이만큼 시전게이지 UI 출력
-
-        if (animator->IsFinish())
-        {
-            animator->SelectAnimation(L"Rio_Rest_Loop");
-            
-            // 상태변경불가
-            SetStateGrade(eAccessGrade::DISABLE);
-            param.iData++;
-        }
-        break;
-    }
-    case 1: // 시전 중
-    {
-        // 캔슬 불가
-        if (KEY_TAP(KEY::RBTN) || KEY_TAP(KEY::X))
-        {
-            animator->SelectAnimation(L"Rio_Rest_End", false);
-            param.iData++;
-        }
-        break;
-    }
-    case 2: // 종료 동작
-    {
-        // 캔슬 가능
-        // 애니메이션 길이만큼 시전게이지 UI 출력
-        if (animator->IsFinish())
-        {
-            SetStateGrade(eAccessGrade::BASIC);
-            ChangeState(ER_CHAR_ACT::WAIT);
-            param.iData = 0;
-        }
-        break;
-    }
-    }
-}
-
-void ER_ActionScript_Rio::RestExit(tFSMData& param)
-{
+    ChangeState(ER_CHAR_ACT::SKILL_R);
 }
 
 void ER_ActionScript_Rio::Skill_QEnter(tFSMData& param)
@@ -377,7 +444,6 @@ void ER_ActionScript_Rio::Skill_QEnter(tFSMData& param)
 
     SetStateGrade(eAccessGrade::ADVANCED);
 }
-
 void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
 {
     if ((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
@@ -395,7 +461,6 @@ void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
         ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
-
 void ER_ActionScript_Rio::Skill_QExit(tFSMData& param)
 {
 }
@@ -410,7 +475,6 @@ void ER_ActionScript_Rio::Skill_WEnter(tFSMData& param)
 
     SetStateGrade(eAccessGrade::ADVANCED);
 }
-
 void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
 {
     // 11프레임에 캔슬가능으로 변경 (후딜레이삭제)
@@ -424,7 +488,6 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
         ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
-
 void ER_ActionScript_Rio::Skill_WExit(tFSMData& param)
 {
 }
@@ -454,7 +517,6 @@ void ER_ActionScript_Rio::Skill_EEnter(tFSMData& param)
 
     SetStateGrade(eAccessGrade::ADVANCED);
 }
-
 void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
 {
     CTransform* transform = GetOwner()->Transform();
@@ -519,7 +581,6 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
         ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
-
 void ER_ActionScript_Rio::Skill_EExit(tFSMData& param)
 {
 }
@@ -529,22 +590,21 @@ void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
     if (m_BowType)
     {
         GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Skill_R", false);
-        param.iData = 0;
+        param.iData[0] = 0;
     }
     else
     {
         // 첫 시전
-        if(0 == param.iData)
+        if(0 == param.iData[0])
             GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Skill_R_Start", false);
 
         // 두번째 시전
-        if(1 == param.iData)
+        if(1 == param.iData[0])
             GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Skill_R_End", false);
     }
 
-    SetStateGrade(eAccessGrade::DISABLE);
+    SetStateGrade(eAccessGrade::UTMOST);
 }
-
 void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
 {
     // 장궁 폼
@@ -561,7 +621,7 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
     {
         CAnimator3D* animator = GetOwner()->Animator3D();
 
-        switch (param.iData)
+        switch (param.iData[0])
         {
         case 0: // 시작 동작
         {
@@ -573,7 +633,7 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
             {
                 SetStateGrade(eAccessGrade::BASIC);
                 ChangeState(ER_CHAR_ACT::WAIT);
-                param.iData++;
+                param.iData[0]++;
             }
             break;
         }
@@ -587,30 +647,18 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
             {
                 SetStateGrade(eAccessGrade::BASIC);
                 ChangeState(ER_CHAR_ACT::WAIT);
-                param.iData = 0;
+                param.iData[0] = 0;
             }
             break;
         }
         }
     }
 }
-
 void ER_ActionScript_Rio::Skill_RExit(tFSMData& param)
 {
 }
 
-void ER_ActionScript_Rio::DeadEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Rio_Death", false);
-}
 
-void ER_ActionScript_Rio::DeadUpdate(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Rio::DeadExit(tFSMData& param)
-{
-}
 
 FSMState* ER_ActionScript_Rio::CreateWait()
 {

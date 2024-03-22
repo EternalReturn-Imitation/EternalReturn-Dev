@@ -4,8 +4,14 @@
 class ER_ActionScript_Aya :
     public ER_ActionScript_Character
 {
+    enum class CharacterSound
+    {
+        END,
+    };
+
 private:
     float m_fSec;
+    Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
 protected:
     virtual FSMState* CreateWait();
@@ -44,9 +50,9 @@ private:
     void MoveUpdate(tFSMData& param);
     void MoveExit(tFSMData& param);
 
-    void FarmingEnter(tFSMData& param);
-    void FarmingUpdate(tFSMData& param);
-    void FarmingExit(tFSMData& param);
+    void FarmingEnter(tFSMData& param) {}
+    void FarmingUpdate(tFSMData& param) {}
+    void FarmingExit(tFSMData& param) {}
 
     void CraftEnter(tFSMData& param);
     void CraftUpdate(tFSMData& param);
@@ -75,6 +81,8 @@ private:
     void DeadEnter(tFSMData& param);
     void DeadUpdate(tFSMData& param);
     void DeadExit(tFSMData& param);
+
+    virtual bool SoundLoad();
 
 public:
     ER_ActionScript_Aya();

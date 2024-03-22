@@ -4,8 +4,16 @@
 class ER_ActionScript_Rio :
     public ER_ActionScript_Character
 {
+    enum class CharacterSound
+    {
+        LONG_NORMAL_ATTACK,
+        SHORT_NORMAL_ATTACK,
+        END,
+    };
+
 private:
     bool m_BowType; // false : shot, true : long
+    Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
 protected:
     virtual FSMState* CreateWait();
@@ -75,6 +83,8 @@ private:
     void DeadEnter(tFSMData& param);
     void DeadUpdate(tFSMData& param);
     void DeadExit(tFSMData& param);
+
+    virtual bool SoundLoad();
 
 public:
     ER_ActionScript_Rio();

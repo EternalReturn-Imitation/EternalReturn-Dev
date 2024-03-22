@@ -16,6 +16,7 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_Equipment{}
 	, m_Inventory{}
 	, m_bHPChangeTrigger(false)
+	, m_fSPRegenTime(0.f)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -37,6 +38,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_Inventory{}
 	, CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 	, m_bHPChangeTrigger(false)
+	, m_fSPRegenTime(0.f)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -69,20 +71,23 @@ ER_DataScript_Character::~ER_DataScript_Character()
 void ER_DataScript_Character::StatusUpdate()
 {
 	ER_Ingame_Stats Updatetmp = *m_Stats;
+	UINT Level = Updatetmp.iLevel - 1;
+
+
 	// 레벨,경험치,HP,SP 는 갱신하지 않는다.
 	// 1. 기본 스테이터스
-	Updatetmp.iAttackPower = m_STDStats.iAttackPower + (Updatetmp.iLevel * m_STDStats.iAttackPowerPerLevel);
-	Updatetmp.iDefense = m_STDStats.iDefense + (Updatetmp.iLevel * m_STDStats.iDefensePerLevel);
-	Updatetmp.iMaxHP = m_STDStats.iMaxHP + (Updatetmp.iLevel * m_STDStats.iMaxHPPerLevel);
-	Updatetmp.fHPRegen = m_STDStats.fHPRegen + (Updatetmp.iLevel * m_STDStats.fHPRegenPerLevel);
-	Updatetmp.iMaxSP = m_STDStats.iMaxSP + (Updatetmp.iLevel * m_STDStats.iMaxSPPerLevel);
-	Updatetmp.fSPRegen = m_STDStats.fSPRegen + (Updatetmp.iLevel * m_STDStats.fSPRegenPerLevel);
+	Updatetmp.iAttackPower = m_STDStats.iAttackPower + (Level * m_STDStats.iAttackPowerPerLevel);
+	Updatetmp.iDefense = m_STDStats.iDefense + (Level * m_STDStats.iDefensePerLevel);
+	Updatetmp.iMaxHP = m_STDStats.iMaxHP + (Level * m_STDStats.iMaxHPPerLevel);
+	Updatetmp.fHPRegen = m_STDStats.fHPRegen + (Level * m_STDStats.fHPRegenPerLevel);
+	Updatetmp.iMaxSP = m_STDStats.iMaxSP + (Level * m_STDStats.iMaxSPPerLevel);
+	Updatetmp.fSPRegen = m_STDStats.fSPRegen + (Level * m_STDStats.fSPRegenPerLevel);
 	Updatetmp.fAttackSpeed = m_STDStats.fAttackSpeed + m_STDStats.fWpAtkSpd;
 	Updatetmp.fCriticalStrikeChance = m_STDStats.fCriticalStrikeChance;
 	Updatetmp.fMovementSpeed = m_STDStats.fMovementSpeed;
 	Updatetmp.fVisionRange = m_STDStats.fVisionRange;
-	Updatetmp.iSkillAmplification = m_STDStats.iAttackPower + (Updatetmp.iLevel * m_STDStats.iAttackPowerPerLevel);
-	Updatetmp.fAtakRange = m_STDStats.fWpAtkRange;
+	Updatetmp.iSkillAmplification = m_STDStats.iAttackPower + (Level * m_STDStats.iAttackPowerPerLevel);
+	Updatetmp.fAtkRange = m_STDStats.fWpAtkRange;
 	Updatetmp.fCriticalStrikeDamage = 0;
 	Updatetmp.fCooldownReduction = 0;
 	Updatetmp.fOmnisyphon = 0;
@@ -98,12 +103,12 @@ void ER_DataScript_Character::StatusUpdate()
 		// 아이템 정보를 얻어와 업데이트
 		tItem_Stats Itemtmp = GETITEMSTATS(m_Equipment[i]);
 
-		Updatetmp.iAttackPower += Itemtmp.iAttackPower + (Updatetmp.iLevel * Itemtmp.iAttackPowerPerLevel);
+		Updatetmp.iAttackPower += Itemtmp.iAttackPower + (Level * Itemtmp.iAttackPowerPerLevel);
 		Updatetmp.iDefense += Itemtmp.iDefense;
-		Updatetmp.iMaxHP += Itemtmp.iMaxHP + (Updatetmp.iLevel * Itemtmp.iMaxHPPerLevel);
-		Updatetmp.fHPRegen += Itemtmp.fHPRegen + (Updatetmp.iLevel * Itemtmp.fHPRegenPerLevel);
-		Updatetmp.iMaxSP += Itemtmp.iMaxSP + (Updatetmp.iLevel * Itemtmp.iMaxSPPerLevel);
-		Updatetmp.fSPRegen += Itemtmp.fSPRegen + (Updatetmp.iLevel * Itemtmp.fSPRegenPerLevel);
+		Updatetmp.iMaxHP += Itemtmp.iMaxHP + (Level * Itemtmp.iMaxHPPerLevel);
+		Updatetmp.fHPRegen += Itemtmp.fHPRegen + (Level * Itemtmp.fHPRegenPerLevel);
+		Updatetmp.iMaxSP += Itemtmp.iMaxSP + (Level * Itemtmp.iMaxSPPerLevel);
+		Updatetmp.fSPRegen += Itemtmp.fSPRegen + (Level * Itemtmp.fSPRegenPerLevel);
 		Updatetmp.fAttackSpeed += Itemtmp.fAttackSpeed;
 		Updatetmp.fCriticalStrikeChance += Itemtmp.fCriticalStrikeChance;
 		Updatetmp.fCriticalStrikeDamage += Itemtmp.fCriticalStrikeDamage;
@@ -111,11 +116,29 @@ void ER_DataScript_Character::StatusUpdate()
 		Updatetmp.fVisionRange += Itemtmp.fVisionRange;
 		Updatetmp.fCooldownReduction += Itemtmp.fCooldownReduction;
 		Updatetmp.fOmnisyphon += Itemtmp.fOmnisyphon;
-		Updatetmp.iSkillAmplification += Itemtmp.iSkillAmplification + (Updatetmp.iLevel * Itemtmp.iSkillAmplificationPerLevel);
+		Updatetmp.iSkillAmplification += Itemtmp.iSkillAmplification + (Level * Itemtmp.iSkillAmplificationPerLevel);
 	}
 
 	// 최종스탯 반영
 	*m_Stats = Updatetmp;
+}
+
+void ER_DataScript_Character::HPRegen(float _magnification)
+{
+	// 회복량 회복 후 HP값
+	float HPRegen = m_Stats->iHP + (m_Stats->fHPRegen * _magnification);
+	
+	// HP 자연 회복, 최대 HP면 최대HP로 고정
+	m_Stats->iHP = m_Stats->iMaxHP < HPRegen ?	m_Stats->iMaxHP : HPRegen;
+}
+
+void ER_DataScript_Character::SPRegen(float _magnification)
+{
+	// 회복량 회복 후 HP값
+	float SPRegen = m_Stats->iSP + (m_Stats->fSPRegen * _magnification);
+
+	// HP 자연 회복, 최대 HP면 최대HP로 고정
+	m_Stats->iSP = m_Stats->iMaxSP < SPRegen ? m_Stats->iMaxSP : SPRegen;
 }
 
 void ER_DataScript_Character::init()
@@ -147,15 +170,34 @@ void ER_DataScript_Character::begin()
 	{
 		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
 	}
-
-	CreateStatBar();
 	StatusUpdate();
+
+
+	// 지울거
+	CreateStatBar();
 }
 
 void ER_DataScript_Character::tick()
 {
-	UpdateStatBar();
+	// 스킬 쿨타임 갱신
+	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
+	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
+		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
 	
+	// 버프디버프 쿨타임 갱신
+	m_StatusEffect->ActionTiemUpdate(DT);
+
+	// SPRegen
+	m_fSPRegenTime += DT;
+	if (0.5f <= m_fSPRegenTime)
+	{
+		SPRegen();
+		m_fSPRegenTime -= 0.5f;
+	}
+
+
+	// 아래 지울것
+	UpdateStatBar();
 	//HPReturnBar업데이트
 	if (m_bHPChangeTrigger) {
 		ChangeHPReturnBar();
@@ -165,13 +207,6 @@ void ER_DataScript_Character::tick()
 	//	ChangeStatBar();
 	//}
 	
-	// 스킬 쿨타임 갱신
-	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
-	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
-		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
-	
-	// 버프디버프 쿨타임 갱신
-	m_StatusEffect->ActionTiemUpdate(DT);
 
 }
 

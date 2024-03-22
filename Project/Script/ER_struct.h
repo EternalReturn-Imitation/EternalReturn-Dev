@@ -44,7 +44,7 @@ struct tIngame_Stats
 	float	fCriticalStrikeChance;	// 치명타 확률
 	float	fMovementSpeed;			// 이동속도
 	float	fVisionRange;			// 시야
-	float	fAtakRange;				// 기본공격 사거리
+	float	fAtkRange;				// 기본공격 사거리
 
 	float	fCriticalStrikeDamage;
 	float	fCooldownReduction;			// 쿨타임 감소
@@ -69,7 +69,7 @@ struct tIngame_Stats
 		fCriticalStrikeChance = _StdStats.fCriticalStrikeChance;
 		fMovementSpeed = _StdStats.fMovementSpeed;
 		fVisionRange = _StdStats.fVisionRange;
-		fAtakRange = _StdStats.fWpAtkRange;
+		fAtkRange = _StdStats.fWpAtkRange;
 
 		fCriticalStrikeDamage = 0;
 		fCooldownReduction = 0;
@@ -186,6 +186,7 @@ public:
 	const float& CurCooldown() { return fCoolDown; }
 	const float& ActionTime() { return fMaxActionTime[iSkillLevel]; }
 	const float& UseSP() { return iUseSP[iSkillLevel]; }
+	void ActionOver() { fActionTime = 0.f; }
 
 	void SkillStatusUpdate(float _Ratio)
 	{
