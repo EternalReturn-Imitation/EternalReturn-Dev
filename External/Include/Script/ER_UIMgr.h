@@ -1,9 +1,6 @@
 #pragma once
 #include <Engine\CSingleton.h>
 
-#include <gdiplus.h>
-#pragma comment (lib,"Gdiplus.lib")
-
 class ER_UIMgr
 	: public CSingleton<ER_UIMgr>
 {
@@ -22,12 +19,6 @@ private:
 
 	//등급 텍스트 포인터로 저장해놓기.
 	Ptr<CTexture> m_pGradeTexture[5];
-
-	//마우스 커서 비트맵
-	HBITMAP m_hBitmap;
-	ULONG_PTR m_uGdiplusToken;
-	Gdiplus::GdiplusStartupInput m_gGdiplusStartupInput;
-
 private:
 	bool m_bHPChangeTrigger;
 
@@ -52,11 +43,6 @@ public:
 	void UpdateHP();
 	void UpdateHPReturnBar();
 	void UpdateSteminar();
-
-	//마우스 커서 로딩
-public:
-	HBITMAP LoadPNGAsBitmap(LPCTSTR szFilename);
-	HCURSOR BitmapToCursor(HWND hWnd, HBITMAP hBitmap);
 
 public:
 	CGameObject* GetItemBoxBackground() { return m_pItemBox; }

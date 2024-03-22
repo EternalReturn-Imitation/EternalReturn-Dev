@@ -19,12 +19,6 @@ protected:
     virtual FSMState* CreateSkill_R();
 
 public:
-    virtual void Attack(tFSMData& _Data);         // 기본공격
-    virtual void Wait(tFSMData& _Data);           // 대기
-    virtual void Move(tFSMData& _Data);           // 이동
-    virtual void Farming(tFSMData& _Data);        // 아이템 파밍
-    virtual void Craft(tFSMData& _Data);          // 제작
-    virtual void Rest(tFSMData& _Data);           // 휴식
     virtual void Skill_Q(tFSMData& _Data);        // Q Skill
     virtual void Skill_W(tFSMData& _Data);        // W Skill
     virtual void Skill_E(tFSMData& _Data);        // E Skill

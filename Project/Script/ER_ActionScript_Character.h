@@ -26,91 +26,85 @@ public:
         END,
     }typedef ER_CHAR_ACT;
 
-    enum class bAbleChange
+    enum class eAccessGrade
     {
-        COMMON,     // 일반명령
-        ABSOUTE,    // 캔슬기
-        DISABLE,    // 변경불가
+        BASIC,          // 일반 등급 접근
+        ADVANCED,       // 상위 등급 접근
+        UTMOST,         // 최고 등급 접근
     };
 
 
 protected:
-    FSM* FSMContext;
-    FSMState* StateList[(UINT)ER_CHAR_ACT::END];  // State List
-    UINT m_iPrevState;                      // Prev State
-    UINT m_iCurState;                       // Cur State
-    ER_DataScript_Character* m_Data;        // Cur Character Data
+    FSM*                        FSMContext;
+    FSMState*                   StateList[(UINT)ER_CHAR_ACT::END];  // State List
+    UINT                        m_iPrevState;                       // Prev State
+    UINT                        m_iCurState;                        // Cur State
+    ER_DataScript_Character*    m_Data;                             // Cur Character Data
+    eAccessGrade                m_AccessGrade;                      // 동작 접근 가능 등급
 
-    bAbleChange m_bAbleChange;              // 동작 변경 가능 여부
-
-    CGameObject* m_pFarmingObject;          // 파밍중인 오브젝트
-    bool        m_bFarmingTrigger;          // 파밍 트리거
-
-
-    // FSMState에 Delegate를 생성해서 연결해주는 함수
+    // Create State
     virtual FSMState* CreateWait() = 0;
+    virtual FSMState* CreateArrive() = 0;
+    virtual FSMState* CreateDead() = 0;
+
+    virtual FSMState* CreateAttack() = 0;
     virtual FSMState* CreateMove() = 0;
     virtual FSMState* CreateFarming() = 0;
     virtual FSMState* CreateCraft() = 0;
     virtual FSMState* CreateRest() = 0;
-    virtual FSMState* CreateAttack() = 0;
-    virtual FSMState* CreateArrive() = 0;
-    virtual FSMState* CreateDead() = 0;
+    
     virtual FSMState* CreateSkill_Q() = 0;
     virtual FSMState* CreateSkill_W() = 0;
     virtual FSMState* CreateSkill_E() = 0;
     virtual FSMState* CreateSkill_R() = 0;
 
-    tIngame_Stats* GetStatus();
-    tStatus_Effect* GetStatusEffect();
+    // [ Status Func ]
+    tIngame_Stats* GetStatus();                                     // 캐릭터 스탯 확인
+    tStatus_Effect* GetStatusEffect();                              // 캐릭터 상태효과 확인
+    ER_DataScript_Character* GetCharacterData();                    // 캐릭터 데이터스크립트 확인
 
-protected:
-    Vec3 GetFocusPoint();                // 타겟 지점
-    Vec3 GetClearPoint(const Vec3& vDir, float dist);
-    float GetClearDistance(const Vec3& vDir, float dist);
-    float GetClearDistanceByWall(const Vec3& vDir, float dist);
+    // [ Transform Func ]
+    Vec3 GetFocusPoint();                                           // 타겟 좌표 확인
+    Vec3 GetClearPoint(const Vec3& vDir, float dist);               // 이동 가능 지점 확인
+    float GetClearDistance(const Vec3& vDir, float dist);           // 이동 가능 거리 확인
+    float GetClearDistanceByWall(const Vec3& vDir, float dist);     // 벽까지 이동가능한 거리 확인
+    Vec3 SetRotationToTarget(const Vec3& vTarget);                  // 타겟 방향 회전
 
-    Vec3 SetRotationToTarget(const Vec3& vTarget);
+    bool IsInRange(CGameObject* Target, float _fRange);             // 거리범위 확인
 
-    ER_DataScript_Character* GetCharacterData() { return GetOwner()->GetScript<ER_DataScript_Character>(); }
+    // [ State Manage ]
+    void StateInit();                                                                // 상태 초기화 세팅
+    bool ChangeState(ER_CHAR_ACT _state, eAccessGrade _Grade = eAccessGrade::BASIC); // 상태 변경
+    void SetStateGrade(eAccessGrade _Grade) { m_AccessGrade = _Grade; }              // 상태 접근 가능 등급
+    bool IsAbleChange(eAccessGrade _Grade);                                          // 접근 등급 비교
 
-    bool IsInRange(CGameObject* Target, float _fRange);
 
 public:
     virtual void begin() override;
     virtual void tick() override;
 
-    // 동작 명령 함수. FSM 변경 명령 및 추가 동작 구현
-    virtual void Attack(tFSMData& _Data) = 0;   // 기본공격
+    // 공통 함수
+    virtual void Attack(tFSMData& _Data);       // 기본공격
     virtual void Wait(tFSMData& _Data);         // 대기
     virtual void Move(tFSMData& _Data);         // 이동
-    virtual void Farming(tFSMData& _Data) {}      // 이동
-    virtual void Craft(tFSMData& _Data) {}      // 제작
-    virtual void Rest(tFSMData& _Data) {}       // 휴식
+    virtual void Farming(tFSMData& _Data);      // 아이템파밍
+    virtual void Craft(tFSMData& _Data);        // 제작
+    virtual void Rest(tFSMData& _Data);         // 휴식
+    virtual void Dead(tFSMData& _Data);         // 사망
+    
+    // 개별 구현 함수
     virtual void Skill_Q(tFSMData& _Data) = 0;  // Q Skill
     virtual void Skill_W(tFSMData& _Data) = 0;  // W Skill
     virtual void Skill_E(tFSMData& _Data) = 0;  // E Skill
     virtual void Skill_R(tFSMData& _Data) = 0;  // R Skill
 
-    virtual void Dead(tFSMData& _Data);  // Dead
 
-    void StateInit();
-
-    bool ChangeState(ER_CHAR_ACT _state, bAbleChange _Grade = bAbleChange::COMMON);
-    
-    void SetAbleToCancle(bAbleChange _Grade) { m_bAbleChange = _Grade; }
-    bool IsAbleChange(bAbleChange _Grade);
-
+    // 삭제예정
+    CGameObject* m_pFarmingObject;                   // 파밍중인 오브젝트
+    bool                        m_bFarmingTrigger;                  // 파밍 트리거
     bool GetFarmingTrigger() { return m_bFarmingTrigger; }
     bool SetFarmingTrigger(bool _b) { m_bFarmingTrigger = _b; }
-
-    eCharacterActionState GetCurState() { return (eCharacterActionState)m_iCurState; }
     CGameObject* GetFarmingObject() { return m_pFarmingObject; }
-
-public:
-    virtual void BeginOverlap(CCollider3D* _Other);
-    virtual void OnOverlap(CCollider3D* _Other);
-    virtual void EndOverlap(CCollider3D* _Other);
 
 public:
     ER_ActionScript_Character(SCRIPT_TYPE _type);

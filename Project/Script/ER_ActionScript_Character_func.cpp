@@ -8,16 +8,21 @@
 #include <Engine/CRenderMgr.h>
 #include <Engine/CCollisionMgr.h>
 
+// [ Status Func ]
 tIngame_Stats* ER_ActionScript_Character::GetStatus()
 {
 	return m_Data->GetStatus();
 }
-
 tStatus_Effect* ER_ActionScript_Character::GetStatusEffect()
 {
 	return m_Data->GetStatusEffect();
 }
+ER_DataScript_Character* ER_ActionScript_Character::GetCharacterData()
+{
+	return GetOwner()->GetScript<ER_DataScript_Character>();
+}
 
+// [ Transform Func ]
 Vec3 ER_ActionScript_Character::GetFocusPoint()
 {
 	// 비교용 Map Collider 받기
@@ -33,7 +38,6 @@ Vec3 ER_ActionScript_Character::GetFocusPoint()
 
 	return TargetPos;
 }
-
 Vec3 ER_ActionScript_Character::GetClearPoint(const Vec3& vDir, float dist)
 {
 	Vec3 vPos	= GetOwner()->Transform()->GetRelativePos();
@@ -41,7 +45,6 @@ Vec3 ER_ActionScript_Character::GetClearPoint(const Vec3& vDir, float dist)
 
 	return vPos;
 }
-
 float ER_ActionScript_Character::GetClearDistance(const Vec3& vDir, float dist)
 {
 	float ClearDist = 0.f;
@@ -49,7 +52,6 @@ float ER_ActionScript_Character::GetClearDistance(const Vec3& vDir, float dist)
 
 	return ClearDist;
 }
-
 float ER_ActionScript_Character::GetClearDistanceByWall(const Vec3& vDir, float dist)
 {
 	float ClearDist = 0.f;
@@ -57,7 +59,6 @@ float ER_ActionScript_Character::GetClearDistanceByWall(const Vec3& vDir, float 
 
 	return ClearDist;
 }
-
 Vec3 ER_ActionScript_Character::SetRotationToTarget(const Vec3& vTarget)
 {
 	Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
@@ -80,7 +81,6 @@ Vec3 ER_ActionScript_Character::SetRotationToTarget(const Vec3& vTarget)
 
 	return FinalDir;
 }
-
 bool ER_ActionScript_Character::IsInRange(CGameObject* Target, float _fRange)
 {
 	// 사거리판단
@@ -95,4 +95,70 @@ bool ER_ActionScript_Character::IsInRange(CGameObject* Target, float _fRange)
 		return true;
 
 	return false;
+}
+
+// [ State Manage ]
+void ER_ActionScript_Character::StateInit()
+{
+	StateList[(UINT)ER_CHAR_ACT::WAIT] = CreateWait();
+	StateList[(UINT)ER_CHAR_ACT::MOVE] = CreateMove();
+	StateList[(UINT)ER_CHAR_ACT::FARMING] = CreateFarming();
+	StateList[(UINT)ER_CHAR_ACT::CRAFT] = CreateCraft();
+	StateList[(UINT)ER_CHAR_ACT::REST] = CreateRest();
+	StateList[(UINT)ER_CHAR_ACT::ATTACK] = CreateAttack();
+	StateList[(UINT)ER_CHAR_ACT::ARRIVE] = CreateArrive();
+	StateList[(UINT)ER_CHAR_ACT::DEAD] = CreateDead();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_Q] = CreateSkill_Q();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_W] = CreateSkill_W();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_E] = CreateSkill_E();
+	StateList[(UINT)ER_CHAR_ACT::SKILL_R] = CreateSkill_R();
+
+	if (StateList[(UINT)ER_CHAR_ACT::WAIT])
+		StateList[(UINT)ER_CHAR_ACT::WAIT]->SetName(L"WAIT");
+	if (StateList[(UINT)ER_CHAR_ACT::MOVE])
+		StateList[(UINT)ER_CHAR_ACT::MOVE]->SetName(L"MOVE");
+	if (StateList[(UINT)ER_CHAR_ACT::FARMING])
+		StateList[(UINT)ER_CHAR_ACT::FARMING]->SetName(L"FARMING");
+	if (StateList[(UINT)ER_CHAR_ACT::CRAFT])
+		StateList[(UINT)ER_CHAR_ACT::CRAFT]->SetName(L"CRAFT");
+	if (StateList[(UINT)ER_CHAR_ACT::REST])
+		StateList[(UINT)ER_CHAR_ACT::REST]->SetName(L"REST");
+	if (StateList[(UINT)ER_CHAR_ACT::ATTACK])
+		StateList[(UINT)ER_CHAR_ACT::ATTACK]->SetName(L"ATTACK");
+	if (StateList[(UINT)ER_CHAR_ACT::ARRIVE])
+		StateList[(UINT)ER_CHAR_ACT::ARRIVE]->SetName(L"ARRIVE");
+	if (StateList[(UINT)ER_CHAR_ACT::DEAD])
+		StateList[(UINT)ER_CHAR_ACT::DEAD]->SetName(L"DEAD");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_Q])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_Q]->SetName(L"SKILL_Q");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_W])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_W]->SetName(L"SKILL_W");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_E])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_E]->SetName(L"SKILL_E");
+	if (StateList[(UINT)ER_CHAR_ACT::SKILL_R])
+		StateList[(UINT)ER_CHAR_ACT::SKILL_R]->SetName(L"SKILL_R");
+}
+bool ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, eAccessGrade _Grade)
+{
+	// 같은동작상태여부 & 사망여부
+	if (m_iCurState == (UINT)_state || m_Data->IsDeadState())
+		return false;
+
+	// 변경 가능 수준 검사
+	if (IsAbleChange(_Grade))
+	{
+		m_iPrevState = m_iCurState;
+		FSMContext->ChangeState(StateList[(UINT)_state]);
+		m_iCurState = (UINT)_state;
+	}
+
+	return true;
+	// TO_DO : 당장 변환이 불가능한경우 담아놓기.
+}
+bool ER_ActionScript_Character::IsAbleChange(eAccessGrade _Grade)
+{
+	// 인자로 들어온 동작변경가능 수준이
+	// 현재설정된 동작변경가능 수준과 같거나 높아야 true 반환.
+
+	return m_AccessGrade <= _Grade;
 }

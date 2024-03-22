@@ -27,41 +27,21 @@
 ER_UIMgr::ER_UIMgr()
 	:m_bHPChangeTrigger(false)
 {
-	if (Gdiplus::GdiplusStartup(&m_uGdiplusToken, &m_gGdiplusStartupInput, NULL) != Gdiplus::Ok)
-		assert(false);
 }
 
 ER_UIMgr::~ER_UIMgr()
 {
-	// 사용 후 정리
-	DeleteObject(m_hBitmap); // 비트맵 리소스 해제
-	Gdiplus::GdiplusShutdown(m_uGdiplusToken); // GDI+ 정리
 }
 
 void ER_UIMgr::init()
 {
-	wstring ws = CPathMgr::GetInst()->GetContentPath();
-	ws += L"texture\\UI\\cursor\\Cursor_01.png";
-
-	m_hBitmap = LoadPNGAsBitmap(ws.c_str());	
 }
 
 void ER_UIMgr::tick()
 {
-	//if (KEY_TAP(KEY::F)) {
-	//	UpdateSteminar();
-	//}
-
 	//HPReturnBar업데이트
 	if (m_bHPChangeTrigger) {
 		UpdateHPReturnBar();
-	}
-
-	if (m_hBitmap)
-	{
-		HWND hWnd = CEngine::GetInst()->GetMainWnd();
-		HCURSOR hCursor = BitmapToCursor(hWnd, m_hBitmap);
-		SetCursor(hCursor);
 	}
 }
 
@@ -1789,33 +1769,6 @@ void ER_UIMgr::UpdateSteminar()
 
 	m_pStemnarBar->Transform()->SetRelativePos(pos);
 	m_pStemnarBar->Transform()->SetRelativeScale(scale);
-}
-
-HBITMAP ER_UIMgr::LoadPNGAsBitmap(LPCTSTR szFilename)
-{
-	Gdiplus::Bitmap* pImage = Gdiplus::Bitmap::FromFile(szFilename, FALSE);
-	HBITMAP hBmp = NULL;
-
-	if (pImage && pImage->GetLastStatus() == Gdiplus::Ok)
-	{
-		pImage->GetHBITMAP(Gdiplus::Color(0, 0, 0, 0), &hBmp);
-	}
-
-	delete pImage;
-	return hBmp;
-}
-
-HCURSOR ER_UIMgr::BitmapToCursor(HWND hWnd, HBITMAP hBitmap)
-{
-	ICONINFO iconInfo = {};
-	iconInfo.fIcon = FALSE; // 커서로 사용하기 위해 FALSE로 설정
-	iconInfo.xHotspot = 0;  // 커서의 핫스팟 X 좌표
-	iconInfo.yHotspot = 0;  // 커서의 핫스팟 Y 좌표
-	iconInfo.hbmMask = hBitmap;  // 마스크 비트맵
-	iconInfo.hbmColor = hBitmap; // 컬러 비트맵
-
-	HCURSOR hCursor = CreateIconIndirect(&iconInfo);
-	return hCursor;
 }
 
 Vec3 ER_UIMgr::WorldPosToUIPos(Vec3 worldPos)

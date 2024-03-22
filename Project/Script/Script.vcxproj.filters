@@ -19,14 +19,8 @@
     <Filter Include="Script\ER\DataScript">
       <UniqueIdentifier>{1a97d08e-0c7e-42b5-8448-f40bbb060bbd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER\DataScript\Monster">
-      <UniqueIdentifier>{9dbf146f-05e4-4aff-b19b-65b87366c08c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\ER\DataScript\Character">
       <UniqueIdentifier>{fc5a4c72-94e7-46c8-9fcc-582bc8fc268f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Monster">
-      <UniqueIdentifier>{ae309b0e-d922-4ca0-b403-665033c9fcc2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Script\ER\ActionScript\Character">
       <UniqueIdentifier>{763f25b3-339f-44f0-b3ec-69654adf3bbb}</UniqueIdentifier>
