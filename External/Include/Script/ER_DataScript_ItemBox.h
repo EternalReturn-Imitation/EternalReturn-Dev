@@ -5,7 +5,8 @@ class ER_DataScript_ItemBox :
     public CScript
 {
 private:
-
+    vector<CGameObject*> m_vItemList;
+    CGameObject* m_pBoxIcon;
 
 public:
     void init();
@@ -20,6 +21,16 @@ public:
     virtual void BeginRayOverlap() override;
     virtual void OnRayOverlap() override;
     virtual void EndRayOverlap() override;
+
+public:
+    void CreateRandomItems();
+    void CreateBoxIcon();
+
+public:
+    vector<CGameObject*> GetItemList() { return m_vItemList; }
+    CGameObject* GetItem(int _i) { return m_vItemList[_i]; }
+    
+    void SetEmptyItem(int _i) { m_vItemList[_i] = nullptr; }
 
 public:
     ER_DataScript_ItemBox();

@@ -371,6 +371,10 @@ void CCamera::SortObject()
 				if (vecObject[j]->IsEnable() == false)
 					continue;
 
+				if (vecObject[j]->GetParent())
+					if (vecObject[j]->GetParent()->IsEnable() == false)
+						continue;
+
 				// Frustum Check
 				// if (m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ?ˆë‘ì²´ë Œ???¬ë? ?ë‹¨, ?Œì† ?ˆì´???¹ì? ë³¸ì¸ ?ì²´ ?ˆë‘ì²´ë Œ??ì²´í¬ê°€ ?˜ì–´?ˆëŠ” ê²½ìš°
 				// {
@@ -488,6 +492,10 @@ void CCamera::SortObject(CCamera* _MainCamera)
 
 				if (vecObject[j]->IsEnable() == false)
 					continue;
+
+				if (vecObject[j]->GetParent())
+					if (vecObject[j]->GetParent()->IsEnable() == false)
+						continue;
 
 				// Frustum Check
 				if (_MainCamera->m_iLayerFrustum & (1 << i) || pRenderCom->IsFrustumCheck())	// ÀýµÎÃ¼·»´õ ¿©ºÎ ÆÇ´Ü, ¼Ò¼Ó ·¹ÀÌ¾î È¤Àº º»ÀÎ ÀÚÃ¼ ÀýµÎÃ¼·»´õ Ã¼Å©°¡ µÇ¾îÀÖ´Â °æ¿ì
@@ -610,6 +618,10 @@ void CCamera::SortObject_Shadow()
 
 				if (vecObject[j]->IsEnable() == false)
 					continue;
+
+				if (vecObject[j]->GetParent())
+					if (vecObject[j]->GetParent()->IsEnable() == false)
+						continue;
 
 				m_vecShadow.push_back(vecObject[j]);
 			}

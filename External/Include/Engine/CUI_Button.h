@@ -22,9 +22,15 @@ private:
     Ptr<CTexture> m_pPressedTex;
 
 public:
+    Ptr<CTexture> m_pOriginTex;
+
+public:
     virtual void begin();
     virtual void tick();
     virtual void finaltick();
+
+public:
+    Ptr<CTexture> GetOrigintex() { return m_pOriginTex; }
 
 public:
     virtual void SaveToLevelFile(FILE* _File);

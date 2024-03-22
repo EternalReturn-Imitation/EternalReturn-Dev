@@ -79,6 +79,9 @@
     <Filter Include="GameSystem\Character">
       <UniqueIdentifier>{4fbeb1f6-b219-4820-8f25-26282d0ee874}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameSystem\UI">
+      <UniqueIdentifier>{b3d03eb7-c0f4-4df1-8494-08ae342305a1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="GameSystem\Battle">
       <UniqueIdentifier>{9c8c5026-9c9a-4c8c-9ce5-d9043b036923}</UniqueIdentifier>
     </Filter>
@@ -177,6 +180,9 @@
     <ClInclude Include="ER_ItemMgr.h">
       <Filter>GameSystem\Item</Filter>
     </ClInclude>
+    <ClInclude Include="ER_UIMgr.h">
+      <Filter>GameSystem\UI</Filter>
+    </ClInclude>
     <ClInclude Include="ER_BattleSystem.h">
       <Filter>GameSystem\Battle</Filter>
     </ClInclude>
@@ -271,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="ER_ActionScript_Character_func.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIMgr.cpp">
+      <Filter>GameSystem\UI</Filter>
     </ClCompile>
     <ClCompile Include="ER_BattleSystem.cpp">
       <Filter>GameSystem\Battle</Filter>

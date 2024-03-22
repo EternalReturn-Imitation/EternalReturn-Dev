@@ -134,7 +134,7 @@ void CGameObject::finaltick()
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
-		m_vecChild[i]->finaltick();
+		m_vecChild[i]->finaltick();		
 	}
 		
 	// 소속 레이어가 없는데 finaltick 이 호출되었다.

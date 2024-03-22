@@ -21,6 +21,14 @@ void CCollisionMgr::CollisionBtw3DObject(CGameObject* _LeftObject, CGameObject* 
 	if (_LeftObject->IsEnable() == false || _RightObject->IsEnable() == false)
 		return;
 
+	if (_LeftObject->GetParent())
+		if (_LeftObject->GetParent()->IsEnable() == false)
+			return;
+
+	if (_RightObject->GetParent())
+		if (_RightObject->GetParent()->IsEnable() == false)
+			return;
+
 	// 中宜端 ID 持失
 	CollisionID id = {};
 	if (_LeftObject->Collider3D()->GetID() < _RightObject->Collider3D()->GetID()) {

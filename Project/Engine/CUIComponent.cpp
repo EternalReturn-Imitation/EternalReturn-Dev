@@ -21,10 +21,25 @@ CUIComponent::~CUIComponent()
 
 void CUIComponent::CsrOnCheck()
 {
+    if (GetOwner()->GetName() == L"UI_ItemBoxSlotm00")
+        int a = 0;
+
     // 사각 충돌 : OBB 응용
     CTransform* transform = GetOwner()->Transform();
 
-    Vector2 UIPos = Vec2(transform->GetRelativePos().x, transform->GetRelativePos().y);
+    Vector3 parentPos;
+    Vector3 parentScale;
+    Vec3 worldPos;
+    if (GetOwner()->GetParent()) {
+        parentPos = GetOwner()->GetParent()->Transform()->GetRelativePos();
+        parentScale = GetOwner()->GetParent()->Transform()->GetRelativeScale();
+        worldPos = GetOwner()->GetParent()->Transform()->GetWorldPos();
+    }
+    else {
+        parentScale = Vec3(1.f, 1.f, 1.f);
+    }
+
+    Vector2 UIPos = Vec2(transform->GetRelativePos().x + parentPos.x, transform->GetRelativePos().y+ parentPos.y);
     Vector2 UIScale = Vec2(transform->GetRelativeScale().x, transform->GetRelativeScale().y);
 
     Vector2 MouseScale = { 1.f,1.f };

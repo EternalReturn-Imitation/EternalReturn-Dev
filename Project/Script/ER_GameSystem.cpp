@@ -6,6 +6,7 @@
 #include "ER_ItemMgr.h"
 #include "ER_CharacterMgr.h"
 #include "ER_ProjectilePool.h"
+#include "ER_UIMgr.h"
 
 ER_GameSystem::ER_GameSystem()
 {
@@ -19,6 +20,7 @@ void ER_GameSystem::init()
 {
 	ER_ItemMgr::GetInst()->init();
 	ER_CharacterMgr::GetInst()->init();
+	ER_UIMgr::GetInst()->init();
 	ER_BattleSystem::GetInst()->init();
 	ER_ProjectilePool::GetInst()->init();
 }
@@ -31,4 +33,5 @@ void ER_GameSystem::progress()
 void ER_GameSystem::tick()
 {
 	// Manager tick
+	ER_UIMgr::GetInst()->tick();
 }

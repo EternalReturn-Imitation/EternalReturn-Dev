@@ -41,6 +41,8 @@
 #include "CLevelSaveLoad.h"
 #include "LevelMgr.h"
 
+#include <Script\ER_UIMgr.h>
+
 #pragma endregion
 
 #include <Script\ER_ProjectileScript.h>
@@ -61,9 +63,8 @@ void CreateLumiaIsland()
 
 	LumiaIsland();
 
-	// TestObject();
-
-	// CLevelMgr::GetInst()->GetCurLevel()->ChangeState(LEVEL_STATE::PLAY);
+	ER_UIMgr::GetInst()->GameStart();
+	TestObject();
 }
 
 void CreateTestPlayer()
@@ -76,6 +77,7 @@ void CreateTestEnemy()
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-71.9f, 0.0f, 37.6f));
+
 }
 
 void TestObject()
@@ -180,6 +182,8 @@ void SetLayer(CLevel* _Level)
 	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Base");
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"MapCollider");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Character");
+	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Player");
 
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Projectile");
 	CCollisionMgr::GetInst()->LayerCheck(L"Character", L"Projectile");
@@ -229,7 +233,7 @@ void SetCamera()
 	UICamera->Camera()->SetLayerMaskAll(false);
 	UICamera->Camera()->SetLayerMask(31, true);
 
-	SpawnGameObject(UICamera, Vec3(0.f, 0.f, 0.f), L"Camera");
+	SpawnGameObject(UICamera, Vec3(0.f, 0.f, -5.f), L"Camera");
 }
 void SetLight()
 {
