@@ -82,8 +82,9 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         float fAngle = vOut2.r * 2 * 3.1415926535f;
                         particle.vWorldPos.xyz = float3(fRadius * cos(fAngle), fRadius * sin(fAngle), 100.f);
                         
-                        // float4 vSpawnScale = float4(100.f, 100.f, 100.f, 1.f);
-                        // particle.vWorldScale.xyz = vSpawnScale.xyz;
+                        float4 vSpawnScale = float4(100.f, 100.f, 100.f, 1.f);
+                        vSpawnScale = ModuleData.vSpawnScaleMin + (ModuleData.vSpawnScaleMax - ModuleData.vSpawnScaleMin) * vOut3.x;
+                        particle.vWorldScale.xyz = vSpawnScale.xyz;
                     }
                     
                     // 파티클 질량 설정

@@ -21,6 +21,7 @@ CParticleSystem::CParticleSystem()
 	, m_ModuleData{}
 	, m_AccTime(0.f)
 	, m_PointPos{}
+	, m_pParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire.png"))
 {
 	m_ModuleData.iMaxParticleCount = 3000;
 
@@ -186,9 +187,8 @@ void CParticleSystem::render()
 	// 모듈 데이터 t21 에 바인딩
 	m_ModuleDataBuffer->UpdateData(21, PIPELINE_STAGE::PS_GEOMETRY);
 
-	// Particle Render	
-	Ptr<CTexture> pParticleTex = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire.png");
-	GetMaterial(0)->SetTexParam(TEX_0, pParticleTex);
+	// Particle Render
+	GetMaterial(0)->SetTexParam(TEX_0, m_pParticleTexture);
 
 	GetMaterial(0)->UpdateData();
 	GetMesh()->render_particle(m_ModuleData.iMaxParticleCount);
