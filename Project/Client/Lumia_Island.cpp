@@ -123,8 +123,8 @@ void TestObject()
 
 
 	//CGameObject* testParticle = new CGameObject();
-	CGameObject* testParticle = xnew<CGameObject>();
-	//CGameObject* testParticle = ObjectPool<CGameObject>::Pop();
+	//CGameObject* testParticle = xnew<CGameObject>();
+	CGameObject* testParticle = onew(CGameObject);
 
 	//CGameObject* testParticle111 = onew(CGameObject);
 	//odelete(testParticle111);

@@ -151,7 +151,8 @@ void Safe_Del_Vec(std::vector<T*>& vec) {
 	for (auto& item : vec) {
 		if (static_cast<CEntity*>(item)->GetManagedByMemory()) {
 			static_cast<CEntity*>(item)->SetManagedByMemory(false);
-			xdelete<CEntity>(item);
+			//xdelete<CEntity>(item); // 메모리 풀 버전
+			odelete(item); //오브젝트 풀 버전
 		}
 		else {
 			delete item;
