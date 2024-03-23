@@ -1,4 +1,4 @@
-gjr r#pragma once
+#pragma once
 #include "CRenderComponent.h"
 
 #include "ptr.h"
