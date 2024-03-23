@@ -58,6 +58,7 @@ public:
 
     // 상대 이동, 크기를 절대값으로 지정  
     void SetAbsolute(bool _Set) { m_bAbsolute = _Set; }    
+    bool IsAbsolute() { return m_bAbsolute; }
 
     // 오프셋 위치를 지정
     void SetOffsetRelativePos(Vec3 _vPos) { 
@@ -122,6 +123,8 @@ public:
 
 public:
     void SetOriginAlignment();
+    virtual void SavePrefab(const wstring& _key);
+    virtual void LoadPrefab(const wstring& _key);
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

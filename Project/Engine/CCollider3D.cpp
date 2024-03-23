@@ -148,6 +148,63 @@ void CCollider3D::EndRayOverlap()
 	}
 }
 
+void CCollider3D::SavePrefab(const wstring& _key)
+{
+	// 상대경로 저장
+	wstring RelativePath = L"prefab\\collider3d\\";
+	RelativePath += _key;
+	RelativePath += L".col3prp";	// 확장자
+
+	// 파일 경로 만들기
+	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
+
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_prefab = path_content.wstring() + L"prefab\\collider3d\\";
+
+	if (false == exists(path_prefab))
+	{
+		create_directory(path_prefab);
+	}
+
+	FILE* pFile = nullptr;
+	errno_t err = _wfopen_s(&pFile, strFilePath.c_str(), L"wb");
+	assert(pFile);
+
+	// 키값
+	SaveWString(m_PrefabKey, pFile);
+
+	fwrite(&m_vOffsetPos, sizeof(Vec3), 1, pFile);
+	fwrite(&m_vOffsetScale, sizeof(Vec3), 1, pFile);
+	fwrite(&m_bAbsolute, sizeof(bool), 1, pFile);
+	fwrite(&m_Shape, sizeof(UINT), 1, pFile);
+	fwrite(&m_bDrawCollision, sizeof(bool), 1, pFile);
+
+	fclose(pFile);
+}
+
+void CCollider3D::LoadPrefab(const wstring& _key)
+{
+	// 읽기모드로 파일열기
+	FILE* pFile = nullptr;
+
+	wstring RelativePath = L"prefab\\collider3d\\";
+	RelativePath += _key;
+	RelativePath += L".col3prp";	// 확장자
+
+	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
+
+	_wfopen_s(&pFile, strFilePath.c_str(), L"rb");
+
+	// 키값
+	LoadWString(m_PrefabKey, pFile);
+
+	fread(&m_vOffsetPos, sizeof(Vec3), 1, pFile);
+	fread(&m_vOffsetScale, sizeof(Vec3), 1, pFile);
+	fread(&m_bAbsolute, sizeof(bool), 1, pFile);
+	fread(&m_Shape, sizeof(UINT), 1, pFile);
+	fread(&m_bDrawCollision, sizeof(bool), 1, pFile);
+}
+
 void CCollider3D::SaveToLevelFile(FILE* _File)
 {
 	fwrite(&m_vOffsetPos, sizeof(Vec3), 1, _File);

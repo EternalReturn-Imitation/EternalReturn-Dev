@@ -9,6 +9,7 @@
 #include "TransformUI.h"
 #include "MeshRenderUI.h"
 #include "Collider2DUI.h"
+#include "Collider3DUI.h"
 #include "CameraUI.h"
 #include "Animator2DUI.h"
 #include "TileMapUI.h"
@@ -41,7 +42,7 @@ InspectorUI::InspectorUI()
 	SetName("Inspector");
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM] = new TransformUI;
-	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]->SetSize(0.f, 150.f);	
+	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]->SetSize(0.f, 300.f);	
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::MESHRENDER] = new MeshRenderUI;
@@ -61,6 +62,9 @@ InspectorUI::InspectorUI()
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]);
 
 	// Collider 3D UI
+	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D] = new Collider3DUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D] = new Animator2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D]->SetSize(0.f, 150.f);

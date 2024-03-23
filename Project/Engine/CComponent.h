@@ -15,6 +15,13 @@ private:
     CGameObject* m_pOwner;
     const COMPONENT_TYPE m_Type;
 
+protected:
+    wstring m_PrefabKey;
+
+public:
+    wstring GetPrefabKey() { return m_PrefabKey; }
+    void SetPrefabKey(const wstring& _key) { m_PrefabKey = _key; }
+
 public:
     COMPONENT_TYPE GetType() { return m_Type; }
     CGameObject* GetOwner() { return m_pOwner; }

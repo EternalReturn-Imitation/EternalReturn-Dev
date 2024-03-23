@@ -62,6 +62,8 @@ public:
     void render();
     void render_shadowmap();
 
+    void LoadAllPrefabFromObjName();
+
 public:
     void AddComponent(CComponent* _Component);
     void AddChild(CGameObject* _Object);

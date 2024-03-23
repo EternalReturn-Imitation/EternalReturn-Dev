@@ -60,7 +60,6 @@ public:
 	};
 
 private:
-	wstring								m_PrefabKey;		// Text 프리팹 사용한경우 
 	vector<tTextInfo*>					m_vecTextInfo;		// 렌더용 텍스트 정보 벡터
 
 public:

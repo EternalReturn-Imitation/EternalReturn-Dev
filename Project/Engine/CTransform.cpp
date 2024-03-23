@@ -4,6 +4,7 @@
 #include "CDevice.h"
 #include "CConstBuffer.h"
 #include "CRenderComponent.h"
+#include "CPathMgr.h"
 
 CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
@@ -86,8 +87,8 @@ void CTransform::finaltick()
 		}
 		else
 		{
-			m_matWorldScale = pParent->Transform()->m_matWorldScale;
 			m_matWorld *= pParent->Transform()->m_matWorld;
+			m_matWorldScale *= pParent->Transform()->m_matWorldScale;
 		}
 
 
@@ -193,6 +194,61 @@ void CTransform::SetOriginAlignment()
 	}
 	SetOffsetRelativePos(Vec3(xMin, yMin, zMin));
 	SetOffsetTrigger(true);
+}
+
+void CTransform::SavePrefab(const wstring& _key)
+{
+	// 상대경로 저장
+	wstring RelativePath = L"prefab\\transform\\";
+	RelativePath += _key;
+	RelativePath += L".trfprp";	// 확장자
+
+	// 파일 경로 만들기
+	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
+
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_prefab = path_content.wstring() + L"prefab\\transform\\";
+
+	if (false == exists(path_prefab))
+	{
+		create_directory(path_prefab);
+	}
+
+	FILE* pFile = nullptr;
+	errno_t err = _wfopen_s(&pFile, strFilePath.c_str(), L"wb");
+	assert(pFile);
+
+	// 키값
+	SaveWString(m_PrefabKey, pFile);
+
+	fwrite(&m_vRelativePos, sizeof(Vec3), 1, pFile);
+	fwrite(&m_vRelativeScale, sizeof(Vec3), 1, pFile);
+	fwrite(&m_vRelativeRot, sizeof(Vec3), 1, pFile);
+	fwrite(&m_bAbsolute, sizeof(bool), 1, pFile);
+
+	fclose(pFile);
+}
+
+void CTransform::LoadPrefab(const wstring& _key)
+{
+	// 읽기모드로 파일열기
+	FILE* pFile = nullptr;
+
+	wstring RelativePath = L"prefab\\transform\\";
+	RelativePath += _key;
+	RelativePath += L".trfprp";	// 확장자
+
+	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
+
+	_wfopen_s(&pFile, strFilePath.c_str(), L"rb");
+
+	// 키값
+	LoadWString(m_PrefabKey, pFile);
+
+	fread(&m_vRelativePos, sizeof(Vec3), 1, pFile);
+	fread(&m_vRelativeScale, sizeof(Vec3), 1, pFile);
+	fread(&m_vRelativeRot, sizeof(Vec3), 1, pFile);
+	fread(&m_bAbsolute, sizeof(bool), 1, pFile);
 }
 
 void CTransform::SaveToLevelFile(FILE* _File)
