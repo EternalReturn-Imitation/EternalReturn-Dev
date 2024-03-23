@@ -27,7 +27,13 @@
 
 #define FONT_RGBA(r, g, b, a) (((((BYTE)a << 24 ) | (BYTE)b << 16) | (BYTE)g << 8) | (BYTE)r)
 
-
+#ifdef _DEBUG
+#define xAlloc(size)		PoolAllocator::Alloc(size)
+#define xrelease(ptr)		PoolAllocator::Release(ptr)
+#else
+#define xAlloc(size)		PoolAllocator::Alloc(size)
+#define xrelease(ptr)		PoolAllocator::Release(ptr)
+#endif
 
 
 

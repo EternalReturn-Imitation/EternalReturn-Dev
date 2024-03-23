@@ -267,6 +267,15 @@
     <ClInclude Include="CFrustum.h">
       <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryPool.h">
+      <Filter>Source\03. Manager\16. MemoryMgr\01. MemoryPool</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryMgr.h">
+      <Filter>Source\03. Manager\16. MemoryMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="Allocator.h">
+      <Filter>Source\03. Manager\16. MemoryMgr\02. Allocator</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -524,6 +533,15 @@
     <ClCompile Include="CText.cpp">
       <Filter>Source\06. Component\11. Text</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>Source\03. Manager\16. MemoryMgr\01. MemoryPool</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryMgr.cpp">
+      <Filter>Source\03. Manager\16. MemoryMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Allocator.cpp">
+      <Filter>Source\03. Manager\16. MemoryMgr\02. Allocator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Default">
@@ -768,6 +786,15 @@
     </Filter>
     <Filter Include="Source\09. Module\NaviMesh">
       <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\16. MemoryMgr">
+      <UniqueIdentifier>{72973523-9b0d-4e36-a2c6-142999b3eaab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\16. MemoryMgr\01. MemoryPool">
+      <UniqueIdentifier>{261c055e-22f6-4cb7-a3fd-1b56cbb90d43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\16. MemoryMgr\02. Allocator">
+      <UniqueIdentifier>{753a505e-1c34-43c2-8264-fd31d46b31a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
