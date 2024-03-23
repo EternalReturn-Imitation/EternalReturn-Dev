@@ -132,7 +132,10 @@ void CEventMgr::GC_Clear()
 			if (m_vecGC[i]->GetParent())			
 				m_vecGC[i]->DisconnectFromParent();
 			
-			delete m_vecGC[i];
+			if (static_cast<CEntity*>(m_vecGC[i])->GetManagedByMemory())
+				xdelete<CGameObject>(m_vecGC[i]);
+			else
+				delete m_vecGC[i];
 
 			m_LevelChanged = true;
 		}		
