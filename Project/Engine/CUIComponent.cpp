@@ -6,12 +6,19 @@
 
 #include "CScript.h"
 
-CUIComponent::CUIComponent(COMPONENT_TYPE _type)
-    : CComponent(_type)
+CUIComponent::CUIComponent()
+    : CComponent(COMPONENT_TYPE::UICOMPONENT)
     , m_bCsrPressed(false)
     , m_bCsrOnUI(false)
     , bOpen(false)
-    , m_pUIScript(nullptr)
+{
+}
+
+CUIComponent::CUIComponent(const CUIComponent& _Origin)
+    : CComponent(COMPONENT_TYPE::UICOMPONENT)
+    , m_bCsrPressed(false)
+    , m_bCsrOnUI(false)
+    , bOpen(false)
 {
 }
 
@@ -21,36 +28,30 @@ CUIComponent::~CUIComponent()
 
 void CUIComponent::CsrOnCheck()
 {
-    if (GetOwner()->GetName() == L"UI_ItemBoxSlotm00")
-        int a = 0;
+    if (GetOwner()->GetName() == L"ChildTestUI")
+    {
+        int stop = 1;
+    }
 
     // 사각 충돌 : OBB 응용
-    CTransform* transform = GetOwner()->Transform();
+    Matrix WolrdMat = Transform()->GetWorldMat();
+    Matrix WorldScaleMat = Transform()->GetWorldScaleMat();
 
-    Vector3 parentPos;
-    Vector3 parentScale;
-    Vec3 worldPos;
-    if (GetOwner()->GetParent()) {
-        parentPos = GetOwner()->GetParent()->Transform()->GetRelativePos();
-        parentScale = GetOwner()->GetParent()->Transform()->GetRelativeScale();
-        worldPos = GetOwner()->GetParent()->Transform()->GetWorldPos();
-    }
-    else {
-        parentScale = Vec3(1.f, 1.f, 1.f);
-    }
 
-    Vector2 UIPos = Vec2(transform->GetRelativePos().x + parentPos.x, transform->GetRelativePos().y+ parentPos.y);
-    Vector2 UIScale = Vec2(transform->GetRelativeScale().x, transform->GetRelativeScale().y);
+    Vec2 UIPos(WolrdMat._41, WolrdMat._42);
+    Vec2 UIScale(
+        sqrt(WorldScaleMat._11 * WorldScaleMat._11 + WorldScaleMat._12 * WorldScaleMat._12 + WorldScaleMat._13 * WorldScaleMat._13),
+        sqrt(WorldScaleMat._21 * WorldScaleMat._21 + WorldScaleMat._22 * WorldScaleMat._22 + WorldScaleMat._23 * WorldScaleMat._23));
 
-    Vector2 MouseScale = { 1.f,1.f };
-    Vector2 MousePos = CKeyMgr::GetInst()->GetUnProjectPos();
-    Vector2 CenterDir = UIPos - MousePos; // 두 객체의 중심끼리의 거리벡터
-    Vector2 Axis; // 기준 투영축
+    Vec2 MouseScale = { 1.f,1.f };
+    Vec2 MousePos = CKeyMgr::GetInst()->GetUnProjectPos();
+    Vec2 CenterDir = UIPos - MousePos; // 두 객체의 중심끼리의 거리벡터
+    Vec2 Axis; // 기준 투영축
     float CenterProjDist; // 투영축 기준으로 두 중심점 사이의 거리 스칼라
     float r1, r2; // 비교 대상인 두 벡터의 투영길이
 
     //  1. Rect의 right축 투영
-    Axis = transform->GetRelativeDir(DIR_TYPE::RIGHT);
+    Axis = Transform()->GetWorldDir(DIR_TYPE::RIGHT);
     CenterProjDist = abs(CenterDir.Dot(Axis));
 
     r1 = UIScale.x / 2.f;
@@ -63,7 +64,7 @@ void CUIComponent::CsrOnCheck()
     }
 
     // 2. Rect의 up축 투영
-    Axis = transform->GetRelativeDir(DIR_TYPE::UP);
+    Axis = Transform()->GetWorldDir(DIR_TYPE::UP);
     CenterProjDist = abs(CenterDir.Dot(Axis));
 
     r1 = UIScale.y / 2.f;
@@ -78,14 +79,6 @@ void CUIComponent::CsrOnCheck()
     m_bCsrOnUI = true;
 }
 
-void CUIComponent::begin()
-{
-}
-
-void CUIComponent::tick()
-{
-}
-
 void CUIComponent::finaltick()
 {
     CsrOnCheck();
@@ -93,26 +86,46 @@ void CUIComponent::finaltick()
 
 void CUIComponent::CsrOn()
 {
-    if (m_pUIScript && m_CsrOnFunc) 
-        (m_pUIScript->*m_CsrOnFunc)();
+    DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrOn", "");
+    // Script 호출
+    const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+    for (size_t i = 0; i < vecScript.size(); ++i)
+    {
+        vecScript[i]->CsrClick();
+    }
 }
 
 void CUIComponent::CsrTap()
 {
+    DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrTap", "");
     m_bCsrPressed = true;  
-    if (m_pUIScript && m_CsrTapFunc) 
-        (m_pUIScript->*m_CsrTapFunc)();
+    // Script 호출
+    const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+    for (size_t i = 0; i < vecScript.size(); ++i)
+    {
+        vecScript[i]->CsrClick();
+    }
 }
 
 void CUIComponent::CsrRelease()
 {
+    DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrRelease", "");
     m_bCsrPressed = false; 
-    if (m_pUIScript && m_CsrReleasFunc) 
-        (m_pUIScript->*m_CsrReleasFunc)();
+    // Script 호출
+    const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+    for (size_t i = 0; i < vecScript.size(); ++i)
+    {
+        vecScript[i]->CsrClick();
+    }
 }
 
 void CUIComponent::CsrClick()
 {
-    if (m_pUIScript && m_CsrClickFunc) 
-        (m_pUIScript->*m_CsrClickFunc)();
+    DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrClick", "");
+    // Script 호출
+    const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+    for (size_t i = 0; i < vecScript.size(); ++i)
+    {
+        vecScript[i]->CsrClick();
+    }
 }

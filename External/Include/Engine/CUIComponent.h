@@ -3,8 +3,6 @@
 
 class CScript;
 
-typedef void (CScript::* CUI_DELEGATE)(void);
-
 class CUIComponent :
     public CComponent
 {
@@ -15,19 +13,11 @@ private:
     bool bOpen;
 
 private:
-    CScript* m_pUIScript;
-
-    CUI_DELEGATE m_CsrOnFunc;
-    CUI_DELEGATE m_CsrTapFunc;
-    CUI_DELEGATE m_CsrReleasFunc;
-    CUI_DELEGATE m_CsrClickFunc;
-
-private:
     void CsrOnCheck();
 
 public:
-    virtual void begin();
-    virtual void tick() = 0;
+    virtual void begin() {};
+    virtual void tick() {};
     virtual void finaltick();
 
 public:
@@ -35,24 +25,19 @@ public:
     bool IsCsrPressed() { return m_bCsrPressed; }
 
 public:
-    void SetUIScript(CScript* _UIScript) { m_pUIScript = _UIScript; }
-    
-    void SetUIFunc_CsrOn(CUI_DELEGATE _func) { m_CsrOnFunc = _func; }
-    void SetUIFunc_CsrTap(CUI_DELEGATE _func) { m_CsrTapFunc = _func; }
-    void SetUIFunc_CsrRelease(CUI_DELEGATE _func) { m_CsrReleasFunc = _func; }
-    void SetUIFunc_CsrClick(CUI_DELEGATE _func) { m_CsrClickFunc = _func; }
-
-    void CsrOn();
-    void CsrTap();
-    void CsrRelease();
-    void CsrClick();
+    virtual void CsrOn();
+    virtual void CsrTap();
+    virtual void CsrRelease();
+    virtual void CsrClick();
 
 public:
     virtual void SaveToLevelFile(FILE* _File) {}
     virtual void LoadFromLevelFile(FILE* _FILE) {}
 
+    CLONE(CUIComponent);
 public:
-    CUIComponent(COMPONENT_TYPE _type);
+    CUIComponent();
+    CUIComponent(const CUIComponent& _Origin);
     virtual ~CUIComponent();
 };
 

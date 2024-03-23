@@ -80,7 +80,7 @@ void CTransform::finaltick()
 			Matrix matParentWorld = pParent->Transform()->m_matWorld;
 			Matrix matParentScale = pParent->Transform()->m_matWorldScale;
 			Matrix matParentScaleInv = XMMatrixInverse(nullptr, matParentScale);
-			
+
 			// 월드 = 로컬월드 * 부모크기 역 * 부모 월드(크기/회전/이동)
 			m_matWorld = m_matWorld * matParentScaleInv * matParentWorld;
 		}
@@ -88,21 +88,8 @@ void CTransform::finaltick()
 		{
 			m_matWorldScale = pParent->Transform()->m_matWorldScale;
 			m_matWorld *= pParent->Transform()->m_matWorld;
-
-			m_matWorldBoundingScale = pParent->Transform()->m_matWorldBoundingScale;
-			m_matWorldBoundingBox *= pParent->Transform()->m_matWorldBoundingBox;
-
-			// 로컬 변환
-			/*
-			Matrix chilslclPosition = pParent->Transform()->m_matWorldInv * matTranslation;
-			Matrix childlclRotation = matRot;
-			Matrix childlclScale = pParent->Transform()->m_matWorldInv * XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
-
-			m_matWorld = childlclScale * childlclRotation * chilslclPosition;
-			*/
 		}
 
-		m_fBoundingRadius = m_matWorldBoundingScale._11;
 
 		for (int i = 0; i < 3; ++i)
 		{

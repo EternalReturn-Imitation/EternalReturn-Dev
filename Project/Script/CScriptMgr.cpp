@@ -20,6 +20,7 @@
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
 #include "ER_ProjectileScript.h"
+#include "ER_UIScript_ItemBox.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -42,6 +43,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_ProjectileScript");
+	_vec.push_back(L"ER_UIScript_ItemBox");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -84,6 +86,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_PlayerScript_Range;
 	if (L"ER_ProjectileScript" == _strScriptName)
 		return new ER_ProjectileScript;
+	if (L"ER_UIScript_ItemBox" == _strScriptName)
+		return new ER_UIScript_ItemBox;
 	return nullptr;
 }
 
@@ -147,6 +151,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PROJECTILESCRIPT:
 		return new ER_ProjectileScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMBOX:
+		return new ER_UIScript_ItemBox;
 		break;
 	}
 	return nullptr;
@@ -230,6 +237,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_PROJECTILESCRIPT:
 		return L"ER_ProjectileScript";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_ITEMBOX:
+		return L"ER_UIScript_ItemBox";
 		break;
 
 	}

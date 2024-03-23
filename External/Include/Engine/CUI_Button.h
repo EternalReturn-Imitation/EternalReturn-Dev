@@ -4,7 +4,7 @@
 
 class CTexture;
 
-class CUI_Button :
+class CUIComponent :
     public CUIComponent
 {
 private:
@@ -36,12 +36,12 @@ public:
     virtual void SaveToLevelFile(FILE* _File);
     virtual void LoadFromLevelFile(FILE* _FILE);
 
-    CLONE(CUI_Button);
+    CLONE(CUIComponent);
 
 public:
-    CUI_Button();
-    CUI_Button(const CUI_Button& _Other);
-    virtual ~CUI_Button();
+    CUIComponent();
+    CUIComponent(const CUIComponent& _Other);
+    virtual ~CUIComponent();
 
 };
 

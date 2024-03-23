@@ -22,6 +22,7 @@
 #include <Engine\CCollider3D.h>
 #include <Engine\CFindPath.h>
 #include <Engine\CText.h>
+#include <Engine\CUIComponent.h>
 
 // [Graphic]
 #include <Engine\CSetColorShader.h>
@@ -65,7 +66,7 @@ void CreateLumiaIsland()
 
 	ER_UIMgr::GetInst()->GameStart();
 	
-	// TestObject();
+	TestObject();
 }
 
 void CreateTestPlayer()
@@ -83,79 +84,37 @@ void CreateTestEnemy()
 
 void TestObject()
 {
-	// Ptr<CMeshData> bulletMdat = CResMgr::GetInst()->FindRes<CMeshData>(L"bullet.mdat");
-	// CGameObject* bullet = new CGameObject;
-	// AddComponents(bullet, _TRANSFORM | _MESHRENDER);
-	// bullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rozzi_Bullet.mesh").Get());
-	// bullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BulletMtrl.mtrl").Get(), 0);
-	// bullet->MeshRender()->GetDynamicMaterial(0);
-	// 
-	// bullet->Transform()->SetRelativeScale(Vec3(2.f, 2.f, 2.f));
-	// SpawnGameObject(bullet, Vec3(-69.3f, 0.0f, 37.6f), 0);
+	// Text Obj
+	CGameObject* testTextObj = new CGameObject;
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT | _UICOMPONENT);
+	testTextObj->SetName(L"TextUI");
+	
+	// Std2DUIMtrl 사용
+	testTextObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 0.f));
+	testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
 
-	// // Text Obj
-	// CGameObject* testTextObj = new CGameObject;
-	// AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	// testTextObj->SetName(L"TextUI");
-	// 
-	// // 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
-	// // Std2DUIMtrl 사용
-	// testTextObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 0.f));
-	// testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	// testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	// 
-	// // 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
-	// // testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_01.png"));
-	// 
-	// 
-	// // 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
-	// // 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 50.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	// testTextObj->Text()->InputString(L"테스트");
-	// 
-	// SpawnGameObject(testTextObj, Vec3(0.f, 0.f, 0.f), L"UI");
+	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
+	testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_01.png"));
+	testTextObj->MeshRender()->GetDynamicMaterial(0);
+
+	CGameObject* testChild = new CGameObject;
+	AddComponents(testChild, _TRANSFORM | _MESHRENDER | _UICOMPONENT);
+	
+	testChild->SetName(L"ChildTestUI");
+	testChild->Transform()->SetRelativePos(Vec3(0.f, 0.f, -0.1f));
+	testChild->Transform()->SetRelativeScale(Vec3(0.1f, 0.1f, 0.1f));
+	testChild->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	testChild->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
+	testChild->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_02.png"));
+	testChild->MeshRender()->GetDynamicMaterial(0);
+
+	testTextObj->AddChild(testChild);
 
 
-	// Particle
-
-	// 마우스 커서위치
-
-	CGameObject* testParticle = new CGameObject;
-	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	CParticleSystem* Particle = testParticle->ParticleSystem();
+	testTextObj->Text()->LoadPrefab(L"test");
 	
-	tParticleModule particle_data = Particle->GetParticleInfo();		// 파티클데이터 얻기
-	
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
-	
-	particle_data.StartScale = 0.8f;
-	particle_data.EndScale = 0.001f;
-	
-	particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
-	particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
-	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
-	
-	particle_data.MinLifeTime = 3.f;
-	particle_data.MaxLifeTime = 3.f;
-	
-	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
-	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-	
-	Particle->SetMaxParticleCount(20);
-
-	particle_data.AddVelocityType = 2;
-	particle_data.vVelocityDir = Vec3(0.f, 1.f, 0.f);
-	particle_data.Speed = 2.5f;
-	
-	Particle->SetParticleInfo(particle_data);	// 파티클 데이터 세팅
-
-	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+	SpawnGameObject(testTextObj, Vec3(0.f, 0.f, 0.f), L"UI");
 }
 
 void SetLayer(CLevel* _Level)

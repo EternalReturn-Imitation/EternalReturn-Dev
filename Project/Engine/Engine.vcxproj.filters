@@ -255,10 +255,7 @@
       <Filter>Source\03. Manager\15. UIMgr</Filter>
     </ClInclude>
     <ClInclude Include="CUIComponent.h">
-      <Filter>Source\06. Component\UIComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="CUI_Button.h">
-      <Filter>Source\06. Component\UIComponent\ButtonUI</Filter>
+      <Filter>Source\06. Component\12. UIComponent</Filter>
     </ClInclude>
     <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CText.h">
@@ -516,10 +513,7 @@
       <Filter>Source\03. Manager\15. UIMgr</Filter>
     </ClCompile>
     <ClCompile Include="CUIComponent.cpp">
-      <Filter>Source\06. Component\UIComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="CUI_Button.cpp">
-      <Filter>Source\06. Component\UIComponent\ButtonUI</Filter>
+      <Filter>Source\06. Component\12. UIComponent</Filter>
     </ClCompile>
     <ClCompile Include="CText.cpp">
       <Filter>Source\06. Component\11. Text</Filter>
@@ -757,17 +751,14 @@
     <Filter Include="Source\06. Component\3. Collider3D">
       <UniqueIdentifier>{9134b812-6184-459c-bbba-748c8bb417c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\UIComponent">
-      <UniqueIdentifier>{55327782-e51e-4fbc-8dcc-6e677ed1ff9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\06. Component\UIComponent\ButtonUI">
-      <UniqueIdentifier>{0cd0da2f-2001-4640-b62e-953408a3b0e8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\06. Component\11. Text">
       <UniqueIdentifier>{fb3ba9b6-c3f5-43ba-8656-0f8800c81b40}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\09. Module\NaviMesh">
       <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\12. UIComponent">
+      <UniqueIdentifier>{55327782-e51e-4fbc-8dcc-6e677ed1ff9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

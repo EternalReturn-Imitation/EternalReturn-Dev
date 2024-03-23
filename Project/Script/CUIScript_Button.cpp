@@ -30,8 +30,8 @@ void CUIScript_Button::init()
 
 void CUIScript_Button::begin()
 {
-	GetOwner()->UI_Button()->SetUIScript(static_cast<CScript*>(this));
-	GetOwner()->UI_Button()->SetUIFunc_CsrClick(static_cast<CUI_DELEGATE>(&CUIScript_Button::ItemAcquisiton));
+	// GetOwner()->UI_Button()->SetUIScript(static_cast<CScript*>(this));
+	// GetOwner()->UI_Button()->SetUIFunc_CsrClick(static_cast<CUI_DELEGATE>(&CUIScript_Button::ItemAcquisiton));
 }
 
 void CUIScript_Button::tick()

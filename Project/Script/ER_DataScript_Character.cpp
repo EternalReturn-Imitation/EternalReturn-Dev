@@ -247,7 +247,7 @@ void ER_DataScript_Character::CreateStatBar()
 	
 	m_aStatBar[0]->AddComponent(new CTransform);
 	m_aStatBar[0]->AddComponent(new CMeshRender);
-	m_aStatBar[0]->AddComponent(new CUI_Button);
+	m_aStatBar[0]->AddComponent(new CUIComponent);
 	
 	m_aStatBar[0]->Transform()->SetRelativeScale(Vec3(120.f, 15.f, 1.f));
 	
@@ -268,7 +268,7 @@ void ER_DataScript_Character::CreateStatBar()
 
 	m_aStatBar[1]->AddComponent(new CTransform);
 	m_aStatBar[1]->AddComponent(new CMeshRender);
-	m_aStatBar[1]->AddComponent(new CUI_Button);
+	m_aStatBar[1]->AddComponent(new CUIComponent);
 
 	m_aStatBar[1]->Transform()->SetRelativeScale(Vec3(120.f, 15.f, 1.f));
 
@@ -286,7 +286,7 @@ void ER_DataScript_Character::CreateStatBar()
 
 	m_aStatBar[2]->AddComponent(new CTransform);
 	m_aStatBar[2]->AddComponent(new CMeshRender);
-	m_aStatBar[2]->AddComponent(new CUI_Button);
+	m_aStatBar[2]->AddComponent(new CUIComponent);
 
 	m_aStatBar[2]->Transform()->SetRelativeScale(Vec3(120.f, 5.f, 1.f));
 
@@ -299,7 +299,7 @@ void ER_DataScript_Character::CreateStatBar()
 
 	// Text Obj
 	m_aStatBar[3] = new CGameObject;
-	AddComponents(m_aStatBar[3], _TRANSFORM | _MESHRENDER | _TEXT);
+	AddComponents(m_aStatBar[3], _TRANSFORM | _MESHRENDER);
 	m_aStatBar[3]->SetName(L"UI_stat00");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
@@ -315,8 +315,8 @@ void ER_DataScript_Character::CreateStatBar()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	m_aStatBar[3]->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 20.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	m_aStatBar[3]->Text()->InputString(std::to_wstring(LV));
+	// m_aStatBar[3]->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 20.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// m_aStatBar[3]->Text()->InputString(std::to_wstring(LV));
 
 	SpawnGameObject(m_aStatBar[3], Vec3(-542.f, -300.f, 0.f), L"UI");
 }

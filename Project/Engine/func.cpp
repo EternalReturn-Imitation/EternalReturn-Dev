@@ -117,8 +117,8 @@ void AddComponents(CGameObject* _Object, int CreateCompType)
 	if (CreateCompType & _FINDPATH)
 		_Object->AddComponent(new CFindPath);
 
-	if (CreateCompType & _UI_BUTTON)
-		_Object->AddComponent(new CUI_Button);
+	if (CreateCompType & _UICOMPONENT)
+		_Object->AddComponent(new CUIComponent);
 
 	if (CreateCompType & _MESHRENDER)
 		_Object->AddComponent(new CMeshRender);

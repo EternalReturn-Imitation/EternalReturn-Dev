@@ -5,7 +5,6 @@
 #include <Engine\CLevelMgr.h>
 #include <Engine\CTransform.h>
 #include <Engine\CMeshRender.h>
-#include <Engine\CUI_Button.h>
 #include "CUIScript_Button.h"
 #include "ER_ItemMgr.h"
 #include "ER_DataScript_Item.h"
@@ -99,7 +98,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(195.12195f, 125.f, 1.f));
@@ -135,7 +134,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	m_pPCFace->AddComponent(new CTransform);
 	m_pPCFace->AddComponent(new CMeshRender);
-	m_pPCFace->AddComponent(new CUI_Button);
+	m_pPCFace->AddComponent(new CUIComponent);
 	m_pPCFace->AddComponent(new CUIScript_Button);
 
 	m_pPCFace->Transform()->SetRelativeScale(Vec3(125.f, 162.6984125f, 1.f));
@@ -152,7 +151,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(198.17073125f, 125.f, 1.f));
@@ -169,7 +168,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(393.2926825f, 125.f, 1.f));
@@ -186,7 +185,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(414.156625f, 125.0f, 1.f));
@@ -204,7 +203,7 @@ void ER_UIMgr::CreateBaseUI()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(255.434775f, 62.5f, 1.f));
@@ -225,7 +224,7 @@ void ER_UIMgr::CreateHPBar()
 
 	m_pHPBar->AddComponent(new CTransform);
 	m_pHPBar->AddComponent(new CMeshRender);
-	m_pHPBar->AddComponent(new CUI_Button);
+	m_pHPBar->AddComponent(new CUIComponent);
 	m_pHPBar->AddComponent(new CUIScript_Button);
 
 	m_pHPBar->Transform()->SetRelativeScale(Vec3(375.f, 15.f, 1.f));
@@ -242,7 +241,7 @@ void ER_UIMgr::CreateHPBar()
 
 	m_pHPReturnBar->AddComponent(new CTransform);
 	m_pHPReturnBar->AddComponent(new CMeshRender);
-	m_pHPReturnBar->AddComponent(new CUI_Button);
+	m_pHPReturnBar->AddComponent(new CUIComponent);
 	m_pHPReturnBar->AddComponent(new CUIScript_Button);
 
 	m_pHPReturnBar->Transform()->SetRelativeScale(Vec3(375.f, 15.f, 1.f));
@@ -259,7 +258,7 @@ void ER_UIMgr::CreateHPBar()
 
 	m_pStemnarBar->AddComponent(new CTransform);
 	m_pStemnarBar->AddComponent(new CMeshRender);
-	m_pStemnarBar->AddComponent(new CUI_Button);
+	m_pStemnarBar->AddComponent(new CUIComponent);
 	m_pStemnarBar->AddComponent(new CUIScript_Button);
 
 	m_pStemnarBar->Transform()->SetRelativeScale(Vec3(375.f, 15.f, 1.f));
@@ -279,7 +278,7 @@ void ER_UIMgr::CreateSkill()
 
 	skill->AddComponent(new CTransform);
 	skill->AddComponent(new CMeshRender);
-	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIComponent);
 	skill->AddComponent(new CUIScript_Button);
 
 	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
@@ -296,7 +295,7 @@ void ER_UIMgr::CreateSkill()
 
 	skill->AddComponent(new CTransform);
 	skill->AddComponent(new CMeshRender);
-	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIComponent);
 	skill->AddComponent(new CUIScript_Button);
 
 	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
@@ -313,7 +312,7 @@ void ER_UIMgr::CreateSkill()
 
 	skill->AddComponent(new CTransform);
 	skill->AddComponent(new CMeshRender);
-	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIComponent);
 	skill->AddComponent(new CUIScript_Button);
 
 	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
@@ -330,7 +329,7 @@ void ER_UIMgr::CreateSkill()
 
 	skill->AddComponent(new CTransform);
 	skill->AddComponent(new CMeshRender);
-	skill->AddComponent(new CUI_Button);
+	skill->AddComponent(new CUIComponent);
 	skill->AddComponent(new CUIScript_Button);
 
 	skill->Transform()->SetRelativeScale(Vec3(57.5f, 57.5f, 1.f));
@@ -351,7 +350,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -374,7 +373,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -396,7 +395,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -418,7 +417,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -440,7 +439,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -462,7 +461,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -484,7 +483,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -506,7 +505,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -528,7 +527,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -550,7 +549,7 @@ void ER_UIMgr::CreateInventorySlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -577,7 +576,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -600,7 +599,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -622,7 +621,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -644,7 +643,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -666,7 +665,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -688,7 +687,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -710,7 +709,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -732,7 +731,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -754,7 +753,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -776,7 +775,7 @@ void ER_UIMgr::CreateInventoryItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(68.41463375f, 42.5f, 1.f));
@@ -810,7 +809,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -833,7 +832,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -856,7 +855,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -879,7 +878,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -902,7 +901,7 @@ void ER_UIMgr::CreateEquipSlot()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -928,7 +927,7 @@ void ER_UIMgr::CreateEquipItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -952,7 +951,7 @@ void ER_UIMgr::CreateEquipItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -975,7 +974,7 @@ void ER_UIMgr::CreateEquipItem()
 
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -998,7 +997,7 @@ void ER_UIMgr::CreateEquipItem()
 	
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 	
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -1021,7 +1020,7 @@ void ER_UIMgr::CreateEquipItem()
 	
 	UITestObj->AddComponent(new CTransform);
 	UITestObj->AddComponent(new CMeshRender);
-	UITestObj->AddComponent(new CUI_Button);
+	UITestObj->AddComponent(new CUIComponent);
 	UITestObj->AddComponent(new CUIScript_Button);
 	
 	UITestObj->Transform()->SetRelativeScale(Vec3(58.75f, 36.49621125f, 1.f));
@@ -1063,7 +1062,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	m_pItemBox->AddComponent(new CTransform);
 	m_pItemBox->AddComponent(new CMeshRender);
-	m_pItemBox->AddComponent(new CUI_Button);
+	m_pItemBox->AddComponent(new CUIComponent);
 	m_pItemBox->AddComponent(new CUIScript_Button);
 
 	m_pItemBox->Transform()->SetRelativeScale(Vec3(261.02362f, 150.f, 1.f));
@@ -1084,7 +1083,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1110,7 +1109,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1137,7 +1136,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1164,7 +1163,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1190,7 +1189,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1217,7 +1216,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1244,7 +1243,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1271,7 +1270,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(53.f, 32.f, 1.f));
@@ -1298,7 +1297,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1322,7 +1321,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1347,7 +1346,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1372,7 +1371,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1396,7 +1395,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1421,7 +1420,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1446,7 +1445,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1471,7 +1470,7 @@ void ER_UIMgr::CreateDropInventory()
 
 	dropItem->AddComponent(new CTransform);
 	dropItem->AddComponent(new CMeshRender);
-	dropItem->AddComponent(new CUI_Button);
+	dropItem->AddComponent(new CUIComponent);
 	dropItem->AddComponent(new CUIScript_Button);
 
 	dropItem->Transform()->SetRelativeScale(Vec3(0.20222f, 0.21000f, 1.f));
@@ -1505,7 +1504,7 @@ void ER_UIMgr::CreateStatText()
 {
 	// Text Obj
 	CGameObject* testTextObj = new CGameObject;
-	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER);
 	testTextObj->SetName(L"UI_stat00");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
@@ -1520,9 +1519,9 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
-	testTextObj->Text()->SetName(L"테스트00");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->SetName(L"테스트00");
 	
 	m_pStatText[0][0] = testTextObj;
 
@@ -1530,7 +1529,7 @@ void ER_UIMgr::CreateStatText()
 
 
 	testTextObj = new CGameObject;
-	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
+	AddComponents(testTextObj, _TRANSFORM | _MESHRENDER);
 	testTextObj->SetName(L"UI_stat01");
 
 	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
@@ -1545,8 +1544,8 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
 
 	m_pStatText[0][1] = testTextObj;
 
@@ -1569,8 +1568,8 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
 
 	m_pStatText[1][0] = testTextObj;
 
@@ -1593,8 +1592,8 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
 
 	m_pStatText[1][1] = testTextObj;
 
@@ -1616,8 +1615,8 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
 
 	m_pStatText[2][0] = testTextObj;
 
@@ -1640,8 +1639,8 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
 
 	m_pStatText[2][1] = testTextObj;
 
@@ -1663,8 +1662,8 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
 
 	m_pStatText[3][0] = testTextObj;
 
@@ -1687,8 +1686,8 @@ void ER_UIMgr::CreateStatText()
 
 	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
 	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	testTextObj->Text()->InputString(L"테스트");
+	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 15.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
+	// testTextObj->Text()->InputString(L"테스트");
 
 	m_pStatText[3][1] = testTextObj;
 
@@ -1701,14 +1700,14 @@ void ER_UIMgr::UpdateStat()
 {
 	ER_Ingame_Stats* status = ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->GetStatus();
 
-	m_pStatText[0][0]->Text()->InputString(std::to_wstring(status->iAttackPower));			//공격력
-	m_pStatText[0][1]->Text()->InputString(std::to_wstring(status->iDefense));				//방어력
-	m_pStatText[1][0]->Text()->InputString(std::to_wstring(status->fAttackSpeed));			//공격속도
-	m_pStatText[1][1]->Text()->InputString(std::to_wstring(status->fMovementSpeed));		//이동속도
-	m_pStatText[2][0]->Text()->InputString(std::to_wstring(status->fCriticalStrikeChance));	//치명타 확률
-	m_pStatText[2][1]->Text()->InputString(std::to_wstring(status->fVisionRange));			//시야
-	m_pStatText[3][0]->Text()->InputString(std::to_wstring(status->fHPRegen));				//체력 재생
-	m_pStatText[3][1]->Text()->InputString(std::to_wstring(status->fSPRegen));				//스태미너 재생
+	// m_pStatText[0][0]->Text()->InputString(std::to_wstring(status->iAttackPower));			//공격력
+	// m_pStatText[0][1]->Text()->InputString(std::to_wstring(status->iDefense));				//방어력
+	// m_pStatText[1][0]->Text()->InputString(std::to_wstring(status->fAttackSpeed));			//공격속도
+	// m_pStatText[1][1]->Text()->InputString(std::to_wstring(status->fMovementSpeed));		//이동속도
+	// m_pStatText[2][0]->Text()->InputString(std::to_wstring(status->fCriticalStrikeChance));	//치명타 확률
+	// m_pStatText[2][1]->Text()->InputString(std::to_wstring(status->fVisionRange));			//시야
+	// m_pStatText[3][0]->Text()->InputString(std::to_wstring(status->fHPRegen));				//체력 재생
+	// m_pStatText[3][1]->Text()->InputString(std::to_wstring(status->fSPRegen));				//스태미너 재생
 }
 
 void ER_UIMgr::UpdateHP()

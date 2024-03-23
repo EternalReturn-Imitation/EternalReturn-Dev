@@ -171,6 +171,8 @@ struct tParticleModule
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
 };
 
+
+
 // FSM 가용 데이터
 struct tFSMData
 {

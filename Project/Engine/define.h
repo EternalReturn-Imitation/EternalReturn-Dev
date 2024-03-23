@@ -48,7 +48,7 @@ enum class COMPONENT_TYPE
 	FINDPATH,
 	
 	// UI
-	UI_BUTTON,
+	UICOMPONENT,
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링
@@ -78,7 +78,7 @@ enum Component_Flags_
 	_TEXT = 1 << 8,
 	_BEHAVIORTREE = 1 << 9,
 	_FINDPATH = 1 << 10,
-	_UI_BUTTON = 1 << 11,
+	_UICOMPONENT = 1 << 11,
 	_MESHRENDER = 1 << 12,
 	_PARTICLESYSTEM = 1 << 13,
 	_TILEMAP = 1 << 14,
@@ -342,6 +342,8 @@ enum class MRT_TYPE
 	SHADOWMAP,
 
 	_3DANIM_EDIT,
+
+	_UI_EDIT,
 
 	END,
 };

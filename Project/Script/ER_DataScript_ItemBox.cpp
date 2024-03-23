@@ -96,15 +96,13 @@ void ER_DataScript_ItemBox::CreateRandomItems()
 			if (i == 1 && j > random_number02)
 				break;
 
-			m_vItemList.push_back(ER_ItemMgr::GetInst()->GetItemObj(random_number01)->Clone());
+			// m_pItemList.push_back(ER_ItemMgr::GetInst()->GetItemObj(random_number01)->Clone());
 
 			random_number01 = dis01(gen);
 		}
 	}
-
-	for (int i = 0; i < m_vItemList.size(); ++i) {
-		m_vItemList[i]->GetScript<ER_DataScript_Item>()->SetSlotIdx(i);
-	}
+	// for (int i = 0; i < m_pItemList.size(); ++i) {
+	// 	m_pItemList[i]->GetScript<ER_DataScript_Item>()->SetSlotIdx(i);
 }
 
 void ER_DataScript_ItemBox::CreateBoxIcon()
@@ -114,7 +112,7 @@ void ER_DataScript_ItemBox::CreateBoxIcon()
 	
 	m_pBoxIcon->AddComponent(new CTransform);
 	m_pBoxIcon->AddComponent(new CMeshRender);
-	m_pBoxIcon->AddComponent(new CUI_Button);
+	m_pBoxIcon->AddComponent(new CUIComponent);
 	m_pBoxIcon->AddComponent(new CUIScript_Button);
 	
 	m_pBoxIcon->Transform()->SetRelativeScale(Vec3(100.f, 150.f, 1.f));

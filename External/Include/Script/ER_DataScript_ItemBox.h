@@ -4,8 +4,26 @@
 class ER_DataScript_ItemBox :
     public CScript
 {
+    enum class eItemBoxSlotIdx
+    {
+        SOLT_1,
+        SOLT_2,
+        SOLT_3,
+        SOLT_4,
+        SOLT_5,
+        SOLT_6,
+        SOLT_7,
+        SOLT_8,
+        END
+    }typedef ITEMBOXSLOT;
+
 private:
-    vector<CGameObject*> m_vItemList;
+    // [Data]
+    CGameObject* m_pItemList[(UINT)ITEMBOXSLOT::END];           // 아이템 슬롯
+
+    // [UI]
+    CGameObject* m_pItemBoxUI;                                  // 아이템 박스 UI
+
     CGameObject* m_pBoxIcon;
 
 public:
@@ -27,14 +45,15 @@ public:
     void CreateBoxIcon();
 
 public:
-    vector<CGameObject*> GetItemList() { return m_vItemList; }
-    CGameObject* GetItem(int _i) { return m_vItemList[_i]; }
+    CGameObject* GetItem(int _i) { return m_pItemList[_i]; }
     
-    void SetEmptyItem(int _i) { m_vItemList[_i] = nullptr; }
+    void SetEmptyItem(int _i) { m_pItemList[_i] = nullptr; }
 
 public:
     ER_DataScript_ItemBox();
     ~ER_DataScript_ItemBox();
 
-    CLONE_DISABLE(ER_DataScript_ItemBox);
+    CLONE(ER_DataScript_ItemBox);
+
+    friend class m_UIScript_ItemBox;
 };

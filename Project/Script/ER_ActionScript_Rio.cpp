@@ -370,18 +370,18 @@ void ER_ActionScript_Rio::FarmingUpdate(tFSMData& param)
         ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(true);
         ER_UIMgr::GetInst()->GetItemBoxBackground()->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y - 100.f, -1.0f));
 
-        vector<CGameObject*> itemList = ((CGameObject*)param.lParam)->GetScript<ER_DataScript_ItemBox>()->GetItemList();
-        for (int i = 0; i < itemList.size(); ++i) {
-            if (itemList[i]) {
-                std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList((int)i / 4, (int)i % 4);
-
-                itemLists.first->SetEnable(true);
-                itemLists.second->SetEnable(true);
-
-                itemLists.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(itemList[i]->GetScript<ER_DataScript_Item>()->GetGrade()));
-                itemLists.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, itemList[i]->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
-            }
-        }
+        // vector<CGameObject*> itemList = ((CGameObject*)param.lParam)->GetScript<ER_DataScript_ItemBox>()->GetItemList();
+        // for (int i = 0; i < itemList.size(); ++i) {
+        //     if (itemList[i]) {
+        //         std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList((int)i / 4, (int)i % 4);
+        // 
+        //         itemLists.first->SetEnable(true);
+        //         itemLists.second->SetEnable(true);
+        // 
+        //         itemLists.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(itemList[i]->GetScript<ER_DataScript_Item>()->GetGrade()));
+        //         itemLists.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, itemList[i]->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+        //     }
+        // }
 
         m_bFarmingTrigger = false;
     }

@@ -23,7 +23,6 @@ class CBehaviorTree;
 class CCollider3D;
 class CFindPath;
 class CUIComponent;
-class CUI_Button;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -38,8 +37,8 @@ private:
     CText* m_TextCom;
 
 
-    CUIComponent*       m_UICom;
-    vector<CScript*>    m_vecScript;
+    CUIComponent*           m_UICom;
+    vector<CScript*>        m_vecScript;
 
     CGameObject* m_Parent;
     vector<CGameObject*>    m_vecChild;
@@ -89,7 +88,7 @@ public:
     GET_COMPONENT(LandScape, LANDSCAPE);
     GET_COMPONENT(Collider3D, COLLIDER3D);
     GET_COMPONENT(FindPath, FINDPATH);
-    GET_COMPONENT(UI_Button, UI_BUTTON);
+    GET_COMPONENT(UIComponent, UICOMPONENT);
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
     CText* GetTextComponent() const { return m_TextCom; }

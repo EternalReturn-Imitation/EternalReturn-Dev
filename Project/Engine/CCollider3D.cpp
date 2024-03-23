@@ -94,7 +94,6 @@ void CCollider3D::BeginOverlap(CCollider3D* _Other)
 	{
 		vecScript[i]->BeginOverlap(_Other);
 	}
-
 }
 
 void CCollider3D::OnOverlap(CCollider3D* _Other)

@@ -28,6 +28,8 @@ public:
 public:
     virtual void SaveToLevelFile(FILE* _File) = 0;
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
+    virtual void SavePrefab(const wstring& _key) {};
+    virtual void LoadPrefab(const wstring& _key) {};
 
 public:  
     GET_OTHER_COMPONENT(Transform);
@@ -43,7 +45,7 @@ public:
     GET_OTHER_COMPONENT(LandScape);
     GET_OTHER_COMPONENT(Collider3D);
     GET_OTHER_COMPONENT(FindPath);
-    GET_OTHER_COMPONENT(UI_Button);
+    GET_OTHER_COMPONENT(UIComponent);
 
 public:
     CComponent(COMPONENT_TYPE _Type);

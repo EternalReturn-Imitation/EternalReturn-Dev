@@ -97,6 +97,15 @@
     <Filter Include="Script\ER\SystemScript\Projectile">
       <UniqueIdentifier>{bbd448f0-1bcf-442a-967b-388a679dd4d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\UI\Item">
+      <UniqueIdentifier>{25325e07-cbc0-498a-824b-b5bca5deb842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Box">
+      <UniqueIdentifier>{5f2af9b9-e6ee-4cd1-a0b3-75ccfa5876c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Slot">
+      <UniqueIdentifier>{dc91efe5-dc89-4ad5-97d8-64f88abfb87e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -191,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="ER_ProjectileScript.h">
       <Filter>Script\ER\SystemScript\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_ItemBox.h">
+      <Filter>Script\UI\Item\Box</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +304,9 @@
     </ClCompile>
     <ClCompile Include="ER_ActionScript_Init.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_ItemBox.cpp">
+      <Filter>Script\UI\Item\Box</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
