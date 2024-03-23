@@ -268,16 +268,19 @@
       <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClInclude>
     <ClInclude Include="MemoryPool.h">
-      <Filter>Source\03. Manager\16. MemoryMgr\01. MemoryPool</Filter>
+      <Filter>Source\03. Manager\16. MemoryMgr\02. MemoryPool</Filter>
     </ClInclude>
     <ClInclude Include="MemoryMgr.h">
       <Filter>Source\03. Manager\16. MemoryMgr</Filter>
     </ClInclude>
     <ClInclude Include="Allocator.h">
-      <Filter>Source\03. Manager\16. MemoryMgr\02. Allocator</Filter>
+      <Filter>Source\03. Manager\16. MemoryMgr\01. Allocator</Filter>
     </ClInclude>
     <ClInclude Include="CustomContainer.h">
       <Filter>Source\00. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectPool.h">
+      <Filter>Source\03. Manager\16. MemoryMgr\03. ObjectPool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -537,13 +540,16 @@
       <Filter>Source\06. Component\11. Text</Filter>
     </ClCompile>
     <ClCompile Include="MemoryPool.cpp">
-      <Filter>Source\03. Manager\16. MemoryMgr\01. MemoryPool</Filter>
+      <Filter>Source\03. Manager\16. MemoryMgr\02. MemoryPool</Filter>
     </ClCompile>
     <ClCompile Include="MemoryMgr.cpp">
       <Filter>Source\03. Manager\16. MemoryMgr</Filter>
     </ClCompile>
     <ClCompile Include="Allocator.cpp">
-      <Filter>Source\03. Manager\16. MemoryMgr\02. Allocator</Filter>
+      <Filter>Source\03. Manager\16. MemoryMgr\01. Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectPool.cpp">
+      <Filter>Source\03. Manager\16. MemoryMgr\03. ObjectPool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -793,11 +799,14 @@
     <Filter Include="Source\03. Manager\16. MemoryMgr">
       <UniqueIdentifier>{72973523-9b0d-4e36-a2c6-142999b3eaab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\03. Manager\16. MemoryMgr\01. MemoryPool">
+    <Filter Include="Source\03. Manager\16. MemoryMgr\01. Allocator">
+      <UniqueIdentifier>{753a505e-1c34-43c2-8264-fd31d46b31a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\16. MemoryMgr\02. MemoryPool">
       <UniqueIdentifier>{261c055e-22f6-4cb7-a3fd-1b56cbb90d43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\03. Manager\16. MemoryMgr\02. Allocator">
-      <UniqueIdentifier>{753a505e-1c34-43c2-8264-fd31d46b31a1}</UniqueIdentifier>
+    <Filter Include="Source\03. Manager\16. MemoryMgr\03. ObjectPool">
+      <UniqueIdentifier>{53bd0e25-5590-4cf7-af2b-f63bad9a7922}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

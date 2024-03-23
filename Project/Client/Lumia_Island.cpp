@@ -120,6 +120,10 @@ void TestObject()
 
 	// 마우스 커서위치
 
+	//CGameObject* ex = ObjectPool<CGameObject>::Pop();
+
+
+
 	CGameObject* testParticle = xnew<CGameObject>();
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
