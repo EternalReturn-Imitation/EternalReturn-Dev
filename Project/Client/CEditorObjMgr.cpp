@@ -133,9 +133,11 @@ void CEditorObjMgr::DebugRender()
 	if (!m_bDebugRender)
 	{
 		vector<tDebugShapeInfo>::iterator iter = m_DebugShapeInfo.begin();
-
-		for(; iter != m_DebugShapeInfo.end(); iter++)
+		
+		while(iter != m_DebugShapeInfo.end())
+		{
 			iter = m_DebugShapeInfo.erase(iter);
+		}
 
 		return;
 	}

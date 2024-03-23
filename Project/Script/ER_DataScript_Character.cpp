@@ -2,7 +2,6 @@
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_Item.h"
 #include "ER_struct.h"
-#include "ER_UIMgr.h"
 #include <FontEngine\FW1FontWrapper.h>
 #include "ER_DataScript_Item.h"
 
@@ -174,7 +173,7 @@ void ER_DataScript_Character::begin()
 
 
 	// 지울거
-	CreateStatBar();
+	// CreateStatBar();
 }
 
 void ER_DataScript_Character::tick()
@@ -197,11 +196,11 @@ void ER_DataScript_Character::tick()
 
 
 	// 아래 지울것
-	UpdateStatBar();
-	//HPReturnBar업데이트
-	if (m_bHPChangeTrigger) {
-		ChangeHPReturnBar();
-	}
+	// UpdateStatBar();
+	// //HPReturnBar업데이트
+	// if (m_bHPChangeTrigger) {
+	// 	ChangeHPReturnBar();
+	// }
 	
 	//if (KEY_TAP(KEY::F)) {
 	//	ChangeStatBar();
@@ -225,12 +224,12 @@ CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)
 
 	m_Inventory[i] = _ItemObj;
 
-	std::pair<CGameObject*, CGameObject*> objPair = ER_UIMgr::GetInst()->GetInventoryItem(i / 5, i % 5);
-	objPair.first->SetEnable(true);
-	objPair.second->SetEnable(true);
-
-	objPair.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(_ItemObj->GetScript<ER_DataScript_Item>()->GetGrade()));
-	objPair.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, _ItemObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
+	// std::pair<CGameObject*, CGameObject*> objPair = ER_UIMgr::GetInst()->GetInventoryItem(i / 5, i % 5);
+	// objPair.first->SetEnable(true);
+	// objPair.second->SetEnable(true);
+	// 
+	// objPair.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(_ItemObj->GetScript<ER_DataScript_Item>()->GetGrade()));
+	// objPair.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, _ItemObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
 
 	return _ItemObj;
 }
@@ -257,9 +256,9 @@ void ER_DataScript_Character::CreateStatBar()
 	m_aStatBar[0]->MeshRender()->GetDynamicMaterial(0);
 	
 	Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
-	Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
-	
-	SpawnGameObject(m_aStatBar[0], Vec3(pos.x, pos.y+ 62.5f, -1.1f), L"UI");
+	// Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
+	// 
+	// SpawnGameObject(m_aStatBar[0], Vec3(pos.x, pos.y+ 62.5f, -1.1f), L"UI");
 
 
 
@@ -277,7 +276,7 @@ void ER_DataScript_Character::CreateStatBar()
 	m_aStatBar[1]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ReturnBar_UI.png"));
 	m_aStatBar[1]->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_aStatBar[1], Vec3(pos.x, pos.y + 62.5f, -1.f), L"UI");
+	// SpawnGameObject(m_aStatBar[1], Vec3(pos.x, pos.y + 62.5f, -1.f), L"UI");
 
 
 
@@ -295,7 +294,7 @@ void ER_DataScript_Character::CreateStatBar()
 	m_aStatBar[2]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"SPBar_UI.png"));
 	m_aStatBar[2]->MeshRender()->GetDynamicMaterial(0);
 
-	SpawnGameObject(m_aStatBar[2], Vec3(pos.x, pos.y + 42.5f, -1.1f), L"UI");
+	// SpawnGameObject(m_aStatBar[2], Vec3(pos.x, pos.y + 42.5f, -1.1f), L"UI");
 
 	// Text Obj
 	m_aStatBar[3] = new CGameObject;
@@ -324,12 +323,12 @@ void ER_DataScript_Character::CreateStatBar()
 void ER_DataScript_Character::UpdateStatBar()
 {
 	Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
-	Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
-
-	m_aStatBar[0]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[0], pos.y + 175.f, -1.1f));
-	m_aStatBar[1]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[1], pos.y + 175.f, -1.f));
-	m_aStatBar[2]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[2], pos.y + 165.f, -1.1f));
-	m_aStatBar[3]->Transform()->SetRelativePos(Vec3(pos.x-75.f + m_aStatPosOffset[3], pos.y + 171.25f, -1.2f));
+	// Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
+	// 
+	// m_aStatBar[0]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[0], pos.y + 175.f, -1.1f));
+	// m_aStatBar[1]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[1], pos.y + 175.f, -1.f));
+	// m_aStatBar[2]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[2], pos.y + 165.f, -1.1f));
+	// m_aStatBar[3]->Transform()->SetRelativePos(Vec3(pos.x-75.f + m_aStatPosOffset[3], pos.y + 171.25f, -1.2f));
 }
 
 void ER_DataScript_Character::ChangeStatBar()

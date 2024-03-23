@@ -2,7 +2,6 @@
 #include "ER_ActionScript_Jackie.h"
 #include "ER_DataScript_Character.h"
 
-#include "ER_UIMgr.h"
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
 

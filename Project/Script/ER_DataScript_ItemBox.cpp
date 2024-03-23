@@ -6,7 +6,6 @@
 #include <Engine\define.h>
 #include "ER_ItemMgr.h"
 #include "ER_ActionScript_Character.h"
-#include "ER_UIMgr.h"
 #include "ER_DataScript_Item.h"
 
 #include "CUIScript_Button.h"
@@ -40,8 +39,8 @@ void ER_DataScript_ItemBox::begin()
 void ER_DataScript_ItemBox::tick()
 {
 	if (m_pBoxIcon) {
-		Vec3 resultPos = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
-		m_pBoxIcon->Transform()->SetRelativePos(Vec3(resultPos.x, resultPos.y + 150.f, -1.1f));
+		// Vec3 resultPos = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
+		// m_pBoxIcon->Transform()->SetRelativePos(Vec3(resultPos.x, resultPos.y + 150.f, -1.1f));
 	}
 }
 
@@ -124,8 +123,8 @@ void ER_DataScript_ItemBox::CreateBoxIcon()
 	m_pBoxIcon->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"Img_ItemBox_Icon_Copy.png"));
 	m_pBoxIcon->MeshRender()->GetDynamicMaterial(0);
 	
-	Vec3 resultPos = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
+	// Vec3 resultPos = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
 	
-	SpawnGameObject(m_pBoxIcon, Vec3(resultPos.x, resultPos.y + 120.f, -1.1f), L"UI");
+	 // SpawnGameObject(m_pBoxIcon, Vec3(resultPos.x, resultPos.y + 120.f, -1.1f), L"UI");
 	//SpawnGameObject(m_pBoxIcon, Vec3(GetOwner()->Transform()->GetRelativePos().x, GetOwner()->Transform()->GetRelativePos().y+4.f, GetOwner()->Transform()->GetRelativePos().z), L"ItemBox");
 }

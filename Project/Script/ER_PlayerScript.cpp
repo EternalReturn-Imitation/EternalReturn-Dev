@@ -14,7 +14,6 @@
 #include "ER_CamControllerScript.h"
 #include "ER_ActionScript_Character.h"
 
-#include "ER_UIMgr.h"
 #include "CUIScript_Button.h"
 
 #define LAYER_ITEMBOX 5
@@ -66,6 +65,7 @@ void ER_PlayerScript::tick()
 	data.lParam = (DWORD_PTR)pTargetObj.first;
 
 	// [ Mouse Control ]
+	// 마우스가 UI위에 있다면 입력을 받지 않는다.
 	// 이동
 	if (KEY_TAP(KEY::RBTN))
 	{

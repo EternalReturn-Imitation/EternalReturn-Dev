@@ -1,5 +1,6 @@
 #pragma once
 #include "CComponent.h"
+#include "CFontMgr.h"
 
 class CText :
     public CComponent
@@ -39,7 +40,7 @@ private:
 			, vOffsetPos{}
 			, fSize(100.f)
 			, FontColor(FONT_RGBA(255, 255, 255, 255))
-			, Flags(1 | 4)	// FW1_CENTER | FW1_VCENTER
+			, Flags(FW1_RIGHT | FW1_VCENTER)
 			, bReference(false)
 			, RefDataType(0)
 			, RefPtr(0)
@@ -62,6 +63,8 @@ public:
 private:
 	vector<tTextInfo*>					m_vecTextInfo;		// ·»´õ¿ë ÅØ½ºÆ® Á¤º¸ º¤ÅÍ
 
+	void DeleteLastIdx();
+
 public:
 	virtual void finaltick() override;
 
@@ -77,6 +80,10 @@ public:
 	bool SetOffset(int _Textidx, Vec2 _vOffset);
 	bool SetSize(int _Textidx, float _size);
 	bool SetColor(int _Textidx, UINT _Color);
+	bool SetLeft(int _Textidx);
+	bool SetCenter(int _Textidx);
+	bool SetRight(int _Textidx);
+
 
 	void render();
 

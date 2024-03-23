@@ -5,7 +5,6 @@
 #include "ER_ActionScript_Character.h"
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_ItemBox.h"
-#include "ER_UIMgr.h"
 
 CUIScript_Button::CUIScript_Button()
 	: CScript((UINT)SCRIPT_TYPE::UISCRIPT_BUTTON)
@@ -60,9 +59,9 @@ void CUIScript_Button::ItemAcquisiton()
 			return;
 		else {
 			DI->SetEmptyItem(m_iUIPos);
-			std::pair<CGameObject*, CGameObject*> objPair = ER_UIMgr::GetInst()->GetItemBoxItem(m_iUIPos / 4, m_iUIPos % 4);
-			objPair.first->SetEnable(false);
-			objPair.second->SetEnable(false);
+			// std::pair<CGameObject*, CGameObject*> objPair = ER_UIMgr::GetInst()->GetItemBoxItem(m_iUIPos / 4, m_iUIPos % 4);
+			// objPair.first->SetEnable(false);
+			// objPair.second->SetEnable(false);
 		}
 	}
 }

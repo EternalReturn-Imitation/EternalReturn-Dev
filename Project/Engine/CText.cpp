@@ -109,6 +109,48 @@ bool CText::SetColor(int _Textidx, UINT _Color)
 	return false;
 }
 
+bool CText::SetLeft(int _Textidx)
+{
+	if (m_vecTextInfo.size() < _Textidx)
+	{
+		m_vecTextInfo[_Textidx]->Flags = FW1_VCENTER | FW1_LEFT;
+		return true;
+	}
+
+	return false;
+}
+
+bool CText::SetCenter(int _Textidx)
+{
+	if (m_vecTextInfo.size() < _Textidx)
+	{
+		m_vecTextInfo[_Textidx]->Flags = FW1_VCENTER | FW1_CENTER;
+		return true;
+	}
+
+	return false;
+}
+
+bool CText::SetRight(int _Textidx)
+{
+	if (m_vecTextInfo.size() < _Textidx)
+	{
+		m_vecTextInfo[_Textidx]->Flags = FW1_VCENTER | FW1_RIGHT;
+		return true;
+	}
+
+	return false;
+}
+
+void CText::DeleteLastIdx()
+{
+	int MaxSize = (int)m_vecTextInfo.size();
+	vector<CText::tTextInfo*>::iterator iter = m_vecTextInfo.begin() + (MaxSize - 1);
+	delete* iter;
+	*iter = nullptr;
+	m_vecTextInfo.erase(iter);
+}
+
 void CText::finaltick()
 {
 	// 위치 변환

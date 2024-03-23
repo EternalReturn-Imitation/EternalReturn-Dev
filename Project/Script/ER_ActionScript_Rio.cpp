@@ -4,7 +4,6 @@
 #include "ER_ProjectilePool.h"
 #include "ER_ProjectileScript.h"
 
-#include "ER_UIMgr.h"
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
 
@@ -366,9 +365,9 @@ void ER_ActionScript_Rio::FarmingUpdate(tFSMData& param)
     float rangeScale = XMVectorGetX(vRangeScale);
 
     if (abs(rangeScale) < 2.0f && m_bFarmingTrigger) {
-        Vec3 posResult = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
-        ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(true);
-        ER_UIMgr::GetInst()->GetItemBoxBackground()->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y - 100.f, -1.0f));
+        // Vec3 posResult = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
+        // ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(true);
+        // ER_UIMgr::GetInst()->GetItemBoxBackground()->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y - 100.f, -1.0f));
 
         // vector<CGameObject*> itemList = ((CGameObject*)param.lParam)->GetScript<ER_DataScript_ItemBox>()->GetItemList();
         // for (int i = 0; i < itemList.size(); ++i) {
@@ -388,14 +387,12 @@ void ER_ActionScript_Rio::FarmingUpdate(tFSMData& param)
 }
 void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
 {
-    ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(false);
-
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 4; ++j) {
-            std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList(i, j);
+            // std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList(i, j);
 
-            itemLists.first->SetEnable(false);
-            itemLists.second->SetEnable(false);
+            // itemLists.first->SetEnable(false);
+            // itemLists.second->SetEnable(false);
         }
     }
 

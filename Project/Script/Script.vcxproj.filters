@@ -79,12 +79,6 @@
     <Filter Include="GameSystem\Battle">
       <UniqueIdentifier>{9c8c5026-9c9a-4c8c-9ce5-d9043b036923}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameSystem\Monster">
-      <UniqueIdentifier>{74d458ac-2568-48e0-abaf-a8d9d240b711}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\PlayerScript\PlayerControll">
-      <UniqueIdentifier>{8ac70603-e378-482c-9a59-41e8106b1c7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameSystem\ObjPool">
       <UniqueIdentifier>{5e4e2628-94c6-48cd-adcb-07eab12e405a}</UniqueIdentifier>
     </Filter>
@@ -105,6 +99,21 @@
     </Filter>
     <Filter Include="Script\UI\Item\Slot">
       <UniqueIdentifier>{dc91efe5-dc89-4ad5-97d8-64f88abfb87e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar">
+      <UniqueIdentifier>{20778e8d-140b-45cd-baaa-0913e661af7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot">
+      <UniqueIdentifier>{a8a5eeac-904b-4e0f-a09e-f97a0b5176a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\Gauge">
+      <UniqueIdentifier>{2bcef9fb-6adc-4c59-829c-9ba2b37c7392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot\SkillUP">
+      <UniqueIdentifier>{414c1ede-421a-42b9-b26c-0d44f9657a6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot\Slot">
+      <UniqueIdentifier>{170ac4af-3bea-4601-bd03-5292d129959f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -183,14 +192,11 @@
     <ClInclude Include="ER_ItemMgr.h">
       <Filter>GameSystem\Item</Filter>
     </ClInclude>
-    <ClInclude Include="ER_UIMgr.h">
+    <ClInclude Include="ER_UIMgr2.h">
       <Filter>GameSystem\UI</Filter>
     </ClInclude>
     <ClInclude Include="ER_BattleSystem.h">
       <Filter>GameSystem\Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_PlayerScript.h">
-      <Filter>Script\ER\PlayerScript\PlayerControll</Filter>
     </ClInclude>
     <ClInclude Include="ER_PlayerScript_Range.h">
       <Filter>Script\ER\PlayerScript</Filter>
@@ -203,6 +209,21 @@
     </ClInclude>
     <ClInclude Include="ER_UIScript_ItemBox.h">
       <Filter>Script\UI\Item\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIMgr.h">
+      <Filter>GameSystem\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_Gauge.h">
+      <Filter>Script\UI\Statusbar\Gauge</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_SkillUpBtn.h">
+      <Filter>Script\UI\Statusbar\SkillSlot\SkillUP</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_SkillSlot.h">
+      <Filter>Script\UI\Statusbar\SkillSlot\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_PlayerScript.h">
+      <Filter>Script\ER\PlayerScript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,14 +305,11 @@
     <ClCompile Include="ER_ActionScript_Character_func.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
     </ClCompile>
-    <ClCompile Include="ER_UIMgr.cpp">
+    <ClCompile Include="ER_UIMgr2.cpp">
       <Filter>GameSystem\UI</Filter>
     </ClCompile>
     <ClCompile Include="ER_BattleSystem.cpp">
       <Filter>GameSystem\Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_PlayerScript.cpp">
-      <Filter>Script\ER\PlayerScript\PlayerControll</Filter>
     </ClCompile>
     <ClCompile Include="ER_PlayerScript_Range.cpp">
       <Filter>Script\ER\PlayerScript</Filter>
@@ -307,6 +325,21 @@
     </ClCompile>
     <ClCompile Include="ER_UIScript_ItemBox.cpp">
       <Filter>Script\UI\Item\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIMgr.cpp">
+      <Filter>GameSystem\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_Gauge.cpp">
+      <Filter>Script\UI\Statusbar\Gauge</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_SkillUpBtn.cpp">
+      <Filter>Script\UI\Statusbar\SkillSlot\SkillUP</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_SkillSlot.cpp">
+      <Filter>Script\UI\Statusbar\SkillSlot\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_PlayerScript.cpp">
+      <Filter>Script\ER\PlayerScript</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

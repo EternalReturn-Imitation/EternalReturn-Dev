@@ -2,6 +2,7 @@
 #include "TextUI.h"
 
 #include <Engine\CText.h>
+#include <Engine\CFontMgr.h>
 
 TextUI::TextUI()
     : ComponentUI("##Text", COMPONENT_TYPE::TEXTCOMP)
@@ -29,7 +30,6 @@ int TextUI::render_update()
     char szbuffer[256] = {};
     strcpy_s(szbuffer, converter.to_bytes(Textcomp->m_PrefabKey).c_str());
 
-    ImGui::PushItemWidth(-FLT_MIN);
     ImGui::InputText("##PrefabKey", szbuffer, sizeof(szbuffer));
 
     // UTF-8 ->wchar_t
@@ -38,7 +38,6 @@ int TextUI::render_update()
 
     Textcomp->m_PrefabKey = WString;    // 프리팹키 수정
 
-    ImGui::PushItemWidth(-FLT_MIN);
     if (ImGui::Button("SAVE##TextPrepab"))
     {
         Textcomp->SavePrefab(Textcomp->m_PrefabKey);
@@ -46,15 +45,14 @@ int TextUI::render_update()
 
     ImGui::Separator();
     // 현재텍스트(Combo) / 전체 텍스트 수
-    ImGui::Button("TextList", ImVec2(40.f, 0.f)); ImGui::SameLine();
-
-    ImGui::SetNextItemWidth(100.f);
+    ImGui::Button("TextList", ImVec2(0.f, 0.f)); ImGui::SameLine();
 
     static int CurEditTex = 0;
     int MaxSize = pText.size();
 
     const char* idx[20] = { "0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19" };
 
+    ImGui::SetNextItemWidth(60.f);
     if (ImGui::BeginCombo("##TextIdx", idx[CurEditTex], 0))
     {
         for (int n = 0; n < MaxSize; n++)
@@ -71,7 +69,9 @@ int TextUI::render_update()
     ImGui::SameLine();
 
     ImGui::Text(" / %d", pText.size());
+    
     ImGui::SameLine();
+    
     ImGui::BeginDisabled(20 <= MaxSize);
     if (ImGui::Button("+"))
     {
@@ -83,11 +83,10 @@ int TextUI::render_update()
     if (ImGui::Button("-"))
     {
         if (CurEditTex == MaxSize - 1)
+        {
             CurEditTex--;
-
-        vector<CText::tTextInfo*>::iterator iter = pText.begin() + (MaxSize - 1);
-        delete* iter;
-        pText.erase(iter);
+        }
+        Textcomp->DeleteLastIdx();
     }
     ImGui::EndDisabled();
 
@@ -97,7 +96,7 @@ int TextUI::render_update()
         return true;
 
     ImVec2 TitleSize(70.f, 22.f);
-
+    
     // Offset
     float vOffset[2] = { pText[CurEditTex]->vOffsetPos.x, pText[CurEditTex]->vOffsetPos.y};
 

@@ -249,6 +249,8 @@ void CTransform::LoadPrefab(const wstring& _key)
 	fread(&m_vRelativeScale, sizeof(Vec3), 1, pFile);
 	fread(&m_vRelativeRot, sizeof(Vec3), 1, pFile);
 	fread(&m_bAbsolute, sizeof(bool), 1, pFile);
+
+	fclose(pFile);
 }
 
 void CTransform::SaveToLevelFile(FILE* _File)

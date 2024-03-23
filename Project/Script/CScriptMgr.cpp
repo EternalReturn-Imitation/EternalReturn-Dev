@@ -20,7 +20,10 @@
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
 #include "ER_ProjectileScript.h"
+#include "ER_UIScript_Gauge.h"
 #include "ER_UIScript_ItemBox.h"
+#include "ER_UIScript_SkillSlot.h"
+#include "ER_UIScript_SkillUpBtn.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -43,7 +46,10 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_ProjectileScript");
+	_vec.push_back(L"ER_UIScript_Gauge");
 	_vec.push_back(L"ER_UIScript_ItemBox");
+	_vec.push_back(L"ER_UIScript_SkillSlot");
+	_vec.push_back(L"ER_UIScript_SkillUpBtn");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -86,8 +92,14 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_PlayerScript_Range;
 	if (L"ER_ProjectileScript" == _strScriptName)
 		return new ER_ProjectileScript;
+	if (L"ER_UIScript_Gauge" == _strScriptName)
+		return new ER_UIScript_Gauge;
 	if (L"ER_UIScript_ItemBox" == _strScriptName)
 		return new ER_UIScript_ItemBox;
+	if (L"ER_UIScript_SkillSlot" == _strScriptName)
+		return new ER_UIScript_SkillSlot;
+	if (L"ER_UIScript_SkillUpBtn" == _strScriptName)
+		return new ER_UIScript_SkillUpBtn;
 	return nullptr;
 }
 
@@ -152,8 +164,17 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_PROJECTILESCRIPT:
 		return new ER_ProjectileScript;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
+		return new ER_UIScript_Gauge;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMBOX:
 		return new ER_UIScript_ItemBox;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_SKILLSLOT:
+		return new ER_UIScript_SkillSlot;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_SKILLUPBTN:
+		return new ER_UIScript_SkillUpBtn;
 		break;
 	}
 	return nullptr;
@@ -239,8 +260,20 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_ProjectileScript";
 		break;
 
+	case SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
+		return L"ER_UIScript_Gauge";
+		break;
+
 	case SCRIPT_TYPE::ER_UISCRIPT_ITEMBOX:
 		return L"ER_UIScript_ItemBox";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_SKILLSLOT:
+		return L"ER_UIScript_SkillSlot";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_SKILLUPBTN:
+		return L"ER_UIScript_SkillUpBtn";
 		break;
 
 	}
