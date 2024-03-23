@@ -1,4 +1,7 @@
 #pragma once
+#include "MemoryPool.h"
+#include "MemoryMgr.h"
+#include "CEntity.h"
 
 template <typename T, UINT _Size>
 void DeleteArray(T* (&Arr)[_Size])
@@ -120,17 +123,41 @@ void Safe_Del_Array(T* (&arr)[Size])
 	}	
 }
 
-template<typename T>
-void Safe_Del_Vec(vector<T*>& _vec)
-{
-	for (size_t i = 0; i < _vec.size(); ++i)
-	{
-		if (nullptr != _vec[i])
-		{
-			delete _vec[i];
+//template<typename T>
+//void Safe_Del_Vec(vector<T*>& _vec)
+//{
+//	for (size_t i = 0; i < _vec.size(); ++i)
+//	{
+//		if (nullptr != _vec[i])
+//		{
+//			delete _vec[i];
+//		}
+//	}
+//	_vec.clear();
+//}
+
+//일반적인 벡터 삭제
+template<typename T, typename std::enable_if<!std::is_base_of<CEntity, T>::value, T>::type* = nullptr>
+void Safe_Del_Vec(std::vector<T*>& vec) {
+	for (auto& item : vec) {
+		delete item;
+	}
+	vec.clear();
+}
+
+// CEntity 또는 그 파생 클래스인 경우
+template<typename T, typename std::enable_if<std::is_base_of<CEntity, T>::value, T>::type* = nullptr>
+void Safe_Del_Vec(std::vector<T*>& vec) {
+	for (auto& item : vec) {
+		if (static_cast<CEntity*>(item)->GetManagedByMemory()) {
+			static_cast<CEntity*>(item)->SetManagedByMemory(false);
+			xdelete<CEntity>(item);
+		}
+		else {
+			delete item;
 		}
 	}
-	_vec.clear();
+	vec.clear();
 }
 
 template<typename T1, typename T2>

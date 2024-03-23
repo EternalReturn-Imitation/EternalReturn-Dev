@@ -1,5 +1,6 @@
 #pragma once
 #include "MemoryPool.h"
+#include "CEntity.h"
 
 template<typename Type>
 class ObjectPool
@@ -14,6 +15,7 @@ public:
 	{
 		Type* memory = static_cast<Type*>(MemoryHeader::AttachHeader(s_pool.Pop(), s_allocSize));
 		new(memory)Type(forward<Args>(args)...);
+		((CEntity*)memory)->SetManagedByMemory(true);
 		return memory;
 	}
 

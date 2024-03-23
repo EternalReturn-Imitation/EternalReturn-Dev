@@ -1,5 +1,6 @@
 #pragma once
 #include "Allocator.h"
+#include "CEntity.h"
 
 using namespace std;
 
@@ -38,11 +39,30 @@ private:
 };
 
 
-template<typename Type, typename... Args>
+//template<typename Type, typename... Args>
+//Type* xnew(Args&&... args)
+//{
+//	Type* memory = static_cast<Type*>(xAlloc(sizeof(Type)));
+//	new(memory)Type(forward<Args>(args)...); // placement new
+//	return memory;
+//}
+
+// Entity 또는 그 파생 클래스가 아닌 경우의 xnew
+template<typename Type, typename... Args, typename std::enable_if<!std::is_base_of<CEntity, Type>::value, Type>::type* = nullptr>
 Type* xnew(Args&&... args)
 {
 	Type* memory = static_cast<Type*>(xAlloc(sizeof(Type)));
-	new(memory)Type(forward<Args>(args)...); // placement new
+	new(memory) Type(std::forward<Args>(args)...); // placement new
+	return memory;
+}
+
+// Entity 또는 그 파생 클래스인 경우의 xnew
+template<typename Type, typename... Args, typename std::enable_if<std::is_base_of<CEntity, Type>::value, Type>::type* = nullptr>
+Type* xnew(Args&&... args)
+{
+	Type* memory = static_cast<Type*>(xAlloc(sizeof(Type)));
+	new(memory) Type(std::forward<Args>(args)...); // placement new
+	(static_cast<CEntity*>(memory))->SetManagedByMemory(true);
 	return memory;
 }
 
