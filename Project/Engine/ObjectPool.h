@@ -2,6 +2,8 @@
 #include "MemoryPool.h"
 #include "CEntity.h"
 
+using namespace std;
+
 template<typename Type>
 class ObjectPool
 {
@@ -23,6 +25,7 @@ public:
 	{
 		obj->~Type();
 		s_pool.Push(MemoryHeader::DetachHeader(obj));
+		obj = nullptr;
 	}
 
 	static shared_ptr<Type> MakeShared()
