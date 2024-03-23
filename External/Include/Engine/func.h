@@ -153,3 +153,7 @@ float Deg2Rad(float _Degree);
 float roundToDecimal(double value, int decimalPlaces);
 
 float CTruncate(float value, int decimalPlaces);
+
+
+//MemoryMgr Init
+extern class MemoryMgr* GMemory;

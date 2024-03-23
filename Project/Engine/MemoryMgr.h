@@ -10,9 +10,7 @@ class MemoryPool;
 ---------------*/
 
 class MemoryMgr
-	: public CSingleton<MemoryMgr>
 {
-	SINGLE(MemoryMgr);
 
 	enum
 	{
@@ -20,6 +18,10 @@ class MemoryMgr
 		POOL_COUNT = (1024 / 32) + (1024 / 128) + (2048 / 256),
 		MAX_ALLOC_SIZE = 4096
 	};
+
+public:
+	MemoryMgr();
+	~MemoryMgr();
 
 public:
 	void	init();

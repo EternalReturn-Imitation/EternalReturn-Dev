@@ -120,7 +120,7 @@ void TestObject()
 
 	// 마우스 커서위치
 
-	CGameObject* testParticle = new CGameObject;
+	CGameObject* testParticle = xnew<CGameObject>();
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
 	

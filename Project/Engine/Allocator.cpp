@@ -8,10 +8,10 @@
 
 void* PoolAllocator::Alloc(int size)
 {
-	return MemoryMgr::GetInst()->Allocate(size);
+	return GMemory->Allocate(size);
 }
 
 void PoolAllocator::Release(void* ptr)
 {
-	MemoryMgr::GetInst()->Release(ptr);
+	return GMemory->Release(ptr);
 }
