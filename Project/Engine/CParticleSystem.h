@@ -1,4 +1,4 @@
-#pragma once
+gjr r#pragma once
 #include "CRenderComponent.h"
 
 #include "ptr.h"
@@ -40,7 +40,7 @@ public:
     void SetSpawnInitialColor(Vec3 _vInitialColor) { m_ModuleData.vSpawnColor = _vInitialColor; }   // 생성 시 초기 색상 설정
     void SetSpawnRate(int _SpawnRate) { m_ModuleData.SpawnRate = _SpawnRate; }                      // 초당 생성 개수 설정
     
-    void SetMaxParticleCound(int _SpawnCnt) { m_ModuleData.iMaxParticleCount = _SpawnCnt; }         // 최대 파티클 최대 생성 개수
+    void SetMaxParticleCount(int _SpawnCnt) { m_ModuleData.iMaxParticleCount = _SpawnCnt; }         // 최대 파티클 최대 생성 개수
 
     void SetParticleTexture(Ptr<CTexture> _tex) { m_pParticleTexture = _tex; }
 

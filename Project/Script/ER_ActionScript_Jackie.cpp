@@ -586,11 +586,11 @@ void ER_ActionScript_Jackie::Skill_QExit(tFSMData& param)
 void ER_ActionScript_Jackie::Skill_WEnter(tFSMData& param)
 {
     // 스킬사용
-    tSkill_Info* WSkill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
-    if (WSkill->Use(true))
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+    if (Skill->Use(&GetStatus()->iSP, true))
     {
-        float SpdValue = WSkill->Float1();
-        float Time = WSkill->fActionTime;
+        float SpdValue = Skill->Float1();
+        float Time = Skill->fActionTime;
         m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_SPD, Time, SpdValue);
     }
 }
@@ -612,6 +612,7 @@ void ER_ActionScript_Jackie::Skill_WExit(tFSMData& param)
 void ER_ActionScript_Jackie::Skill_EEnter(tFSMData& param)
 {
     tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+    
     GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Wait", true);
     param.iData = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 공격
 }
@@ -653,8 +654,9 @@ void ER_ActionScript_Jackie::Skill_EUpdate(tFSMData& param)
             param.v4Data[3] = 0.f;
 
             // 스킬 발동
-            SetAbleToCancle(bAbleChange::DISABLE);
+            param.bData[0] = true;
             param.iData++;
+            SetAbleToCancle(bAbleChange::DISABLE);
         }
         break;
     }
@@ -720,8 +722,7 @@ void ER_ActionScript_Jackie::Skill_EExit(tFSMData& param)
 void ER_ActionScript_Jackie::Skill_REnter(tFSMData& param)
 {
     tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
-
-    if (Skill->Use(true))
+    if (Skill->Use(&GetStatus()->iSP))
     {
         float SpdValue = (float)Skill->Int1();
         float Time = Skill->Float1();
@@ -740,6 +741,7 @@ void ER_ActionScript_Jackie::Skill_RExit(tFSMData& param)
 
 void ER_ActionScript_Jackie::DeadEnter(tFSMData& param)
 {
+    GetOwner()->Animator3D()->SelectAnimation(L"Jackie_Death", true);
 }
 
 void ER_ActionScript_Jackie::DeadUpdate(tFSMData& param)

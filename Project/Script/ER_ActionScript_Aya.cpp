@@ -796,6 +796,7 @@ void ER_ActionScript_Aya::Skill_RExit(tFSMData& param)
 
 void ER_ActionScript_Aya::DeadEnter(tFSMData& param)
 {
+    GetOwner()->Animator3D()->SelectAnimation(L"Aya_Death", false);
 }
 
 void ER_ActionScript_Aya::DeadUpdate(tFSMData& param)

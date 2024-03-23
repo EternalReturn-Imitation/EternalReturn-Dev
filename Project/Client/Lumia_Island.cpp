@@ -45,6 +45,8 @@
 
 #pragma endregion
 
+#include <Script\ER_ProjectileScript.h>
+
 void CreateLumiaIsland()
 {
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -62,12 +64,34 @@ void CreateLumiaIsland()
 	LumiaIsland();
 
 	ER_UIMgr::GetInst()->GameStart();
+	
+	// TestObject();
+}
 
-	TestObject();
+void CreateTestPlayer()
+{
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Rio", Vec3(-69.3f, 0.0f, 37.6f));
+}
+void CreateTestEnemy()
+{
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-80.4f, 1.00345f, 44.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-76.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-71.9f, 0.0f, 37.6f));
+
 }
 
 void TestObject()
 {
+	// Ptr<CMeshData> bulletMdat = CResMgr::GetInst()->FindRes<CMeshData>(L"bullet.mdat");
+	// CGameObject* bullet = new CGameObject;
+	// AddComponents(bullet, _TRANSFORM | _MESHRENDER);
+	// bullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rozzi_Bullet.mesh").Get());
+	// bullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BulletMtrl.mtrl").Get(), 0);
+	// bullet->MeshRender()->GetDynamicMaterial(0);
+	// 
+	// bullet->Transform()->SetRelativeScale(Vec3(2.f, 2.f, 2.f));
+	// SpawnGameObject(bullet, Vec3(-69.3f, 0.0f, 37.6f), 0);
 
 	// // Text Obj
 	// CGameObject* testTextObj = new CGameObject;
@@ -94,10 +118,42 @@ void TestObject()
 
 	// Particle
 
+	// 마우스 커서위치
 
 	CGameObject* testParticle = new CGameObject;
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
+	
+	tParticleModule particle_data = Particle->GetParticleInfo();		// 파티클데이터 얻기
+	
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
+	
+	particle_data.StartScale = 0.8f;
+	particle_data.EndScale = 0.001f;
+	
+	particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
+	particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
+	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
+	
+	particle_data.MinLifeTime = 3.f;
+	particle_data.MaxLifeTime = 3.f;
+	
+	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
+	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
+	
+	Particle->SetMaxParticleCount(20);
+
+	particle_data.AddVelocityType = 2;
+	particle_data.vVelocityDir = Vec3(0.f, 1.f, 0.f);
+	particle_data.Speed = 2.5f;
+	
+	Particle->SetParticleInfo(particle_data);	// 파티클 데이터 세팅
 
 	tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
 
@@ -149,6 +205,8 @@ void SetLayer(CLevel* _Level)
 	_Level->GetLayer(11)->SetName(L"Monster");
 	_Level->GetLayer(12)->SetName(L"Character");
 	_Level->GetLayer(13)->SetName(L"Player");
+	
+	_Level->GetLayer(14)->SetName(L"Projectile");
 
 	_Level->GetLayer(28)->SetName(L"InGameUI");
 	_Level->GetLayer(29)->SetName(L"MapCollider");
@@ -161,6 +219,9 @@ void SetLayer(CLevel* _Level)
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"MapCollider");
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Character");
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Player");
+
+	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Projectile");
+	CCollisionMgr::GetInst()->LayerCheck(L"Character", L"Projectile");
 
 	// Ray LayerCheck
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
@@ -248,14 +309,7 @@ void SetMapCollider()
 	CPathFindMgr::GetInst()->SetMapCollider(MapCollider);
 	SpawnGameObject(MapCollider, Vec3(-37.98901f, 0.f, 0.62141f), L"MapCollider");
 }
-void CreateTestPlayer()
-{
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Hyunwoo", Vec3(-69.32188f, 0.0f, 37.60328f));
-}
-void CreateTestEnemy()
-{
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-74.98286f, 0.0f, 37.60328f));
-}
+
 
 void LumiaIsland()
 {

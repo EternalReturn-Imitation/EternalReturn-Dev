@@ -19,6 +19,7 @@ void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 
 // 오브젝트 삭제
 void DestroyObject(CGameObject* _DeletObject);
+void EraseObject(CGameObject* _EraseObject);
 
 // 컴포넌트 추가
 void AddComponents(CGameObject* _Object, int CreateCompType);

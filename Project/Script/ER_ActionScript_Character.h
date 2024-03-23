@@ -60,7 +60,10 @@ protected:
     virtual FSMState* CreateSkill_W() = 0;
     virtual FSMState* CreateSkill_E() = 0;
     virtual FSMState* CreateSkill_R() = 0;
-    
+
+    tIngame_Stats* GetStatus();
+    tStatus_Effect* GetStatusEffect();
+
 protected:
     Vec3 GetFocusPoint();                // Å¸°Ù ÁöÁ¡
     Vec3 GetClearPoint(const Vec3& vDir, float dist);
@@ -88,6 +91,8 @@ public:
     virtual void Skill_W(tFSMData& _Data) = 0;  // W Skill
     virtual void Skill_E(tFSMData& _Data) = 0;  // E Skill
     virtual void Skill_R(tFSMData& _Data) = 0;  // R Skill
+
+    virtual void Dead(tFSMData& _Data);  // Dead
 
     void StateInit();
 

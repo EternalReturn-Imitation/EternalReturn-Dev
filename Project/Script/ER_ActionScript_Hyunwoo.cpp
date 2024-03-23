@@ -511,7 +511,17 @@ void ER_ActionScript_Hyunwoo::RestExit(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::Skill_QEnter(tFSMData& param)
 {
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_SkillQ", false);
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    if (Skill->Use(&GetStatus()->iSP, true))
+    {
+        float SpdValue = Skill->Float1();
+        float Time = Skill->fActionTime;
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_SPD, Time, SpdValue);
+        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_SkillQ", false);
+    }
+    else
+        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Wait", false);
+
     SetRotationToTarget(param.v4Data);
     SetAbleToCancle(bAbleChange::DISABLE);
 
@@ -687,6 +697,7 @@ void ER_ActionScript_Hyunwoo::Skill_RExit(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::DeadEnter(tFSMData& param)
 {
+    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Death", false);
 }
 
 void ER_ActionScript_Hyunwoo::DeadUpdate(tFSMData& param)

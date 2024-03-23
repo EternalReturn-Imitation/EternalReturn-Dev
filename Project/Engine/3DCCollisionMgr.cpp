@@ -11,12 +11,14 @@
 
 void CCollisionMgr::CollisionBtw3DObject(CGameObject* _LeftObject, CGameObject* _RightObject)
 {
+	
+
 	// 충돌체를 보유하지 않은 경우
 	if (!(_LeftObject->Collider3D() && _RightObject->Collider3D()))
 		return;
 
 	//비활성화된경우 제외
-	if (_LeftObject->IsEnable() == false || _LeftObject->IsEnable() == false)
+	if (_LeftObject->IsEnable() == false || _RightObject->IsEnable() == false)
 		return;
 
 	if (_LeftObject->GetParent())
@@ -53,6 +55,12 @@ void CCollisionMgr::CollisionBtw3DObject(CGameObject* _LeftObject, CGameObject* 
 		bDead = true;
 	}
 
+	bool bErase = false;
+	if (_LeftObject->IsOutofLayer() || _RightObject->IsOutofLayer())
+	{
+		bErase = true;
+	}
+
 	// 두 충돌체가 지금 충돌 중인지 확인
 	if (CollisionBtw3DCollider(_LeftObject->Collider3D(), _RightObject->Collider3D()))
 	{
@@ -61,6 +69,13 @@ void CCollisionMgr::CollisionBtw3DObject(CGameObject* _LeftObject, CGameObject* 
 		{
 			_LeftObject->Collider3D()->EndOverlap(_RightObject->Collider3D());
 			_RightObject->Collider3D()->EndOverlap(_LeftObject->Collider3D());
+			iter->second = false;
+		}
+		else if (bErase && iter->second)
+		{
+			_LeftObject->Collider3D()->EndOverlap(_RightObject->Collider3D());
+			_RightObject->Collider3D()->EndOverlap(_LeftObject->Collider3D());
+			iter->second = false;
 		}
 		else if (iter->second)
 		{
@@ -72,6 +87,12 @@ void CCollisionMgr::CollisionBtw3DObject(CGameObject* _LeftObject, CGameObject* 
 		{
 			// 이번 프레임에 처음 충돌했다.
 			if (!bDead) // 둘중 하나라도 Dead 상태면 충돌을 무시한다.
+			{
+				_LeftObject->Collider3D()->BeginOverlap(_RightObject->Collider3D());
+				_RightObject->Collider3D()->BeginOverlap(_LeftObject->Collider3D());
+				iter->second = true;
+			}
+			else if (!bErase) // 둘중 하나라도 Erase 상태면 충돌을 무시한다.
 			{
 				_LeftObject->Collider3D()->BeginOverlap(_RightObject->Collider3D());
 				_RightObject->Collider3D()->BeginOverlap(_LeftObject->Collider3D());

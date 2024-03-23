@@ -158,14 +158,14 @@
     <Filter Include="UI\InspectorUI\ComponentUI\13. UIUI">
       <UniqueIdentifier>{3ede7258-9ea7-4dd8-9a25-49ebaf889adf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\14. Text">
+      <UniqueIdentifier>{a78383b4-319f-4080-8605-0ea540f20edf}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Level">
       <UniqueIdentifier>{e4893bb9-6bd5-4ded-9a9c-ade69d609ca2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Level\Lumia">
       <UniqueIdentifier>{675dde2c-c551-47f9-a4d3-75ea2e5c126c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\InspectorUI\ComponentUI\14. Text">
-      <UniqueIdentifier>{a78383b4-319f-4080-8605-0ea540f20edf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

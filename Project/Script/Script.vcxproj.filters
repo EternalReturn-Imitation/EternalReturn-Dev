@@ -46,12 +46,6 @@
     <Filter Include="Script\ER\DataScript\ItemBox">
       <UniqueIdentifier>{4917d2dd-28b0-48a2-94e5-08be8efd8b71}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER\SystemScript">
-      <UniqueIdentifier>{fa13962b-4671-41fe-b9e1-93ae6b79ae42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\SystemScript\Cam">
-      <UniqueIdentifier>{afcad44f-5ae1-4bcc-9276-fe611232c7ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\ER\ActionScript\Character\Rio">
       <UniqueIdentifier>{08d6a4eb-a4f9-4554-a421-96f8c0253ce7}</UniqueIdentifier>
     </Filter>
@@ -96,6 +90,18 @@
     </Filter>
     <Filter Include="Script\ER\PlayerScript\PlayerControll">
       <UniqueIdentifier>{8ac70603-e378-482c-9a59-41e8106b1c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\ObjPool">
+      <UniqueIdentifier>{5e4e2628-94c6-48cd-adcb-07eab12e405a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript">
+      <UniqueIdentifier>{fa13962b-4671-41fe-b9e1-93ae6b79ae42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript\Cam">
+      <UniqueIdentifier>{afcad44f-5ae1-4bcc-9276-fe611232c7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript\Projectile">
+      <UniqueIdentifier>{bbd448f0-1bcf-442a-967b-388a679dd4d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +191,12 @@
     </ClInclude>
     <ClInclude Include="ER_PlayerScript_Range.h">
       <Filter>Script\ER\PlayerScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ProjectilePool.h">
+      <Filter>GameSystem\ObjPool</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ProjectileScript.h">
+      <Filter>Script\ER\SystemScript\Projectile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +289,12 @@
     </ClCompile>
     <ClCompile Include="ER_PlayerScript_Range.cpp">
       <Filter>Script\ER\PlayerScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ProjectilePool.cpp">
+      <Filter>GameSystem\ObjPool</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ProjectileScript.cpp">
+      <Filter>Script\ER\SystemScript\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
