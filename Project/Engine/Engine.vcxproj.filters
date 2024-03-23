@@ -276,6 +276,9 @@
     <ClInclude Include="Allocator.h">
       <Filter>Source\03. Manager\16. MemoryMgr\02. Allocator</Filter>
     </ClInclude>
+    <ClInclude Include="CustomContainer.h">
+      <Filter>Source\00. Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">

@@ -240,6 +240,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CUIComponent.h" />
     <ClInclude Include="CUIMgr.h" />
     <ClInclude Include="CUI_Button.h" />
+    <ClInclude Include="CustomContainer.h" />
     <ClInclude Include="CWeightMapShader.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
