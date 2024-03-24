@@ -190,6 +190,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_BattleSystem.h" />
     <ClInclude Include="ER_CamControllerScript.h" />
     <ClInclude Include="ER_CharacterMgr.h" />
+    <ClInclude Include="ER_Cursor.h" />
     <ClInclude Include="ER_DataScript_Character.h" />
     <ClInclude Include="ER_DataScript_Item.h" />
     <ClInclude Include="ER_DataScript_LandMeshBase.h" />
@@ -232,6 +233,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_CamControllerScript.cpp" />
     <ClCompile Include="ER_CharacterMgr.cpp" />
     <ClCompile Include="ER_CharacterMgr_Init.cpp" />
+    <ClCompile Include="ER_Cursor.cpp" />
     <ClCompile Include="ER_DataScript_Character.cpp" />
     <ClCompile Include="ER_DataScript_Item.cpp" />
     <ClCompile Include="ER_DataScript_ItemBox.cpp" />

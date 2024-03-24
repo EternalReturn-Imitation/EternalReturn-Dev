@@ -13,6 +13,7 @@
 #include "ER_ActionScript_Rio.h"
 #include "ER_ActionScript_Yuki.h"
 #include "ER_CamControllerScript.h"
+#include "ER_Cursor.h"
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_Item.h"
 #include "ER_DataScript_ItemBox.h"
@@ -40,6 +41,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ActionScript_Rio");
 	_vec.push_back(L"ER_ActionScript_Yuki");
 	_vec.push_back(L"ER_CamControllerScript");
+	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Character");
 	_vec.push_back(L"ER_DataScript_Item");
 	_vec.push_back(L"ER_DataScript_ItemBox");
@@ -80,6 +82,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_ActionScript_Yuki;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
+	if (L"ER_Cursor" == _strScriptName)
+		return new ER_Cursor;
 	if (L"ER_DataScript_Character" == _strScriptName)
 		return new ER_DataScript_Character;
 	if (L"ER_DataScript_Item" == _strScriptName)
@@ -146,6 +150,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_CURSOR:
+		return new ER_Cursor;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:
 		return new ER_DataScript_Character;
@@ -237,6 +244,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return L"ER_CamControllerScript";
+		break;
+
+	case SCRIPT_TYPE::ER_CURSOR:
+		return L"ER_Cursor";
 		break;
 
 	case SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:

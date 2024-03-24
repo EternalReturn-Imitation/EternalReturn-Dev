@@ -37,6 +37,7 @@
 
 #include <Script\ER_CharacterMgr.h>
 #include <Script\ER_UIMgr.h>
+#include <Script\ER_GameSystem.h>
 
 // [Editor]
 #include "CEditorObjMgr.h"
@@ -62,8 +63,8 @@ void CreateLumiaIsland()
 	CreateTestEnemy();
 
 	LumiaIsland();
-
-	ER_UIMgr::GetInst()->SpawnUI();
+	
+	ER_GameSystem::GetInst()->GameStart();
 
 //	TestObject();
 }

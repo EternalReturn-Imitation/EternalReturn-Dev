@@ -7,7 +7,9 @@
 #include <Engine\CUIMgr.h>
 
 #include "ER_BattleSystem.h"
+#include "ER_GameSystem.h"
 #include "ER_DataScript_Character.h"
+#include "ER_Cursor.h"
 
 #include <Engine\CFindPath.h>
 
@@ -56,6 +58,19 @@ void ER_PlayerScript::tick()
 	std::pair<CGameObject*,int> pTargetObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vCsrPoint = GetFocusPoint();	// 타겟 지점
 
+	if (pTargetObj.second == LAYER_ITEMBOX)
+	{
+		ER_GameSystem::GetInst()->GetCursor()->SetState(2);
+	}
+	else if (pTargetObj.second == LAYER_CHARACTER)
+	{
+		ER_GameSystem::GetInst()->GetCursor()->SetState(1);
+	}
+	else
+	{
+		ER_GameSystem::GetInst()->GetCursor()->SetState(0);
+	}
+
 	tFSMData data = {};
 
 	// v4Data : 마우스 위치, 마우스 방향 활용가능
@@ -91,11 +106,6 @@ void ER_PlayerScript::tick()
 		{
 			//몬스터인경우(Layer 이름 : ItemBox)
 			m_pActionScript->Farming(data);
-		}
-		else if (pTargetObj.second == LAYER_MONSTER)
-		{
-			//몬스터인경우(Layer 이름 : Monster)
-			int i = 0;
 		}
 		else if (pTargetObj.second == LAYER_CHARACTER)
 		{

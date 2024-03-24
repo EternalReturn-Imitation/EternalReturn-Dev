@@ -55,26 +55,41 @@ void ER_UIScript_SkillUpBtn::CsrOn()
 
 void ER_UIScript_SkillUpBtn::CsrTap()
 {
-	m_CsrState = 2;
-	MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &m_CsrState);
+	if (1 <= *m_SkillPoint)
+	{
+		m_CsrState = 2;
+		MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &m_CsrState);
+	}
 }
 
 void ER_UIScript_SkillUpBtn::CsrRelease()
 {
-	m_CsrState = 1;
-	MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &m_CsrState);
+	if (1 <= *m_SkillPoint)
+	{
+		m_CsrState = 1;
+		MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &m_CsrState);
+	}
 }
 
 void ER_UIScript_SkillUpBtn::CsrClick()
 {
 	if (m_Slot && m_SkillUpFunc)
 		(m_Slot->*m_SkillUpFunc)();
+
+	if (*m_SkillPoint < 1)
+	{
+		m_CsrState = 0;
+		MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &m_CsrState);
+	}
 }
 
 void ER_UIScript_SkillUpBtn::CsrBeginOn()
 {
-	m_CsrState = 1;
-	MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &m_CsrState);
+	if (1 <= *m_SkillPoint)
+	{
+		m_CsrState = 1;
+		MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &m_CsrState);
+	}
 }
 
 void ER_UIScript_SkillUpBtn::CsrAway()

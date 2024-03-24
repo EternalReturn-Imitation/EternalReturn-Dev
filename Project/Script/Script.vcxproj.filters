@@ -118,6 +118,9 @@
     <Filter Include="Script\ER\SystemScript\Projectile">
       <UniqueIdentifier>{bbd448f0-1bcf-442a-967b-388a679dd4d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\SystemScript\Cursor">
+      <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -230,6 +233,9 @@
     </ClInclude>
     <ClInclude Include="ER_UIScript_StatusBarGauge.h">
       <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_Cursor.h">
+      <Filter>Script\ER\SystemScript\Cursor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -349,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="ER_UIScript_StatusBarGauge.cpp">
       <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_Cursor.cpp">
+      <Filter>Script\ER\SystemScript\Cursor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
