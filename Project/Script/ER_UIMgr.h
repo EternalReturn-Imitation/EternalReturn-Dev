@@ -11,6 +11,9 @@ private:
     CGameObject* StatusBar_CharacterInfo;       // 장비창 버튼스크립트
     CGameObject* StatusBar_Inventory;           // 버튼 스크립트
 
+    // [ HP / SP ]
+    CGameObject* StatusBar_Gauge[2];             // 0 : HP, 1 : SP
+
     // [ Skill ]
     CGameObject* StatusBar_SkillSlot[4];        // 스킬버튼
     CGameObject* StatusBar_SkillLevelUpBtn[4];  // 버튼 스크립트
@@ -30,5 +33,6 @@ public:
 
     void SpawnUI();
 
+    void RegistPlayerCharacetr();
 };
 

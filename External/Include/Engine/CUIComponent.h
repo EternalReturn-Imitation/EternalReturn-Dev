@@ -8,8 +8,10 @@ class CUIComponent :
 {
 private:
     bool m_bCsrPressed;
-    bool m_bCsrOnUI;
-
+    
+    bool m_bCsrOn;
+    bool m_bPrevCsrOn;
+    
     bool bOpen;
 
 private:
@@ -21,7 +23,7 @@ public:
     virtual void finaltick();
 
 public:
-    bool IsCsrOn() { return m_bCsrOnUI; }
+    bool IsCsrOn() { return m_bCsrOn; }
     bool IsCsrPressed() { return m_bCsrPressed; }
 
 public:
@@ -29,6 +31,8 @@ public:
     virtual void CsrTap();
     virtual void CsrRelease();
     virtual void CsrClick();
+    virtual void CsrBeginOn();
+    virtual void CsrAway();
 
 public:
     virtual void SaveToLevelFile(FILE* _File) {}

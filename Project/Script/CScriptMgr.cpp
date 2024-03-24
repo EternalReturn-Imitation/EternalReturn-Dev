@@ -24,6 +24,7 @@
 #include "ER_UIScript_ItemBox.h"
 #include "ER_UIScript_SkillSlot.h"
 #include "ER_UIScript_SkillUpBtn.h"
+#include "ER_UIScript_StatusBarGauge.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -50,6 +51,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_UIScript_ItemBox");
 	_vec.push_back(L"ER_UIScript_SkillSlot");
 	_vec.push_back(L"ER_UIScript_SkillUpBtn");
+	_vec.push_back(L"ER_UIScript_StatusBarGauge");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -100,6 +102,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_UIScript_SkillSlot;
 	if (L"ER_UIScript_SkillUpBtn" == _strScriptName)
 		return new ER_UIScript_SkillUpBtn;
+	if (L"ER_UIScript_StatusBarGauge" == _strScriptName)
+		return new ER_UIScript_StatusBarGauge;
 	return nullptr;
 }
 
@@ -175,6 +179,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_SKILLUPBTN:
 		return new ER_UIScript_SkillUpBtn;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
+		return new ER_UIScript_StatusBarGauge;
 		break;
 	}
 	return nullptr;
@@ -274,6 +281,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_UISCRIPT_SKILLUPBTN:
 		return L"ER_UIScript_SkillUpBtn";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
+		return L"ER_UIScript_StatusBarGauge";
 		break;
 
 	}

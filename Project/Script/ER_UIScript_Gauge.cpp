@@ -12,6 +12,7 @@ ER_UIScript_Gauge::~ER_UIScript_Gauge()
 
 void ER_UIScript_Gauge::init()
 {
+	
 }
 
 void ER_UIScript_Gauge::begin()

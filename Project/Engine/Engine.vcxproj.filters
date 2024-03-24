@@ -768,23 +768,11 @@
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="value.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="struct.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="func.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
     <FxCompile Include="setcolor.fx">
       <Filter>Source\08. ShaderCode\Compute\SetColor</Filter>
     </FxCompile>
     <FxCompile Include="particle_update.fx">
       <Filter>Source\08. ShaderCode\Compute\ParticleUpdate</Filter>
-    </FxCompile>
-    <FxCompile Include="postprocess.fx">
-      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="postprocess.fx">
       <Filter>Source\08. ShaderCode\PostProcess</Filter>
@@ -793,12 +781,6 @@
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
     <FxCompile Include="particle_render.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="std2d.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="tilemap.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
     <FxCompile Include="func.fx">
@@ -815,9 +797,6 @@
     </FxCompile>
     <FxCompile Include="decal.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="std3d_deferred.fx">
-      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="decal.fx">
       <Filter>Source\08. ShaderCode</Filter>
@@ -869,6 +848,30 @@
     </FxCompile>
     <FxCompile Include="RaycastBase.fx">
       <Filter>Source\08. ShaderCode\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="2DUI.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="value.fx">
+      <Filter>Source\08. ShaderCode\Util</Filter>
+    </FxCompile>
+    <FxCompile Include="struct.fx">
+      <Filter>Source\08. ShaderCode\Util</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
+      <Filter>Source\08. ShaderCode\Util</Filter>
+    </FxCompile>
+    <FxCompile Include="std2d.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="tilemap.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="std3d_deferred.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
+    </FxCompile>
+    <FxCompile Include="postprocess.fx">
+      <Filter>Source\08. ShaderCode\PostProcess</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

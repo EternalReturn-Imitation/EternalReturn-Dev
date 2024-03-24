@@ -13,6 +13,8 @@ public:
 
 	CGameObject* GetPlayerCharacter() { return m_pPlayerCharacter; }
 
+	void GameStart();
+
 public:
 	void init();
 	void progress();

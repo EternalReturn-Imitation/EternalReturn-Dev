@@ -51,7 +51,7 @@ void ER_PlayerScript::tick()
 	// 캐릭터가 사망상태면 리턴
 	if (m_Character->IsDeadState())
 		return;
-	
+
 	// [ Mouse ]
 	std::pair<CGameObject*,int> pTargetObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vCsrPoint = GetFocusPoint();	// 타겟 지점

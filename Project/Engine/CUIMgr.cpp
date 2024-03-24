@@ -33,7 +33,6 @@ void CUIMgr::tick()
 	// 현재 레벨 접근
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 
-	
 	// UI Layer 가져오기
 	const vector<CGameObject*>& vecUI = pCurLevel->GetLayer(31)->GetParentObject();
 
@@ -47,7 +46,7 @@ void CUIMgr::tick()
 		CUIComponent* pUI = pOwner->GetUIComponent();
 
 		// UI Componenet가 없다
-		if (!pUI)
+		if (!pUI && pOwner->IsEnable())
 			continue;
 		
 		if (pUI->IsCsrOn() && !(pOwner->IsDead()))
@@ -76,9 +75,8 @@ void CUIMgr::tick()
 	for (int i = (int)vecUI.size() - 1; 0 <= i; --i)
 	{
 		CGameObject* pOwner = vecUI[i];
-
-		if (pOwner->GetName() == L"UI_ItemBox_BackGround" && KEY_TAP(KEY::RBTN))
-			int a = 0;
+		if (!pOwner->IsEnable())
+			continue;
 
 		m_pPriorityUI = GetPriorityUI(pOwner); // 현재 UI에 우선순위 UI가 있는지 확인한다.
 

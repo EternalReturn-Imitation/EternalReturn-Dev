@@ -16,6 +16,11 @@ ER_GameSystem::~ER_GameSystem()
 {
 }
 
+void ER_GameSystem::GameStart()
+{
+
+}
+
 void ER_GameSystem::init()
 {
 	ER_ItemMgr::GetInst()->init();

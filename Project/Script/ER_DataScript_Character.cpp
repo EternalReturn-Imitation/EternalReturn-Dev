@@ -16,6 +16,7 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_Inventory{}
 	, m_bHPChangeTrigger(false)
 	, m_fSPRegenTime(0.f)
+	, m_SkillPoint(0)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -38,6 +39,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 	, m_bHPChangeTrigger(false)
 	, m_fSPRegenTime(0.f)
+	, m_SkillPoint(0)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -140,6 +142,20 @@ void ER_DataScript_Character::SPRegen(float _magnification)
 	m_Stats->iSP = m_Stats->iMaxSP < SPRegen ? m_Stats->iMaxSP : SPRegen;
 }
 
+void ER_DataScript_Character::LevelUP()
+{
+	// IngameState level 변수 1 증가
+	// Exp 0으로 초기화
+	// Skill투자 가능포인트 1 증가
+
+	// [ 이펙트 ]
+	// 레벨업 이펙트 및 애니메이션 재생
+	// 레벨업 효과음 재생
+
+	// [ 스테이터스 최종 반영 ]
+	// StatusUpdate
+}
+
 void ER_DataScript_Character::init()
 {
 	// [텍스쳐 로딩]
@@ -157,6 +173,7 @@ void ER_DataScript_Character::init()
 		m_FullTax = CResMgr::GetInst()->FindRes<CTexture>(FullTexKey);
 		m_MapTex = CResMgr::GetInst()->FindRes<CTexture>(MapTexKey);
 	}
+	
 }
 
 void ER_DataScript_Character::begin()
@@ -171,6 +188,7 @@ void ER_DataScript_Character::begin()
 	}
 	StatusUpdate();
 
+	SkillSlotInit();
 
 	// 지울거
 	// CreateStatBar();
@@ -194,6 +212,10 @@ void ER_DataScript_Character::tick()
 		m_fSPRegenTime -= 0.5f;
 	}
 
+	if (KEY_TAP(KEY::_5))
+	{
+		m_SkillPoint++;
+	}
 
 	// 아래 지울것
 	// UpdateStatBar();
@@ -207,6 +229,19 @@ void ER_DataScript_Character::tick()
 	//}
 	
 
+}
+
+void ER_DataScript_Character::ChangeSkill(int _Idx)
+{
+
+}
+
+void ER_DataScript_Character::SkillSlotInit()
+{
+	m_Skill[(UINT)SKILLIDX::Q_1] = m_SkillList[(UINT)SKILLIDX::Q_1];
+	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
+	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
+	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }
 
 CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)

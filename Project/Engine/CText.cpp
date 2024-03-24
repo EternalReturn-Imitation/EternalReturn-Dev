@@ -307,6 +307,7 @@ void CText::LoadPrefab(const wstring& _key)
 		fread(&m_vecTextInfo[i]->FontColor, sizeof(UINT), 1, pFile);
 		fread(&m_vecTextInfo[i]->Flags, sizeof(UINT), 1, pFile);
 	}
+	fclose(pFile);
 }
 
 void CText::SaveToLevelFile(FILE* _File)

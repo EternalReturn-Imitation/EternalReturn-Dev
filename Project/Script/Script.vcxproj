@@ -207,6 +207,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_UIScript_Gauge.h" />
     <ClInclude Include="ER_UIScript_SkillSlot.h" />
     <ClInclude Include="ER_UIScript_SkillUpBtn.h" />
+    <ClInclude Include="ER_UIScript_StatusBarGauge.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ER_UIScript_ItemBox.h" />
     <ClInclude Include="pch.h" />
@@ -248,6 +249,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_UIScript_ItemBox.cpp" />
     <ClCompile Include="ER_UIScript_SkillSlot.cpp" />
     <ClCompile Include="ER_UIScript_SkillUpBtn.cpp" />
+    <ClCompile Include="ER_UIScript_StatusBarGauge.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

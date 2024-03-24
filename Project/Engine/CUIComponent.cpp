@@ -9,7 +9,7 @@
 CUIComponent::CUIComponent()
     : CComponent(COMPONENT_TYPE::UICOMPONENT)
     , m_bCsrPressed(false)
-    , m_bCsrOnUI(false)
+    , m_bCsrOn(false)
     , bOpen(false)
 {
 }
@@ -17,7 +17,7 @@ CUIComponent::CUIComponent()
 CUIComponent::CUIComponent(const CUIComponent& _Origin)
     : CComponent(COMPONENT_TYPE::UICOMPONENT)
     , m_bCsrPressed(false)
-    , m_bCsrOnUI(false)
+    , m_bCsrOn(false)
     , bOpen(false)
 {
 }
@@ -28,11 +28,6 @@ CUIComponent::~CUIComponent()
 
 void CUIComponent::CsrOnCheck()
 {
-    if (GetOwner()->GetName() == L"ChildTestUI")
-    {
-        int stop = 1;
-    }
-
     // 사각 충돌 : OBB 응용
     Matrix WolrdMat = Transform()->GetWorldMat();
     Matrix WorldScaleMat = Transform()->GetWorldScaleMat();
@@ -59,7 +54,7 @@ void CUIComponent::CsrOnCheck()
 
     if (r1 + r2 < CenterProjDist)
     {
-        m_bCsrOnUI = false;
+        m_bCsrOn = false;
         return;
     }
 
@@ -72,16 +67,34 @@ void CUIComponent::CsrOnCheck()
 
     if (r1 + r2 < CenterProjDist)
     {
-        m_bCsrOnUI = false;
+        m_bCsrOn = false;
         return;
     }
 
-    m_bCsrOnUI = true;
+    m_bCsrOn = true;
 }
 
 void CUIComponent::finaltick()
 {
+    if (!GetOwner()->IsEnable())
+    {
+        m_bCsrOn = false;
+        m_bPrevCsrOn = false;
+        return;
+    }
+
     CsrOnCheck();
+
+    if (m_bCsrOn && !m_bPrevCsrOn)
+    {
+        CsrBeginOn();
+        m_bPrevCsrOn = true;
+    }
+    else if (m_bPrevCsrOn && !m_bCsrOn)
+    {
+        CsrAway();
+        m_bPrevCsrOn = false;
+    }
 }
 
 void CUIComponent::CsrOn()
@@ -91,7 +104,7 @@ void CUIComponent::CsrOn()
     const vector<CScript*>& vecScript = GetOwner()->GetScripts();
     for (size_t i = 0; i < vecScript.size(); ++i)
     {
-        vecScript[i]->CsrClick();
+        vecScript[i]->CsrOn();
     }
 }
 
@@ -103,7 +116,7 @@ void CUIComponent::CsrTap()
     const vector<CScript*>& vecScript = GetOwner()->GetScripts();
     for (size_t i = 0; i < vecScript.size(); ++i)
     {
-        vecScript[i]->CsrClick();
+        vecScript[i]->CsrTap();
     }
 }
 
@@ -115,7 +128,7 @@ void CUIComponent::CsrRelease()
     const vector<CScript*>& vecScript = GetOwner()->GetScripts();
     for (size_t i = 0; i < vecScript.size(); ++i)
     {
-        vecScript[i]->CsrClick();
+        vecScript[i]->CsrRelease();
     }
 }
 
@@ -127,5 +140,27 @@ void CUIComponent::CsrClick()
     for (size_t i = 0; i < vecScript.size(); ++i)
     {
         vecScript[i]->CsrClick();
+    }
+}
+
+void CUIComponent::CsrBeginOn()
+{
+    DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrBeginOn", "");
+    // Script 호출
+    const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+    for (size_t i = 0; i < vecScript.size(); ++i)
+    {
+        vecScript[i]->CsrBeginOn();
+    }
+}
+
+void CUIComponent::CsrAway()
+{
+    DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrAway", "");
+    // Script 호출
+    const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+    for (size_t i = 0; i < vecScript.size(); ++i)
+    {
+        vecScript[i]->CsrAway();
     }
 }

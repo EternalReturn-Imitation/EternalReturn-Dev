@@ -63,7 +63,7 @@ struct tIngame_Stats
 		iHP = _StdStats.iMaxHP;
 		fHPRegen = _StdStats.fHPRegen;
 		iMaxSP = _StdStats.iMaxSP;
-		iSP = _StdStats.iMaxHP;
+		iSP = _StdStats.iMaxSP;
 		fSPRegen = _StdStats.fSPRegen;
 		fAttackSpeed = _StdStats.fAttackSpeed;
 		fCriticalStrikeChance = _StdStats.fCriticalStrikeChance;
@@ -127,10 +127,12 @@ struct tSkill_Info
 
 	// 인게임 정보
 	int		iSkillLevel;		// 스킬 레벨	: value Idx
+	int		iCurUseSP;			// 현재 사용에 필요한 SP
 	float	fCoolDown;			// 남은 재사용 대기시간
 	bool	IsUsable;			// 사용 가능 여부;
 	bool	IsAction;			// 작동중인지 여부;
 	float	fActionTime;		// 지속시간
+
 
 	tSkill_Info()
 		: iMaxSkillLevel(5)	// 최대 스킬 레벨
@@ -142,7 +144,8 @@ struct tSkill_Info
 		, iUseSP{}
 		, fMaxCoolDown{}
 		, fMaxActionTime{}
-		, iSkillLevel(5)
+		, iSkillLevel(0)
+		, iCurUseSP(0)
 		, fCoolDown(0.f)
 		, IsUsable(true)
 		, IsAction(false)
@@ -190,6 +193,8 @@ public:
 
 	void SkillStatusUpdate(float _Ratio)
 	{
+		iCurUseSP = iUseSP[iSkillLevel];
+
 		if (IsAction)
 		{
 			fActionTime -= _Ratio;

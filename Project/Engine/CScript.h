@@ -62,6 +62,9 @@ public:
     virtual void CsrTap() {}
     virtual void CsrRelease() {}
     virtual void CsrClick() {}
+    virtual void CsrBeginOn() {}
+    virtual void CsrAway() {}
+
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}

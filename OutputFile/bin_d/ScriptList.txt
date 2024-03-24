@@ -21,3 +21,4 @@ ER_UIScript_Gauge
 ER_UIScript_ItemBox
 ER_UIScript_SkillSlot
 ER_UIScript_SkillUpBtn
+ER_UIScript_StatusBarGauge

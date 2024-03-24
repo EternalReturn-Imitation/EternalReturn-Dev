@@ -203,6 +203,8 @@ void CCollider3D::LoadPrefab(const wstring& _key)
 	fread(&m_bAbsolute, sizeof(bool), 1, pFile);
 	fread(&m_Shape, sizeof(UINT), 1, pFile);
 	fread(&m_bDrawCollision, sizeof(bool), 1, pFile);
+
+	fclose(pFile);
 }
 
 void CCollider3D::SaveToLevelFile(FILE* _File)
