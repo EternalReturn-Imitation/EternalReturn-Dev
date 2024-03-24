@@ -78,23 +78,42 @@ void ER_UIMgr::CreateCenter()
 void ER_UIMgr::CreateCharacterInfo()
 {
 	StatusBar_CharacterInfo = new CGameObject;
+
+	// [ 캐릭터정보 UI 보드 생성 ]
+	StatusBar_CharacterInfo = new CGameObject;
+	StatusBar_CharacterInfo->SetName(L"UI_StatusBar_CharacterInfo");
+	AddComponents(StatusBar_CharacterInfo, _TRANSFORM | _MESHRENDER);
+
+	StatusBar_CharacterInfo->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	StatusBar_CharacterInfo->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"2DUISTD_Mtrl"), 0);
+	StatusBar_CharacterInfo->MeshRender()->GetDynamicMaterial(0);
+
+	StatusBar_CharacterInfo->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Img_MainBg_02.png"));
+	// StatusBar_Center->Transform()->LoadPrefab(L"UI_StatusBar_Center");
 }
 
 void ER_UIMgr::CreateInventory()
 {
 	StatusBar_Inventory = new CGameObject;
-}
 
-void ER_UIMgr::CreateSkillUpBtn()
-{
-	for (int i = 0; i < 4; ++i)
-		StatusBar_SkillLevelUpBtn[i] = new CGameObject;
+	// [ 인벤토리 UI 보드 생성 ]
+	StatusBar_Inventory = new CGameObject;
+	StatusBar_Inventory->SetName(L"UI_StatusBar_Inventory");
+	AddComponents(StatusBar_Inventory, _TRANSFORM | _MESHRENDER);
+
+	StatusBar_Inventory->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	StatusBar_Inventory->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"2DUISTD_Mtrl"), 0);
+	StatusBar_Inventory->MeshRender()->GetDynamicMaterial(0);
+
+	StatusBar_Inventory->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Img_MainBg_04.png"));
 }
 
 void ER_UIMgr::init()
 {
 	// 스테이터스 UI 생성
 	CreateCenter();
+	CreateCharacterInfo();
+	CreateInventory();
 }
 
 void ER_UIMgr::tick()
@@ -104,6 +123,8 @@ void ER_UIMgr::tick()
 void ER_UIMgr::SpawnUI()
 {
 	SpawnGameObject(StatusBar_Center, L"UI");
+	SpawnGameObject(StatusBar_CharacterInfo, L"UI");
+	SpawnGameObject(StatusBar_Inventory, L"UI");
 
 	for (auto Btn : StatusBar_SkillLevelUpBtn)
 		SpawnGameObject(Btn, L"UI");

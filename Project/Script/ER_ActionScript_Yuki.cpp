@@ -312,6 +312,8 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
 }
 void ER_ActionScript_Yuki::AttackExit(tFSMData& param)
 {
+    param.bData[0] = false;
+    SetStateGrade(eAccessGrade::BASIC);
 }
 
 void ER_ActionScript_Yuki::CraftEnter(tFSMData& param)

@@ -70,186 +70,20 @@ void CreateLumiaIsland()
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Rio", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Hyunwoo", Vec3(-69.3f, 0.0f, 37.6f));
 }
 void CreateTestEnemy()
 {
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-80.4f, 1.00345f, 44.8f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-76.9f, 0.0f, 37.6f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-71.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-80.4f, 1.00345f, 44.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-76.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-71.9f, 0.0f, 37.6f));
 
 }
 
 void TestObject()
 {
-	CGameObject* CenterBoardUI = new CGameObject;
-	CenterBoardUI->SetName(L"StatusBarUI_CenterBoard");
-	AddComponents(CenterBoardUI, _TRANSFORM | _MESHRENDER);
-	CenterBoardUI->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	CenterBoardUI->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	CenterBoardUI->MeshRender()->GetDynamicMaterial(0);
-	CenterBoardUI->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Img_MainBg_03.png"));
-	CenterBoardUI->Transform()->LoadPrefab(L"StatusBarUI_CenterBoard");
-
-
-	CGameObject* SkillSlot[4];
-	for (int i = 0; i < 4; ++i)
-	{
-		wstring prefab;
-		switch (i)
-		{
-		case 0:
-			prefab = L"SkillSlot_Q";
-			break;
-		case 1:
-			prefab = L"SkillSlot_W";
-			break;
-		case 2:
-			prefab = L"SkillSlot_E";
-			break;
-		case 3:
-			prefab = L"SkillSlot_R";
-			break;
-		default:
-			break;
-		}
-
-		SkillSlot[i] = new CGameObject;
-		AddComponents(SkillSlot[i], _TRANSFORM | _MESHRENDER | _TEXT | _UICOMPONENT);
-		SkillSlot[i]->SetName(L"SkillSlot_");
-		SkillSlot[i]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		SkillSlot[i]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-		SkillSlot[i]->MeshRender()->GetDynamicMaterial(0);
-		SkillSlot[i]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Img_Skill_BasicSlot.png"));
-		SkillSlot[i]->Transform()->LoadPrefab(prefab);
-		SkillSlot[i]->Text()->LoadPrefab(L"SkillSlot_Text");
-
-
-
-		CGameObject* SkillLv = new CGameObject;
-		SkillLv->SetName(L"SkillSlot_Lv");
-		AddComponents(SkillLv, _TRANSFORM | _MESHRENDER);
-		SkillLv->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		SkillLv->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-		SkillLv->MeshRender()->GetDynamicMaterial(0);
-		SkillLv->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"UI_SkillLevelBg_Five_LV5.png"));
-		SkillLv->Transform()->LoadPrefab(L"SkillSlot_SkillLv");
-
-		CGameObject* SkillLvup = new CGameObject;
-		SkillLvup->SetName(L"SkillSlot_LevelBtn");
-		AddComponents(SkillLvup, _TRANSFORM | _MESHRENDER);
-		SkillLvup->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		SkillLvup->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-		SkillLvup->MeshRender()->GetDynamicMaterial(0);
-		SkillLvup->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Btn_LevelUp_Basic.png"));
-
-		CenterBoardUI->AddChild(SkillSlot[i]);
-		SkillSlot[i]->AddChild(SkillLv);
-		SkillSlot[i]->AddChild(SkillLvup);
-	}
 	
-	CGameObject* HPGuageBg = new CGameObject;
-	HPGuageBg->SetName(L"HPGuageBG");
-	AddComponents(HPGuageBg, _TRANSFORM | _MESHRENDER | _TEXT);
-	HPGuageBg->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	HPGuageBg->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	HPGuageBg->MeshRender()->GetDynamicMaterial(0);
-	HPGuageBg->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"EmptyBar_UI.png"));
-	HPGuageBg->Transform()->LoadPrefab(L"StatusBar_HPBg");
-
-	CGameObject* SPGuageBg = new CGameObject;
-	SPGuageBg->SetName(L"SPGuageBg");
-	AddComponents(SPGuageBg, _TRANSFORM | _MESHRENDER | _TEXT);
-	SPGuageBg->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	SPGuageBg->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	SPGuageBg->MeshRender()->GetDynamicMaterial(0);
-	SPGuageBg->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"EmptyBar_UI.png"));
-	SPGuageBg->Transform()->LoadPrefab(L"StatusBar_SPBg");
-
-	CenterBoardUI->AddChild(HPGuageBg);
-	CenterBoardUI->AddChild(SPGuageBg);
-
-	CGameObject* HPGuage = new CGameObject;
-	HPGuage->SetName(L"HPGuage");
-	AddComponents(HPGuage, _TRANSFORM | _MESHRENDER);
-	HPGuage->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	HPGuage->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0); // 텍스쳐 0 흰색, 들어온 선형보간, 1,2는 수치바로반영
-	HPGuage->MeshRender()->GetDynamicMaterial(0);
-	HPGuage->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Img_Main_Gage_01.png"));
-	HPGuage->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"Img_Main_Gage_05.png"));
-	HPGuage->MeshRender()->GetMaterial(0)->SetTexParam(TEX_2, CResMgr::GetInst()->FindRes<CTexture>(L"ReturnBar_UI.png"));
-	HPGuage->Transform()->LoadPrefab(L"StatusBar_Gauge");
-	
-	CGameObject* SPGuage = new CGameObject;
-	SPGuage->SetName(L"SPGuage");
-	AddComponents(SPGuage, _TRANSFORM | _MESHRENDER);
-	SPGuage->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	SPGuage->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	SPGuage->MeshRender()->GetDynamicMaterial(0);
-	SPGuage->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Img_Main_Gage_02.png"));
-	SPGuage->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"ReturnBar_UI.png"));
-	SPGuage->Transform()->LoadPrefab(L"StatusBar_Gauge");
-
-
-	CGameObject* HPicon = new CGameObject;
-	HPicon->SetName(L"HPicon");
-	AddComponents(HPicon, _TRANSFORM | _MESHRENDER | _TEXT);
-	HPicon->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	HPicon->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	HPicon->MeshRender()->GetDynamicMaterial(0);
-	HPicon->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemComsumable_HP.png"));
-	HPicon->Transform()->LoadPrefab(L"StatusBar_Value");
-
-	CGameObject* SPicon = new CGameObject;
-	SPicon->SetName(L"SPicon");
-	AddComponents(SPicon, _TRANSFORM | _MESHRENDER | _TEXT);
-	SPicon->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	SPicon->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	SPicon->MeshRender()->GetDynamicMaterial(0);
-	SPicon->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemComsumable_Stamina.png"));
-	SPicon->Transform()->LoadPrefab(L"StatusBar_Value");
-
-	HPGuageBg->AddChild(HPGuage);
-	SPGuageBg->AddChild(SPGuage);
-
-	HPGuageBg->AddChild(HPicon);
-	SPGuageBg->AddChild(SPicon);
-
-	SpawnGameObject(CenterBoardUI, L"UI");
-
-
-	// Text Obj
-	// CGameObject* testTextObj = new CGameObject;
-	// AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT | _UICOMPONENT);
-	// testTextObj->SetName(L"TextUI");
-	// 
-	// // Std2DUIMtrl 사용
-	// testTextObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 0.f));
-	// testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	// testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	// 
-	// // 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
-	// testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_01.png"));
-	// testTextObj->MeshRender()->GetDynamicMaterial(0);
-	// 
-	// CGameObject* testChild = new CGameObject;
-	// AddComponents(testChild, _TRANSFORM | _MESHRENDER | _UICOMPONENT);
-	// 
-	// testChild->SetName(L"ChildTestUI");
-	// testChild->Transform()->SetRelativePos(Vec3(0.f, 0.f, -0.1f));
-	// testChild->Transform()->SetRelativeScale(Vec3(0.1f, 0.1f, 0.1f));
-	// testChild->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	// testChild->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	// testChild->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_02.png"));
-	// testChild->MeshRender()->GetDynamicMaterial(0);
-	// 
-	// testTextObj->AddChild(testChild);
-	// 
-	// 
-	// testTextObj->Text()->LoadPrefab(L"test");
-	// 
-	// SpawnGameObject(testTextObj, Vec3(0.f, 0.f, 0.f), L"UI");
 }
 
 void SetLayer(CLevel* _Level)

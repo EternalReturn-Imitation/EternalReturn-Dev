@@ -316,6 +316,8 @@ void ER_ActionScript_Aya::AttackUpdate(tFSMData& param)
 
 void ER_ActionScript_Aya::AttackExit(tFSMData& param)
 {
+    param.bData[0] = false;
+    SetStateGrade(eAccessGrade::BASIC);
 }
 
 void ER_ActionScript_Aya::CraftEnter(tFSMData& param)

@@ -216,7 +216,7 @@ void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
     param.bData[1] = false;
     param.bData[3] = !param.bData[3];
 
-    if (param.bData[0])
+    if (param.bData[3])
     {
         Animator3D()->SelectAnimation(L"Hyunwoo_Attack0", false);
         param.iData[0] = 6;
@@ -289,6 +289,7 @@ void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
         {
             // 거리 판단
             float AtkRange = GetStatus()->fAtkRange;
+            
 
             if (IsInRange(Target, AtkRange))
                 AttackEnter(param);
@@ -300,7 +301,6 @@ void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
 void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
 {
     param.bData[0] = false;
-    param.bData[1] = false;
     SetStateGrade(eAccessGrade::BASIC);
 }
 

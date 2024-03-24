@@ -257,9 +257,11 @@
     <ClInclude Include="CUIComponent.h">
       <Filter>Source\06. Component\12. UIComponent</Filter>
     </ClInclude>
-    <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CText.h">
       <Filter>Source\06. Component\11. Text</Filter>
+    </ClInclude>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClInclude>
     <ClInclude Include="CFrustum.h">
       <Filter>Source\06. Component\4. Camera\Frustum</Filter>

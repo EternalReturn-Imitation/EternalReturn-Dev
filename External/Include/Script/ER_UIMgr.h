@@ -25,7 +25,6 @@ private:
     void CreateCenter();
     void CreateCharacterInfo();
     void CreateInventory();
-    void CreateSkillUpBtn();
 
 public:
     void init();

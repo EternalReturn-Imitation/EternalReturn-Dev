@@ -349,6 +349,8 @@ void ER_ActionScript_Jackie::AttackUpdate(tFSMData& param)
 }
 void ER_ActionScript_Jackie::AttackExit(tFSMData& param)
 {
+    param.bData[0] = false;
+    SetStateGrade(eAccessGrade::BASIC);
 }
 
 void ER_ActionScript_Jackie::CraftEnter(tFSMData& param)

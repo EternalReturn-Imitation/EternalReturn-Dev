@@ -325,7 +325,6 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
 void ER_ActionScript_Rio::AttackExit(tFSMData& param)
 {
     param.bData[0] = false;
-    param.bData[1] = false;
     SetStateGrade(eAccessGrade::BASIC);
 }
 

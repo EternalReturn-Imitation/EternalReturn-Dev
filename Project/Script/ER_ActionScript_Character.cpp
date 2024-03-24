@@ -47,9 +47,10 @@ void ER_ActionScript_Character::Move(tFSMData& _Data)
 	// 이동가능 상태 판단
 	if (IsAbleChange(eAccessGrade::BASIC))
 	{
+		STATEDATA_SET(MOVE, _Data);
+
 		if (m_iCurState != (UINT)ER_CHAR_ACT::MOVE)
 		{
-			STATEDATA_SET(MOVE, _Data);
 			ChangeState(ER_CHAR_ACT::MOVE);				// 이동중이 아니었다면 이동상태 변환
 		}
 		else
@@ -119,6 +120,7 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 		}
 		else
 		{
+			STATEDATA_SET(ATTACK, _Data);
 			tFSMData MoveData = {};
 			MoveData.lParam		= _Data.lParam;		// 타겟
 			MoveData.bData[0]	= true;				// 타겟 추적중
