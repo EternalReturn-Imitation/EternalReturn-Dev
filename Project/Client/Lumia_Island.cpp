@@ -65,7 +65,7 @@ void CreateLumiaIsland()
 
 	ER_UIMgr::GetInst()->GameStart();
 	
-	// TestObject();
+	TestObject();
 }
 
 void CreateTestPlayer()
@@ -119,8 +119,17 @@ void TestObject()
 	// Particle
 
 	// 마우스 커서위치
+	
 
-	CGameObject* testParticle = new CGameObject;
+
+	//CGameObject* testParticle = new CGameObject();
+	//CGameObject* testParticle = xnew<CGameObject>();
+	CGameObject* testParticle = onew(CGameObject);
+
+	//CGameObject* testParticle111 = onew(CGameObject);
+	//odelete(testParticle111);
+
+	testParticle->SetName(L"particleTest");
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
 	

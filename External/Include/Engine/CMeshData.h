@@ -16,6 +16,9 @@ struct tMeshData
 
 	int						m_bGroupObj;
 	int						m_ParentIdx;
+
+	tMeshData() {}
+	virtual ~tMeshData() {}
 };
 
 class CMeshData :

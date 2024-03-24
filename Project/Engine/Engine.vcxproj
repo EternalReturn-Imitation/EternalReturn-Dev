@@ -171,6 +171,7 @@ call EngineCopy.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Allocator.h" />
     <ClInclude Include="CAnim2D.h" />
     <ClInclude Include="CAnim3D.h" />
     <ClInclude Include="CAnimation3DShader.h" />
@@ -239,6 +240,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CUIComponent.h" />
     <ClInclude Include="CUIMgr.h" />
     <ClInclude Include="CUI_Button.h" />
+    <ClInclude Include="CustomContainer.h" />
     <ClInclude Include="CWeightMapShader.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
@@ -255,6 +257,9 @@ call EngineCopy.bat</Command>
     <ClInclude Include="FSM.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="MemoryMgr.h" />
+    <ClInclude Include="MemoryPool.h" />
+    <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ptr.h" />
     <ClInclude Include="resource.h" />
@@ -263,6 +268,7 @@ call EngineCopy.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DCCollisionMgr.cpp" />
+    <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="CAnim2D.cpp" />
     <ClCompile Include="CAnim3D.cpp" />
     <ClCompile Include="CAnimation3DShader.cpp" />
@@ -349,6 +355,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="extern.cpp" />
     <ClCompile Include="FSM.cpp" />
     <ClCompile Include="func.cpp" />
+    <ClCompile Include="MemoryMgr.cpp" />
+    <ClCompile Include="MemoryPool.cpp" />
+    <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

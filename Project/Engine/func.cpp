@@ -650,3 +650,23 @@ float CTruncate(float value, int decimalPlaces) {
 	float factor = (float)std::pow(10.0, decimalPlaces);
 	return std::floor(value * factor) / factor;
 }
+
+//memoryMgr init
+#include "MemoryMgr.h"
+
+
+MemoryMgr* GMemory = nullptr;
+
+class CoreGlobal
+{
+public:
+	CoreGlobal()
+	{
+		GMemory = new MemoryMgr();
+	}
+
+	~CoreGlobal()
+	{
+		delete GMemory;
+	}
+} GCoreGlobal;

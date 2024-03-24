@@ -151,6 +151,8 @@ struct tSkill_Info
 		strName = L"NULL";
 	}
 
+	virtual ~tSkill_Info() {}
+
 public:
 	bool Use(int* _CharacterSP, bool _IsBuf = false)
 	{

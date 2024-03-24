@@ -14,6 +14,7 @@
 #include "CInstancingBuffer.h"
 #include "CPathFindMgr.h"
 #include "CUIMgr.h"
+#include "MemoryMgr.h"
 
 #include "CCamera.h"
 
