@@ -40,7 +40,7 @@ private:
     CUIComponent*           m_UICom;
     vector<CScript*>        m_vecScript;
 
-    CGameObject* m_Parent;
+    CGameObject*            m_Parent;
     vector<CGameObject*>    m_vecChild;
 
     int                     m_iLayerIdx; // 소속된 레이어 인덱스값

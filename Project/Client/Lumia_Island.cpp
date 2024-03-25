@@ -71,13 +71,13 @@ void CreateLumiaIsland()
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Hyunwoo", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Rio", Vec3(-69.3f, 0.0f, 37.6f));
 }
 void CreateTestEnemy()
 {
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-80.4f, 1.00345f, 44.8f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-76.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-71.9f, 0.0f, 37.6f));
 
 }
@@ -106,6 +106,7 @@ void SetLayer(CLevel* _Level)
 	_Level->GetLayer(4)->SetName(L"Roof");
 	
 	_Level->GetLayer(5)->SetName(L"ItemBox");
+	_Level->GetLayer(6)->SetName(L"ItemBoxTag");
 	_Level->GetLayer(11)->SetName(L"Monster");
 	_Level->GetLayer(12)->SetName(L"Character");
 	_Level->GetLayer(13)->SetName(L"Player");
@@ -170,6 +171,7 @@ void SetCamera()
 	UICamera->Camera()->SetOrthoHeight(WinResolution.y);
 
 	UICamera->Camera()->SetLayerMaskAll(false);
+	UICamera->Camera()->SetLayerMask(28, true);
 	UICamera->Camera()->SetLayerMask(31, true);
 
 	SpawnGameObject(UICamera, Vec3(0.f, 0.f, -5.f), L"Camera");
@@ -195,6 +197,7 @@ void SetLight()
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMaskAll(true);
+	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(6, false);	// ItemBoxTag
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(28, false);	// InGameUI
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(31, false);	// UI
 
@@ -276,6 +279,7 @@ void Create_Archery()
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
@@ -313,11 +317,12 @@ void Create_Forest()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
-
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
 }
 void Create_Hotel()
@@ -367,10 +372,12 @@ void Create_Hotel()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
 }
 void Create_SandyBeach()
@@ -405,10 +412,12 @@ void Create_SandyBeach()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
 }
 void Create_School()
@@ -472,10 +481,12 @@ void Create_School()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
 }
 void Create_Uptown()
@@ -510,10 +521,12 @@ void Create_Uptown()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
+		
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
 }
 

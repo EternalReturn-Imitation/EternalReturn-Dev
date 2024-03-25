@@ -99,7 +99,7 @@ void CUIComponent::finaltick()
 
 void CUIComponent::CsrOn()
 {
-    DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrOn", "");
+    // DEBUG_LOG_COLLISION(ToString(GetOwner()->GetName()).c_str(), "CsrOn", "");
     // Script »£√‚
     const vector<CScript*>& vecScript = GetOwner()->GetScripts();
     for (size_t i = 0; i < vecScript.size(); ++i)

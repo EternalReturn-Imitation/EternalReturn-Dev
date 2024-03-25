@@ -241,6 +241,10 @@ void CTransform::LoadPrefab(const wstring& _key)
 	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
 
 	_wfopen_s(&pFile, strFilePath.c_str(), L"rb");
+	if (pFile == nullptr)
+	{
+		return;
+	}
 
 	// Å°°ª
 	LoadWString(m_PrefabKey, pFile);

@@ -195,6 +195,11 @@ void CCollider3D::LoadPrefab(const wstring& _key)
 
 	_wfopen_s(&pFile, strFilePath.c_str(), L"rb");
 
+	if (pFile == nullptr)
+	{
+		return;
+	}
+
 	// Å°°ª
 	LoadWString(m_PrefabKey, pFile);
 

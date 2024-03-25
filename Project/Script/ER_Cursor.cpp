@@ -14,6 +14,8 @@ ER_Cursor::~ER_Cursor()
 }
 void ER_Cursor::init()
 {
+	GetOwner()->SetName(L"Cursor");
+
 	AddComponents(GetOwner(), _TRANSFORM | _MESHRENDER);
 	MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"2DUIIndicator_Mtrl"), 0);

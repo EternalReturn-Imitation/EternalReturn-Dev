@@ -121,6 +121,9 @@
     <Filter Include="Script\ER\SystemScript\Cursor">
       <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
+      <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -236,6 +239,12 @@
     </ClInclude>
     <ClInclude Include="ER_Cursor.h">
       <Filter>Script\ER\SystemScript\Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_TrackingStatusBar.h">
+      <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_ItemSlot.h">
+      <Filter>Script\UI\Item\Slot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +367,12 @@
     </ClCompile>
     <ClCompile Include="ER_Cursor.cpp">
       <Filter>Script\ER\SystemScript\Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_TrackingStatusBar.cpp">
+      <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_ItemSlot.cpp">
+      <Filter>Script\UI\Item\Slot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

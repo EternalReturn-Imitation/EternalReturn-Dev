@@ -6,6 +6,8 @@
 #include "ER_PlayerScript_Range.h"
 
 #include "ER_UIMgr.h"
+#include "ER_UIScript_TrackingStatusBar.h"
+#include "ER_DataScript_Character.h"
 
 ER_CharacterMgr::ER_CharacterMgr()
 {
@@ -26,6 +28,7 @@ CGameObject* ER_CharacterMgr::SpawnCharacter(const wstring& _key)
 {
     CGameObject* Character = new CGameObject(*m_mapCharacters.find(_key)->second);
     AddComponents(Character, _COLLIDER3D | _FINDPATH);
+    Character->GetScript<ER_DataScript_Character>()->begin();
 
     Character->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 
@@ -33,6 +36,8 @@ CGameObject* ER_CharacterMgr::SpawnCharacter(const wstring& _key)
     Character->Collider3D()->SetOffsetScale(Vec3(1.0f, 2.0f, 1.0f));
     Character->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
 
+    Character->AddComponent(new ER_UIScript_TrackingStatusBar);
+    Character->GetScript<ER_UIScript_TrackingStatusBar>()->init(Character);
 
     return Character;
 }

@@ -124,7 +124,8 @@ CGameObject* CUIMgr::GetPriorityUI(CGameObject* _pParentUI)
 
 	CGameObject* pParentUI = _pParentUI;
 	
-	if (!IsUIObject(_pParentUI))
+	bool bUIObject = IsUIObject(_pParentUI);
+	if (!bUIObject)
 		return nullptr;
 
 	static queue<CGameObject*> _queue;

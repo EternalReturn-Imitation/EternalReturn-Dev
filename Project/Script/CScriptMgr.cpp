@@ -23,9 +23,11 @@
 #include "ER_ProjectileScript.h"
 #include "ER_UIScript_Gauge.h"
 #include "ER_UIScript_ItemBox.h"
+#include "ER_UIScript_ItemSlot.h"
 #include "ER_UIScript_SkillSlot.h"
 #include "ER_UIScript_SkillUpBtn.h"
 #include "ER_UIScript_StatusBarGauge.h"
+#include "ER_UIScript_TrackingStatusBar.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -51,9 +53,11 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ProjectileScript");
 	_vec.push_back(L"ER_UIScript_Gauge");
 	_vec.push_back(L"ER_UIScript_ItemBox");
+	_vec.push_back(L"ER_UIScript_ItemSlot");
 	_vec.push_back(L"ER_UIScript_SkillSlot");
 	_vec.push_back(L"ER_UIScript_SkillUpBtn");
 	_vec.push_back(L"ER_UIScript_StatusBarGauge");
+	_vec.push_back(L"ER_UIScript_TrackingStatusBar");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -102,12 +106,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_UIScript_Gauge;
 	if (L"ER_UIScript_ItemBox" == _strScriptName)
 		return new ER_UIScript_ItemBox;
+	if (L"ER_UIScript_ItemSlot" == _strScriptName)
+		return new ER_UIScript_ItemSlot;
 	if (L"ER_UIScript_SkillSlot" == _strScriptName)
 		return new ER_UIScript_SkillSlot;
 	if (L"ER_UIScript_SkillUpBtn" == _strScriptName)
 		return new ER_UIScript_SkillUpBtn;
 	if (L"ER_UIScript_StatusBarGauge" == _strScriptName)
 		return new ER_UIScript_StatusBarGauge;
+	if (L"ER_UIScript_TrackingStatusBar" == _strScriptName)
+		return new ER_UIScript_TrackingStatusBar;
 	return nullptr;
 }
 
@@ -181,6 +189,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMBOX:
 		return new ER_UIScript_ItemBox;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMSLOT:
+		return new ER_UIScript_ItemSlot;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_SKILLSLOT:
 		return new ER_UIScript_SkillSlot;
 		break;
@@ -189,6 +200,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
 		return new ER_UIScript_StatusBarGauge;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
+		return new ER_UIScript_TrackingStatusBar;
 		break;
 	}
 	return nullptr;
@@ -286,6 +300,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_UIScript_ItemBox";
 		break;
 
+	case SCRIPT_TYPE::ER_UISCRIPT_ITEMSLOT:
+		return L"ER_UIScript_ItemSlot";
+		break;
+
 	case SCRIPT_TYPE::ER_UISCRIPT_SKILLSLOT:
 		return L"ER_UIScript_SkillSlot";
 		break;
@@ -296,6 +314,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
 		return L"ER_UIScript_StatusBarGauge";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
+		return L"ER_UIScript_TrackingStatusBar";
 		break;
 
 	}

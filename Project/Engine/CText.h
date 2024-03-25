@@ -58,6 +58,7 @@ public:
 		INT,		// 정수형
 		FLOAT_DP1,	// 소수점 첫재자리
 		FLOAT_DP2,	// 소수점 둘째자리
+		PERCENT,	// 퍼센트 표기
 	};
 
 private:

@@ -108,7 +108,7 @@ void CKeyMgr::tick()
 	if (GetFocus())
 	{
 		if(bCsrHide)
-			ShowCursor(false);
+			ShowCursor(true);
 
 		for (size_t i = 0; i < m_vecKey.size(); ++i)
 		{

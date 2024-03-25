@@ -23,26 +23,20 @@ private:
 
     // [UI]
     CGameObject* m_pItemBoxUI;                                  // 아이템 박스 UI
-
-    CGameObject* m_pBoxIcon;
-
-public:
-    void init();
-    virtual void begin() override;
-    virtual void tick() override;
+    CGameObject* m_UIBoxTag;
 
 public:
-    virtual void BeginOverlap(CCollider3D* _Other) override;
-    virtual void OnOverlap(CCollider3D* _Other) override;
-    virtual void EndOverlap(CCollider3D* _Other) override;
-
-    virtual void BeginRayOverlap() override;
-    virtual void OnRayOverlap() override;
-    virtual void EndRayOverlap() override;
+    void            init();
+    virtual void    begin() override;
+    virtual void    tick() override;
 
 public:
-    void CreateRandomItems();
-    void CreateBoxIcon();
+    virtual void    BeginRayOverlap() override;
+    virtual void    OnRayOverlap() override;
+    virtual void    EndRayOverlap() override;
+
+public:
+    void CreateBoxUI();
 
 public:
     CGameObject* GetItem(int _i) { return m_pItemList[_i]; }
@@ -54,6 +48,4 @@ public:
     ~ER_DataScript_ItemBox();
 
     CLONE(ER_DataScript_ItemBox);
-
-    friend class m_UIScript_ItemBox;
 };

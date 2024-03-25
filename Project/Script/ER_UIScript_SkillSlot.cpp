@@ -43,12 +43,11 @@ void ER_UIScript_SkillSlot::RegistPlayerCharacetr()
 
 	int SkillSlot = 1;
 	MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &SkillSlot);
-
-	Text()->SetReference(1, 0, (DWORD_PTR) & (*m_Skill)->iCurUseSP);
 }
 
 void ER_UIScript_SkillSlot::begin()
 {
+	Text()->SetReference(1, 1, (DWORD_PTR)&(*m_Skill)->iCurUseSP);
 	SkillLevelIndicator->MeshRender()->GetMaterial(0)->SetScalarParam(INT_0, &(*m_Skill)->iSkillLevel);
 }
 

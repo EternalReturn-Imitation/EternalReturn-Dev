@@ -50,7 +50,8 @@ public:
     virtual void begin() override;
     virtual void tick() override;
 
-    const wstring& GetCharacterName() { return m_strKey; }
+    const wstring&      GetCharacterName() { return m_strKey; }
+    const wstring& GetCharacterKorName() { return m_strName; }
 
 public:
     // [Status]
@@ -83,13 +84,6 @@ public:
     CGameObject*        ItemAcquisition(CGameObject* _ItemObj);
 
     bool                SwapItem(CGameObject* _DragmItem, CGameObject* _DropItem);
-
-public:
-    void                CreateStatBar();
-    void                UpdateStatBar(); // 매 틱 업데이트
-    void                ChangeStatBar(); // 변환이 필요할 때만 호출
-    void                ChangeHPReturnBar(); //HPReturnBar 변경시 호출
-
 public:
     virtual void        BeginOverlap(CCollider3D* _Other) override;
     virtual void        OnOverlap(CCollider3D* _Other) override;

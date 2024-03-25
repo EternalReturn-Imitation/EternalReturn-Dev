@@ -50,4 +50,5 @@ void ER_GameSystem::progress()
 
 void ER_GameSystem::tick()
 {
+	ER_UIMgr::GetInst()->tick();
 }

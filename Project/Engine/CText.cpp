@@ -50,10 +50,11 @@ int CText::AddText(Vec2 _vOffsetPos, float _fSize, UINT _Color)
 bool CText::SetReference(int _Textidx, UINT _RefDataType, DWORD_PTR _RefPtr)
 {
 	// 입력으로 넣은 인덱스가 TextInfo 배열 작은경우만 동작
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->RefDataType = _RefDataType;
 		m_vecTextInfo[_Textidx]->RefPtr = _RefPtr;
+		m_vecTextInfo[_Textidx]->bReference = true;
 		return true;
 	}
 
@@ -63,7 +64,7 @@ bool CText::SetReference(int _Textidx, UINT _RefDataType, DWORD_PTR _RefPtr)
 bool CText::SetText(int _Textidx, const wchar_t* _str)
 {
 	// 입력으로 넣은 인덱스가 TextInfo 배열 작은경우만 동작
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->str = _str;
 		return true;
@@ -75,7 +76,7 @@ bool CText::SetText(int _Textidx, const wchar_t* _str)
 bool CText::SetOffset(int _Textidx, Vec2 _vOffset)
 {
 	// 입력으로 넣은 인덱스가 TextInfo 배열 작은경우만 동작
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->vOffsetPos = _vOffset;
 		return true;
@@ -87,7 +88,7 @@ bool CText::SetOffset(int _Textidx, Vec2 _vOffset)
 bool CText::SetSize(int _Textidx, float _size)
 {
 	// 입력으로 넣은 인덱스가 TextInfo 배열 작은경우만 동작
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->fSize = _size;
 		return true;
@@ -100,7 +101,7 @@ bool CText::SetSize(int _Textidx, float _size)
 bool CText::SetColor(int _Textidx, UINT _Color)
 {
 	// 입력으로 넣은 인덱스가 TextInfo 배열 작은경우만 동작
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->str = _Color;
 		return true;
@@ -111,7 +112,7 @@ bool CText::SetColor(int _Textidx, UINT _Color)
 
 bool CText::SetLeft(int _Textidx)
 {
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->Flags = FW1_VCENTER | FW1_LEFT;
 		return true;
@@ -122,7 +123,7 @@ bool CText::SetLeft(int _Textidx)
 
 bool CText::SetCenter(int _Textidx)
 {
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->Flags = FW1_VCENTER | FW1_CENTER;
 		return true;
@@ -133,7 +134,7 @@ bool CText::SetCenter(int _Textidx)
 
 bool CText::SetRight(int _Textidx)
 {
-	if (m_vecTextInfo.size() < _Textidx)
+	if (_Textidx < m_vecTextInfo.size())
 	{
 		m_vecTextInfo[_Textidx]->Flags = FW1_VCENTER | FW1_RIGHT;
 		return true;
@@ -176,37 +177,73 @@ void CText::finaltick()
 			{
 			case (UINT)eTextRefType::WSTRING:
 			{
+				wchar_t* refstr = reinterpret_cast<wchar_t*>(Text->RefPtr);
+				
 				// 문자열 비교후 같지 않으면 갱신
-				if (Text->str != (wchar_t*)(Text->RefPtr))
-					Text->str = (wchar_t*)(Text->RefPtr);
+				if (Text->str != refstr)
+					Text->str = refstr;
 			}
 				break;
 			case (UINT)eTextRefType::INT:
 			{
-				int CurRefint = *(int*)(Text->RefPtr);
+				int* CurRefint = reinterpret_cast<int*>(Text->RefPtr);
+				
+				wchar_t szbuf[5] = {};
+				swprintf_s(szbuf, L"%d", *CurRefint);
 
 				// 문자열 갱신
-				if (CurRefint != Text->PrevRefData.i)
+				if (*CurRefint != Text->PrevRefData.i)
 				{
-					Text->str = std::to_wstring(CurRefint);
-					Text->PrevRefData.i = CurRefint;
+					Text->str = szbuf;
+					Text->PrevRefData.i = *CurRefint;
 				}
 			}
 				break;
 			case (UINT)eTextRefType::FLOAT_DP1:
-			case (UINT)eTextRefType::FLOAT_DP2:
 			{
-				float CurReffloat = *((float*)(Text->RefPtr));
-				CurReffloat = CTruncate(CurReffloat, Text->RefDataType);
+				float* CurReffloat = reinterpret_cast<float*>(Text->RefPtr);
+				*CurReffloat = CTruncate(*CurReffloat, Text->RefDataType);
+
+				wchar_t szbuf[5] = {};
+				swprintf_s(szbuf, L"%.1f", *CurReffloat);
 
 				// 문자열 갱신
-				if (CurReffloat != Text->PrevRefData.f)
+				if (*CurReffloat != Text->PrevRefData.f)
 				{
-					Text->str = std::to_wstring(CurReffloat);
-					Text->PrevRefData.f = CurReffloat;
+					Text->str = szbuf;
+					Text->PrevRefData.f = *CurReffloat;
+				}
+			}
+			break;
+			case (UINT)eTextRefType::FLOAT_DP2:
+			{
+				float* CurReffloat = reinterpret_cast<float*>(Text->RefPtr);
+				*CurReffloat = CTruncate(*CurReffloat, Text->RefDataType);
+
+				wchar_t szbuf[5] = {};
+				swprintf_s(szbuf, L"%.2f", *CurReffloat);
+
+				// 문자열 갱신
+				if (*CurReffloat != Text->PrevRefData.f)
+				{
+					Text->str = szbuf;
+					Text->PrevRefData.f = *CurReffloat;
 				}
 			}
 				break;
+			case (UINT)eTextRefType::PERCENT:
+				float* CurReffloat = reinterpret_cast<float*>(Text->RefPtr);
+				*CurReffloat = CTruncate(*CurReffloat, 2);
+				
+				wchar_t szbuf[5] = {};
+				swprintf_s(szbuf, L"%d%%", static_cast<int>(*CurReffloat * 100));
+				
+				// 문자열 갱신
+				if (*CurReffloat != Text->PrevRefData.f || Text->str != szbuf)
+				{
+					Text->str = szbuf;
+					Text->PrevRefData.f = *CurReffloat;
+				}
 			}
 		}
 	}
@@ -287,6 +324,11 @@ void CText::LoadPrefab(const wstring& _key)
 	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + RelativePath;
 
 	_wfopen_s(&pFile, strFilePath.c_str(), L"rb");
+
+	if (pFile == nullptr)
+	{
+		return;
+	}
 
 	// 키값
 	LoadWString(m_PrefabKey, pFile);

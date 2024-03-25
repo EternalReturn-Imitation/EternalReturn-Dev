@@ -20,6 +20,15 @@ int TextUI::render_update()
         return FALSE;
 
     CText* Textcomp = GetTarget()->Text();
+    static CText* PrevText;
+    static int CurEditTex = 0;
+    if (Textcomp != PrevText)
+    {
+        CurEditTex = 0;
+    }
+    
+    PrevText = Textcomp;
+
     vector<CText::tTextInfo*> pText = Textcomp->m_vecTextInfo;
 
     // 프리팹 키
@@ -47,7 +56,6 @@ int TextUI::render_update()
     // 현재텍스트(Combo) / 전체 텍스트 수
     ImGui::Button("TextList", ImVec2(0.f, 0.f)); ImGui::SameLine();
 
-    static int CurEditTex = 0;
     int MaxSize = pText.size();
 
     const char* idx[20] = { "0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19" };
