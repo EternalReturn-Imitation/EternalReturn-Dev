@@ -73,3 +73,8 @@ typedef Vector4 Vec4;
 #include <bitset>
 #include <set>
 #include <iomanip>
+
+//메모리 매니저 관련
+#include "MemoryMgr.h"
+#include "CustomContainer.h"
+#include "ObjectPool.h"

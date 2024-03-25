@@ -84,7 +84,16 @@ void CreateTestEnemy()
 
 void TestObject()
 {
-	
+	//CGameObject* testParticle = new CGameObject();
+	//CGameObject* testParticle = xnew<CGameObject>();
+	CGameObject* testParticle = onew(CGameObject);
+
+	//CGameObject* testParticle111 = onew(CGameObject);
+	//odelete(testParticle111);
+
+	testParticle->SetName(L"particleTest");
+	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
+	CParticleSystem* Particle = testParticle->ParticleSystem();
 }
 
 void SetLayer(CLevel* _Level)

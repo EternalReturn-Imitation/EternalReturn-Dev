@@ -369,6 +369,7 @@ void ER_DataScript_Character::UpdateStatBar()
 void ER_DataScript_Character::ChangeStatBar()
 {
 	ER_Ingame_Stats* stat = GetStatus();
+
 	float maxHP = stat->iMaxHP;
 	float curHP = stat->iHP;
 
@@ -392,20 +393,20 @@ void ER_DataScript_Character::ChangeStatBar()
 
 	m_bHPChangeTrigger = true;
 
-	stat = GetStatus();
-	float maxSR = stat->iMaxSP;
-	float curSR = stat->iSP;
-	
-	decreaseRate = ((curSR) / maxSR) * 120.f;
-	m_aStatPosOffset[2] = -((120 - decreaseRate) / 2);
-	
-	pos = m_aStatBar[2]->Transform()->GetRelativePos();	 
-	pos.x = pos.x - ((120 - decreaseRate) / 2);
-	scale = m_aStatBar[2]->Transform()->GetRelativeScale();
-	scale.x = decreaseRate;
-	
-	m_aStatBar[2]->Transform()->SetRelativePos(pos);
-	m_aStatBar[2]->Transform()->SetRelativeScale(scale);
+	//stat = GetStatus();
+	//float maxSR = stat->iMaxSP;
+	//float curSR = stat->iSP;
+	//
+	//decreaseRate = ((curSR) / maxSR) * 120.f;
+	//m_aStatPosOffset[2] = -((120 - decreaseRate) / 2);
+	//
+	//pos = m_aStatBar[2]->Transform()->GetRelativePos();	 
+	//pos.x = pos.x - ((120 - decreaseRate) / 2);
+	//scale = m_aStatBar[2]->Transform()->GetRelativeScale();
+	//scale.x = decreaseRate;
+	//
+	//m_aStatBar[2]->Transform()->SetRelativePos(pos);
+	//m_aStatBar[2]->Transform()->SetRelativeScale(scale);
 }
 
 void ER_DataScript_Character::ChangeHPReturnBar()

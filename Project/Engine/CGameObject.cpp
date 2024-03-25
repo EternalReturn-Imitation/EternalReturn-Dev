@@ -26,6 +26,7 @@ CGameObject::CGameObject()
 	, m_bLifeSpan(false)
 	, m_bEnable(true)
 	, m_bOutofLayer(false)
+	, m_TextCom(nullptr)
 {
 }
 
@@ -42,6 +43,7 @@ CGameObject::CGameObject(const CGameObject& _Other)
 	, m_bLifeSpan(false)
 	, m_bEnable(true)
 	, m_bOutofLayer(false)
+	, m_TextCom(nullptr)
 {
 	// Component บนป็
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)

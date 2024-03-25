@@ -4,6 +4,9 @@
 #include "ER_DataScript_Character.h"
 #include "ER_ActionScript_Character.h"
 
+//테스트용
+#include "ER_GameSystem.h"
+
 ER_BattleSystem::ER_BattleSystem()
 {
 }
