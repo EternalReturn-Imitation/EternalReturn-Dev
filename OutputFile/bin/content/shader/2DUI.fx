@@ -137,13 +137,16 @@ float4 PS_2DUI_GUAGE(VS_OUT _in) : SV_Target
 }
 
 // [ Indicator ]
-#define Level0    g_tex_0
-#define Level1    g_tex_1
-#define Level2    g_tex_2
-#define Level3    g_tex_3
-#define Level4    g_tex_4
-#define Level5    g_tex_5
-#define Level     g_int_0
+#define Texture0    g_tex_0
+#define Texture1    g_tex_1
+#define Texture2    g_tex_2
+#define Texture3    g_tex_3
+#define Texture4    g_tex_4
+#define Texture5    g_tex_5
+#define Texture6    g_tex_6
+#define Texture7    g_tex_7
+
+#define TextureType     g_int_0
 
 
 float4 PS_2DUI_Indicator(VS_OUT _in) : SV_Target
@@ -183,6 +186,59 @@ float4 PS_2DUI_Indicator(VS_OUT _in) : SV_Target
         vOutColor = g_tex_7.Sample(g_sam_0, _in.vUV);
     }
         
+    return vOutColor;
+}
+
+// [ Item Slot ]
+#define ItemTexture    g_tex_0
+#define NORMAL         g_tex_1
+#define UNCOMMON       g_tex_2
+#define RARE           g_tex_3
+#define EPIC           g_tex_4
+#define Empty          g_tex_5
+#define IsNotEmpty     g_int_0
+#define ItemGrade      g_int_1
+
+
+float4 PS_2DUI_ItemSlot(VS_OUT _in) : SV_Target
+{
+    float4 vOutColor = (float4) 0.f;
+    
+    if (IsNotEmpty && g_btex_0)
+    {
+        if (ItemGrade == 0 && g_btex_1)
+        {
+            vOutColor = g_tex_1.Sample(g_sam_0, _in.vUV);
+        }
+        else if (ItemGrade == 1 && g_btex_2)
+        {
+            vOutColor = g_tex_2.Sample(g_sam_0, _in.vUV);
+        }
+        else if (ItemGrade == 2 && g_btex_3)
+        {
+            vOutColor = g_tex_3.Sample(g_sam_0, _in.vUV);
+        }
+        else if (ItemGrade == 3 && g_btex_4)
+        {
+            vOutColor = g_tex_4.Sample(g_sam_0, _in.vUV);
+        }
+        
+        float2 ItemUV = _in.vUV;
+        ItemUV.x *= (3.f / 2.f);
+        ItemUV.x -= 0.25f;
+        ItemUV.x = saturate(ItemUV.x);
+        
+        float4 ItemColor = g_tex_0.Sample(g_sam_0, ItemUV);
+        
+        // ºí·»µù °è»ê
+        vOutColor = (1 - ItemColor.w) * vOutColor + ItemColor * ItemColor.w;
+    }
+    else if (g_btex_5)
+    {
+        vOutColor = g_tex_5.Sample(g_sam_0, _in.vUV);
+    }
+    
+    
     return vOutColor;
 }
 

@@ -847,6 +847,48 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	AddRes(pShader->GetKey(), pShader);
 
+	// ============================
+	// PS_2DUI_ItemSlot
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: ItemTexture    
+	// g_tex_1				: NORMAL            
+	// g_tex_2				: UNCOMMON          
+	// g_tex_3				: RARE              
+	// g_tex_4				: EPIC              
+	// g_tex_5				: Empty             
+	// g_int_0				: IsNotEmpty        
+	// g_int_1				: ItemGrade         
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUIItemSlot_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_ItemSlot");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(INT_0, "IsNotEmpty");
+	pShader->AddScalarParam(INT_1, "ItemGrade");
+
+	pShader->AddTexParam(TEX_0, "ItemTexture Texture");
+	pShader->AddTexParam(TEX_1, "NORMAL Texture");
+	pShader->AddTexParam(TEX_2, "UNCOMMON Texture");
+	pShader->AddTexParam(TEX_3, "RARE Texture");
+	pShader->AddTexParam(TEX_4, "EPIC Texture");
+	pShader->AddTexParam(TEX_5, "Empty Texture");
+
+
+
+
+	AddRes(pShader->GetKey(), pShader);
 
 	// ======================================
 	// Std2DLightShader
@@ -1433,6 +1475,11 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIIndicator_Shader"));
 	AddRes(L"2DUIIndicator_Mtrl", pMtrl);
+
+	// 2D UI ItemSlot Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIItemSlot_Shader"));
+	AddRes(L"2DUIItemSlot_Mtrl", pMtrl);
 
 	// ===========
 	// ==  3 D  ==

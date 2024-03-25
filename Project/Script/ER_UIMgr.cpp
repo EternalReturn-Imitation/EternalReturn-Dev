@@ -218,10 +218,6 @@ void ER_UIMgr::RegistPlayerCharacetr()
 	// [ EquipMent ]
 	for (int i = 0; i < 5; ++i)
 	{
-		if (PlayerCharacter->GetAllEquipItem()[i])
-		{
-			wstring name = PlayerCharacter->GetAllEquipItem()[i]->GetScript<ER_DataScript_Item>()->GetItemName();
-		}
 		StatusBar_CharacterInfo_EquipMent[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllEquipItem()[i]);
 	}
 

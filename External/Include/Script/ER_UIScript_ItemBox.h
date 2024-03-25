@@ -18,8 +18,8 @@ class ER_UIScript_ItemBox :
     }typedef ITEMBOXSLOT;
 
 private:
-    CGameObject* m_pBGUI;                               // Slot Bg
-    CGameObject* m_pSlotUI[(UINT)ITEMBOXSLOT::END];     // Slot UI
+    CGameObject** m_pBGUI;                               // Slot Bg
+    CGameObject*  m_pSlotUI[(UINT)ITEMBOXSLOT::END];     // Slot UI
 
 public:
     void init();

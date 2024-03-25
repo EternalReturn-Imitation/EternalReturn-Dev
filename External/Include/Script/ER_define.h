@@ -19,7 +19,7 @@
 enum class ER_ITEM_GRADE
 {
 	NORMAL,		// ÀÏ¹Ý
-	UNCOMMONE,	// °í±Þ
+	UNCOMMON,	// °í±Þ
 	RARE,		// Èñ±Í
 	EPIC,		// ¿µ¿õ
 };

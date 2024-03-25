@@ -1,14 +1,18 @@
 #pragma once
 #include <Engine\CScript.h>
 
-// ER_DataScrip_ItemBox
+class ER_DataScript_Item;
 
 class ER_UIScript_ItemSlot :
     public CScript
 {
 private:
-    CGameObject** m_Slot;    
+    CGameObject** m_Slot; 
+    ER_DataScript_Item* m_ItemData;
     // Box가 들고있는 아이템을 그대로 받아서 보여주기만.
+
+    int m_PrevItemID;
+    int m_CurItemID;
 
 public:
     void            init();
