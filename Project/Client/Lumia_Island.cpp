@@ -66,7 +66,7 @@ void CreateLumiaIsland()
 	
 	ER_GameSystem::GetInst()->GameStart();
 
-//	TestObject();
+	TestObject();
 }
 
 void CreateTestPlayer()
@@ -88,8 +88,8 @@ void TestObject()
 	// CGameObject* testParticle = xnew<CGameObject>();
 	// CGameObject* testParticle = new(CGameObject);
 	// 
-	// //CGameObject* testParticle111 = onew(CGameObject);
-	// //odelete(testParticle111);
+	CGameObject* testParticle111 = onew(CGameObject);
+	odelete(testParticle111);
 	// 
 	// testParticle->SetName(L"particleTest");
 	// AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
