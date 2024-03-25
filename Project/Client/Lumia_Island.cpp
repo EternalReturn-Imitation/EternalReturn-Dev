@@ -65,7 +65,7 @@ void CreateLumiaIsland()
 
 	ER_UIMgr::GetInst()->GameStart();
 	
-	// TestObject();
+	TestObject();
 }
 
 void CreateTestPlayer()
@@ -120,44 +120,83 @@ void TestObject()
 
 	// 마우스 커서위치
 
+	//CGameObject* testParticle = new CGameObject;
+	//AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
+	//CParticleSystem* Particle = testParticle->ParticleSystem();
+	//
+	//tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
+	//
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = false;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
+	//
+	//particle_data.StartScale = 1.5f;
+	//particle_data.EndScale = 3.0f;
+	//
+	//particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
+	//particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
+	//particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
+	//
+	//particle_data.MinLifeTime = 1.f;
+	//particle_data.MaxLifeTime = 1.f;
+	//
+	//particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
+	//particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
+	//
+	//particle_data.SpawnRate = 1;
+	//particle_data.iMaxParticleCount = 1;
+	//
+	//Particle->SetMaxParticleCount(1);
+	//Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
+	//Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"AyaQ_FirstTake.png"));
+	//
+	//SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+
 	CGameObject* testParticle = new CGameObject;
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
-
+	
 	tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
-
+	
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
-
+	
 	particle_data.StartScale = 0.8f;
 	particle_data.EndScale = 0.001f;
-
+	
 	particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
 	particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
 	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
-
+	
 	particle_data.MinLifeTime = 3.f;
 	particle_data.MaxLifeTime = 3.f;
-
+	
 	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
 	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-
-	//Particle->SetMaxParticleCount(20);
-	particle_data.SpawnShapeType = 1;
-	particle_data.fSphereShapeRadius = 10.f;
-
-	particle_data.AddVelocityType = 1;
+	
+	
+	particle_data.AddVelocityType = 0;
 	particle_data.vVelocityDir = Vec3(0.f, 1.f, 0.f);
 	particle_data.Speed = 2.5f;
 
-	Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
-	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Ring4.png"));
+	particle_data.SpawnRate = 25;
 
+	particle_data.EndDrag = -1.f;
+
+	Particle->SetMaxParticleCount(25);
+	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Smoke.png"));
+	Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
+	
 	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 }
 

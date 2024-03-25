@@ -25,6 +25,9 @@ private:
 
     Ptr<CTexture>               m_pParticleTexture; // 파티클 텍스쳐
 
+    bool                        m_bTickToggle;
+    int                         m_aSpawnNum[2];
+
 public:
     const int* GetModuleCheckList() { return m_ModuleData.ModuleCheck; }
     void ActiveModule(PARTICLE_MODULE _ModuleType) { m_ModuleData.ModuleCheck[(UINT)_ModuleType] = true; }
@@ -54,6 +57,7 @@ public:
     Vec3 GetWorldPos(Vec3 _relativePos, Vec3 _relrativeRot);
 
 public:
+    virtual void tick() override;
     virtual void finaltick() override;
     virtual void render() override;
     virtual void render(UINT _iSubset) override;

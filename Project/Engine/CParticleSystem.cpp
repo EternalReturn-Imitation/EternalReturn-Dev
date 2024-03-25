@@ -22,6 +22,8 @@ CParticleSystem::CParticleSystem()
 	, m_AccTime(0.f)
 	, m_PointPos{}
 	, m_pParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire.png"))
+	, m_aSpawnNum{0,1}
+	, m_bTickToggle(false)
 {
 	m_ModuleData.iMaxParticleCount = 3000;
 
@@ -89,6 +91,8 @@ CParticleSystem::CParticleSystem()
 	// 모듈 활성화 및 모듈 설정 정보 버퍼
 	m_ModuleDataBuffer = new CStructuredBuffer;
 	m_ModuleDataBuffer->Create(sizeof(tParticleModule), 1, SB_TYPE::READ_ONLY, true);
+
+	m_aSpawnNum[1] *= m_ModuleData.SpawnRate;
 }
 
 CParticleSystem::~CParticleSystem()
@@ -136,9 +140,15 @@ Vec3 CParticleSystem::GetWorldPos(Vec3 _relativePos, Vec3 _relativeRot)
 	return matWorld.Translation();
 }
 
+void CParticleSystem::tick()
+{
+	m_bTickToggle = true;
+}
+
 void CParticleSystem::finaltick()
 {
-	
+	if (m_aSpawnNum[0] > m_aSpawnNum[1])
+		return;
 
 	// 스폰 레이트 계산
 	// 1개 스폰 시간
@@ -157,6 +167,9 @@ void CParticleSystem::finaltick()
 		// 버퍼에 스폰 카운트 전달
 		tRWParticleBuffer rwbuffer = { (int)fData, };
 		m_RWBuffer->SetData(&rwbuffer);
+
+		if(m_bTickToggle)
+			++m_aSpawnNum[0];
 	}
 
 
@@ -190,6 +203,9 @@ void CParticleSystem::finaltick()
 
 void CParticleSystem::render()
 {
+	if (m_aSpawnNum[0] > m_aSpawnNum[1])
+		return;
+
 	Transform()->UpdateData();
 
 	// 파티클버퍼 t20 에 바인딩
@@ -211,6 +227,9 @@ void CParticleSystem::render()
 
 void CParticleSystem::render(UINT _iSubset)
 {
+	if (m_aSpawnNum[0] > m_aSpawnNum[1])
+		return;
+
 	render();
 }
 
