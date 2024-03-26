@@ -2,9 +2,9 @@
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_Item.h"
 #include "ER_struct.h"
-#include "ER_UIMgr.h"
 #include <FontEngine\FW1FontWrapper.h>
 #include "ER_DataScript_Item.h"
+#include "ER_ItemMgr.h"
 
 ER_DataScript_Character::ER_DataScript_Character()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
@@ -15,7 +15,9 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_bOutofContorl(false)
 	, m_Equipment{}
 	, m_Inventory{}
-	, m_bHPChangeTrigger(false)
+	, m_fSPRegenTime(0.f)
+	, m_SkillPoint(0)
+	, m_STDStats{}
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -36,7 +38,8 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_Equipment{}
 	, m_Inventory{}
 	, CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
-	, m_bHPChangeTrigger(false)
+	, m_fSPRegenTime(0.f)
+	, m_SkillPoint(0)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -69,20 +72,23 @@ ER_DataScript_Character::~ER_DataScript_Character()
 void ER_DataScript_Character::StatusUpdate()
 {
 	ER_Ingame_Stats Updatetmp = *m_Stats;
+	UINT Level = Updatetmp.iLevel - 1;
+
+
 	// 레벨,경험치,HP,SP 는 갱신하지 않는다.
 	// 1. 기본 스테이터스
-	Updatetmp.iAttackPower = m_STDStats.iAttackPower + (Updatetmp.iLevel * m_STDStats.iAttackPowerPerLevel);
-	Updatetmp.iDefense = m_STDStats.iDefense + (Updatetmp.iLevel * m_STDStats.iDefensePerLevel);
-	Updatetmp.iMaxHP = m_STDStats.iMaxHP + (Updatetmp.iLevel * m_STDStats.iMaxHPPerLevel);
-	Updatetmp.fHPRegen = m_STDStats.fHPRegen + (Updatetmp.iLevel * m_STDStats.fHPRegenPerLevel);
-	Updatetmp.iMaxSP = m_STDStats.iMaxSP + (Updatetmp.iLevel * m_STDStats.iMaxSPPerLevel);
-	Updatetmp.fSPRegen = m_STDStats.fSPRegen + (Updatetmp.iLevel * m_STDStats.fSPRegenPerLevel);
+	Updatetmp.iAttackPower = m_STDStats.iAttackPower + (Level * m_STDStats.iAttackPowerPerLevel);
+	Updatetmp.iDefense = m_STDStats.iDefense + (Level * m_STDStats.iDefensePerLevel);
+	Updatetmp.iMaxHP = m_STDStats.iMaxHP + (Level * m_STDStats.iMaxHPPerLevel);
+	Updatetmp.fHPRegen = m_STDStats.fHPRegen + (Level * m_STDStats.fHPRegenPerLevel);
+	Updatetmp.iMaxSP = m_STDStats.iMaxSP + (Level * m_STDStats.iMaxSPPerLevel);
+	Updatetmp.fSPRegen = m_STDStats.fSPRegen + (Level * m_STDStats.fSPRegenPerLevel);
 	Updatetmp.fAttackSpeed = m_STDStats.fAttackSpeed + m_STDStats.fWpAtkSpd;
 	Updatetmp.fCriticalStrikeChance = m_STDStats.fCriticalStrikeChance;
 	Updatetmp.fMovementSpeed = m_STDStats.fMovementSpeed;
 	Updatetmp.fVisionRange = m_STDStats.fVisionRange;
-	Updatetmp.iSkillAmplification = m_STDStats.iAttackPower + (Updatetmp.iLevel * m_STDStats.iAttackPowerPerLevel);
-	Updatetmp.fAtakRange = m_STDStats.fWpAtkRange;
+	Updatetmp.iSkillAmplification = m_STDStats.iAttackPower + (Level * m_STDStats.iAttackPowerPerLevel);
+	Updatetmp.fAtkRange = m_STDStats.fWpAtkRange;
 	Updatetmp.fCriticalStrikeDamage = 0;
 	Updatetmp.fCooldownReduction = 0;
 	Updatetmp.fOmnisyphon = 0;
@@ -98,12 +104,12 @@ void ER_DataScript_Character::StatusUpdate()
 		// 아이템 정보를 얻어와 업데이트
 		tItem_Stats Itemtmp = GETITEMSTATS(m_Equipment[i]);
 
-		Updatetmp.iAttackPower += Itemtmp.iAttackPower + (Updatetmp.iLevel * Itemtmp.iAttackPowerPerLevel);
+		Updatetmp.iAttackPower += Itemtmp.iAttackPower + (Level * Itemtmp.iAttackPowerPerLevel);
 		Updatetmp.iDefense += Itemtmp.iDefense;
-		Updatetmp.iMaxHP += Itemtmp.iMaxHP + (Updatetmp.iLevel * Itemtmp.iMaxHPPerLevel);
-		Updatetmp.fHPRegen += Itemtmp.fHPRegen + (Updatetmp.iLevel * Itemtmp.fHPRegenPerLevel);
-		Updatetmp.iMaxSP += Itemtmp.iMaxSP + (Updatetmp.iLevel * Itemtmp.iMaxSPPerLevel);
-		Updatetmp.fSPRegen += Itemtmp.fSPRegen + (Updatetmp.iLevel * Itemtmp.fSPRegenPerLevel);
+		Updatetmp.iMaxHP += Itemtmp.iMaxHP + (Level * Itemtmp.iMaxHPPerLevel);
+		Updatetmp.fHPRegen += Itemtmp.fHPRegen + (Level * Itemtmp.fHPRegenPerLevel);
+		Updatetmp.iMaxSP += Itemtmp.iMaxSP + (Level * Itemtmp.iMaxSPPerLevel);
+		Updatetmp.fSPRegen += Itemtmp.fSPRegen + (Level * Itemtmp.fSPRegenPerLevel);
 		Updatetmp.fAttackSpeed += Itemtmp.fAttackSpeed;
 		Updatetmp.fCriticalStrikeChance += Itemtmp.fCriticalStrikeChance;
 		Updatetmp.fCriticalStrikeDamage += Itemtmp.fCriticalStrikeDamage;
@@ -111,11 +117,43 @@ void ER_DataScript_Character::StatusUpdate()
 		Updatetmp.fVisionRange += Itemtmp.fVisionRange;
 		Updatetmp.fCooldownReduction += Itemtmp.fCooldownReduction;
 		Updatetmp.fOmnisyphon += Itemtmp.fOmnisyphon;
-		Updatetmp.iSkillAmplification += Itemtmp.iSkillAmplification + (Updatetmp.iLevel * Itemtmp.iSkillAmplificationPerLevel);
+		Updatetmp.iSkillAmplification += Itemtmp.iSkillAmplification + (Level * Itemtmp.iSkillAmplificationPerLevel);
 	}
 
 	// 최종스탯 반영
 	*m_Stats = Updatetmp;
+}
+
+void ER_DataScript_Character::HPRegen(float _magnification)
+{
+	// 회복량 회복 후 HP값
+	float HPRegen = m_Stats->iHP + (m_Stats->fHPRegen * _magnification);
+	
+	// HP 자연 회복, 최대 HP면 최대HP로 고정
+	m_Stats->iHP = m_Stats->iMaxHP < (int)HPRegen ?	m_Stats->iMaxHP : (int)HPRegen;
+}
+
+void ER_DataScript_Character::SPRegen(float _magnification)
+{
+	// 회복량 회복 후 HP값
+	float SPRegen = m_Stats->iSP + (m_Stats->fSPRegen * _magnification);
+
+	// HP 자연 회복, 최대 HP면 최대HP로 고정
+	m_Stats->iSP = m_Stats->iMaxSP < (int)SPRegen ? m_Stats->iMaxSP : (int)SPRegen;
+}
+
+void ER_DataScript_Character::LevelUP()
+{
+	// IngameState level 변수 1 증가
+	// Exp 0으로 초기화
+	// Skill투자 가능포인트 1 증가
+
+	// [ 이펙트 ]
+	// 레벨업 이펙트 및 애니메이션 재생
+	// 레벨업 효과음 재생
+
+	// [ 스테이터스 최종 반영 ]
+	// StatusUpdate
 }
 
 void ER_DataScript_Character::init()
@@ -135,6 +173,7 @@ void ER_DataScript_Character::init()
 		m_FullTax = CResMgr::GetInst()->FindRes<CTexture>(FullTexKey);
 		m_MapTex = CResMgr::GetInst()->FindRes<CTexture>(MapTexKey);
 	}
+	
 }
 
 void ER_DataScript_Character::begin()
@@ -147,24 +186,18 @@ void ER_DataScript_Character::begin()
 	{
 		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
 	}
-
-	CreateStatBar();
+	
 	StatusUpdate();
+	SkillSlotInit();
+
+	m_Equipment[1] = ER_ItemMgr::GetInst()->GetItemObj(87)->Clone();
+	m_Equipment[1]->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
+	m_Inventory[0] = ER_ItemMgr::GetInst()->GetItemObj(58)->Clone();
+	m_Inventory[0]->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
 }
 
 void ER_DataScript_Character::tick()
 {
-	UpdateStatBar();
-	
-	//HPReturnBar업데이트
-	if (m_bHPChangeTrigger) {
-		ChangeHPReturnBar();
-	}
-	
-	//if (KEY_TAP(KEY::F)) {
-	//	ChangeStatBar();
-	//}
-	
 	// 스킬 쿨타임 갱신
 	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
 	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
@@ -173,6 +206,32 @@ void ER_DataScript_Character::tick()
 	// 버프디버프 쿨타임 갱신
 	m_StatusEffect->ActionTiemUpdate(DT);
 
+	// SPRegen
+	m_fSPRegenTime += DT;
+	if (0.5f <= m_fSPRegenTime)
+	{
+		SPRegen();
+		m_fSPRegenTime -= 0.5f;
+	}
+
+	if (KEY_TAP(KEY::_5))
+	{
+		m_SkillPoint++;
+	}
+
+}
+
+void ER_DataScript_Character::ChangeSkill(int _Idx)
+{
+
+}
+
+void ER_DataScript_Character::SkillSlotInit()
+{
+	m_Skill[(UINT)SKILLIDX::Q_1] = m_SkillList[(UINT)SKILLIDX::Q_1];
+	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
+	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
+	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }
 
 CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)
@@ -190,172 +249,172 @@ CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)
 
 	m_Inventory[i] = _ItemObj;
 
-	std::pair<CGameObject*, CGameObject*> objPair = ER_UIMgr::GetInst()->GetInventoryItem(i / 5, i % 5);
-	objPair.first->SetEnable(true);
-	objPair.second->SetEnable(true);
-
-	objPair.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(_ItemObj->GetScript<ER_DataScript_Item>()->GetGrade()));
-	objPair.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, _ItemObj->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
-
 	return _ItemObj;
 }
 
-bool ER_DataScript_Character::SwapItem(CGameObject* _DragmItem, CGameObject* _DropItem)
+bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _DropItem)
 {
+
+	ER_DataScript_Item* DragItem = nullptr;
+	int DragItemType = -1;
+	bool DragItemEquiped = false;
+
+	ER_DataScript_Item* DropItem = nullptr;
+	int DropItemType = -1;
+	bool DropItemEquiped = false;
+
+	if (*_DragItem)
+	{
+		DragItem = (*_DragItem)->GetScript<ER_DataScript_Item>();
+		DragItemType = DragItem->m_eSlot;
+		DragItemEquiped = DragItem->m_bEquiped;
+	}
+	if (*_DropItem)
+	{
+		DropItem = (*_DropItem)->GetScript<ER_DataScript_Item>();
+		DropItemType = DropItem->m_eSlot;
+		DropItemEquiped = DropItem->m_bEquiped;
+	}
+
+	// 장비창 -> 인벤토리
+	// 1. 빈칸으로 이동하는경우
+	// 그냥 이동, 이동후 아이템 슬롯타입 2로교체
+	// 2. 아이템과 교체 하는경우
+	// 아이템타입 비교후 교체, 서로 슬롯타입 교체
+
+	// 인벤토리 -> 장비창
+	// 1. 빈칸으로 이동하는 경우
+	// 아이템 타입 확인, 목적지 주소와 장비슬롯 주소가 같은지 확인
+	// 2. 아이템과 교체하는 경우
+	// 아이템타입 비교후 교체, 서로 슬롯타입 교체
+
+	// 인벤토리orItemBox 끼리
+	// 그냥 교체
+
+	// 장비창 ->
+	if (DragItemEquiped && !DropItemEquiped)
+	{
+		// 장착 슬롯이 같은 경우
+		if (DragItemType == DropItemType)
+		{
+			// 포인터 교환
+			CGameObject* tmp = (*_DropItem);
+			(*_DropItem) = (*_DragItem);
+			(*_DragItem) = tmp;
+
+			// 장착여부 변경
+			(*_DragItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
+			(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+		}
+		// -> NULLSlot
+		else if (DropItemType == -1)
+		{
+			// -> 장비창 : 다른 슬롯타입의 장비창이므로 옮겨지지 않는다.
+			for (int i = 0; i < 5; ++i)
+			{
+				// 장비창 인덱스 확인
+				if (_DropItem == &m_Equipment[i])
+				{
+					return false;
+				}
+			}
+
+			// 포인터 교환
+			CGameObject* tmp = (*_DropItem);
+			(*_DropItem) = (*_DragItem);
+			(*_DragItem) = tmp;
+
+			(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+		}
+	}
+	// 인벤토리 or ItemBox ->
+	else
+	{
+		// -> 장비창
+		for (int i = 0; i < 5; ++i)
+		{
+			// 장비창 인덱스 확인
+			if (_DropItem == &m_Equipment[i])
+			{
+				// 아이템타입과 슬롯이 일치한다
+				if (DragItemType == i)
+				{
+					// 슬롯이 비어있다
+					if (DropItemType == -1)
+					{
+						CGameObject* tmp = (*_DropItem);
+						(*_DropItem) = (*_DragItem);
+						(*_DragItem) = tmp;
+
+						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
+
+						return true;
+					}
+					else if (DragItemType == DropItemType)
+					{
+						// 포인터 교환
+						CGameObject* tmp = (*_DropItem);
+						(*_DropItem) = (*_DragItem);
+						(*_DragItem) = tmp;
+
+						// 장착여부 변경
+						(*_DragItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
+
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		// -> 인벤토리 or 아이템 박스
+		CGameObject* tmp = (*_DropItem);
+		(*_DropItem) = (*_DragItem);
+		(*_DragItem) = tmp;
+	}
+
 	return false;
 }
 
-void ER_DataScript_Character::CreateStatBar()
+void ER_DataScript_Character::AcquireItem(CGameObject** _BoxSlot)
 {
-	m_aStatBar[0] = new CGameObject;
-	m_aStatBar[0]->SetName(L"UI_Player_HPBar");
-	
-	m_aStatBar[0]->AddComponent(new CTransform);
-	m_aStatBar[0]->AddComponent(new CMeshRender);
-	m_aStatBar[0]->AddComponent(new CUI_Button);
-	
-	m_aStatBar[0]->Transform()->SetRelativeScale(Vec3(120.f, 15.f, 1.f));
-	
-	m_aStatBar[0]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	m_aStatBar[0]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	m_aStatBar[0]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"HPBar_UI.png"));
-	m_aStatBar[0]->MeshRender()->GetDynamicMaterial(0);
-	
-	Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
-	Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
-	
-	SpawnGameObject(m_aStatBar[0], Vec3(pos.x, pos.y+ 62.5f, -1.1f), L"UI");
+	// 아이텝슬롯에 아이템이 있는지 여부
+	if ((*_BoxSlot))
+	{
+		int Slotidx = -1;
+		int slottype = 0;
 
+		// 아이템 스크립트 보유 확인 예외처리
+		ER_DataScript_Item* Item = (*_BoxSlot)->GetScript<ER_DataScript_Item>();
 
+		// ItemScript를 보유하고있지 않다 - 함수종료
+		if (!Item)
+			return;
 
-	m_aStatBar[1] = new CGameObject;
-	m_aStatBar[1]->SetName(L"UI_Player_HPReturnBar");
+		int emptyslot = -1;
+		// 인벤토리 여유공간 확인
+		for (int i = 0; i < 10; ++i)
+		{
+			if (nullptr == m_Inventory[i])
+			{
+				emptyslot = i;
+				break;
+			}
+		}
 
-	m_aStatBar[1]->AddComponent(new CTransform);
-	m_aStatBar[1]->AddComponent(new CMeshRender);
-	m_aStatBar[1]->AddComponent(new CUI_Button);
+		// 인벤토리에 여유공간이 없다. - 함수종료
+		if (emptyslot == -1)
+			return;
 
-	m_aStatBar[1]->Transform()->SetRelativeScale(Vec3(120.f, 15.f, 1.f));
-
-	m_aStatBar[1]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	m_aStatBar[1]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	m_aStatBar[1]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"ReturnBar_UI.png"));
-	m_aStatBar[1]->MeshRender()->GetDynamicMaterial(0);
-
-	SpawnGameObject(m_aStatBar[1], Vec3(pos.x, pos.y + 62.5f, -1.f), L"UI");
-
-
-
-	m_aStatBar[2] = new CGameObject;
-	m_aStatBar[2]->SetName(L"UI_Player_SteminarBar");
-
-	m_aStatBar[2]->AddComponent(new CTransform);
-	m_aStatBar[2]->AddComponent(new CMeshRender);
-	m_aStatBar[2]->AddComponent(new CUI_Button);
-
-	m_aStatBar[2]->Transform()->SetRelativeScale(Vec3(120.f, 5.f, 1.f));
-
-	m_aStatBar[2]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	m_aStatBar[2]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DMtrl"), 0);
-	m_aStatBar[2]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, CResMgr::GetInst()->GetInst()->FindRes<CTexture>(L"SPBar_UI.png"));
-	m_aStatBar[2]->MeshRender()->GetDynamicMaterial(0);
-
-	SpawnGameObject(m_aStatBar[2], Vec3(pos.x, pos.y + 42.5f, -1.1f), L"UI");
-
-	// Text Obj
-	m_aStatBar[3] = new CGameObject;
-	AddComponents(m_aStatBar[3], _TRANSFORM | _MESHRENDER | _TEXT);
-	m_aStatBar[3]->SetName(L"UI_stat00");
-
-	// 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
-	// Std2DUIMtrl 사용
-	m_aStatBar[3]->Transform()->SetRelativeScale(Vec3(30.f, 30.f, 0.f));
-	m_aStatBar[3]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	m_aStatBar[3]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-
-	// 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
-	m_aStatBar[3]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Btn_WeaponType_Lock.png"));
-
-	int LV = m_Stats->iLevel;
-
-	// 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
-	// 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	m_aStatBar[3]->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 20.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	m_aStatBar[3]->Text()->InputString(std::to_wstring(LV));
-
-	SpawnGameObject(m_aStatBar[3], Vec3(-542.f, -300.f, 0.f), L"UI");
-}
-
-void ER_DataScript_Character::UpdateStatBar()
-{
-	Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
-	Vec3 pos = ER_UIMgr::GetInst()->WorldPosToUIPos(ownerPos);
-
-	m_aStatBar[0]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[0], pos.y + 175.f, -1.1f));
-	m_aStatBar[1]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[1], pos.y + 175.f, -1.f));
-	m_aStatBar[2]->Transform()->SetRelativePos(Vec3(pos.x + m_aStatPosOffset[2], pos.y + 165.f, -1.1f));
-	m_aStatBar[3]->Transform()->SetRelativePos(Vec3(pos.x-75.f + m_aStatPosOffset[3], pos.y + 171.25f, -1.2f));
-}
-
-void ER_DataScript_Character::ChangeStatBar()
-{
-	ER_Ingame_Stats* stat = GetStatus();
-
-	float maxHP = stat->iMaxHP;
-	float curHP = stat->iHP;
-
-	//흰 바 먼저 초기화
-	m_aStatBar[1]->Transform()->SetRelativePos(m_aStatBar[0]->Transform()->GetRelativePos());
-	m_aStatBar[1]->Transform()->SetRelativeScale(m_aStatBar[0]->Transform()->GetRelativeScale());
-
-	m_aStatPosOffset[1] = m_aStatPosOffset[0];
-
-	//실제 체력바 계산
-	float decreaseRate = ((curHP) / maxHP) * 120.f;
-	m_aStatPosOffset[0] = -((120 - decreaseRate) / 2);
-
-	Vec3 pos = m_aStatBar[0]->Transform()->GetRelativePos();
-	pos.x = pos.x - ((120 - decreaseRate) / 2);
-	Vec3 scale = m_aStatBar[0]->Transform()->GetRelativeScale();
-	scale.x = decreaseRate;
-
-	m_aStatBar[0]->Transform()->SetRelativePos(pos);
-	m_aStatBar[0]->Transform()->SetRelativeScale(scale);
-
-	m_bHPChangeTrigger = true;
-
-	//stat = GetStatus();
-	//float maxSR = stat->iMaxSP;
-	//float curSR = stat->iSP;
-	//
-	//decreaseRate = ((curSR) / maxSR) * 120.f;
-	//m_aStatPosOffset[2] = -((120 - decreaseRate) / 2);
-	//
-	//pos = m_aStatBar[2]->Transform()->GetRelativePos();	 
-	//pos.x = pos.x - ((120 - decreaseRate) / 2);
-	//scale = m_aStatBar[2]->Transform()->GetRelativeScale();
-	//scale.x = decreaseRate;
-	//
-	//m_aStatBar[2]->Transform()->SetRelativePos(pos);
-	//m_aStatBar[2]->Transform()->SetRelativeScale(scale);
-}
-
-void ER_DataScript_Character::ChangeHPReturnBar()
-{
-	Vec3 pos = m_aStatBar[1]->Transform()->GetRelativePos();
-	Vec3 scale = m_aStatBar[1]->Transform()->GetRelativeScale();
-
-	if (scale.x > m_aStatBar[0]->Transform()->GetRelativeScale().x) {
-		float decreaseRate = (75.f * DT);
-		scale.x -= decreaseRate;
-		pos.x -= (decreaseRate / 2);
-		m_aStatPosOffset[1] -=(decreaseRate / 2);
-		m_aStatBar[1]->Transform()->SetRelativePos(pos);
-		m_aStatBar[1]->Transform()->SetRelativeScale(scale);
+		// 비어있는 인벤토리에 넣어주고, 원래 슬롯을 비워준다.
+		m_Inventory[emptyslot] = (*_BoxSlot);
+		*_BoxSlot = nullptr;
 	}
-	else {
-		m_bHPChangeTrigger = false;
-	}
+}
+
+void ER_DataScript_Character::CraftItem(CGameObject** _iSlot1, CGameObject** _iSlot2)
+{
 }
 
 void ER_DataScript_Character::BeginOverlap(CCollider3D* _Other)
@@ -432,9 +491,4 @@ void ER_DataScript_Character::LoadFromLevelFile(FILE* _File)
 
 		m_SkillList.push_back(Skill);
 	}
-
-	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
-	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
-	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
-	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }

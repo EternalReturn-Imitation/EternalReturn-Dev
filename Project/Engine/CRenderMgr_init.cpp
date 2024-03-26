@@ -151,6 +151,27 @@ void CRenderMgr::CreateMRT()
         m_MRT[(UINT)MRT_TYPE::_3DANIM_EDIT]->Create(arrRTTex, 1, pDSTex);
         m_MRT[(UINT)MRT_TYPE::_3DANIM_EDIT]->SetClearColor(Vec4(0.3f, 0.3f, 0.3f, 1.f), 0);
     }
+
+    // ====================
+    // UI_EDIT
+    // ====================
+    {
+        m_MRT[(UINT)MRT_TYPE::_UI_EDIT] = new CMRT;
+
+        Vec2 vResol = CDevice::GetInst()->GetRenderResolution();
+
+        Ptr<CTexture> arrRTTex[8] = {};
+        arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"UIEditorTex", (UINT)vResol.x, (UINT)vResol.y
+            , DXGI_FORMAT_R8G8B8A8_UNORM
+            , D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+
+        Ptr<CTexture> pDSTex = CResMgr::GetInst()->CreateTexture(L"UIEditorDepthTex", (UINT)vResol.x, (UINT)vResol.y
+            , DXGI_FORMAT_D32_FLOAT
+            , D3D11_BIND_DEPTH_STENCIL);
+
+        m_MRT[(UINT)MRT_TYPE::_UI_EDIT]->Create(arrRTTex, 1, pDSTex);
+        m_MRT[(UINT)MRT_TYPE::_UI_EDIT]->SetClearColor(Vec4(0.1f, 0.1f, 0.1f, 1.f), 0);
+    }
 }
 
 void CRenderMgr::ClearMRT()

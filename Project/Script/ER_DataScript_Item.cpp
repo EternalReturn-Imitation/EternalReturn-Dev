@@ -9,6 +9,7 @@ ER_DataScript_Item::ER_DataScript_Item()
 	, m_eSlot()
 	, m_uniRecipe{}
 	, m_tItemStats{}
+	, m_bEquiped(false)
 {
 }
 

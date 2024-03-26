@@ -10,65 +10,14 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER">
-      <UniqueIdentifier>{3f35b2cd-9c75-4326-bd26-dd2c73829ac2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript">
-      <UniqueIdentifier>{d278ac5e-11e4-4f19-980d-cf2c22789fef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\DataScript">
-      <UniqueIdentifier>{1a97d08e-0c7e-42b5-8448-f40bbb060bbd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\DataScript\Monster">
-      <UniqueIdentifier>{9dbf146f-05e4-4aff-b19b-65b87366c08c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\DataScript\Character">
-      <UniqueIdentifier>{fc5a4c72-94e7-46c8-9fcc-582bc8fc268f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Monster">
-      <UniqueIdentifier>{ae309b0e-d922-4ca0-b403-665033c9fcc2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Character">
-      <UniqueIdentifier>{763f25b3-339f-44f0-b3ec-69654adf3bbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\PlayerScript">
-      <UniqueIdentifier>{d1f4aa95-6b71-4309-b84d-f5bf1a2357cd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\Default">
       <UniqueIdentifier>{d16ac6e3-a8e0-4754-91db-6e96261beb7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\DataScript\Item">
-      <UniqueIdentifier>{da0d90e9-f334-4e62-9413-f648d0b19058}</UniqueIdentifier>
     </Filter>
     <Filter Include="Default\ER_header">
       <UniqueIdentifier>{ab7cb09f-7a29-440c-94a5-7cc14bfb4d66}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER\DataScript\ItemBox">
-      <UniqueIdentifier>{4917d2dd-28b0-48a2-94e5-08be8efd8b71}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Character\Rio">
-      <UniqueIdentifier>{08d6a4eb-a4f9-4554-a421-96f8c0253ce7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Character\Jackie">
-      <UniqueIdentifier>{570d651e-3b29-44dc-90ee-067541a651fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Character\Hyunwoo">
-      <UniqueIdentifier>{87476fa6-013b-4e45-b889-ed7a0f3ad9ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Character\Aya">
-      <UniqueIdentifier>{7d751086-2f6f-49ce-a474-d6aeba6ee9bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\ActionScript\Character\Yuki">
-      <UniqueIdentifier>{78e8d3fd-5132-4e6a-8ad5-f304e1f74d06}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\UI">
       <UniqueIdentifier>{3685c51a-070f-4ee1-a7b5-2deae237c121}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\UI\Button">
-      <UniqueIdentifier>{bb96cd13-f5de-4fcd-b6cf-7ca5033965a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\DataScript\LandMesh">
-      <UniqueIdentifier>{f1617758-7daa-4bac-a50c-2e5e988e6019}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameSystem">
       <UniqueIdentifier>{148f1ec1-74ec-49d7-abe3-e185dc4794a3}</UniqueIdentifier>
@@ -85,14 +34,77 @@
     <Filter Include="GameSystem\Battle">
       <UniqueIdentifier>{9c8c5026-9c9a-4c8c-9ce5-d9043b036923}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameSystem\Monster">
-      <UniqueIdentifier>{74d458ac-2568-48e0-abaf-a8d9d240b711}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\PlayerScript\PlayerControll">
-      <UniqueIdentifier>{8ac70603-e378-482c-9a59-41e8106b1c7b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameSystem\ObjPool">
       <UniqueIdentifier>{5e4e2628-94c6-48cd-adcb-07eab12e405a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item">
+      <UniqueIdentifier>{25325e07-cbc0-498a-824b-b5bca5deb842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Box">
+      <UniqueIdentifier>{5f2af9b9-e6ee-4cd1-a0b3-75ccfa5876c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Slot">
+      <UniqueIdentifier>{dc91efe5-dc89-4ad5-97d8-64f88abfb87e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar">
+      <UniqueIdentifier>{20778e8d-140b-45cd-baaa-0913e661af7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot">
+      <UniqueIdentifier>{a8a5eeac-904b-4e0f-a09e-f97a0b5176a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\Gauge">
+      <UniqueIdentifier>{2bcef9fb-6adc-4c59-829c-9ba2b37c7392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot\SkillUP">
+      <UniqueIdentifier>{414c1ede-421a-42b9-b26c-0d44f9657a6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot\Slot">
+      <UniqueIdentifier>{170ac4af-3bea-4601-bd03-5292d129959f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\Gauge\StatusBar">
+      <UniqueIdentifier>{effa1817-967c-4936-9a7f-0d68665e9c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER">
+      <UniqueIdentifier>{3f35b2cd-9c75-4326-bd26-dd2c73829ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript">
+      <UniqueIdentifier>{d278ac5e-11e4-4f19-980d-cf2c22789fef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character">
+      <UniqueIdentifier>{763f25b3-339f-44f0-b3ec-69654adf3bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Rio">
+      <UniqueIdentifier>{08d6a4eb-a4f9-4554-a421-96f8c0253ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Jackie">
+      <UniqueIdentifier>{570d651e-3b29-44dc-90ee-067541a651fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Hyunwoo">
+      <UniqueIdentifier>{87476fa6-013b-4e45-b889-ed7a0f3ad9ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Aya">
+      <UniqueIdentifier>{7d751086-2f6f-49ce-a474-d6aeba6ee9bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Yuki">
+      <UniqueIdentifier>{78e8d3fd-5132-4e6a-8ad5-f304e1f74d06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript">
+      <UniqueIdentifier>{1a97d08e-0c7e-42b5-8448-f40bbb060bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Character">
+      <UniqueIdentifier>{fc5a4c72-94e7-46c8-9fcc-582bc8fc268f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Item">
+      <UniqueIdentifier>{da0d90e9-f334-4e62-9413-f648d0b19058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\ItemBox">
+      <UniqueIdentifier>{4917d2dd-28b0-48a2-94e5-08be8efd8b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\LandMesh">
+      <UniqueIdentifier>{f1617758-7daa-4bac-a50c-2e5e988e6019}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\PlayerScript">
+      <UniqueIdentifier>{d1f4aa95-6b71-4309-b84d-f5bf1a2357cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Script\ER\SystemScript">
       <UniqueIdentifier>{fa13962b-4671-41fe-b9e1-93ae6b79ae42}</UniqueIdentifier>
@@ -102,6 +114,12 @@
     </Filter>
     <Filter Include="Script\ER\SystemScript\Projectile">
       <UniqueIdentifier>{bbd448f0-1bcf-442a-967b-388a679dd4d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript\Cursor">
+      <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
+      <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +183,6 @@
     <ClInclude Include="ER_CamControllerScript.h">
       <Filter>Script\ER\SystemScript\Cam</Filter>
     </ClInclude>
-    <ClInclude Include="CUIScript_Button.h">
-      <Filter>Script\UI\Button</Filter>
-    </ClInclude>
     <ClInclude Include="ER_DataScript_LandMeshBase.h">
       <Filter>Script\ER\DataScript\LandMesh</Filter>
     </ClInclude>
@@ -180,14 +195,8 @@
     <ClInclude Include="ER_ItemMgr.h">
       <Filter>GameSystem\Item</Filter>
     </ClInclude>
-    <ClInclude Include="ER_UIMgr.h">
-      <Filter>GameSystem\UI</Filter>
-    </ClInclude>
     <ClInclude Include="ER_BattleSystem.h">
       <Filter>GameSystem\Battle</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_PlayerScript.h">
-      <Filter>Script\ER\PlayerScript\PlayerControll</Filter>
     </ClInclude>
     <ClInclude Include="ER_PlayerScript_Range.h">
       <Filter>Script\ER\PlayerScript</Filter>
@@ -197,6 +206,36 @@
     </ClInclude>
     <ClInclude Include="ER_ProjectileScript.h">
       <Filter>Script\ER\SystemScript\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_ItemBox.h">
+      <Filter>Script\UI\Item\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIMgr.h">
+      <Filter>GameSystem\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_Gauge.h">
+      <Filter>Script\UI\Statusbar\Gauge</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_SkillUpBtn.h">
+      <Filter>Script\UI\Statusbar\SkillSlot\SkillUP</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_SkillSlot.h">
+      <Filter>Script\UI\Statusbar\SkillSlot\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_PlayerScript.h">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_StatusBarGauge.h">
+      <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_Cursor.h">
+      <Filter>Script\ER\SystemScript\Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_TrackingStatusBar.h">
+      <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_ItemSlot.h">
+      <Filter>Script\UI\Item\Slot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,9 +293,6 @@
     <ClCompile Include="ER_CamControllerScript.cpp">
       <Filter>Script\ER\SystemScript\Cam</Filter>
     </ClCompile>
-    <ClCompile Include="CUIScript_Button.cpp">
-      <Filter>Script\UI\Button</Filter>
-    </ClCompile>
     <ClCompile Include="ER_DataScript_LandMeshBase.cpp">
       <Filter>Script\ER\DataScript\LandMesh</Filter>
     </ClCompile>
@@ -278,14 +314,8 @@
     <ClCompile Include="ER_ActionScript_Character_func.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
     </ClCompile>
-    <ClCompile Include="ER_UIMgr.cpp">
-      <Filter>GameSystem\UI</Filter>
-    </ClCompile>
     <ClCompile Include="ER_BattleSystem.cpp">
       <Filter>GameSystem\Battle</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_PlayerScript.cpp">
-      <Filter>Script\ER\PlayerScript\PlayerControll</Filter>
     </ClCompile>
     <ClCompile Include="ER_PlayerScript_Range.cpp">
       <Filter>Script\ER\PlayerScript</Filter>
@@ -295,6 +325,39 @@
     </ClCompile>
     <ClCompile Include="ER_ProjectileScript.cpp">
       <Filter>Script\ER\SystemScript\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Init.cpp">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_ItemBox.cpp">
+      <Filter>Script\UI\Item\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIMgr.cpp">
+      <Filter>GameSystem\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_Gauge.cpp">
+      <Filter>Script\UI\Statusbar\Gauge</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_SkillUpBtn.cpp">
+      <Filter>Script\UI\Statusbar\SkillSlot\SkillUP</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_SkillSlot.cpp">
+      <Filter>Script\UI\Statusbar\SkillSlot\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_PlayerScript.cpp">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_StatusBarGauge.cpp">
+      <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_Cursor.cpp">
+      <Filter>Script\ER\SystemScript\Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_TrackingStatusBar.cpp">
+      <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_ItemSlot.cpp">
+      <Filter>Script\UI\Item\Slot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -43,7 +43,7 @@ VS_OUT VS_Std2D(VS_IN _in)
 // 레스터라이저 스테이트
 float4 PS_Std2D(VS_OUT _in) : SV_Target
 {
-    float4 vOutColor = (float4) 0.f;            
+    float4 vOutColor = (float4) 0.f;
         
     if (g_btex_0)
     {
@@ -51,25 +51,17 @@ float4 PS_Std2D(VS_OUT _in) : SV_Target
     }
     else
     {
-        vOutColor = float4(1.f, 0.f, 1.f, 1.f);
+        vOutColor = float4(0.f, 0.f, 0.f, 0.f);
     }
 
-    //if (0.f == vOutColor.a)
-    //    discard; // 픽셀 쉐이더 중단
+    // if (0.f == vOutColor.a)
+    //     discard; // 픽셀 쉐이더 중단
     
-    if(g_int_2 == 1)
+    if (g_int_2 == 1)
         vOutColor = float4(1.f, 0.f, 0.f, 1.f);
-    else if (g_int_2 == 2)
-        vOutColor.a /= 1.5f;
     
     return vOutColor;
 }
-
-
-
-
-
-
 
 
 

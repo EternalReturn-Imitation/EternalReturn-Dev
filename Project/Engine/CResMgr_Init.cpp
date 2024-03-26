@@ -713,7 +713,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	AddRes(pShader->GetKey(), pShader);
 
 	// ============================
-	// Std2DShaderUI
+	// 2DUI_STD
 	// RasterizerState      : None
 	// BlendState           : Mask
 	// DepthStencilState    : Less
@@ -722,22 +722,171 @@ void CResMgr::CreateDefaultGraphicsShader()
 	// g_tex_0              : Output Texture
 	// ============================
 	pShader = new CGraphicsShader;
-	pShader->SetKey(L"Std2DUIShader");
-	pShader->CreateVertexShader(L"shader\\std2d.fx", "VS_Std2D");
-	pShader->CreatePixelShader(L"shader\\std2d.fx", "PS_Std2D");
+	pShader->SetKey(L"2DUISTD_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI");
 
 	pShader->SetRSType(RS_TYPE::CULL_NONE);
 	pShader->SetDSType(DS_TYPE::LESS);
-	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetBSType(BS_TYPE::MASK);
 
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
 
 	// Param
 	pShader->AddTexParam(TEX_0, "Output Texture");
+	
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// 2DUI_CoolDown
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: Texture1        
+	// g_tex_1				: Texture2        
+	// g_tex_2				: Texture3        
+	// g_tex_3				: Texture4        
+	// g_tex_3				: CoolDownTex     
+	// g_int_0				: TexIdx          
+	// g_float_0			: CoolDownRatio   
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUICoolDown_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_CoolDown");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(INT_0, "TextureIdx");
+	pShader->AddScalarParam(FLOAT_0, "CoolDown Ratio");
+
+	pShader->AddTexParam(TEX_0, "Texture1");
+	pShader->AddTexParam(TEX_1, "Texture2");
+	pShader->AddTexParam(TEX_2, "Texture3");
+	pShader->AddTexParam(TEX_3, "Texture4");
+	pShader->AddTexParam(TEX_4, "CoolDownTex");
 
 	AddRes(pShader->GetKey(), pShader);
 
+	// ============================
+	// 2DUI_Guage
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: MainTex     
+	// g_tex_1				: ReturnTex   
+	// g_tex_2				: MainTexEfc  
+	// g_float_0			: MainRatio   
+	// g_float_1			: ReturnRatio 
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUIGuage_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_GUAGE");
 
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(FLOAT_0, "MainRatio");
+	pShader->AddScalarParam(FLOAT_1, "ReturnRatio");
+
+	pShader->AddTexParam(TEX_0, "Main Texture");
+	pShader->AddTexParam(TEX_1, "Return Texture");
+	pShader->AddTexParam(TEX_2, "Effect Texture");
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// 2DUI_Indicator
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: Level0    
+	// g_tex_1				: Level1    
+	// g_tex_2				: Level2    
+	// g_tex_3				: Level3    
+	// g_tex_4				: Level4    
+	// g_tex_5				: Level5    
+	// g_int_0				: Level     
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUIIndicator_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_Indicator");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(INT_0, "Level");
+
+	pShader->AddTexParam(TEX_0, "Level0 Texture");
+	pShader->AddTexParam(TEX_1, "Level1 Texture");
+	pShader->AddTexParam(TEX_2, "Level2 Texture");
+	pShader->AddTexParam(TEX_3, "Level3 Texture");
+	pShader->AddTexParam(TEX_4, "Level4 Texture");
+	pShader->AddTexParam(TEX_5, "Level5 Texture");
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// PS_2DUI_ItemSlot
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: ItemTexture    
+	// g_tex_1				: NORMAL            
+	// g_tex_2				: UNCOMMON          
+	// g_tex_3				: RARE              
+	// g_tex_4				: EPIC              
+	// g_tex_5				: Empty             
+	// g_int_0				: IsNotEmpty        
+	// g_int_1				: ItemGrade         
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUIItemSlot_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_ItemSlot");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(INT_0, "IsNotEmpty");
+	pShader->AddScalarParam(INT_1, "ItemGrade");
+
+	pShader->AddTexParam(TEX_0, "ItemTexture Texture");
+	pShader->AddTexParam(TEX_1, "NORMAL Texture");
+	pShader->AddTexParam(TEX_2, "UNCOMMON Texture");
+	pShader->AddTexParam(TEX_3, "RARE Texture");
+	pShader->AddTexParam(TEX_4, "EPIC Texture");
+	pShader->AddTexParam(TEX_5, "Empty Texture");
+	pShader->AddTexParam(TEX_6, "EquiptType Texture");
+
+	AddRes(pShader->GetKey(), pShader);
 
 	// ======================================
 	// Std2DLightShader
@@ -1286,11 +1435,6 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
 	AddRes(L"Std2DMtrl", pMtrl);
 
-	// Std2D UI Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DUIShader"));
-	AddRes(L"Std2DUIMtrl", pMtrl);
-
 	// Std2DAnim Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
@@ -1305,6 +1449,35 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DLightShader"));
 	AddRes(L"Std2DAnimLightMtrl", pMtrl);
+
+	// =============
+	// ==  2D UI  ==
+	// =============
+
+	// 2D UI STD Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUISTD_Shader"));
+	AddRes(L"2DUISTD_Mtrl", pMtrl);
+
+	// 2D UI CoolDown Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUICoolDown_Shader"));
+	AddRes(L"2DUICoolDown_Mtrl", pMtrl);
+
+	// 2D UI Guage Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIGuage_Shader"));
+	AddRes(L"2DUIGuage_Mtrl", pMtrl);
+
+	// 2D UI Indicator Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIIndicator_Shader"));
+	AddRes(L"2DUIIndicator_Mtrl", pMtrl);
+
+	// 2D UI ItemSlot Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIItemSlot_Shader"));
+	AddRes(L"2DUIItemSlot_Mtrl", pMtrl);
 
 	// ===========
 	// ==  3 D  ==

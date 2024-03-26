@@ -21,6 +21,8 @@ private:
 
 	void RecipeUpdate();
 
+	void random();
+
 public:
 	int SearchRecipe(UINT _ingr_1, UINT _ingr_2, int& _res);
 	vector<CGameObject*> GetItemObjs() { return m_vecItem; }

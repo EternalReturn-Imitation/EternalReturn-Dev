@@ -3,7 +3,6 @@
 
 #include "ER_DataScript_Character.h"
 #include "ER_ActionScript_Character.h"
-#include "ER_UIMgr.h"
 
 //테스트용
 #include "ER_GameSystem.h"
@@ -47,15 +46,7 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 	}
 	HitInfo->iHP -= FinalDmg;
 
-	// UI Update부분
-	//AtkObj->GetScript<ER_DataScript_Character>()->ChangeStatBar();
-	HitObj->GetScript<ER_DataScript_Character>()->ChangeStatBar();
-	
-	if (HitObj == ER_GameSystem::GetInst()->GetPlayerCharacter()) {
-		ER_UIMgr::GetInst()->UpdateStat();
-		ER_UIMgr::GetInst()->UpdateHP();
-	}
-	// 데미지 폰트 출력
+	// 데미지폰트 출력
 }
 
 void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker

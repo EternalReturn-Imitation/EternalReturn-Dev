@@ -81,6 +81,8 @@ cbuffer GLOBAL : register(b2)
     int2   g_globalpadding;
 }
 
+Texture2D g_tex[8];
+
 Texture2D g_tex_0 : register(t0);
 Texture2D g_tex_1 : register(t1);
 Texture2D g_tex_2 : register(t2);

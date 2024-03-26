@@ -53,6 +53,9 @@ public:
     void OnRayOverlap();
     void EndRayOverlap();
 
+    virtual void SavePrefab(const wstring& _key);
+    virtual void LoadPrefab(const wstring& _key);
+
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 

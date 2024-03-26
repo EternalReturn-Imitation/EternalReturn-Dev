@@ -22,6 +22,7 @@
 #include <Engine\CCollider3D.h>
 #include <Engine\CFindPath.h>
 #include <Engine\CText.h>
+#include <Engine\CUIComponent.h>
 
 // [Graphic]
 #include <Engine\CSetColorShader.h>
@@ -35,13 +36,13 @@
 #include <Script\ER_DataScript_LandMeshBase.h>
 
 #include <Script\ER_CharacterMgr.h>
+#include <Script\ER_UIMgr.h>
+#include <Script\ER_GameSystem.h>
 
 // [Editor]
 #include "CEditorObjMgr.h"
 #include "CLevelSaveLoad.h"
 #include "LevelMgr.h"
-
-#include <Script\ER_UIMgr.h>
 
 #pragma endregion
 
@@ -62,9 +63,9 @@ void CreateLumiaIsland()
 	CreateTestEnemy();
 
 	LumiaIsland();
-
-	ER_UIMgr::GetInst()->GameStart();
 	
+	ER_GameSystem::GetInst()->GameStart();
+
 	TestObject();
 }
 
@@ -75,96 +76,24 @@ void CreateTestPlayer()
 void CreateTestEnemy()
 {
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-80.4f, 1.00345f, 44.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-76.9f, 0.0f, 37.6f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-71.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-71.9f, 0.0f, 37.6f));
 
 }
 
 void TestObject()
 {
-	// Ptr<CMeshData> bulletMdat = CResMgr::GetInst()->FindRes<CMeshData>(L"bullet.mdat");
-	// CGameObject* bullet = new CGameObject;
-	// AddComponents(bullet, _TRANSFORM | _MESHRENDER);
-	// bullet->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"Rozzi_Bullet.mesh").Get());
-	// bullet->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"BulletMtrl.mtrl").Get(), 0);
-	// bullet->MeshRender()->GetDynamicMaterial(0);
+	// CGameObject* testParticle = new CGameObject();
+	// CGameObject* testParticle = xnew<CGameObject>();
+	// CGameObject* testParticle = new(CGameObject);
 	// 
-	// bullet->Transform()->SetRelativeScale(Vec3(2.f, 2.f, 2.f));
-	// SpawnGameObject(bullet, Vec3(-69.3f, 0.0f, 37.6f), 0);
-
-	// // Text Obj
-	// CGameObject* testTextObj = new CGameObject;
-	// AddComponents(testTextObj, _TRANSFORM | _MESHRENDER | _TEXT);
-	// testTextObj->SetName(L"TextUI");
+	CGameObject* testParticle111 = onew(CGameObject);
+	odelete(testParticle111);
 	// 
-	// // 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
-	// // Std2DUIMtrl 사용
-	// testTextObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 0.f));
-	// testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	// testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	// 
-	// // 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
-	// // testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_01.png"));
-	// 
-	// 
-	// // 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
-	// // 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 50.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	// testTextObj->Text()->InputString(L"테스트");
-	// 
-	// SpawnGameObject(testTextObj, Vec3(0.f, 0.f, 0.f), L"UI");
-
-
-	// Particle
-
-	// 마우스 커서위치
-	
-
-
-	//CGameObject* testParticle = new CGameObject();
-	//CGameObject* testParticle = xnew<CGameObject>();
-	CGameObject* testParticle = onew(CGameObject);
-
-	//CGameObject* testParticle111 = onew(CGameObject);
-	//odelete(testParticle111);
-
-	testParticle->SetName(L"particleTest");
-	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	CParticleSystem* Particle = testParticle->ParticleSystem();
-	
-	tParticleModule particle_data = Particle->GetParticleInfo();		// 파티클데이터 얻기
-	
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
-	
-	particle_data.StartScale = 0.8f;
-	particle_data.EndScale = 0.001f;
-	
-	particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
-	particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
-	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
-	
-	particle_data.MinLifeTime = 3.f;
-	particle_data.MaxLifeTime = 3.f;
-	
-	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
-	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-	
-	Particle->SetMaxParticleCount(20);
-
-	particle_data.AddVelocityType = 2;
-	particle_data.vVelocityDir = Vec3(0.f, 1.f, 0.f);
-	particle_data.Speed = 2.5f;
-	
-	Particle->SetParticleInfo(particle_data);	// 파티클 데이터 세팅
-
-	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+	// testParticle->SetName(L"particleTest");
+	// AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
+	// CParticleSystem* Particle = testParticle->ParticleSystem();
 }
 
 void SetLayer(CLevel* _Level)
@@ -177,6 +106,7 @@ void SetLayer(CLevel* _Level)
 	_Level->GetLayer(4)->SetName(L"Roof");
 	
 	_Level->GetLayer(5)->SetName(L"ItemBox");
+	_Level->GetLayer(6)->SetName(L"ItemBoxTag");
 	_Level->GetLayer(11)->SetName(L"Monster");
 	_Level->GetLayer(12)->SetName(L"Character");
 	_Level->GetLayer(13)->SetName(L"Player");
@@ -241,6 +171,7 @@ void SetCamera()
 	UICamera->Camera()->SetOrthoHeight(WinResolution.y);
 
 	UICamera->Camera()->SetLayerMaskAll(false);
+	UICamera->Camera()->SetLayerMask(28, true);
 	UICamera->Camera()->SetLayerMask(31, true);
 
 	SpawnGameObject(UICamera, Vec3(0.f, 0.f, -5.f), L"Camera");
@@ -266,6 +197,7 @@ void SetLight()
 	pLightObj->Light3D()->SetLightAmbient(Vec3(0.f, 0.f, 0.f));
 
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMaskAll(true);
+	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(6, false);	// ItemBoxTag
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(28, false);	// InGameUI
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(31, false);	// UI
 
@@ -309,15 +241,13 @@ void Create_Archery()
 	Building->SetName(L"Archery_Building");
 	Roof->SetName(L"Archery_Roof");
 
-	Base->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Building->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Roof->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
+	Base->LoadAllPrefabFromObjName();
+	Building->LoadAllPrefabFromObjName();
+	Roof->LoadAllPrefabFromObjName();
 
-	SetRot_x(Building, REVERSE90RAD);
-	
-	SpawnGameObject(Base, Vec3(-187.f, -3.99f, 26.f), L"Base");
-	SpawnGameObject(Building, Vec3(0.2f, -0.1f, 0.5f), L"Building");
-	SpawnGameObject(Roof, Vec3(-133.18f, 5.660f, 43.730f), L"Roof");
+	SpawnGameObject(Base, L"Base");
+	SpawnGameObject(Building, L"Building");
+	SpawnGameObject(Roof, L"Roof");
 
 
 	// [ Collider ]
@@ -325,14 +255,12 @@ void Create_Archery()
 	RoofEnable->SetName(L"Archery_Base_Collider3D");
 	AddComponents(RoofEnable, _TRANSFORM | _COLLIDER3D);
 
-	RoofEnable->Collider3D()->SetOffsetScale(Vec3(10.f, 1.f, 20.f));
-	RoofEnable->Collider3D()->SetOffsetPos(Vec3(0.f, 1.f, 0.f));
-	RoofEnable->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+	RoofEnable->LoadAllPrefabFromObjName();
 
 	RoofEnable->AddComponent(new ER_DataScript_LandMeshBase);
 	RoofEnable->GetScript<ER_DataScript_LandMeshBase>()->SetRoof(Roof);
 
-	SpawnGameObject(RoofEnable, Vec3(-132.f, 1.76422f, 53.28091f), L"Base");
+	SpawnGameObject(RoofEnable, L"Base");
 
 	// ====================================
 
@@ -351,27 +279,11 @@ void Create_Archery()
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		box->AddComponent(new ER_DataScript_ItemBox);
-		
-		box->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
-		
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 		box->MeshRender()->GetDynamicMaterial(0);
+		box->LoadAllPrefabFromObjName();
+		SpawnGameObject(box, L"ItemBox");
 	}
-	
-	XMConv_Rot_XYZ(ItemBox[0], 90.f, -68.f, -180.f);
-	XMConv_Rot_X(ItemBox[1], -90.f);
-	XMConv_Rot_Y(ItemBox[2], -36.f);
-	
-	ItemBox[0]->Collider3D()->SetOffsetScale(Vec3(150.f, 150.f, 300.f));
-	ItemBox[1]->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 300.f));
-	ItemBox[2]->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));
-
-	ItemBox[0]->Collider3D()->SetOffsetPos(Vec3(0.f, 1.f, 100.f));
-	ItemBox[1]->Collider3D()->SetOffsetPos(Vec3(0.f, 101.f, 100.f));
-	ItemBox[2]->Collider3D()->SetOffsetPos(Vec3(0.f, 101.f, 0.f));
-
-	SpawnGameObject(ItemBox[0], Vec3(-134.89401f, -0.228f, 91.17091f), L"ItemBox");
-	SpawnGameObject(ItemBox[1], Vec3(-132.93658f, 1.4689f, 46.70636f), L"ItemBox");
-	SpawnGameObject(ItemBox[2], Vec3(-121.580f, 0.82966f, 35.689f), L"ItemBox");
 }
 void Create_Forest()
 {
@@ -380,12 +292,12 @@ void Create_Forest()
 
 	Base->SetName(L"Forest_Base");
 	Building->SetName(L"Forest_Building");
-	
-	Base->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Building->Transform()->SetRelativeScale(0.01007f, 0.01067f, 0.01067f);
 
-	SpawnGameObject(Base, Vec3(-53.680f, -7.98f, -20.202f), L"Base");
-	SpawnGameObject(Building, Vec3(-11.92211f, 0.227f, -20.54554f), L"Building");
+	Base->LoadAllPrefabFromObjName();
+	Building->LoadAllPrefabFromObjName();
+
+	SpawnGameObject(Base, L"Base");
+	SpawnGameObject(Building, L"Building");
 
 	// =========================================================
 
@@ -405,31 +317,13 @@ void Create_Forest()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
-
-		box->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
 		box->MeshRender()->GetDynamicMaterial(0);
+		box->LoadAllPrefabFromObjName();
+		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
-
-	XMConv_Rot_XYZ(ItemBox[3], -180.f, 65.f, -180.f);
-
-	ItemBox[0]->Collider3D()->SetOffsetScale(Vec3(120.f, 120.f, 120.f));
-	ItemBox[1]->Collider3D()->SetOffsetScale(Vec3(100.f, 120.f, 100.f));
-	ItemBox[2]->Collider3D()->SetOffsetScale(Vec3(400.f, 100.f, 100.f));
-	ItemBox[3]->Collider3D()->SetOffsetScale(Vec3(400.f, 100.f, 100.f));
-	
-	ItemBox[0]->Collider3D()->SetOffsetPos(Vec3(0.f, 51.f, 0.f));
-	ItemBox[1]->Collider3D()->SetOffsetPos(Vec3(0.f, 51.f, 0.f));
-	ItemBox[2]->Collider3D()->SetOffsetPos(Vec3(0.f, 1.f, 0.f));
-	ItemBox[3]->Collider3D()->SetOffsetPos(Vec3(0.f, 1.f, 0.f));
-
-	ItemBox[2]->Transform()->SetRelativeRot(Vec3(0.f, Deg2Rad(-10), 0.f));
-	ItemBox[3]->Transform()->SetRelativeRot(Deg2Rad(-11), Deg2Rad(88), Deg2Rad(-11));
-	
-	SpawnGameObject(ItemBox[0], Vec3(19.80982f, 0.11900f, 16.42808f), L"ItemBox");
-	SpawnGameObject(ItemBox[1], Vec3(-26.02692f, 0.27824f, 18.76737f), L"ItemBox");
-	SpawnGameObject(ItemBox[2], Vec3(14.36587f, 1.59560f, -3.72484f), L"ItemBox");
-	SpawnGameObject(ItemBox[3], Vec3(-26.97585f, 0.05435f, -3.30284f), L"ItemBox");
 }
 void Create_Hotel()
 {
@@ -441,27 +335,24 @@ void Create_Hotel()
 	Building->SetName(L"Hotel_Building");
 	Roof->SetName(L"Hotel_Roof");
 	
-	Base->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Building->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Roof->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	
-	SpawnGameObject(Base, Vec3(-96.4f, -1.76f, 176.4f), L"Base");
-	SpawnGameObject(Building, Vec3(-141.f, -2.6f, -21.35f), L"Building");
-	SpawnGameObject(Roof, Vec3(-101.72f, 0.910f, -18.075f), L"Roof");
+	Base->LoadAllPrefabFromObjName();
+	Building->LoadAllPrefabFromObjName();
+	Roof->LoadAllPrefabFromObjName();
+
+	SpawnGameObject(Base, L"Base");
+	SpawnGameObject(Building, L"Building");
+	SpawnGameObject(Roof, L"Roof");
 
 	// [ Collider ]
 	CGameObject* RoofEnable = new CGameObject;
 	RoofEnable->SetName(L"Hotel_Base_Collider3D");
 	AddComponents(RoofEnable, _TRANSFORM | _COLLIDER3D);
+	RoofEnable->LoadAllPrefabFromObjName();
 
-	RoofEnable->Collider3D()->SetOffsetScale(Vec3(15.f, 1.f, 30.f));
-	RoofEnable->Collider3D()->SetOffsetPos(Vec3(0.f, 1.f, 0.f));
-	RoofEnable->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	
 	RoofEnable->AddComponent(new ER_DataScript_LandMeshBase);
 	RoofEnable->GetScript<ER_DataScript_LandMeshBase>()->SetRoof(Roof);
 	
-	SpawnGameObject(RoofEnable, Vec3(-109.07837f, 1.f, -3.79784f), L"Base");
+	SpawnGameObject(RoofEnable, L"Base");
 
 	// =====================================================================
 
@@ -481,33 +372,13 @@ void Create_Hotel()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
-
-		box->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
 		box->MeshRender()->GetDynamicMaterial(0);
+		box->LoadAllPrefabFromObjName();
+		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
-	
-	XMConv_Rot_X(ItemBox[0], -180.f);
-	XMConv_Rot_Z(ItemBox[0], -180.f);
-
-	XMConv_Rot_Y(ItemBox[1], -90.f);
-
-	XMConv_Rot_X(ItemBox[2], -90.f);
-	
-	ItemBox[0]->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));
-	ItemBox[1]->Collider3D()->SetOffsetScale(Vec3(120.f, 150.f, 150.f));
-	ItemBox[2]->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
-	ItemBox[3]->Collider3D()->SetOffsetScale(Vec3(120.f, 220.f, 120.f));
-	
-	ItemBox[0]->Collider3D()->SetOffsetPos(Vec3(0.f, 101.f, 0.f));
-	ItemBox[1]->Collider3D()->SetOffsetPos(Vec3(0.f, 71.f, 0.f));
-	ItemBox[2]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
-	ItemBox[3]->Collider3D()->SetOffsetPos(Vec3(0.f, 140.f, 0.f));
-	
-	SpawnGameObject(ItemBox[0], Vec3(-112.772f, 1.14831f, -16.68324f), L"ItemBox");
-	SpawnGameObject(ItemBox[1], Vec3(-103.886f, 0.374f, -32.562f), L"ItemBox");
-	SpawnGameObject(ItemBox[2], Vec3(-63.052f, 0.332f, -19.634f), L"ItemBox");
-	SpawnGameObject(ItemBox[3], Vec3(-105.717f, 0.322f, 8.205f), L"ItemBox");
 }
 void Create_SandyBeach()
 {
@@ -517,13 +388,11 @@ void Create_SandyBeach()
 	Base->SetName(L"SandyBeach_Base");
 	Building->SetName(L"SandyBeach_Building");
 
-	Base->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Building->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
+	Base->LoadAllPrefabFromObjName();
+	Building->LoadAllPrefabFromObjName();
 
-	SetRot_x(Building, REVERSE90RAD);
-
-	SpawnGameObject(Base, Vec3(-79.400f, -10.500f, -75.300f), L"Base");
-	SpawnGameObject(Building, Vec3(0.911f, -0.7f, 12.500f), L"Building");
+	SpawnGameObject(Base, L"Base");
+	SpawnGameObject(Building, L"Building");
 
 	// ==================================================================================
 
@@ -543,36 +412,13 @@ void Create_SandyBeach()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
-
-		box->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
 		box->MeshRender()->GetDynamicMaterial(0);
+		box->LoadAllPrefabFromObjName();
+		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
-
-	XMConv_Rot_XYZ(ItemBox[0], 90.f, 45.f, -180.f);
-
-	XMConv_Rot_X(ItemBox[1], -90.f);
-	XMConv_Rot_Y(ItemBox[1], 22.f);
-
-	XMConv_Rot_X(ItemBox[2], -91.f);
-	XMConv_Rot_Y(ItemBox[2], -66.f);
-
-	XMConv_Rot_XYZ(ItemBox[3], 90.f, -90.f, -180.f);
-
-	ItemBox[0]->Collider3D()->SetOffsetScale(Vec3(200.f, 700.f, 120.f));
-	ItemBox[1]->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
-	ItemBox[2]->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
-	ItemBox[3]->Collider3D()->SetOffsetScale(Vec3(200.f, 700.f, 120.f));
-
-	ItemBox[0]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
-	ItemBox[1]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 50.f));
-	ItemBox[2]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
-	ItemBox[3]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
-
-	SpawnGameObject(ItemBox[0], Vec3(-32.593f, -2.816f, -68.192f), L"ItemBox");
-	SpawnGameObject(ItemBox[1], Vec3(-64.518f, -3.001f, -72.063f), L"ItemBox");
-	SpawnGameObject(ItemBox[2], Vec3(-42.661f, -1.764f, -48.906f), L"ItemBox");
-	SpawnGameObject(ItemBox[3], Vec3(-64.094f, -1.371f, -42.020f), L"ItemBox");
 }
 void Create_School()
 {
@@ -584,42 +430,38 @@ void Create_School()
 	Building->SetName(L"School_Building");
 	Roof->SetName(L"School_Roof");
 	
-	Base->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Building->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Roof->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	
-	SetRot_y(Roof, REVERSE90RAD);
+	Base->LoadAllPrefabFromObjName();
+	Building->LoadAllPrefabFromObjName();
+	Roof->LoadAllPrefabFromObjName();
 
-	SpawnGameObject(Base, Vec3(-86.656f, -3.100f, 67.850f), L"Base");
-	SpawnGameObject(Building, Vec3(-74.800f, -0.380f, 31.400f), L"Building");
-	SpawnGameObject(Roof, Vec3(-87.150f, -0.280f, 76.150f), L"Roof");
+	SpawnGameObject(Base, L"Base");
+	SpawnGameObject(Building, L"Building");
+	SpawnGameObject(Roof, L"Roof");
 
 	// Collider Set
 
 	CGameObject* RoofEnableCollidr[3] = {};
 
-	for (auto &collider : RoofEnableCollidr)
-	{
-		collider = new CGameObject;
-		AddComponents(collider, _TRANSFORM | _COLLIDER3D);
-		collider->Collider3D()->SetOffsetPos(Vec3(0.f, 1.f, 0.f));
-		collider->AddComponent(new ER_DataScript_LandMeshBase);
-		collider->GetScript<ER_DataScript_LandMeshBase>()->SetRoof(Roof);
-		collider->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-	}
+	RoofEnableCollidr[0] = new CGameObject;
+	RoofEnableCollidr[1] = new CGameObject;
+	RoofEnableCollidr[2] = new CGameObject;
 
 	RoofEnableCollidr[0]->SetName(L"School_Base_Collider3D01");
 	RoofEnableCollidr[1]->SetName(L"School_Base_Collider3D02");
 	RoofEnableCollidr[2]->SetName(L"School_Base_Collider3D03");
-	
-	RoofEnableCollidr[0]->Collider3D()->SetOffsetScale(Vec3(28.f, 1.f, 24.f));
-	RoofEnableCollidr[1]->Collider3D()->SetOffsetScale(Vec3(17.f, 1.f, 55.f));
-	RoofEnableCollidr[2]->Collider3D()->SetOffsetScale(Vec3(6.f, 1.f, 7.f));
-	
 
-	SpawnGameObject(RoofEnableCollidr[0], Vec3(-101.36192f, 1.f, 88.06251f), L"Base");
-	SpawnGameObject(RoofEnableCollidr[1], Vec3(-69.12391f, 1.f, 68.64030f), L"Base");
-	SpawnGameObject(RoofEnableCollidr[2], Vec3(-59.57447f, 1.f, 65.01f), L"Base");
+	for (auto &collider : RoofEnableCollidr)
+	{
+		AddComponents(collider, _TRANSFORM | _COLLIDER3D);
+		collider->AddComponent(new ER_DataScript_LandMeshBase);
+		collider->GetScript<ER_DataScript_LandMeshBase>()->SetRoof(Roof);
+		collider->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
+		collider->LoadAllPrefabFromObjName();
+	}
+	
+	SpawnGameObject(RoofEnableCollidr[0], L"Base");
+	SpawnGameObject(RoofEnableCollidr[1], L"Base");
+	SpawnGameObject(RoofEnableCollidr[2], L"Base");
 
 	// =================================================================================
 
@@ -635,36 +477,17 @@ void Create_School()
 	ItemBox[2]->SetName(L"School_WreckCar01");
 	ItemBox[3]->SetName(L"School_WreckCar02");
 
-	for (auto &box : ItemBox)
+	for (auto& box : ItemBox)
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
-
-		box->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
 		box->MeshRender()->GetDynamicMaterial(0);
+		box->LoadAllPrefabFromObjName();
+		SpawnGameObject(box, L"ItemBox");
+
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
-	XMConv_Rot_X(ItemBox[0], -90.f);
-
-	XMConv_Rot_Y(ItemBox[1], -90.f);
-	XMConv_Rot_Z(ItemBox[1], 90.f);
-
-	XMConv_Rot_XYZ(ItemBox[2], -180.f, -90.f, -180.f);
-	
-	ItemBox[0]->Collider3D()->SetOffsetScale(Vec3(100.f, 220.f, 170.f));
-	ItemBox[1]->Collider3D()->SetOffsetScale(Vec3(50.f, 200.f, 250.f));
-	ItemBox[2]->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
-	ItemBox[3]->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
-
-	ItemBox[0]->Collider3D()->SetOffsetPos(Vec3(0.f, 0.f, 90.f));
-	ItemBox[1]->Collider3D()->SetOffsetPos(Vec3(30.f, 90.f, 120.f));
-	ItemBox[2]->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
-	ItemBox[3]->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
-	
-	SpawnGameObject(ItemBox[0], Vec3(-105.100f, -0.160f, 53.730f), L"ItemBox");
-	SpawnGameObject(ItemBox[1], Vec3(-65.92036f, 3.28625f, 67.42262f), L"ItemBox");
-	SpawnGameObject(ItemBox[2], Vec3(-65.73459f, 0.45918f, 101.998f), L"ItemBox");
-	SpawnGameObject(ItemBox[3], Vec3(-84.585f, -0.16467f, 47.429f), L"ItemBox");
 }
 void Create_Uptown()
 {
@@ -674,11 +497,11 @@ void Create_Uptown()
 	Base->SetName(L"Uptown_Base");
 	Building->SetName(L"Uptown_Building");
 
-	Base->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
-	Building->Transform()->SetRelativeScale(LANDSCALE, LANDSCALE, LANDSCALE);
+	Base->LoadAllPrefabFromObjName();
+	Building->LoadAllPrefabFromObjName();
 	
-	SpawnGameObject(Base, Vec3(23.820f, -5.33f, -53.350f), L"Base");
-	SpawnGameObject(Building, Vec3(9.f, -4.600f, -70.290f), L"Building");
+	SpawnGameObject(Base, L"Base");
+	SpawnGameObject(Building, L"Building");
 
 	// ====================================================================================
 
@@ -698,29 +521,13 @@ void Create_Uptown()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
-
-		box->Transform()->SetRelativeScale(0.01f, 0.01f, 0.01f);
 		box->MeshRender()->GetDynamicMaterial(0);
+		box->LoadAllPrefabFromObjName();
+		SpawnGameObject(box, L"ItemBox");
+		
+		box->AddComponent(new ER_DataScript_ItemBox);
+		box->GetScript<ER_DataScript_ItemBox>()->init();
 	}
-
-	XMConv_Rot_XYZ(ItemBox[1], -180.f, 9.f, -180.f);
-	XMConv_Rot_XYZ(ItemBox[3], -180.f, -90.f, -180.f);
-
-	ItemBox[0]->Collider3D()->SetOffsetScale(Vec3(120.f, 150.f, 150.f));
-	ItemBox[1]->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
-	ItemBox[2]->Collider3D()->SetOffsetScale(Vec3(100.f, 200.f, 100.f));
-	ItemBox[3]->Collider3D()->SetOffsetScale(Vec3(200.f, 100.f, 550.f));
-
-	ItemBox[0]->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
-	ItemBox[1]->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
-	ItemBox[2]->Collider3D()->SetOffsetPos(Vec3(0.f, 100.f, 0.f));
-	ItemBox[3]->Collider3D()->SetOffsetPos(Vec3(0.f, 70.f, 0.f));
-
-	SpawnGameObject(ItemBox[0], Vec3(-13.929f, -0.46114f, -50.756f), L"ItemBox");
-	SpawnGameObject(ItemBox[1], Vec3(-6.39721f, -0.40347f, -65.22822f), L"ItemBox");
-	SpawnGameObject(ItemBox[2], Vec3(31.074f, -0.57047f, -41.496f), L"ItemBox");
-	SpawnGameObject(ItemBox[3], Vec3(27.374f, -0.05370f, -76.997f), L"ItemBox");
 }
 
 // func

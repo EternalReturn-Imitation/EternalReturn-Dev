@@ -23,13 +23,13 @@
       <Filter>Source\01. Engine</Filter>
     </ClInclude>
     <ClInclude Include="CSingleton.h">
-      <Filter>Source\09. Module</Filter>
+      <Filter>Source\08. ShaderCode\09. Module</Filter>
     </ClInclude>
     <ClInclude Include="CDevice.h">
       <Filter>Source\02. Device</Filter>
     </ClInclude>
     <ClInclude Include="SimpleMath.h">
-      <Filter>Source\09. Module\SimpleMath</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\SimpleMath</Filter>
     </ClInclude>
     <ClInclude Include="CPathMgr.h">
       <Filter>Source\03. Manager\01. PathMgr</Filter>
@@ -161,7 +161,7 @@
       <Filter>Source\06. Component\RenderComponent\4. Decal</Filter>
     </ClInclude>
     <ClInclude Include="CFBXLoader.h">
-      <Filter>Source\09. Module\FBXLoader</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\FBXLoader</Filter>
     </ClInclude>
     <ClInclude Include="CMeshData.h">
       <Filter>Source\07. Resource\7. MeshData</Filter>
@@ -210,31 +210,31 @@
       <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourStatus.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourAlloc.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourAssert.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourCommon.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourMath.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMesh.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMeshBuilder.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMeshQuery.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNode.h">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="CPathFindMgr.h">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
@@ -246,7 +246,7 @@
       <Filter>Source\03. Manager\14. Debug</Filter>
     </ClInclude>
     <ClInclude Include="FSM.h">
-      <Filter>Source\09. Module\FSM</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\FSM</Filter>
     </ClInclude>
     <ClInclude Include="CCollider3D.h">
       <Filter>Source\06. Component\3. Collider3D</Filter>
@@ -255,20 +255,16 @@
       <Filter>Source\03. Manager\15. UIMgr</Filter>
     </ClInclude>
     <ClInclude Include="CUIComponent.h">
-      <Filter>Source\06. Component\UIComponent</Filter>
+      <Filter>Source\06. Component\12. UIComponent</Filter>
     </ClInclude>
-    <ClInclude Include="CUI_Button.h">
-      <Filter>Source\06. Component\UIComponent\ButtonUI</Filter>
-    </ClInclude>
-    <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CText.h">
       <Filter>Source\06. Component\11. Text</Filter>
     </ClInclude>
     <ClInclude Include="CFrustum.h">
       <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryPool.h">
-      <Filter>Source\03. Manager\16. MemoryMgr\02. MemoryPool</Filter>
+    <ClInclude Include="CFrustum.h">
+      <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClInclude>
     <ClInclude Include="MemoryMgr.h">
       <Filter>Source\03. Manager\16. MemoryMgr</Filter>
@@ -276,8 +272,8 @@
     <ClInclude Include="Allocator.h">
       <Filter>Source\03. Manager\16. MemoryMgr\01. Allocator</Filter>
     </ClInclude>
-    <ClInclude Include="CustomContainer.h">
-      <Filter>Source\00. Header</Filter>
+    <ClInclude Include="MemoryPool.h">
+      <Filter>Source\03. Manager\16. MemoryMgr\02. MemoryPool</Filter>
     </ClInclude>
     <ClInclude Include="ObjectPool.h">
       <Filter>Source\03. Manager\16. MemoryMgr\03. ObjectPool</Filter>
@@ -435,7 +431,7 @@
       <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClCompile>
     <ClCompile Include="CFBXLoader.cpp">
-      <Filter>Source\09. Module\FBXLoader</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\FBXLoader</Filter>
     </ClCompile>
     <ClCompile Include="CMeshData.cpp">
       <Filter>Source\07. Resource\7. MeshData</Filter>
@@ -486,25 +482,25 @@
       <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourAlloc.cpp">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourAssert.cpp">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourCommon.cpp">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMesh.cpp">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMeshBuilder.cpp">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMeshQuery.cpp">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNode.cpp">
-      <Filter>Source\09. Module\NaviMesh</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="CPathFindMgr.cpp">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
@@ -519,7 +515,7 @@
       <Filter>Source\03. Manager\14. Debug</Filter>
     </ClCompile>
     <ClCompile Include="FSM.cpp">
-      <Filter>Source\09. Module\FSM</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\FSM</Filter>
     </ClCompile>
     <ClCompile Include="3DCCollisionMgr.cpp">
       <Filter>Source\03. Manager\07. CollisionMgr</Filter>
@@ -531,22 +527,19 @@
       <Filter>Source\03. Manager\15. UIMgr</Filter>
     </ClCompile>
     <ClCompile Include="CUIComponent.cpp">
-      <Filter>Source\06. Component\UIComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="CUI_Button.cpp">
-      <Filter>Source\06. Component\UIComponent\ButtonUI</Filter>
+      <Filter>Source\06. Component\12. UIComponent</Filter>
     </ClCompile>
     <ClCompile Include="CText.cpp">
       <Filter>Source\06. Component\11. Text</Filter>
-    </ClCompile>
-    <ClCompile Include="MemoryPool.cpp">
-      <Filter>Source\03. Manager\16. MemoryMgr\02. MemoryPool</Filter>
     </ClCompile>
     <ClCompile Include="MemoryMgr.cpp">
       <Filter>Source\03. Manager\16. MemoryMgr</Filter>
     </ClCompile>
     <ClCompile Include="Allocator.cpp">
       <Filter>Source\03. Manager\16. MemoryMgr\01. Allocator</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>Source\03. Manager\16. MemoryMgr\02. MemoryPool</Filter>
     </ClCompile>
     <ClCompile Include="ObjectPool.cpp">
       <Filter>Source\03. Manager\16. MemoryMgr\03. ObjectPool</Filter>
@@ -594,12 +587,6 @@
     </Filter>
     <Filter Include="Source\08. ShaderCode">
       <UniqueIdentifier>{7bae9d30-a4aa-4ff1-abdc-5ed8dcbd21ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\09. Module">
-      <UniqueIdentifier>{77da0800-3a79-4f9b-aa08-9bf7e06d17d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\09. Module\SimpleMath">
-      <UniqueIdentifier>{c3fbf7d1-977b-4a8d-916b-bc3be792b42f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\04. Level">
       <UniqueIdentifier>{c83961ef-cb2c-4f0d-bbc4-ffd708a2bf4b}</UniqueIdentifier>
@@ -700,9 +687,6 @@
     <Filter Include="Source\03. Manager\06. RenderMgr\MRT">
       <UniqueIdentifier>{cd84714e-7507-400d-b225-8552722f4069}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\09. Module\FBXLoader">
-      <UniqueIdentifier>{5e0d6f76-4f1d-4782-a05e-bc1c743ce2b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\07. Resource\7. MeshData">
       <UniqueIdentifier>{fe6384b9-102a-4745-9f64-34b8309bc0af}</UniqueIdentifier>
     </Filter>
@@ -741,9 +725,6 @@
     </Filter>
     <Filter Include="Source\03. Manager\14. Debug">
       <UniqueIdentifier>{816921f8-d8a6-4c07-9176-0a979561e9fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\09. Module\FSM">
-      <UniqueIdentifier>{09ba7341-2cb3-4d3d-a4c9-ff4291930efa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\15. UIMgr">
       <UniqueIdentifier>{75fd74b4-6181-49d6-a0fc-6be10ec6121f}</UniqueIdentifier>
@@ -784,55 +765,52 @@
     <Filter Include="Source\06. Component\3. Collider3D">
       <UniqueIdentifier>{9134b812-6184-459c-bbba-748c8bb417c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\06. Component\UIComponent">
-      <UniqueIdentifier>{55327782-e51e-4fbc-8dcc-6e677ed1ff9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\06. Component\UIComponent\ButtonUI">
-      <UniqueIdentifier>{0cd0da2f-2001-4640-b62e-953408a3b0e8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\06. Component\11. Text">
       <UniqueIdentifier>{fb3ba9b6-c3f5-43ba-8656-0f8800c81b40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\09. Module\NaviMesh">
-      <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
+    <Filter Include="Source\06. Component\12. UIComponent">
+      <UniqueIdentifier>{55327782-e51e-4fbc-8dcc-6e677ed1ff9e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\16. MemoryMgr">
-      <UniqueIdentifier>{72973523-9b0d-4e36-a2c6-142999b3eaab}</UniqueIdentifier>
+      <UniqueIdentifier>{d6eb5fb7-9e45-45c0-b0c8-c32d95978a4f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\16. MemoryMgr\01. Allocator">
-      <UniqueIdentifier>{753a505e-1c34-43c2-8264-fd31d46b31a1}</UniqueIdentifier>
+      <UniqueIdentifier>{99f965f4-8c5b-4f56-86c8-b81648f63346}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\16. MemoryMgr\02. MemoryPool">
-      <UniqueIdentifier>{261c055e-22f6-4cb7-a3fd-1b56cbb90d43}</UniqueIdentifier>
+      <UniqueIdentifier>{d7855663-4f6a-472d-95e1-fe6c69b10f3a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\03. Manager\16. MemoryMgr\03. ObjectPool">
-      <UniqueIdentifier>{53bd0e25-5590-4cf7-af2b-f63bad9a7922}</UniqueIdentifier>
+      <UniqueIdentifier>{e6d362e2-2393-45e8-9006-6b5f4dde54f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\09. Module">
+      <UniqueIdentifier>{77da0800-3a79-4f9b-aa08-9bf7e06d17d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\09. Module\SimpleMath">
+      <UniqueIdentifier>{c3fbf7d1-977b-4a8d-916b-bc3be792b42f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\09. Module\FBXLoader">
+      <UniqueIdentifier>{5e0d6f76-4f1d-4782-a05e-bc1c743ce2b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\09. Module\FSM">
+      <UniqueIdentifier>{09ba7341-2cb3-4d3d-a4c9-ff4291930efa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\08. ShaderCode\09. Module\NaviMesh">
+      <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
-      <Filter>Source\09. Module\SimpleMath</Filter>
+      <Filter>Source\08. ShaderCode\09. Module\SimpleMath</Filter>
     </None>
     <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="value.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="struct.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
-    <FxCompile Include="func.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
     <FxCompile Include="setcolor.fx">
       <Filter>Source\08. ShaderCode\Compute\SetColor</Filter>
     </FxCompile>
     <FxCompile Include="particle_update.fx">
       <Filter>Source\08. ShaderCode\Compute\ParticleUpdate</Filter>
-    </FxCompile>
-    <FxCompile Include="postprocess.fx">
-      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="postprocess.fx">
       <Filter>Source\08. ShaderCode\PostProcess</Filter>
@@ -841,12 +819,6 @@
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
     <FxCompile Include="particle_render.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="std2d.fx">
-      <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="tilemap.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
     <FxCompile Include="func.fx">
@@ -863,9 +835,6 @@
     </FxCompile>
     <FxCompile Include="decal.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
-    </FxCompile>
-    <FxCompile Include="std3d_deferred.fx">
-      <Filter>Source\08. ShaderCode</Filter>
     </FxCompile>
     <FxCompile Include="decal.fx">
       <Filter>Source\08. ShaderCode</Filter>
@@ -917,6 +886,30 @@
     </FxCompile>
     <FxCompile Include="RaycastBase.fx">
       <Filter>Source\08. ShaderCode\Compute</Filter>
+    </FxCompile>
+    <FxCompile Include="2DUI.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="value.fx">
+      <Filter>Source\08. ShaderCode\Util</Filter>
+    </FxCompile>
+    <FxCompile Include="struct.fx">
+      <Filter>Source\08. ShaderCode\Util</Filter>
+    </FxCompile>
+    <FxCompile Include="func.fx">
+      <Filter>Source\08. ShaderCode\Util</Filter>
+    </FxCompile>
+    <FxCompile Include="std2d.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="tilemap.fx">
+      <Filter>Source\08. ShaderCode\Render\2D</Filter>
+    </FxCompile>
+    <FxCompile Include="std3d_deferred.fx">
+      <Filter>Source\08. ShaderCode\Render\3D</Filter>
+    </FxCompile>
+    <FxCompile Include="postprocess.fx">
+      <Filter>Source\08. ShaderCode\PostProcess</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

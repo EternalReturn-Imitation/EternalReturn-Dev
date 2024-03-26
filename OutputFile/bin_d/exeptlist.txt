@@ -12,3 +12,4 @@ ER_CharacterMgr.h
 ER_BattleSystem.h
 ER_ProjectilePool.h
 ER_UIMgr.h
+ER_UIMgr2.h

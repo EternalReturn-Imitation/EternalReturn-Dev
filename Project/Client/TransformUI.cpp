@@ -31,7 +31,47 @@ int TransformUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 	
+	CTransform* transform = GetTarget()->Transform();
+
+	// ÇÁ¸®ÆÕ Å°
+	ImGui::Button("Key", ImVec2(40.f, 0.f)); ImGui::SameLine();
+	ImGui::SameLine();
+	// wchar_t -> UTF-8
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	char szbuffer[256] = {};
+	strcpy_s(szbuffer, converter.to_bytes(transform->GetPrefabKey()).c_str());
+
+	ImGui::PushItemWidth(-FLT_MIN);
+	ImGui::InputText("##PrefabKey", szbuffer, sizeof(szbuffer));
+
+	// UTF-8 ->wchar_t
+	std::string utf8String = szbuffer;
+	std::wstring WString = converter.from_bytes(utf8String);
+
+	transform->SetPrefabKey(WString);    // ÇÁ¸®ÆÕÅ° ¼öÁ¤
+
+	ImGui::PushItemWidth(-FLT_MIN);
+	if (ImGui::Button("SAVE##TransformPrepab"))
+	{
+		transform->SavePrefab(WString);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("SetObjName##transformPrepab"))
+	{
+		transform->SetPrefabKey(GetTarget()->GetName());
+		transform->SavePrefab(GetTarget()->GetName());
+	}
+	bool bAbsolute = transform->IsAbsolute();
+
+	if (ImGui::Checkbox("##TrasnformAbsolut", &bAbsolute))
+	{
+		bAbsolute = !bAbsolute;
+	}
+
+	transform->SetAbsolute(bAbsolute);
 	
+	ImGui::Separator();
+
 // 	Vec3 vPos = GetTarget()->Transform()->GetRelativePos();
 // 	Vec3 vScale = GetTarget()->Transform()->GetRelativeScale();
 // 	Vec3 vRotation = GetTarget()->Transform()->GetRelativeRot();

@@ -239,8 +239,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CUIComponent.h" />
     <ClInclude Include="CUIMgr.h" />
-    <ClInclude Include="CUI_Button.h" />
-    <ClInclude Include="CustomContainer.h" />
     <ClInclude Include="CWeightMapShader.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
@@ -341,7 +339,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="CUIComponent.cpp" />
     <ClCompile Include="CUIMgr.cpp" />
-    <ClCompile Include="CUI_Button.cpp" />
     <ClCompile Include="CWeightMapShader.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Detour\DetourAlloc.cpp" />
@@ -370,6 +367,10 @@ call EngineCopy.bat</Command>
     <None Include="SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="2DUI.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+    </FxCompile>
     <FxCompile Include="animation3d.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

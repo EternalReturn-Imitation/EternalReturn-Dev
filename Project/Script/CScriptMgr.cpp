@@ -6,13 +6,13 @@
 #include "CMissileScript.h"
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
-#include "CUIScript_Button.h"
 #include "ER_ActionScript_Aya.h"
 #include "ER_ActionScript_Hyunwoo.h"
 #include "ER_ActionScript_Jackie.h"
 #include "ER_ActionScript_Rio.h"
 #include "ER_ActionScript_Yuki.h"
 #include "ER_CamControllerScript.h"
+#include "ER_Cursor.h"
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_Item.h"
 #include "ER_DataScript_ItemBox.h"
@@ -20,6 +20,13 @@
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
 #include "ER_ProjectileScript.h"
+#include "ER_UIScript_Gauge.h"
+#include "ER_UIScript_ItemBox.h"
+#include "ER_UIScript_ItemSlot.h"
+#include "ER_UIScript_SkillSlot.h"
+#include "ER_UIScript_SkillUpBtn.h"
+#include "ER_UIScript_StatusBarGauge.h"
+#include "ER_UIScript_TrackingStatusBar.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -28,13 +35,13 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CMissileScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
-	_vec.push_back(L"CUIScript_Button");
 	_vec.push_back(L"ER_ActionScript_Aya");
 	_vec.push_back(L"ER_ActionScript_Hyunwoo");
 	_vec.push_back(L"ER_ActionScript_Jackie");
 	_vec.push_back(L"ER_ActionScript_Rio");
 	_vec.push_back(L"ER_ActionScript_Yuki");
 	_vec.push_back(L"ER_CamControllerScript");
+	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Character");
 	_vec.push_back(L"ER_DataScript_Item");
 	_vec.push_back(L"ER_DataScript_ItemBox");
@@ -42,6 +49,13 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_ProjectileScript");
+	_vec.push_back(L"ER_UIScript_Gauge");
+	_vec.push_back(L"ER_UIScript_ItemBox");
+	_vec.push_back(L"ER_UIScript_ItemSlot");
+	_vec.push_back(L"ER_UIScript_SkillSlot");
+	_vec.push_back(L"ER_UIScript_SkillUpBtn");
+	_vec.push_back(L"ER_UIScript_StatusBarGauge");
+	_vec.push_back(L"ER_UIScript_TrackingStatusBar");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -56,8 +70,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CMonsterScript;
 	if (L"CPlanetScript" == _strScriptName)
 		return new CPlanetScript;
-	if (L"CUIScript_Button" == _strScriptName)
-		return new CUIScript_Button;
 	if (L"ER_ActionScript_Aya" == _strScriptName)
 		return new ER_ActionScript_Aya;
 	if (L"ER_ActionScript_Hyunwoo" == _strScriptName)
@@ -70,6 +82,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_ActionScript_Yuki;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
+	if (L"ER_Cursor" == _strScriptName)
+		return new ER_Cursor;
 	if (L"ER_DataScript_Character" == _strScriptName)
 		return new ER_DataScript_Character;
 	if (L"ER_DataScript_Item" == _strScriptName)
@@ -84,6 +98,20 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_PlayerScript_Range;
 	if (L"ER_ProjectileScript" == _strScriptName)
 		return new ER_ProjectileScript;
+	if (L"ER_UIScript_Gauge" == _strScriptName)
+		return new ER_UIScript_Gauge;
+	if (L"ER_UIScript_ItemBox" == _strScriptName)
+		return new ER_UIScript_ItemBox;
+	if (L"ER_UIScript_ItemSlot" == _strScriptName)
+		return new ER_UIScript_ItemSlot;
+	if (L"ER_UIScript_SkillSlot" == _strScriptName)
+		return new ER_UIScript_SkillSlot;
+	if (L"ER_UIScript_SkillUpBtn" == _strScriptName)
+		return new ER_UIScript_SkillUpBtn;
+	if (L"ER_UIScript_StatusBarGauge" == _strScriptName)
+		return new ER_UIScript_StatusBarGauge;
+	if (L"ER_UIScript_TrackingStatusBar" == _strScriptName)
+		return new ER_UIScript_TrackingStatusBar;
 	return nullptr;
 }
 
@@ -106,9 +134,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::PLANETSCRIPT:
 		return new CPlanetScript;
 		break;
-	case (UINT)SCRIPT_TYPE::UISCRIPT_BUTTON:
-		return new CUIScript_Button;
-		break;
 	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:
 		return new ER_ActionScript_Aya;
 		break;
@@ -126,6 +151,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_CURSOR:
+		return new ER_Cursor;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:
 		return new ER_DataScript_Character;
@@ -147,6 +175,27 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PROJECTILESCRIPT:
 		return new ER_ProjectileScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
+		return new ER_UIScript_Gauge;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMBOX:
+		return new ER_UIScript_ItemBox;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMSLOT:
+		return new ER_UIScript_ItemSlot;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_SKILLSLOT:
+		return new ER_UIScript_SkillSlot;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_SKILLUPBTN:
+		return new ER_UIScript_SkillUpBtn;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
+		return new ER_UIScript_StatusBarGauge;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
+		return new ER_UIScript_TrackingStatusBar;
 		break;
 	}
 	return nullptr;
@@ -176,10 +225,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CPlanetScript";
 		break;
 
-	case SCRIPT_TYPE::UISCRIPT_BUTTON:
-		return L"CUIScript_Button";
-		break;
-
 	case SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA:
 		return L"ER_ActionScript_Aya";
 		break;
@@ -202,6 +247,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return L"ER_CamControllerScript";
+		break;
+
+	case SCRIPT_TYPE::ER_CURSOR:
+		return L"ER_Cursor";
 		break;
 
 	case SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:
@@ -230,6 +279,34 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_PROJECTILESCRIPT:
 		return L"ER_ProjectileScript";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
+		return L"ER_UIScript_Gauge";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_ITEMBOX:
+		return L"ER_UIScript_ItemBox";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_ITEMSLOT:
+		return L"ER_UIScript_ItemSlot";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_SKILLSLOT:
+		return L"ER_UIScript_SkillSlot";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_SKILLUPBTN:
+		return L"ER_UIScript_SkillUpBtn";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
+		return L"ER_UIScript_StatusBarGauge";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
+		return L"ER_UIScript_TrackingStatusBar";
 		break;
 
 	}

@@ -15,6 +15,13 @@ private:
     CGameObject* m_pOwner;
     const COMPONENT_TYPE m_Type;
 
+protected:
+    wstring m_PrefabKey;
+
+public:
+    wstring GetPrefabKey() { return m_PrefabKey; }
+    void SetPrefabKey(const wstring& _key) { m_PrefabKey = _key; }
+
 public:
     COMPONENT_TYPE GetType() { return m_Type; }
     CGameObject* GetOwner() { return m_pOwner; }
@@ -28,6 +35,8 @@ public:
 public:
     virtual void SaveToLevelFile(FILE* _File) = 0;
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
+    virtual void SavePrefab(const wstring& _key) {};
+    virtual void LoadPrefab(const wstring& _key) {};
 
 public:  
     GET_OTHER_COMPONENT(Transform);
@@ -43,7 +52,7 @@ public:
     GET_OTHER_COMPONENT(LandScape);
     GET_OTHER_COMPONENT(Collider3D);
     GET_OTHER_COMPONENT(FindPath);
-    GET_OTHER_COMPONENT(UI_Button);
+    GET_OTHER_COMPONENT(UIComponent);
 
 public:
     CComponent(COMPONENT_TYPE _Type);
