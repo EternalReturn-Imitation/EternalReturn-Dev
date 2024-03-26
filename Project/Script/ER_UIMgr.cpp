@@ -214,11 +214,11 @@ void ER_UIMgr::RegistPlayerCharacetr()
 	StatusBar_CharacterInfo->Text()->SetReference(5, (UINT)CText::eTextRefType::PERCENT, (DWORD_PTR)&PlayerCharacter->GetStatus()->fCriticalStrikeChance);
 	StatusBar_CharacterInfo->Text()->SetReference(6, (UINT)CText::eTextRefType::FLOAT_DP1, (DWORD_PTR)&PlayerCharacter->GetStatus()->fHPRegen);
 	StatusBar_CharacterInfo->Text()->SetReference(7, (UINT)CText::eTextRefType::FLOAT_DP1, (DWORD_PTR)&PlayerCharacter->GetStatus()->fSPRegen);
-
+	
 	// [ EquipMent ]
 	for (int i = 0; i < 5; ++i)
 	{
-		StatusBar_CharacterInfo_EquipMent[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllEquipItem()[i]);
+		StatusBar_CharacterInfo_EquipMent[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllEquipItem()[i],ER_UIScript_ItemSlot::eSlotType::EQUIPMENT);
 	}
 
 
@@ -227,7 +227,40 @@ void ER_UIMgr::RegistPlayerCharacetr()
 	// =============
 	for (int i = 0; i < 10; ++i)
 	{
-		StatusBar_Inventory_Slot[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllInvenItem()[i]);
+		StatusBar_Inventory_Slot[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllInvenItem()[i], ER_UIScript_ItemSlot::eSlotType::COMMON);
 	}
 
+}
+
+void ER_UIMgr::RegistDragItemSlot(ER_UIScript_ItemSlot* _SrcSlot)
+{
+	// Slot이 가리키는곳이 nullptr라면 작업을 진행하지 않는다.
+	if ((*_SrcSlot->m_Slot))
+	{
+		m_pDragItemSlot = _SrcSlot;
+	}
+}
+
+void ER_UIMgr::RegistDropItemSlot(ER_UIScript_ItemSlot* _DestSlot)
+{
+	// DragItemSlot이 nullptr이라면 작업을 진행하지 않는다.
+	if (m_pDragItemSlot)
+	{
+		m_pDropItemSlot = _DestSlot;
+		
+		// SwapItem
+		SwapItem();
+	}
+
+	// 이후 DragITem, DropITem 초기화
+	m_pDragItemSlot = nullptr;
+	m_pDropItemSlot = nullptr;
+}
+
+void ER_UIMgr::SwapItem()
+{
+	CGameObject** DragItem = &(*m_pDragItemSlot->m_Slot);
+	CGameObject** DropItem = &(*m_pDropItemSlot->m_Slot);
+
+	ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->SwapItem(DragItem, DropItem);
 }

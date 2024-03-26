@@ -31,11 +31,8 @@ private:
 
     // 장비창
     CGameObject*                m_Equipment[(UINT)ER_ITEM_SLOT::END];   // 장비칸
+    // 인벤토리
     CGameObject*                m_Inventory[10];                        // 인벤토리 10칸
-
-    CGameObject*                m_aStatBar[4];          //[0] : HPBAR, [1] : ReturnBar, [2] : SteminarBar, [3] : LevelText
-    float                       m_aStatPosOffset[4];    //스탯들의 x 위치 오프셋들.
-    bool                        m_bHPChangeTrigger;     //HP 변경시 트리거
 
 public:
     // [상태 갱신]
@@ -51,7 +48,7 @@ public:
     virtual void tick() override;
 
     const wstring&      GetCharacterName() { return m_strKey; }
-    const wstring& GetCharacterKorName() { return m_strName; }
+    const wstring&      GetCharacterKorName() { return m_strName; }
 
 public:
     // [Status]
@@ -83,7 +80,10 @@ public:
 
     CGameObject*        ItemAcquisition(CGameObject* _ItemObj);
 
-    bool                SwapItem(CGameObject* _DragmItem, CGameObject* _DropItem);
+    bool                SwapItem(CGameObject** _DragItem, CGameObject** _DropItem);
+    void                AcquireItem(CGameObject** _BoxSlot);  // 목적지슬롯
+    void                CraftItem(CGameObject** _iSlot1, CGameObject** _iSlot2);    // 조합, 재료슬롯,재료슬롯
+
 public:
     virtual void        BeginOverlap(CCollider3D* _Other) override;
     virtual void        OnOverlap(CCollider3D* _Other) override;
@@ -103,6 +103,7 @@ public:
     ~ER_DataScript_Character();
     
     CLONE(ER_DataScript_Character);
+
 
     friend class ER_CharacterMgr;
     friend class CharacterDataUI;

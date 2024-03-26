@@ -15,7 +15,6 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_bOutofContorl(false)
 	, m_Equipment{}
 	, m_Inventory{}
-	, m_bHPChangeTrigger(false)
 	, m_fSPRegenTime(0.f)
 	, m_SkillPoint(0)
 {
@@ -38,7 +37,6 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_Equipment{}
 	, m_Inventory{}
 	, CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
-	, m_bHPChangeTrigger(false)
 	, m_fSPRegenTime(0.f)
 	, m_SkillPoint(0)
 {
@@ -187,12 +185,14 @@ void ER_DataScript_Character::begin()
 	{
 		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
 	}
+	
 	StatusUpdate();
-
 	SkillSlotInit();
 
-	m_Equipment[0] = ER_ItemMgr::GetInst()->GetItemObj(87)->Clone();
+	m_Equipment[1] = ER_ItemMgr::GetInst()->GetItemObj(87)->Clone();
+	m_Equipment[1]->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
 	m_Inventory[0] = ER_ItemMgr::GetInst()->GetItemObj(58)->Clone();
+	m_Inventory[0]->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
 }
 
 void ER_DataScript_Character::tick()
@@ -251,9 +251,159 @@ CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)
 	return _ItemObj;
 }
 
-bool ER_DataScript_Character::SwapItem(CGameObject* _DragmItem, CGameObject* _DropItem)
+bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _DropItem)
 {
+
+	ER_DataScript_Item* DragItem = nullptr;
+	int DragItemType = -1;
+	bool DragItemEquiped = false;
+
+	ER_DataScript_Item* DropItem = nullptr;
+	int DropItemType = -1;
+	bool DropItemEquiped = false;
+
+	if (*_DragItem)
+	{
+		DragItem = (*_DragItem)->GetScript<ER_DataScript_Item>();
+		DragItemType = DragItem->m_eSlot;
+		DragItemEquiped = DragItem->m_bEquiped;
+	}
+	if (*_DropItem)
+	{
+		DropItem = (*_DropItem)->GetScript<ER_DataScript_Item>();
+		DropItemType = DropItem->m_eSlot;
+		DropItemEquiped = DropItem->m_bEquiped;
+	}
+
+	// 장비창 -> 인벤토리
+	// 1. 빈칸으로 이동하는경우
+	// 그냥 이동, 이동후 아이템 슬롯타입 2로교체
+	// 2. 아이템과 교체 하는경우
+	// 아이템타입 비교후 교체, 서로 슬롯타입 교체
+
+	// 인벤토리 -> 장비창
+	// 1. 빈칸으로 이동하는 경우
+	// 아이템 타입 확인, 목적지 주소와 장비슬롯 주소가 같은지 확인
+	// 2. 아이템과 교체하는 경우
+	// 아이템타입 비교후 교체, 서로 슬롯타입 교체
+
+	// 인벤토리orItemBox 끼리
+	// 그냥 교체
+
+	// 장비창 ->
+	if (DragItemEquiped && !DropItemEquiped)
+	{
+		// 장착 슬롯이 같은 경우
+		if (DragItemType == DropItemType)
+		{
+			// 포인터 교환
+			CGameObject* tmp = (*_DropItem);
+			(*_DropItem) = (*_DragItem);
+			(*_DragItem) = tmp;
+
+			// 장착여부 변경
+			(*_DragItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
+			(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+		}
+		// -> NULLSlot
+		else if (DropItemType == -1)
+		{
+			// 포인터 교환
+			CGameObject* tmp = (*_DropItem);
+			(*_DropItem) = (*_DragItem);
+			(*_DragItem) = tmp;
+
+			(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+		}
+	}
+	// 인벤토리 or ItemBox ->
+	else
+	{
+		// -> 장비창
+		for (int i = 0; i < 5; ++i)
+		{
+			// 장비창 인덱스 확인
+			if (_DropItem == &m_Equipment[i])
+			{
+				// 아이템타입과 슬롯이 일치한다
+				if (DragItemType == i)
+				{
+					// 슬롯이 비어있다
+					if (DropItemType == -1)
+					{
+						CGameObject* tmp = (*_DropItem);
+						(*_DropItem) = (*_DragItem);
+						(*_DragItem) = tmp;
+
+						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
+
+						return true;
+					}
+					else if (DragItemType == DropItemType)
+					{
+						// 포인터 교환
+						CGameObject* tmp = (*_DropItem);
+						(*_DropItem) = (*_DragItem);
+						(*_DragItem) = tmp;
+
+						// 장착여부 변경
+						(*_DragItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
+
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
+		// -> 인벤토리 or 아이템 박스
+		CGameObject* tmp = (*_DropItem);
+		(*_DropItem) = (*_DragItem);
+		(*_DragItem) = tmp;
+	}
+
 	return false;
+}
+
+void ER_DataScript_Character::AcquireItem(CGameObject** _BoxSlot)
+{
+	// 아이텝슬롯에 아이템이 있는지 여부
+	if ((*_BoxSlot))
+	{
+		int Slotidx = -1;
+		int slottype = 0;
+
+		// 아이템 스크립트 보유 확인 예외처리
+		ER_DataScript_Item* Item = (*_BoxSlot)->GetScript<ER_DataScript_Item>();
+
+		// ItemScript를 보유하고있지 않다 - 함수종료
+		if (!Item)
+			return;
+
+		int emptyslot = -1;
+		// 인벤토리 여유공간 확인
+		for (int i = 0; i < 10; ++i)
+		{
+			if (nullptr == m_Inventory[i])
+			{
+				emptyslot = i;
+				break;
+			}
+		}
+
+		// 인벤토리에 여유공간이 없다. - 함수종료
+		if (emptyslot == -1)
+			return;
+
+		// 비어있는 인벤토리에 넣어주고, 원래 슬롯을 비워준다.
+		m_Inventory[emptyslot] = (*_BoxSlot);
+		*_BoxSlot = nullptr;
+	}
+}
+
+void ER_DataScript_Character::CraftItem(CGameObject** _iSlot1, CGameObject** _iSlot2)
+{
 }
 
 void ER_DataScript_Character::BeginOverlap(CCollider3D* _Other)
@@ -330,9 +480,4 @@ void ER_DataScript_Character::LoadFromLevelFile(FILE* _File)
 
 		m_SkillList.push_back(Skill);
 	}
-
-	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
-	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
-	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
-	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }

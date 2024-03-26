@@ -8,11 +8,11 @@ class CharacterDataUI :
 private:
     map<wstring, CGameObject*>* m_pCharacters;
   
-    CGameObject*    m_pSelectedCharacter;
-    int                m_iSelectedCharIdx;
+    CGameObject*        m_pSelectedCharacter;
+    int                 m_iSelectedCharIdx;
     
-    tSkill_Info*       m_pSelectedSkill;
-    int                m_iSelectedSkillIdx;
+    tSkill_Info*        m_pSelectedSkill;
+    int                 m_iSelectedSkillIdx;
 
 public:
     void RegistCharacters();

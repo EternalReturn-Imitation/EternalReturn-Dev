@@ -2,6 +2,7 @@
 #include "ER_UIScript_ItemSlot.h"
 
 #include "ER_DataScript_Item.h"
+#include "ER_UIMgr.h"
 
 ER_UIScript_ItemSlot::ER_UIScript_ItemSlot()
 	: CScript((UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMSLOT)
@@ -72,30 +73,40 @@ void ER_UIScript_ItemSlot::tick()
 	}
 }
 
-void ER_UIScript_ItemSlot::RegistSlotAdress(CGameObject** _ItemSlotAddress)
+void ER_UIScript_ItemSlot::RegistSlotAdress(CGameObject** _ItemSlotAddress, eSlotType _SlotType)
 {
 	m_Slot = _ItemSlotAddress;
+	m_SlotType = _SlotType;
+}
+
+bool ER_UIScript_ItemSlot::IsItemInSlot()
+{
+	if((*m_Slot))
+		return true;
+	else
+		return false;
 }
 
 void ER_UIScript_ItemSlot::CsrOn()
 {
+	if (KEY_RELEASE(KEY::LBTN))
+	{
+		ER_UIMgr::GetInst()->RegistDropItemSlot(this);
+	}
 }
 
 void ER_UIScript_ItemSlot::CsrTap()
 {
+	ER_UIMgr::GetInst()->RegistDragItemSlot(this);
 }
 
 void ER_UIScript_ItemSlot::CsrRelease()
 {
+
 }
 
 void ER_UIScript_ItemSlot::CsrClick()
 {
-	if (m_Slot)
-	{
-		wstring name = (*m_Slot)->GetScript<ER_DataScript_Item>()->GetItemName();
-		int a = 0;
-	}
 }
 
 void ER_UIScript_ItemSlot::CsrBeginOn()
