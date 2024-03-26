@@ -6,6 +6,7 @@ class ER_ActionScript_Aya :
 {
     enum class CharacterSound
     {
+        NONE,
         END,
     };
 
@@ -50,9 +51,9 @@ private:
     void MoveUpdate(tFSMData& param);
     void MoveExit(tFSMData& param);
 
-    void FarmingEnter(tFSMData& param) {}
+    void FarmingEnter(tFSMData& param);
     void FarmingUpdate(tFSMData& param) {}
-    void FarmingExit(tFSMData& param) {}
+    void FarmingExit(tFSMData& param);
 
     void CraftEnter(tFSMData& param);
     void CraftUpdate(tFSMData& param);

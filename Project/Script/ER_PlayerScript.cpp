@@ -16,8 +16,6 @@
 #include "ER_CamControllerScript.h"
 #include "ER_ActionScript_Character.h"
 
-#include "CUIScript_Button.h"
-
 #define LAYER_ITEMBOX 5
 #define LAYER_MONSTER 11
 #define LAYER_CHARACTER 12
@@ -104,20 +102,18 @@ void ER_PlayerScript::tick()
 		}
 		else if (pTargetObj.second == LAYER_ITEMBOX)
 		{
-			//몬스터인경우(Layer 이름 : ItemBox)
+			//아이템박스인 경우 (Layer 이름 : ItemBox)
 			m_pActionScript->Farming(data);
 		}
 		else if (pTargetObj.second == LAYER_CHARACTER)
 		{
-			m_pActionScript->Attack(data);
-
 			//적 캐릭터인 경우(Layer 이름 : Character)
+			m_pActionScript->Attack(data);
 		}
 		// cursor On Land (else)
 		else
 		{
 			m_pActionScript->Move(data);
-			
 		}
 		m_AttackCsr = false;
 	}

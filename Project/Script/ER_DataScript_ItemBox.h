@@ -22,8 +22,10 @@ private:
     CGameObject* m_pItemList[(UINT)ITEMBOXSLOT::END];           // 아이템 슬롯
 
     // [UI]
-    CGameObject* m_pItemBoxUI;                                  // 아이템 박스 UI
     CGameObject* m_UIBoxTag;
+
+private:
+    Vec3 GetUIPos();
 
 public:
     void            init();
@@ -39,8 +41,8 @@ public:
     void CreateBoxUI();
 
 public:
+    CGameObject** GetItemList() { return m_pItemList; }
     CGameObject* GetItem(int _i) { return m_pItemList[_i]; }
-    
     void SetEmptyItem(int _i) { m_pItemList[_i] = nullptr; }
 
 public:
@@ -48,4 +50,6 @@ public:
     ~ER_DataScript_ItemBox();
 
     CLONE(ER_DataScript_ItemBox);
+
+    friend class ER_UIScript_ItemBox;
 };

@@ -159,7 +159,7 @@ struct tSkill_Info
 public:
 	bool Use(int* _CharacterSP, bool _IsBuf = false)
 	{
-		float UsedSP = *_CharacterSP - iUseSP[iSkillLevel];
+		int UsedSP = *_CharacterSP - iUseSP[iSkillLevel];
 		
 		if (UsedSP < 0)
 			return false;
@@ -190,7 +190,7 @@ public:
 	const float& MaxCooldown() { return fMaxCoolDown[iSkillLevel]; }
 	const float& CurCooldown() { return fCoolDown; }
 	const float& ActionTime() { return fMaxActionTime[iSkillLevel]; }
-	const float& UseSP() { return iUseSP[iSkillLevel]; }
+	const int& UseSP() { return iUseSP[iSkillLevel]; }
 	void ActionOver() { fActionTime = 0.f; }
 
 	void SkillStatusUpdate(float _Ratio)

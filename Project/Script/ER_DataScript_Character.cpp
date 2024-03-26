@@ -17,6 +17,7 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_Inventory{}
 	, m_fSPRegenTime(0.f)
 	, m_SkillPoint(0)
+	, m_STDStats{}
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -129,7 +130,7 @@ void ER_DataScript_Character::HPRegen(float _magnification)
 	float HPRegen = m_Stats->iHP + (m_Stats->fHPRegen * _magnification);
 	
 	// HP 자연 회복, 최대 HP면 최대HP로 고정
-	m_Stats->iHP = m_Stats->iMaxHP < HPRegen ?	m_Stats->iMaxHP : HPRegen;
+	m_Stats->iHP = m_Stats->iMaxHP < (int)HPRegen ?	m_Stats->iMaxHP : (int)HPRegen;
 }
 
 void ER_DataScript_Character::SPRegen(float _magnification)
@@ -138,7 +139,7 @@ void ER_DataScript_Character::SPRegen(float _magnification)
 	float SPRegen = m_Stats->iSP + (m_Stats->fSPRegen * _magnification);
 
 	// HP 자연 회복, 최대 HP면 최대HP로 고정
-	m_Stats->iSP = m_Stats->iMaxSP < SPRegen ? m_Stats->iMaxSP : SPRegen;
+	m_Stats->iSP = m_Stats->iMaxSP < (int)SPRegen ? m_Stats->iMaxSP : (int)SPRegen;
 }
 
 void ER_DataScript_Character::LevelUP()
@@ -308,6 +309,16 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 		// -> NULLSlot
 		else if (DropItemType == -1)
 		{
+			// -> 장비창 : 다른 슬롯타입의 장비창이므로 옮겨지지 않는다.
+			for (int i = 0; i < 5; ++i)
+			{
+				// 장비창 인덱스 확인
+				if (_DropItem == &m_Equipment[i])
+				{
+					return false;
+				}
+			}
+
 			// 포인터 교환
 			CGameObject* tmp = (*_DropItem);
 			(*_DropItem) = (*_DragItem);

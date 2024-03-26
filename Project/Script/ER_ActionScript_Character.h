@@ -106,14 +106,6 @@ public:
     virtual void Skill_E(tFSMData& _Data) = 0;  // E Skill
     virtual void Skill_R(tFSMData& _Data) = 0;  // R Skill
 
-
-    // 삭제예정
-    CGameObject* m_pFarmingObject;                   // 파밍중인 오브젝트
-    bool                        m_bFarmingTrigger;                  // 파밍 트리거
-    bool GetFarmingTrigger() { return m_bFarmingTrigger; }
-    bool SetFarmingTrigger(bool _b) { m_bFarmingTrigger = _b; }
-    CGameObject* GetFarmingObject() { return m_pFarmingObject; }
-
 public:
     ER_ActionScript_Character(SCRIPT_TYPE _type);
     ~ER_ActionScript_Character();

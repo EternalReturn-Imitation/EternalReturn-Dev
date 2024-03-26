@@ -49,9 +49,9 @@ void ER_UIScript_Gauge::init()
 void ER_UIScript_Gauge::begin()
 {
 	if (m_GaugeType == 0)
-		m_PrevValue = m_Stats->iMaxHP;
+		m_PrevValue = (float)m_Stats->iMaxHP;
 	else if (m_GaugeType == 0)
-		m_PrevValue = m_Stats->iMaxSP;
+		m_PrevValue = (float)m_Stats->iMaxSP;
 }
 
 void ER_UIScript_Gauge::tick()
@@ -59,8 +59,8 @@ void ER_UIScript_Gauge::tick()
 	//ratio °è»ê
 	if (m_GaugeType == 0)
 	{
-		float MaxHP = m_Stats->iMaxHP;
-		float CurHP = m_Stats->iHP;
+		float MaxHP = (float)m_Stats->iMaxHP;
+		float CurHP = (float)m_Stats->iHP;
 
 		m_MainRatio = CurHP / MaxHP;
 		m_PrevValue = Lerp((float)CurHP, m_PrevValue);
@@ -69,8 +69,8 @@ void ER_UIScript_Gauge::tick()
 	}
 	else if (m_GaugeType == 1)
 	{
-		float MaxSP = m_Stats->iMaxSP;
-		float CurSP = m_Stats->iSP;
+		float MaxSP = (float)m_Stats->iMaxSP;
+		float CurSP = (float)m_Stats->iSP;
 
 		m_MainRatio = CurSP / MaxSP;
 		m_PrevValue = Lerp((float)CurSP, m_PrevValue);

@@ -46,5 +46,6 @@ public:
     CLONE(ER_UIScript_ItemSlot);
 
     friend class ER_UIMgr;
+    friend class ER_UIScript_ItemBox;
 };
 

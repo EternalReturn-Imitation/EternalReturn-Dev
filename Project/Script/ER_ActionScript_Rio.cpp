@@ -331,71 +331,21 @@ void ER_ActionScript_Rio::AttackExit(tFSMData& param)
 void ER_ActionScript_Rio::FarmingEnter(tFSMData& param)
 {
     if (m_BowType)
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Run", true);
+        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Wait", true);
     else
-        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Run", true);
+        GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Wait", true);
 
     SetStateGrade(eAccessGrade::BASIC);
 
-    Vec3 DestPos = param.v4Data;
+    CGameObject* ItemObj = ((CGameObject*)param.lParam);
 
-    CFindPath* findpathcomp = GetOwner()->FindPath();
-    findpathcomp->FindPath(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
-
-    m_pFarmingObject = (CGameObject*)param.lParam;
-
-    m_bFarmingTrigger = true;
+    ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
+    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
 }
-void ER_ActionScript_Rio::FarmingUpdate(tFSMData& param)
-{
-    float speed = m_Data->GetStatus()->fMovementSpeed;
 
-    // 다음 이동지점이 없다면 대기상태로 전환
-    if (!GetOwner()->FindPath()->PathMove(speed))
-        if (m_BowType)
-            GetOwner()->Animator3D()->SelectAnimation(L"Rio_Long_Wait", true);
-        else
-            GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Wait", true);
-
-    Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
-    Vec3 ObjectPos = ((CGameObject*)param.lParam)->Transform()->GetRelativePos();
-
-    XMVECTOR vRangeScale = XMVector3Length(ownerPos - ObjectPos);
-    float rangeScale = XMVectorGetX(vRangeScale);
-
-    if (abs(rangeScale) < 2.0f && m_bFarmingTrigger) {
-        // Vec3 posResult = ER_UIMgr::GetInst()->WorldPosToUIPos(GetOwner()->Transform()->GetRelativePos());
-        // ER_UIMgr::GetInst()->GetItemBoxBackground()->SetEnable(true);
-        // ER_UIMgr::GetInst()->GetItemBoxBackground()->Transform()->SetRelativePos(Vec3(posResult.x, posResult.y - 100.f, -1.0f));
-
-        // vector<CGameObject*> itemList = ((CGameObject*)param.lParam)->GetScript<ER_DataScript_ItemBox>()->GetItemList();
-        // for (int i = 0; i < itemList.size(); ++i) {
-        //     if (itemList[i]) {
-        //         std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList((int)i / 4, (int)i % 4);
-        // 
-        //         itemLists.first->SetEnable(true);
-        //         itemLists.second->SetEnable(true);
-        // 
-        //         itemLists.first->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, ER_UIMgr::GetInst()->GetGradeTexture(itemList[i]->GetScript<ER_DataScript_Item>()->GetGrade()));
-        //         itemLists.second->MeshRender()->GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_0, itemList[i]->GetScript<ER_DataScript_Item>()->GetItemTex().Get());
-        //     }
-        // }
-
-        m_bFarmingTrigger = false;
-    }
-}
 void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
 {
-    for (int i = 0; i < 2; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            // std::pair<CGameObject*, CGameObject*> itemLists = ER_UIMgr::GetInst()->GetItemBoxList(i, j);
-
-            // itemLists.first->SetEnable(false);
-            // itemLists.second->SetEnable(false);
-        }
-    }
-
-    m_pFarmingObject = nullptr;
+    ER_UIMgr::GetInst()->CloseItemBoxUI();
 }
 
 void ER_ActionScript_Rio::CraftEnter(tFSMData& param)

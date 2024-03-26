@@ -9,6 +9,8 @@
 
 #include <Engine/CAnim3D.h>
 
+
+
 ER_ActionScript_Aya::ER_ActionScript_Aya()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA)
     , m_fSec(0.f)
@@ -115,6 +117,23 @@ void ER_ActionScript_Aya::MoveUpdate(tFSMData& param)
 void ER_ActionScript_Aya::MoveExit(tFSMData& param)
 {
 
+}
+
+void ER_ActionScript_Aya::FarmingEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Aya_Idle", true);
+    
+    SetStateGrade(eAccessGrade::BASIC);
+
+    CGameObject* ItemObj = ((CGameObject*)param.lParam);
+
+    ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
+    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
+}
+
+void ER_ActionScript_Aya::FarmingExit(tFSMData& param)
+{
+    ER_UIMgr::GetInst()->CloseItemBoxUI();
 }
 
 void ER_ActionScript_Aya::RestEnter(tFSMData& param)
@@ -442,7 +461,7 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
 
         float angleRad = atan2(vDir.y, vDir.x) - atan2(param.v2Data.y, param.v2Data.x);
         // 라디안을 도로 변환
-        float angleDeg = angleRad * (180.0 / XM_PI);
+        float angleDeg = (float)(angleRad * (180.0 / XM_PI));
 
         // 각도를 -180 ~ 180 범위로 조정
         if (angleDeg > 180.0) {

@@ -14,6 +14,9 @@
 #include "ER_UIScript_ItemSlot.h"
 #include "ER_DataScript_Item.h"
 
+#include "ER_UIScript_ItemBox.h"
+#include "ER_DataScript_ItemBox.h"
+
 ER_UIMgr::ER_UIMgr()
 	: StatusBar_Center(nullptr)
 	, StatusBar_CharacterInfo(nullptr)
@@ -21,6 +24,12 @@ ER_UIMgr::ER_UIMgr()
 	, StatusBar_SkillSlot{}
 	, StatusBar_SkillLevelUpBtn{}
 	, StatusBar_Gauge{}
+	, ItemBoxUI(nullptr)
+	, m_pCurDragItem(nullptr)
+	, m_pDragItemSlot(nullptr)
+	, m_pDropItemSlot(nullptr)
+	, StatusBar_CharacterInfo_EquipMent{}
+	, StatusBar_CharacterInfo_Portrait(nullptr)
 {
 }
 
@@ -114,6 +123,8 @@ void ER_UIMgr::CreateCharacterInfo()
 
 	StatusBar_CharacterInfo_Level->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_Map_PointPin_01.png"));
 	
+	const wchar_t* EquipTypeTexKey[5] = { L"Ico_Status_Weapon.png", L"Ico_Status_Armor.png", L"Ico_Status_Head.png",	L"Ico_Status_Arm.png", L"Ico_Status_Leg.png" };
+
 	for (int i = 0; i < 5; ++i)
 	{
 		wstring name = L"StatusBar_CharacterInfo_EquipMent" + std::to_wstring(i);
@@ -123,6 +134,7 @@ void ER_UIMgr::CreateCharacterInfo()
 		StatusBar_CharacterInfo_EquipMent[i]->GetScript<ER_UIScript_ItemSlot>()->init();
 		StatusBar_CharacterInfo->AddChild(StatusBar_CharacterInfo_EquipMent[i]);
 		StatusBar_CharacterInfo_EquipMent[i]->LoadAllPrefabFromObjName();
+		StatusBar_CharacterInfo_EquipMent[i]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_6, CResMgr::GetInst()->FindRes<CTexture>(EquipTypeTexKey[i]));
 	}
 
 	StatusBar_CharacterInfo->AddChild(StatusBar_CharacterInfo_Portrait);
@@ -155,12 +167,20 @@ void ER_UIMgr::CreateInventory()
 	}
 }
 
+void ER_UIMgr::CreateItemBoxUI()
+{
+	ItemBoxUI = new CGameObject;
+	ItemBoxUI->AddComponent(new ER_UIScript_ItemBox);
+	ItemBoxUI->GetScript<ER_UIScript_ItemBox>()->init();
+}
+
 void ER_UIMgr::init()
 {
 	// 스테이터스 UI 생성
 	CreateCenter();
 	CreateCharacterInfo();
 	CreateInventory();
+	CreateItemBoxUI();
 }
 
 void ER_UIMgr::tick()
@@ -173,6 +193,9 @@ void ER_UIMgr::SpawnUI()
 	SpawnGameObject(StatusBar_Center, L"UI");
 	SpawnGameObject(StatusBar_CharacterInfo, L"UI");
 	SpawnGameObject(StatusBar_Inventory, L"UI");
+	SpawnGameObject(ItemBoxUI, L"UI");
+	
+	ItemBoxUI->SetEnable(false);
 
 	// 스킬 레벨업 버튼
 	for (auto Btn : StatusBar_SkillLevelUpBtn)
@@ -230,6 +253,18 @@ void ER_UIMgr::RegistPlayerCharacetr()
 		StatusBar_Inventory_Slot[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllInvenItem()[i], ER_UIScript_ItemSlot::eSlotType::COMMON);
 	}
 
+}
+
+void ER_UIMgr::OpenItemBoxUI(ER_DataScript_ItemBox* _ItemBox)
+{
+	ItemBoxUI->GetScript<ER_UIScript_ItemBox>()->RegistItemBoxData(_ItemBox);
+	ItemBoxUI->SetEnable(true);
+	CResMgr::GetInst()->FindRes<CSound>(L"Locker_01.wav")->Play(1, 0.5f, false);
+}
+
+void ER_UIMgr::CloseItemBoxUI()
+{
+	ItemBoxUI->SetEnable(false);
 }
 
 void ER_UIMgr::RegistDragItemSlot(ER_UIScript_ItemSlot* _SrcSlot)

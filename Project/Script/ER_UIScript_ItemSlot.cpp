@@ -3,11 +3,17 @@
 
 #include "ER_DataScript_Item.h"
 #include "ER_UIMgr.h"
+#include "ER_GameSystem.h"
+
+#include "ER_Cursor.h"
 
 ER_UIScript_ItemSlot::ER_UIScript_ItemSlot()
 	: CScript((UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMSLOT)
 	, m_Slot(nullptr)
 	, m_ItemData(nullptr)
+	, m_CurItemID(0)
+	, m_PrevItemID(0)
+	, m_SlotType(eSlotType::COMMON)
 {
 }
 
@@ -38,6 +44,9 @@ void ER_UIScript_ItemSlot::begin()
 
 void ER_UIScript_ItemSlot::tick()
 {
+	if (!(GetOwner()->GetParent()->IsEnable()))
+		return;
+	
 	if ((*m_Slot))
 	{
 		m_ItemData = (*m_Slot)->GetScript<ER_DataScript_Item>();
@@ -97,12 +106,16 @@ void ER_UIScript_ItemSlot::CsrOn()
 
 void ER_UIScript_ItemSlot::CsrTap()
 {
-	ER_UIMgr::GetInst()->RegistDragItemSlot(this);
+	if ((*m_Slot))
+	{
+		ER_UIMgr::GetInst()->RegistDragItemSlot(this);
+		ER_GameSystem::GetInst()->GetCursor()->GetDragItemTex()->MeshRender()->SetMaterial(MeshRender()->GetMaterial(0), 0);
+	}
 }
 
 void ER_UIScript_ItemSlot::CsrRelease()
 {
-
+	ER_GameSystem::GetInst()->GetCursor()->GetDragItemTex()->MeshRender()->SetMaterial(nullptr, 0);
 }
 
 void ER_UIScript_ItemSlot::CsrClick()

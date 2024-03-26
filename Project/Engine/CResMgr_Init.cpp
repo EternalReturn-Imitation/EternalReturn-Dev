@@ -884,9 +884,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->AddTexParam(TEX_3, "RARE Texture");
 	pShader->AddTexParam(TEX_4, "EPIC Texture");
 	pShader->AddTexParam(TEX_5, "Empty Texture");
-
-
-
+	pShader->AddTexParam(TEX_6, "EquiptType Texture");
 
 	AddRes(pShader->GetKey(), pShader);
 

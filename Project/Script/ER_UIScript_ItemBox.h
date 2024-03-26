@@ -1,6 +1,8 @@
 #pragma once
 #include <Engine\CScript.h>
 
+class ER_DataScript_ItemBox;
+
 class ER_UIScript_ItemBox :
     public CScript
 {
@@ -18,8 +20,11 @@ class ER_UIScript_ItemBox :
     }typedef ITEMBOXSLOT;
 
 private:
-    CGameObject** m_pBGUI;                               // Slot Bg
     CGameObject*  m_pSlotUI[(UINT)ITEMBOXSLOT::END];     // Slot UI
+
+
+private:
+    Vec3 GetUIPos(CGameObject* _Box);
 
 public:
     void init();
@@ -27,13 +32,7 @@ public:
     virtual void tick() override;
 
 public:
-    
-
-public:
-    // vector<CGameObject*> GetItemList() { return m_pItemList; }
-    // CGameObject* GetItem(int _i) { return m_pItemList[_i]; }
-    // 
-    // void SetEmptyItem(int _i) { m_pItemList[_i] = nullptr; }
+    void RegistItemBoxData(ER_DataScript_ItemBox* _data);
 
 public:
     ER_UIScript_ItemBox();

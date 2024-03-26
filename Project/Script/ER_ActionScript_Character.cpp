@@ -2,6 +2,8 @@
 #include "ER_ActionScript_Character.h"
 #include "ER_DataScript_Character.h"
 
+#include "ER_UIMgr.h"
+
 ER_ActionScript_Character::ER_ActionScript_Character(SCRIPT_TYPE _type)
 	: CScript((UINT)_type)
 	, FSMContext(nullptr)
@@ -190,9 +192,12 @@ void ER_ActionScript_Character::Farming(tFSMData& _Data)
 		}
 		else
 		{
+			STATEDATA_SET(FARMING, _Data);
 			tFSMData MoveData	= {};
 			MoveData.bData[0]	= true;				// 파밍박스 추적중
 			MoveData.iData[0]   = 2;				// 타겟 타입 : 2 - 아이템박스
+			MoveData.lParam = _Data.lParam;
+			MoveData.fData = fFarmingDist;
 			MoveData.v4Data = ((CGameObject*)_Data.lParam)->Transform()->GetRelativePos();
 			Move(MoveData);
 		}

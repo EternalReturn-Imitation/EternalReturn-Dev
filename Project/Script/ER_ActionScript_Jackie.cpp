@@ -133,6 +133,29 @@ void ER_ActionScript_Jackie::MoveExit(tFSMData& param)
 {
 }
 
+void ER_ActionScript_Jackie::FarmingEnter(tFSMData& param)
+{
+    param.bData[0] = IsSkillOn(SKILLIDX::R_1);
+
+    if (param.bData[0])
+        Animator3D()->SelectAnimation(L"Jackie_R_Wait", true);
+    else
+        Animator3D()->SelectAnimation(L"Jackie_Wait", true);
+
+    SetStateGrade(eAccessGrade::BASIC);
+
+    CGameObject* ItemObj = ((CGameObject*)param.lParam);
+
+    ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
+    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
+
+}
+
+void ER_ActionScript_Jackie::FarmingExit(tFSMData& param)
+{
+    ER_UIMgr::GetInst()->CloseItemBoxUI();
+}
+
 void ER_ActionScript_Jackie::RestEnter(tFSMData& param)
 {
     /*

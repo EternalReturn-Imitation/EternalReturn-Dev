@@ -18,6 +18,7 @@
 
 #include "CScriptMgr.h"
 #include "ER_BattleSystem.h"
+#include "ER_UIMgr.h"
 
 //Comp
 #include <Engine\CFindPath.h>

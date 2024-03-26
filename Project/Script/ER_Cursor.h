@@ -8,9 +8,13 @@ private:
     int m_CsrState;
     int m_PrevState;
 
+    CGameObject* m_pDragItemTex;
+
 public:
     void init();
     virtual void tick() override;
+
+    CGameObject* GetDragItemTex() { return m_pDragItemTex; }
 
     void SetState(int state);
 

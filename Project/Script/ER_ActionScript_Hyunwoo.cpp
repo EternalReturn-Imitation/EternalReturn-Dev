@@ -9,6 +9,7 @@
 
 ER_ActionScript_Hyunwoo::ER_ActionScript_Hyunwoo()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_HYUNWOO)
+    , m_pSounds{}
 {
 }
 
@@ -104,6 +105,23 @@ void ER_ActionScript_Hyunwoo::MoveUpdate(tFSMData& param)
 void ER_ActionScript_Hyunwoo::MoveExit(tFSMData& param)
 {
     // 기능 없음
+}
+
+void ER_ActionScript_Hyunwoo::FarmingEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Hyunwoo_Wait");
+
+    SetStateGrade(eAccessGrade::BASIC);
+
+    CGameObject* ItemObj = ((CGameObject*)param.lParam);
+
+    ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
+    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
+}
+
+void ER_ActionScript_Hyunwoo::FarmingExit(tFSMData& param)
+{
+    ER_UIMgr::GetInst()->CloseItemBoxUI();
 }
 
 void ER_ActionScript_Hyunwoo::RestEnter(tFSMData& param)
@@ -414,7 +432,7 @@ void ER_ActionScript_Hyunwoo::Skill_EEnter(tFSMData& param)
     param.v4Data[0] = 30.f;                                              // 스킬 거리
     float ClearDist = GetClearDistanceByWall(vDir, param.v4Data[0]);
     param.v4Data[1] = ClearDist;                                        // 이동 가능 거리
-    param.v4Data[2] = Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
+    param.v4Data[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
     param.v4Data[3] = 0.f;                                              // 이동한 거리 초기화.
 
     SetStateGrade(eAccessGrade::ADVANCED);
@@ -441,7 +459,7 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
         float speed = param.v4Data[0];
 
         if (param.v4Data[3] > (param.v4Data[1] / 5.f))
-            speed = param.v4Data[0] * 1.5;
+            speed = (float)(param.v4Data[0] * 1.5f);
 
         float CurFrameMoveDist = speed * param.v4Data[2] * DT;
 

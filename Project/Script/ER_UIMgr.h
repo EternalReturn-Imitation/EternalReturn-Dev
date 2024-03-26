@@ -2,6 +2,7 @@
 #include <Engine\CSingleton.h>
 
 class ER_UIScript_ItemSlot;
+class ER_DataScript_ItemBox;
 
 class ER_UIMgr :
     public CSingleton<ER_UIMgr>
@@ -36,6 +37,11 @@ private:
     CGameObject* StatusBar_Inventory;
     CGameObject* StatusBar_Inventory_Slot[10];
 
+    // =============
+    // [ Inventory ]
+    // =============
+
+    CGameObject* ItemBoxUI;
 
     // ===============
     // [ Cursor Func ]
@@ -51,6 +57,7 @@ private:
     void CreateCenter();
     void CreateCharacterInfo();
     void CreateInventory();
+    void CreateItemBoxUI();
 
 public:
     void init();
@@ -58,6 +65,9 @@ public:
 
     void SpawnUI();
     void RegistPlayerCharacetr();
+
+    void OpenItemBoxUI(ER_DataScript_ItemBox* _ItemBox);
+    void CloseItemBoxUI();
 
 public:
     void RegistDragItemSlot(ER_UIScript_ItemSlot* _SrcSlot);

@@ -105,6 +105,23 @@ void ER_ActionScript_Yuki::MoveExit(tFSMData& param)
 {
 }
 
+void ER_ActionScript_Yuki::FarmingEnter(tFSMData& param)
+{
+    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Wait", true);
+
+    SetStateGrade(eAccessGrade::BASIC);
+
+    CGameObject* ItemObj = ((CGameObject*)param.lParam);
+
+    ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
+    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
+}
+
+void ER_ActionScript_Yuki::FarmingExit(tFSMData& param)
+{
+    ER_UIMgr::GetInst()->CloseItemBoxUI();
+}
+
 void ER_ActionScript_Yuki::RestEnter(tFSMData& param)
 {
     /*

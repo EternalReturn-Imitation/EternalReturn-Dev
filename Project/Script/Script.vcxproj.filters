@@ -19,9 +19,6 @@
     <Filter Include="Script\UI">
       <UniqueIdentifier>{3685c51a-070f-4ee1-a7b5-2deae237c121}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\UI\Button">
-      <UniqueIdentifier>{bb96cd13-f5de-4fcd-b6cf-7ca5033965a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameSystem">
       <UniqueIdentifier>{148f1ec1-74ec-49d7-abe3-e185dc4794a3}</UniqueIdentifier>
     </Filter>
@@ -186,9 +183,6 @@
     <ClInclude Include="ER_CamControllerScript.h">
       <Filter>Script\ER\SystemScript\Cam</Filter>
     </ClInclude>
-    <ClInclude Include="CUIScript_Button.h">
-      <Filter>Script\UI\Button</Filter>
-    </ClInclude>
     <ClInclude Include="ER_DataScript_LandMeshBase.h">
       <Filter>Script\ER\DataScript\LandMesh</Filter>
     </ClInclude>
@@ -200,9 +194,6 @@
     </ClInclude>
     <ClInclude Include="ER_ItemMgr.h">
       <Filter>GameSystem\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_UIMgr2.h">
-      <Filter>GameSystem\UI</Filter>
     </ClInclude>
     <ClInclude Include="ER_BattleSystem.h">
       <Filter>GameSystem\Battle</Filter>
@@ -302,9 +293,6 @@
     <ClCompile Include="ER_CamControllerScript.cpp">
       <Filter>Script\ER\SystemScript\Cam</Filter>
     </ClCompile>
-    <ClCompile Include="CUIScript_Button.cpp">
-      <Filter>Script\UI\Button</Filter>
-    </ClCompile>
     <ClCompile Include="ER_DataScript_LandMeshBase.cpp">
       <Filter>Script\ER\DataScript\LandMesh</Filter>
     </ClCompile>
@@ -325,9 +313,6 @@
     </ClCompile>
     <ClCompile Include="ER_ActionScript_Character_func.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_UIMgr2.cpp">
-      <Filter>GameSystem\UI</Filter>
     </ClCompile>
     <ClCompile Include="ER_BattleSystem.cpp">
       <Filter>GameSystem\Battle</Filter>

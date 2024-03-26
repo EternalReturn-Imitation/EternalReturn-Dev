@@ -3,7 +3,6 @@ CFollowMainCamScript
 CMissileScript
 CMonsterScript
 CPlanetScript
-CUIScript_Button
 ER_ActionScript_Aya
 ER_ActionScript_Hyunwoo
 ER_ActionScript_Jackie

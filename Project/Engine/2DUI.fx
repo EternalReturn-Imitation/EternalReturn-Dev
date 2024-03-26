@@ -196,6 +196,7 @@ float4 PS_2DUI_Indicator(VS_OUT _in) : SV_Target
 #define RARE           g_tex_3
 #define EPIC           g_tex_4
 #define Empty          g_tex_5
+#define EquipType      g_tex_6
 #define IsNotEmpty     g_int_0
 #define ItemGrade      g_int_1
 
@@ -203,6 +204,8 @@ float4 PS_2DUI_Indicator(VS_OUT _in) : SV_Target
 float4 PS_2DUI_ItemSlot(VS_OUT _in) : SV_Target
 {
     float4 vOutColor = (float4) 0.f;
+    
+    
     
     if (IsNotEmpty && g_btex_0)
     {
@@ -236,6 +239,21 @@ float4 PS_2DUI_ItemSlot(VS_OUT _in) : SV_Target
     else if (g_btex_5)
     {
         vOutColor = g_tex_5.Sample(g_sam_0, _in.vUV);
+        
+        if(g_btex_6)
+        {
+            float2 ItemUV = _in.vUV;
+            ItemUV.x *= (2.f / 1.f);
+            ItemUV.x -= 0.5f;
+            ItemUV.x = saturate(ItemUV.x);
+            
+            ItemUV.y *= (4.f / 3.f);
+            ItemUV.y -= 0.15f;
+            ItemUV.y = saturate(ItemUV.y);
+            
+            float4 EquipTypeColor = g_tex_6.Sample(g_sam_0, ItemUV);
+            vOutColor = (1 - EquipTypeColor.w) * vOutColor + EquipTypeColor * EquipTypeColor * EquipTypeColor.w;
+        }
     }
     
     

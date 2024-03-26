@@ -49,7 +49,7 @@ private:
     void WaitExit(tFSMData& param);
 
     void FarmingEnter(tFSMData& param);
-    void FarmingUpdate(tFSMData& param);
+    void FarmingUpdate(tFSMData& param) {}
     void FarmingExit(tFSMData& param);
 
     void MoveEnter(tFSMData& param);
