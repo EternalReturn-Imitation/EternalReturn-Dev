@@ -342,20 +342,26 @@ void ER_ActionScript_Aya::AttackExit(tFSMData& param)
 void ER_ActionScript_Aya::CraftEnter(tFSMData& param)
 {
     GetOwner()->Animator3D()->SelectAnimation(L"Aya_Craft", false);
+    ERCHARSOUND(CRAFT_SOUND);
 }
 
 void ER_ActionScript_Aya::CraftUpdate(tFSMData& param)
 {
+
     if (GetOwner()->Animator3D()->IsFinish())
     {
+        STOPSOUND(CRAFT_SOUND);
         // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        param.bData[0] = false;
         ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
 
 void ER_ActionScript_Aya::CraftExit(tFSMData& param)
 {
-
+    
 }
 
 void ER_ActionScript_Aya::Skill_Q(tFSMData& _Data)

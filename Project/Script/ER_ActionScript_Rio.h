@@ -8,6 +8,7 @@ class ER_ActionScript_Rio :
     {
         LONG_NORMAL_ATTACK,
         SHORT_NORMAL_ATTACK,
+        CRAFT_SOUND,
         END,
     };
 

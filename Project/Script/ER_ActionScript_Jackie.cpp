@@ -238,7 +238,7 @@ void ER_ActionScript_Jackie::ArriveExit(tFSMData& param)
 
 void ER_ActionScript_Jackie::DeadEnter(tFSMData& param)
 {
-    Animator3D()->SelectAnimation(L"Jackie_Death", true);
+    Animator3D()->SelectAnimation(L"Jackie_Death", false);
 }
 void ER_ActionScript_Jackie::DeadUpdate(tFSMData& param)
 {
@@ -378,10 +378,21 @@ void ER_ActionScript_Jackie::AttackExit(tFSMData& param)
 
 void ER_ActionScript_Jackie::CraftEnter(tFSMData& param)
 {
+    Animator3D()->SelectAnimation(L"Jackie_Craft", false);
+    ERCHARSOUND(CRAFT_SOUND);
 }
 
 void ER_ActionScript_Jackie::CraftUpdate(tFSMData& param)
 {
+    if (Animator3D()->IsFinish())
+    {
+        STOPSOUND(CRAFT_SOUND);
+        // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        param.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
 }
 
 void ER_ActionScript_Jackie::CraftExit(tFSMData& param)

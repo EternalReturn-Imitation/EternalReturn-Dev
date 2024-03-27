@@ -6,6 +6,7 @@ class ER_ActionScript_Yuki :
 {
     enum class CharacterSound
     {
+        CRAFT_SOUND,
         END,
     };
 

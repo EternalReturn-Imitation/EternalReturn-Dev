@@ -74,8 +74,7 @@ void ER_UIScript_CraftSlot::CsrClick()
 	// 아아이템 아이디로 플레이어캐릭터스크립트가 가진 액션스크립트의 크래프트 아이템 호출
 	tFSMData data = {};
 	data.iData[0] = m_CurItemID;
-	// ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_ActionScript_Character>()->Craft(data);
-	ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>()->CraftItem(m_CurItemID);
+	ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_ActionScript_Character>()->Craft(data);
 }
 
 void ER_UIScript_CraftSlot::CsrBeginOn()

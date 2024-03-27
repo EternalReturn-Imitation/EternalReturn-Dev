@@ -7,6 +7,7 @@ class ER_ActionScript_Jackie :
     enum class CharacterSound
     {
         NONE,
+        CRAFT_SOUND,
         END,
     };
 

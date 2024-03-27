@@ -335,10 +335,21 @@ void ER_ActionScript_Yuki::AttackExit(tFSMData& param)
 
 void ER_ActionScript_Yuki::CraftEnter(tFSMData& param)
 {
+    Animator3D()->SelectAnimation(L"Yuki_Craft", false);
+    ERCHARSOUND(CRAFT_SOUND);
 }
 
 void ER_ActionScript_Yuki::CraftUpdate(tFSMData& param)
 {
+    if (Animator3D()->IsFinish())
+    {
+        STOPSOUND(CRAFT_SOUND);
+        // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        param.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
 }
 
 void ER_ActionScript_Yuki::CraftExit(tFSMData& param)

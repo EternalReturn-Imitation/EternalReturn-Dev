@@ -7,6 +7,7 @@ class ER_ActionScript_Hyunwoo :
     enum class CharacterSound
     {
         NONE,
+        CRAFT_SOUND,
         END,
     };
 

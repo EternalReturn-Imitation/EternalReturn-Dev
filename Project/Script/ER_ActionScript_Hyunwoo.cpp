@@ -324,11 +324,21 @@ void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
 {
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
+    Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
+    ERCHARSOUND(CRAFT_SOUND);
 }
 
 void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
 {
+    if (GetOwner()->Animator3D()->IsFinish())
+    {
+        STOPSOUND(CRAFT_SOUND);
+        // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        param.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
 }
 
 void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)

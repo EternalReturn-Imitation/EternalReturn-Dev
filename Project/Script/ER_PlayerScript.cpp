@@ -173,7 +173,6 @@ void ER_PlayerScript::tick()
 	{
 		// 목적 경로 초기화
 		GetOwner()->FindPath()->ClearPath();
-		m_AttackCsr = false;
 	}
 	
 	// 휴식
@@ -184,8 +183,15 @@ void ER_PlayerScript::tick()
 	}
 
 	// 제작(CRAFT)
-	if (KEY_TAP(KEY::APOSTROPHE)) {
-		m_pActionScript->Craft(data);
+	if (KEY_TAP(KEY::Z))
+	{
+		// 제작 가능 아이템 수가 1개 이상인 경우 가장 앞에있는 아이템으로 제작진행
+		vector<UINT> CraftList = (*(GetOwner()->GetScript<ER_DataScript_Character>()->GetCraftListAdress()));
+		if (1 <= CraftList.size())
+		{
+			data.iData[0] = CraftList[0];
+			m_pActionScript->Craft(data);
+		}
 		m_AttackCsr = false;
 	}
 
@@ -200,6 +206,7 @@ void ER_PlayerScript::tick()
 	if (KEY_TAP(KEY::TAB))
 	{
 		// 상태 UI 띄우기
+		m_AttackCsr = false;
 	}
 
 

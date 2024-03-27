@@ -350,9 +350,20 @@ void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
 
 void ER_ActionScript_Rio::CraftEnter(tFSMData& param)
 {
+    Animator3D()->SelectAnimation(L"Rio_CraftMetal", false);
+    ERCHARSOUND(CRAFT_SOUND);
 }
 void ER_ActionScript_Rio::CraftUpdate(tFSMData& param)
 {
+    if (Animator3D()->IsFinish())
+    {
+        STOPSOUND(CRAFT_SOUND);
+        // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        param.bData[0] = false;
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
 }
 void ER_ActionScript_Rio::CraftExit(tFSMData& param)
 {

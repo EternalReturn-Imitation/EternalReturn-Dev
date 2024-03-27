@@ -205,10 +205,20 @@ void ER_DataScript_Character::begin()
 	StatusUpdate();
 	SkillSlotInit();
 
-	m_Equipment[1] = ER_ItemMgr::GetInst()->GetItemObj(87)->Clone();
-	m_Equipment[1]->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
-	m_Inventory[0] = ER_ItemMgr::GetInst()->GetItemObj(58)->Clone();
-	m_Inventory[0]->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+	UINT StartWeapon = 0;
+	if (m_strKey == L"Aya")
+		StartWeapon = 20;
+	else if (m_strKey == L"Hyunwoo")
+		StartWeapon = 18;
+	else if (m_strKey == L"Jackie")
+		StartWeapon = 108;
+	else if (m_strKey == L"Rio")
+		StartWeapon = 28;
+	else if (m_strKey == L"Yuki")
+		StartWeapon = 9;
+
+	m_Equipment[0] = ER_ItemMgr::GetInst()->GetItemObj(StartWeapon)->Clone();
+	m_Equipment[0]->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
 }
 
 void ER_DataScript_Character::tick()

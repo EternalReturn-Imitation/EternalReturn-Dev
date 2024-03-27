@@ -220,11 +220,9 @@ void ER_ActionScript_Character::Craft(tFSMData& _Data)
 	[CRAFT]
 	bData[0]	: 제작중 여부
 	iData[0]	: 제작할 아이템 코드
-	iData[1]	: 재료1 아이템 슬롯 번호
-	iData[2]	: 재료2 아이템 슬롯 번호
 	*/
 
-	// 이전 공격상태의 데이터를 받아온다
+	// 이전 제작상태의 데이터를 받아온다
 	tFSMData PrevData = STATEDATA_GET(CRAFT);
 
 	//  현재 아이템 제작중인가
