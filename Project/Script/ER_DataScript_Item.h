@@ -11,18 +11,17 @@ private:
 	Ptr<CTexture>	m_ItemIcon;		// 아이콘 텍스쳐
 
 	UINT			m_eItemCode;	// 아이템 번호
-	UINT			m_eGrade;		// 아이템 등급
-	UINT			m_eType;		// 아이템 타입
-	UINT			m_eSlot;		// 아이템 장착슬롯
-	UINT			m_eWeapon_type;	// 무기 타입
+	UINT			m_eGrade;		// 아이템 등급		0 : 일반, 1 : 고급, 2 : 희귀, 3 : 영웅
+	UINT			m_eType;		// 아이템 타입		
+	UINT			m_eSlot;		// 아이템 장착슬롯	0 : 무기, 1 : 옷, 2 : 머리, 3 : 팔, 4 : 다리, 5 : 장착불가
+	UINT			m_eWeapon_type;	// 무기 타입			0 : 미지정, 1 : 도끼, 2 : 양손검, 3 : 권총, 4 : 글러브, 5 : 활
 
 	ER_RECIPE		m_uniRecipe;	// 재료 아이템
 
 	ER_ItemStats	m_tItemStats;	// 아이템 스탯
 
-	// 장착
-	UINT			m_CurSlotType;	// 0 : 없음, 1 : 장비, 2 : 인벤토리
-	int				m_SlotIdx;		// -1: 없음, 1~10;
+	// 캐릭터 보유 슬롯 확인
+	bool			m_bEquiped;	// 0 : 없음, 1 : 장비
 
 private:
 	void SetItemName(const wchar_t* _strName) { m_strItemName = _strName; }
@@ -61,11 +60,7 @@ public:
 
 	const ER_ItemStats& GetStats() { return m_tItemStats; }
 
-	UINT GetCurSlot() { return m_CurSlotType; }
-	int GetCurSlotIdx() { return m_SlotIdx; }
-
-	void SetSlot(UINT _slottype) { m_CurSlotType = _slottype; if (_slottype == 0) m_SlotIdx = -1; }
-	void SetSlotIdx(UINT _SlotIdx) { m_SlotIdx = _SlotIdx; }
+	bool IsEquiped() { return m_bEquiped; }
 
 	CLONE(ER_DataScript_Item);
 public:
@@ -74,5 +69,6 @@ public:
 
 	friend class ER_ItemMgr;
 	friend class ItemDataUI;
+	friend class ER_DataScript_Character;
 };
 

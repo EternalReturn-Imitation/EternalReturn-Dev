@@ -4,37 +4,52 @@
 class ER_DataScript_ItemBox :
     public CScript
 {
+    enum class eItemBoxSlotIdx
+    {
+        SOLT_1,
+        SOLT_2,
+        SOLT_3,
+        SOLT_4,
+        SOLT_5,
+        SOLT_6,
+        SOLT_7,
+        SOLT_8,
+        END
+    }typedef ITEMBOXSLOT;
+
 private:
-    vector<CGameObject*> m_vItemList;
-    CGameObject* m_pBoxIcon;
+    // [Data]
+    CGameObject* m_pItemList[(UINT)ITEMBOXSLOT::END];           // æ∆¿Ã≈€ ΩΩ∑‘
+
+    // [UI]
+    CGameObject* m_UIBoxTag;
+
+private:
+    Vec3 GetUIPos();
 
 public:
-    void init();
-    virtual void begin() override;
-    virtual void tick() override;
+    void            init();
+    virtual void    begin() override;
+    virtual void    tick() override;
 
 public:
-    virtual void BeginOverlap(CCollider3D* _Other) override;
-    virtual void OnOverlap(CCollider3D* _Other) override;
-    virtual void EndOverlap(CCollider3D* _Other) override;
-
-    virtual void BeginRayOverlap() override;
-    virtual void OnRayOverlap() override;
-    virtual void EndRayOverlap() override;
+    virtual void    BeginRayOverlap() override;
+    virtual void    OnRayOverlap() override;
+    virtual void    EndRayOverlap() override;
 
 public:
-    void CreateRandomItems();
-    void CreateBoxIcon();
+    void CreateBoxUI();
 
 public:
-    vector<CGameObject*> GetItemList() { return m_vItemList; }
-    CGameObject* GetItem(int _i) { return m_vItemList[_i]; }
-    
-    void SetEmptyItem(int _i) { m_vItemList[_i] = nullptr; }
+    CGameObject** GetItemList() { return m_pItemList; }
+    CGameObject* GetItem(int _i) { return m_pItemList[_i]; }
+    void SetEmptyItem(int _i) { m_pItemList[_i] = nullptr; }
 
 public:
     ER_DataScript_ItemBox();
     ~ER_DataScript_ItemBox();
 
-    CLONE_DISABLE(ER_DataScript_ItemBox);
+    CLONE(ER_DataScript_ItemBox);
+
+    friend class ER_UIScript_ItemBox;
 };

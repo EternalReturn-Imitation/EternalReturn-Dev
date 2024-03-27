@@ -7,15 +7,14 @@
 #include <Engine\CUIMgr.h>
 
 #include "ER_BattleSystem.h"
+#include "ER_GameSystem.h"
 #include "ER_DataScript_Character.h"
+#include "ER_Cursor.h"
 
 #include <Engine\CFindPath.h>
 
 #include "ER_CamControllerScript.h"
 #include "ER_ActionScript_Character.h"
-
-#include "ER_UIMgr.h"
-#include "CUIScript_Button.h"
 
 #define LAYER_ITEMBOX 5
 #define LAYER_MONSTER 11
@@ -52,10 +51,23 @@ void ER_PlayerScript::tick()
 	// 캐릭터가 사망상태면 리턴
 	if (m_Character->IsDeadState())
 		return;
-	
+
 	// [ Mouse ]
 	std::pair<CGameObject*,int> pTargetObj = GetFocusObj();	// 타겟 오브젝트
 	Vec3 vCsrPoint = GetFocusPoint();	// 타겟 지점
+
+	if (pTargetObj.second == LAYER_ITEMBOX)
+	{
+		ER_GameSystem::GetInst()->GetCursor()->SetState(2);
+	}
+	else if (pTargetObj.second == LAYER_CHARACTER)
+	{
+		ER_GameSystem::GetInst()->GetCursor()->SetState(1);
+	}
+	else
+	{
+		ER_GameSystem::GetInst()->GetCursor()->SetState(0);
+	}
 
 	tFSMData data = {};
 
@@ -66,6 +78,7 @@ void ER_PlayerScript::tick()
 	data.lParam = (DWORD_PTR)pTargetObj.first;
 
 	// [ Mouse Control ]
+	// 마우스가 UI위에 있다면 입력을 받지 않는다.
 	// 이동
 	if (KEY_TAP(KEY::RBTN))
 	{
@@ -89,25 +102,18 @@ void ER_PlayerScript::tick()
 		}
 		else if (pTargetObj.second == LAYER_ITEMBOX)
 		{
-			//몬스터인경우(Layer 이름 : ItemBox)
+			//아이템박스인 경우 (Layer 이름 : ItemBox)
 			m_pActionScript->Farming(data);
-		}
-		else if (pTargetObj.second == LAYER_MONSTER)
-		{
-			//몬스터인경우(Layer 이름 : Monster)
-			int i = 0;
 		}
 		else if (pTargetObj.second == LAYER_CHARACTER)
 		{
-			m_pActionScript->Attack(data);
-
 			//적 캐릭터인 경우(Layer 이름 : Character)
+			m_pActionScript->Attack(data);
 		}
 		// cursor On Land (else)
 		else
 		{
 			m_pActionScript->Move(data);
-			
 		}
 		m_AttackCsr = false;
 	}

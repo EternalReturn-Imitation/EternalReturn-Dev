@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "CEditorObjMgr.h"
 
-
-
 #include "CGameObjectEx.h"
 #include "CAnimEditObj.h"
+
 #include <Engine\components.h>
 
 #include <Engine\CResMgr.h>
@@ -91,6 +90,7 @@ void CEditorObjMgr::init()
 	//rot.y = rot.y = -1.5708f;
 	//pEditorCamObj->Transform()->SetRelativeRot(rot);
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
+
 }
 
 void CEditorObjMgr::progress()
@@ -102,7 +102,6 @@ void CEditorObjMgr::progress()
 
 
 	tick();
-
 	render();
 }
 
@@ -125,14 +124,25 @@ void CEditorObjMgr::tick()
 
 void CEditorObjMgr::render()
 {
-	if(m_bDebugRender)
-		DebugRender();
+	DebugRender();
 
 	EditorRender();
 }
 
 void CEditorObjMgr::DebugRender()
 {
+	if (!m_bDebugRender)
+	{
+		vector<tDebugShapeInfo>::iterator iter = m_DebugShapeInfo.begin();
+		
+		while(iter != m_DebugShapeInfo.end())
+		{
+			iter = m_DebugShapeInfo.erase(iter);
+		}
+
+		return;
+	}
+
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
 		m_vecEditorObj[i]->render();
@@ -194,6 +204,7 @@ void CEditorObjMgr::DebugRender()
 			++iter;
 		}
 	}
+
 }
 
 void CEditorObjMgr::EditorRender()

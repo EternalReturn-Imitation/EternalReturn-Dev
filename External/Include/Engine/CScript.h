@@ -58,6 +58,14 @@ public:
     virtual void OnRayOverlap() {}
     virtual void EndRayOverlap() {}
 
+    virtual void CsrOn() {}
+    virtual void CsrTap() {}
+    virtual void CsrRelease() {}
+    virtual void CsrClick() {}
+    virtual void CsrBeginOn() {}
+    virtual void CsrAway() {}
+
+
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
     virtual void LoadFromLevelFile(FILE* _File) override {}

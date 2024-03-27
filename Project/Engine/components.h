@@ -20,4 +20,4 @@
 #include "CDecal.h"
 #include "CLandscape.h"
 #include "CFindPath.h"
-#include "CUI_Button.h"
+#include "CUIComponent.h"

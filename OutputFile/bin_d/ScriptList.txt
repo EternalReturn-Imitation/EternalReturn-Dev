@@ -3,13 +3,13 @@ CFollowMainCamScript
 CMissileScript
 CMonsterScript
 CPlanetScript
-CUIScript_Button
 ER_ActionScript_Aya
 ER_ActionScript_Hyunwoo
 ER_ActionScript_Jackie
 ER_ActionScript_Rio
 ER_ActionScript_Yuki
 ER_CamControllerScript
+ER_Cursor
 ER_DataScript_Character
 ER_DataScript_Item
 ER_DataScript_ItemBox
@@ -17,3 +17,10 @@ ER_DataScript_LandMeshBase
 ER_PlayerScript
 ER_PlayerScript_Range
 ER_ProjectileScript
+ER_UIScript_Gauge
+ER_UIScript_ItemBox
+ER_UIScript_ItemSlot
+ER_UIScript_SkillSlot
+ER_UIScript_SkillUpBtn
+ER_UIScript_StatusBarGauge
+ER_UIScript_TrackingStatusBar

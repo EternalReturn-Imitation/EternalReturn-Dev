@@ -132,7 +132,12 @@ void CEventMgr::GC_Clear()
 			if (m_vecGC[i]->GetParent())			
 				m_vecGC[i]->DisconnectFromParent();
 			
-			delete m_vecGC[i];
+			if (static_cast<CEntity*>(m_vecGC[i])->GetManagedByMemory()) {
+				//xdelete<CGameObject>(m_vecGC[i]); // 메모리 풀 버전
+				odelete(m_vecGC[i]); //오브젝트 풀 버전
+			}
+			else
+				delete m_vecGC[i];
 
 			m_LevelChanged = true;
 		}		

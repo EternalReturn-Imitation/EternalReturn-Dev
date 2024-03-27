@@ -100,6 +100,8 @@ private:
 
 	Vec2				m_vUnProjectMousePos;
 
+	bool				bCsrHide;
+
 
 private:
 	IDirectInput8* m_directInput;
@@ -113,6 +115,8 @@ private:
 public:
 	void init();
 	void tick();
+
+	void SetCsrHide(bool _hide) { bCsrHide = _hide; }
 
 	void DinputInit(HINSTANCE _hinstance, HWND _hwnd);
 

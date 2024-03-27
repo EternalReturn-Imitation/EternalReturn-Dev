@@ -54,7 +54,7 @@ void ER_PlayerScript_Range::begin()
 
 void ER_PlayerScript_Range::tick()
 {
-	float frange = m_CharacterData->GetStatus()->fAtakRange;
+	float frange = m_CharacterData->GetStatus()->fAtkRange;
 	Vec3 vPos = m_pOwner->Transform()->GetRelativePos();
 	
 	Vec3 vScale = {};

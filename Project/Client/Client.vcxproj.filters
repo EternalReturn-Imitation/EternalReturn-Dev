@@ -349,6 +349,9 @@
     <ClInclude Include="TextUI.h">
       <Filter>UI\InspectorUI\ComponentUI\14. Text</Filter>
     </ClInclude>
+    <ClInclude Include="Collider3DUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\05. Collider3DUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
@@ -535,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="TextUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\14. Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3DUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\05. Collider3DUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

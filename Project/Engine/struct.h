@@ -171,12 +171,14 @@ struct tParticleModule
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
 };
 
+
+
 // FSM 가용 데이터
 struct tFSMData
 {
 	Vec2		v2Data;
 	float		fData;
-	int			iData;
+	int			iData[4];
 	Vec4		v4Data;
 	bool		bData[4];
 	DWORD_PTR	lParam;

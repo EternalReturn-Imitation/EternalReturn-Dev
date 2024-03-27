@@ -184,16 +184,24 @@ int MenuUI::render_update()
 
             if (ImGui::MenuItem("Play", nullptr, nullptr, PlayEnable))
             {
+                CKeyMgr::GetInst()->SetCsrHide(true);
+
                 CLevelSaveLoad::SaveLevel(L"Temp.lv", CurLevel);
                 // CLevelSaveLoad::SaveLevelToDB(CurLevel);
                 CurLevel->ChangeState(LEVEL_STATE::PLAY);
             }
             else if (ImGui::MenuItem("Pause", nullptr, nullptr, PauseEnable))
             {
+                CKeyMgr::GetInst()->SetCsrHide(false);
+                ShowCursor(true);
+
                 CurLevel->ChangeState(LEVEL_STATE::PAUSE);
             }
             else if (ImGui::MenuItem("Stop", nullptr, nullptr, StopEnable))
             {
+                CKeyMgr::GetInst()->SetCsrHide(false);
+                ShowCursor(true);
+
                 CurLevel->ChangeState(LEVEL_STATE::STOP);
                 CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Temp.lv");
                 // CLevel* pNewLevel = CLevelSaveLoad::LoadLevelByDB();

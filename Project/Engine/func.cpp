@@ -117,8 +117,8 @@ void AddComponents(CGameObject* _Object, int CreateCompType)
 	if (CreateCompType & _FINDPATH)
 		_Object->AddComponent(new CFindPath);
 
-	if (CreateCompType & _UI_BUTTON)
-		_Object->AddComponent(new CUI_Button);
+	if (CreateCompType & _UICOMPONENT)
+		_Object->AddComponent(new CUIComponent);
 
 	if (CreateCompType & _MESHRENDER)
 		_Object->AddComponent(new CMeshRender);
@@ -650,3 +650,23 @@ float CTruncate(float value, int decimalPlaces) {
 	float factor = (float)std::pow(10.0, decimalPlaces);
 	return std::floor(value * factor) / factor;
 }
+
+//memoryMgr init
+#include "MemoryMgr.h"
+
+
+MemoryMgr* GMemory = nullptr;
+
+class CoreGlobal
+{
+public:
+	CoreGlobal()
+	{
+		GMemory = new MemoryMgr();
+	}
+
+	~CoreGlobal()
+	{
+		delete GMemory;
+	}
+} GCoreGlobal;
