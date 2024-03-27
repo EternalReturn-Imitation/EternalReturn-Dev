@@ -2,8 +2,11 @@
 #include "ER_UIScript_ItemSlot.h"
 
 #include "ER_DataScript_Item.h"
+#include "ER_DataScript_Character.h"
 #include "ER_UIMgr.h"
 #include "ER_GameSystem.h"
+
+#include "ER_UIScript_ItemBox.h"
 
 #include "ER_Cursor.h"
 
@@ -101,6 +104,32 @@ void ER_UIScript_ItemSlot::CsrOn()
 	if (KEY_RELEASE(KEY::LBTN))
 	{
 		ER_UIMgr::GetInst()->RegistDropItemSlot(this);
+	}
+	
+	// 아이템이 있는경우의 마우스 오른쪽클리 동작
+	if ((*m_Slot) && KEY_TAP(KEY::RBTN))
+	{
+		ER_DataScript_Item* Item = (*m_Slot)->GetScript<ER_DataScript_Item>();
+
+		ER_UIScript_ItemBox* ItemBox = GetOwner()->GetParent()->GetScript<ER_UIScript_ItemBox>();
+		ER_DataScript_Character* PlayerCharacter = ER_GameSystem::GetInst()->GetPlayerCharacter()->GetScript<ER_DataScript_Character>();
+
+		// Item Box
+		if (ItemBox)
+		{
+			PlayerCharacter->AcquireItem(m_Slot);
+		}
+		// EquipMent
+		else if(Item->IsEquiped())
+		{
+			// 필요 동작코드 동일
+			PlayerCharacter->AcquireItem(m_Slot);
+		}
+		// Inventory
+		else
+		{
+			PlayerCharacter->SwapItem(m_Slot, PlayerCharacter->GetEquipItem(Item->GetSlot()));
+		}
 	}
 }
 

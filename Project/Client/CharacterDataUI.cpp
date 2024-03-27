@@ -4,6 +4,8 @@
 #include <Script\ER_CharacterMgr.h>
 #include <Script\ER_DataScript_Character.h>
 
+#include "ItemDataUI.h"
+
 CharacterDataUI::CharacterDataUI()
     : UI("##CharacterDataUI")
     , m_pSelectedCharacter(nullptr)
@@ -218,6 +220,41 @@ void CharacterDataUI::render_CharacterInfoData()
     ImGui::Text(ToString(CharacterContext->m_MapTex.Get()->GetKey()).c_str());
     ImGui::Button("PortTex", ImVec2(xsize, 0.f)); ImGui::SetNextItemWidth(181.f); ImGui::SameLine();
     ImGui::Text(ToString(CharacterContext->m_PortraitTex.Get()->GetKey()).c_str());
+
+    // [ Root Item ]
+    const char* SlotType[5] = { u8"무기", u8"옷", u8"머리", u8"팔", u8"다리" };
+    UINT CurSetItem[5] = {};
+    for (int i = 0; i < 5; ++i)
+    {
+        CurSetItem[i] = CharacterContext->GetRootItem()[i];
+    }
+    
+    vector<string> vecItemList = ((ItemDataUI*)ImGuiMgr::GetInst()->FindUI("##ItemDataUI"))->GetItemNameList();
+
+    for (int i = 0; i < 5; ++i)
+    {
+        ImGui::Button(SlotType[i], ImVec2(xsize, 0.f)); ImGui::SetNextItemWidth(181.f); ImGui::SameLine();
+        char szbuf[32] = {};
+        sprintf_s(szbuf, "##RootSlot%d", i);
+
+        if (ImGui::BeginCombo(szbuf, vecItemList[CurSetItem[i]].c_str(), 0))
+        {
+            for (int n = 0; n < vecItemList.size(); n++)
+            {
+                const bool is_selected = (CurSetItem[i] == n);
+                if (ImGui::Selectable(vecItemList[n].c_str(), is_selected))
+                {
+                    CurSetItem[i] = n;
+                }
+            }
+            ImGui::EndCombo();
+        }
+    }
+
+    CharacterContext->SetRootItem(CurSetItem, 5);
+
+    // 캐릭터 데이터에 세팅해주기
+    
 
     ImGui::EndGroup();
 

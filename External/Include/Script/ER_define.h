@@ -123,3 +123,14 @@ enum class eStatus_Effect
 	FEAR			= 1 << 8,	// 공포
 	STUN			= 1 << 9,	// 기절
 }typedef BUFNDEBUF_ENUM;
+
+enum class eAreaName
+{
+	ARCHERY,
+	FOREST,
+	HOTEL,
+	SANDYBEACH,
+	SCHOOL,
+	UPTOWN,
+	END,
+}typedef LUMIAISLAND;

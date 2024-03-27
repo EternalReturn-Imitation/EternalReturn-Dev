@@ -35,9 +35,10 @@
 #include <Script\ER_DataScript_ItemBox.h>
 #include <Script\ER_DataScript_LandMeshBase.h>
 
-#include <Script\ER_CharacterMgr.h>
-#include <Script\ER_UIMgr.h>
 #include <Script\ER_GameSystem.h>
+#include <Script\ER_CharacterMgr.h>
+#include <Script\ER_ItemMgr.h>
+#include <Script\ER_UIMgr.h>
 
 // [Editor]
 #include "CEditorObjMgr.h"
@@ -107,7 +108,6 @@ void SetLayer(CLevel* _Level)
 	
 	_Level->GetLayer(5)->SetName(L"ItemBox");
 	_Level->GetLayer(6)->SetName(L"ItemBoxTag");
-	_Level->GetLayer(11)->SetName(L"Monster");
 	_Level->GetLayer(12)->SetName(L"Character");
 	_Level->GetLayer(13)->SetName(L"Player");
 	
@@ -119,11 +119,8 @@ void SetLayer(CLevel* _Level)
 	_Level->GetLayer(31)->SetName(L"UI");
 
 	// Collision Set
-	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Base");
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"MapCollider");
-	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Character");
-	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Player");
 
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Projectile");
 	CCollisionMgr::GetInst()->LayerCheck(L"Character", L"Projectile");
@@ -131,7 +128,6 @@ void SetLayer(CLevel* _Level)
 	// Ray LayerCheck
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
 	CCollisionMgr::GetInst()->RayLayerCheck(L"Character");
-	CCollisionMgr::GetInst()->RayLayerCheck(L"Monster");
 
 }
 void SetCamera()
@@ -283,6 +279,7 @@ void Create_Archery()
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::ARCHERY);
 	}
 }
 void Create_Forest()
@@ -323,6 +320,7 @@ void Create_Forest()
 
 		box->AddComponent(new ER_DataScript_ItemBox);
 		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::FOREST);
 	}
 }
 void Create_Hotel()
@@ -378,6 +376,7 @@ void Create_Hotel()
 
 		box->AddComponent(new ER_DataScript_ItemBox);
 		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::HOTEL);
 	}
 }
 void Create_SandyBeach()
@@ -418,6 +417,7 @@ void Create_SandyBeach()
 
 		box->AddComponent(new ER_DataScript_ItemBox);
 		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::SANDYBEACH);
 	}
 }
 void Create_School()
@@ -487,6 +487,7 @@ void Create_School()
 
 		box->AddComponent(new ER_DataScript_ItemBox);
 		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::SCHOOL);
 	}
 }
 void Create_Uptown()
@@ -527,6 +528,7 @@ void Create_Uptown()
 		
 		box->AddComponent(new ER_DataScript_ItemBox);
 		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::UPTOWN);
 	}
 }
 

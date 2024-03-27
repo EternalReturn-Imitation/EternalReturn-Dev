@@ -121,6 +121,9 @@
     <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
       <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\UI\Item\Slot\CraftSlot">
+      <UniqueIdentifier>{9c6a4bc4-a8a4-4271-ab0e-9dd45dad9d73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -236,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="ER_UIScript_ItemSlot.h">
       <Filter>Script\UI\Item\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_CraftSlot.h">
+      <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +364,9 @@
     </ClCompile>
     <ClCompile Include="ER_UIScript_ItemSlot.cpp">
       <Filter>Script\UI\Item\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_CraftSlot.cpp">
+      <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

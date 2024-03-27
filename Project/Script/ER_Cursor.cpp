@@ -35,7 +35,7 @@ void ER_Cursor::init()
 	AddComponents(m_pDragItemTex, _TRANSFORM | _MESHRENDER);
 	m_pDragItemTex->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	m_pDragItemTex->Transform()->SetRelativePos(Vec3(-0.5, 0.5f, 1.1f));
-	m_pDragItemTex->Transform()->SetRelativeScale(Vec3(1.88f, 1.25f, 1.f));
+	m_pDragItemTex->Transform()->SetRelativeScale(Vec3(1.88f, 1.1f, 1.f));
 
 	GetOwner()->AddChild(m_pDragItemTex);
 }

@@ -38,8 +38,14 @@ private:
     CGameObject* StatusBar_Inventory_Slot[10];
 
     // =============
-    // [ Inventory ]
+    // [ CraftList ]
     // =============
+
+    CGameObject* StatusBar_CraftList[7];
+
+    // ===========
+    // [ ItemBox ]
+    // ===========
 
     CGameObject* ItemBoxUI;
 

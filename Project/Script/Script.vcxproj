@@ -203,6 +203,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_ProjectileScript.h" />
     <ClInclude Include="ER_struct.h" />
     <ClInclude Include="ER_UIMgr.h" />
+    <ClInclude Include="ER_UIScript_CraftSlot.h" />
     <ClInclude Include="ER_UIScript_Gauge.h" />
     <ClInclude Include="ER_UIScript_ItemSlot.h" />
     <ClInclude Include="ER_UIScript_SkillSlot.h" />
@@ -245,6 +246,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_PlayerScript_Range.cpp" />
     <ClCompile Include="ER_ProjectilePool.cpp" />
     <ClCompile Include="ER_ProjectileScript.cpp" />
+    <ClCompile Include="ER_UIScript_CraftSlot.cpp" />
     <ClCompile Include="ER_UIScript_Gauge.cpp" />
     <ClCompile Include="ER_UIScript_ItemBox.cpp" />
     <ClCompile Include="ER_UIScript_ItemSlot.cpp" />

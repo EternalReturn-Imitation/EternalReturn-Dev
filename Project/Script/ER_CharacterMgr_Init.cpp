@@ -86,6 +86,8 @@ int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
         SaveResRef(CharacterContext->m_SkillList[i]->TexSkill.Get(), _File);
     }
 
+    fwrite(&CharacterContext->m_RootItem, sizeof(UINT), 5, _File);
+
     return 0;
 }
 
@@ -107,7 +109,6 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
 
     // CharacterData init
     pCharacter->SetName(CharacterContext->m_strKey);
-    CharacterContext->init();
 
     // MeshData Set
     wstring MeshDataKey = CharacterContext->m_strKey + L".mdat";
@@ -135,6 +136,10 @@ CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
     }
 
     m_mapCharacters.insert(make_pair(CharacterContext->m_strKey, pCharacter));
+
+    fread(&CharacterContext->m_RootItem, sizeof(UINT), 5, _File);
+    
+    CharacterContext->init();
 
     return pCharacter;
 }

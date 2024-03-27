@@ -9,9 +9,10 @@
 #include "ER_DataScript_Character.h"
 #include "ER_UIScript_SkillSlot.h"
 #include "ER_UIScript_SkillUpBtn.h"
-#include "ER_UIScript_StatusBarGauge.h""
+#include "ER_UIScript_StatusBarGauge.h"
 
 #include "ER_UIScript_ItemSlot.h"
+#include "ER_UIScript_CraftSlot.h"
 #include "ER_DataScript_Item.h"
 
 #include "ER_UIScript_ItemBox.h"
@@ -164,6 +165,15 @@ void ER_UIMgr::CreateInventory()
 		StatusBar_Inventory_Slot[i]->GetScript<ER_UIScript_ItemSlot>()->init();
 		StatusBar_Inventory->AddChild(StatusBar_Inventory_Slot[i]);
 		StatusBar_Inventory_Slot[i]->LoadAllPrefabFromObjName();
+
+		if (i < 7)
+		{
+			name = L"StatusBar_CraftList_Slot_" + std::to_wstring(i);
+			StatusBar_CraftList[i] = new CGameObject;
+			StatusBar_CraftList[i]->SetName(name);
+			StatusBar_CraftList[i]->AddComponent(new ER_UIScript_CraftSlot);
+			StatusBar_CraftList[i]->GetScript< ER_UIScript_CraftSlot>()->init();
+		}
 	}
 }
 
@@ -185,6 +195,10 @@ void ER_UIMgr::init()
 
 void ER_UIMgr::tick()
 {
+	for (int i = 0; i < 7; ++i)
+	{
+		StatusBar_CraftList[i]->tick();
+	}
 }
 
 void ER_UIMgr::SpawnUI()
@@ -199,6 +213,10 @@ void ER_UIMgr::SpawnUI()
 
 	// 스킬 레벨업 버튼
 	for (auto Btn : StatusBar_SkillLevelUpBtn)
+		SpawnGameObject(Btn, L"UI");
+
+	// 제작가능 아이템 버튼
+	for (auto Btn : StatusBar_CraftList)
 		SpawnGameObject(Btn, L"UI");
 }
 
@@ -251,6 +269,10 @@ void ER_UIMgr::RegistPlayerCharacetr()
 	for (int i = 0; i < 10; ++i)
 	{
 		StatusBar_Inventory_Slot[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllInvenItem()[i], ER_UIScript_ItemSlot::eSlotType::COMMON);
+		if (i < 7)
+		{
+			StatusBar_CraftList[i]->GetScript< ER_UIScript_CraftSlot>()->RegistCraftvector(PlayerCharacter->GetCraftListAdress(), i);
+		}
 	}
 
 }

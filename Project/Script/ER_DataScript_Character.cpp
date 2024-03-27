@@ -18,6 +18,7 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_fSPRegenTime(0.f)
 	, m_SkillPoint(0)
 	, m_STDStats{}
+	, m_RootItem{}
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -40,6 +41,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 	, m_fSPRegenTime(0.f)
 	, m_SkillPoint(0)
+	, m_RootItem{}
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -56,6 +58,13 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
 	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
 	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
+
+	for (int i = 0; i < 5; ++i)
+	{
+		m_RootItem[i] = _origin.m_RootItem[i];
+	}
+
+	m_IngredientList = _origin.m_IngredientList;
 }
 
 ER_DataScript_Character::~ER_DataScript_Character()
@@ -67,6 +76,8 @@ ER_DataScript_Character::~ER_DataScript_Character()
 		delete m_StatusEffect;
 
 	Safe_Del_Vec(m_SkillList);
+
+	// 인벤토리, 장착 아이템 delete 작업
 }
 
 void ER_DataScript_Character::StatusUpdate()
@@ -174,6 +185,10 @@ void ER_DataScript_Character::init()
 		m_MapTex = CResMgr::GetInst()->FindRes<CTexture>(MapTexKey);
 	}
 	
+	for (int i = 0; i < 5; ++i)
+	{
+		ER_ItemMgr::GetInst()->GetIngredient(m_RootItem[i], &m_IngredientList);
+	}
 }
 
 void ER_DataScript_Character::begin()
@@ -234,27 +249,8 @@ void ER_DataScript_Character::SkillSlotInit()
 	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }
 
-CGameObject* ER_DataScript_Character::ItemAcquisition(CGameObject* _ItemObj)
-{
-	int i = 0;
-	//비어있는 인벤 찾음
-	while (i < 10) {
-		if (!m_Inventory[i])
-			break;
-		++i;
-	}
-
-	if (i == 10)
-		return nullptr;
-
-	m_Inventory[i] = _ItemObj;
-
-	return _ItemObj;
-}
-
 bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _DropItem)
 {
-
 	ER_DataScript_Item* DragItem = nullptr;
 	int DragItemType = -1;
 	bool DragItemEquiped = false;
@@ -305,6 +301,9 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 			// 장착여부 변경
 			(*_DragItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
 			(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+
+			ItemInfoUpdate();
+			StatusUpdate();
 		}
 		// -> NULLSlot
 		else if (DropItemType == -1)
@@ -325,6 +324,9 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 			(*_DragItem) = tmp;
 
 			(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
+
+			ItemInfoUpdate();
+			StatusUpdate();
 		}
 	}
 	// 인벤토리 or ItemBox ->
@@ -347,7 +349,9 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 						(*_DragItem) = tmp;
 
 						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
-
+						
+						ItemInfoUpdate();
+						StatusUpdate();
 						return true;
 					}
 					else if (DragItemType == DropItemType)
@@ -361,6 +365,8 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 						(*_DragItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
 						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
 
+						ItemInfoUpdate();
+						StatusUpdate();
 						return true;
 					}
 				}
@@ -369,9 +375,14 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 		}
 
 		// -> 인벤토리 or 아이템 박스
+
+		// Inventory에 있는 아이템이면 
+		// Drag가 ItemSlot이 아닌경우
 		CGameObject* tmp = (*_DropItem);
 		(*_DropItem) = (*_DragItem);
 		(*_DragItem) = tmp;
+
+		ItemInfoUpdate();
 	}
 
 	return false;
@@ -409,12 +420,124 @@ void ER_DataScript_Character::AcquireItem(CGameObject** _BoxSlot)
 
 		// 비어있는 인벤토리에 넣어주고, 원래 슬롯을 비워준다.
 		m_Inventory[emptyslot] = (*_BoxSlot);
+		m_Inventory[emptyslot]->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
 		*_BoxSlot = nullptr;
+
+		StatusUpdate();
+		ItemInfoUpdate();
 	}
 }
 
-void ER_DataScript_Character::CraftItem(CGameObject** _iSlot1, CGameObject** _iSlot2)
+void ER_DataScript_Character::ItemInfoUpdate()
 {
+	// 제작가능 아이템 업데이트
+	vector<UINT> itemlist;
+
+	for (int i = 0; i < 10; ++i)
+	{
+		if (i < 5 && m_Equipment[i])
+			itemlist.push_back(m_Equipment[i]->GetScript<ER_DataScript_Item>()->m_eItemCode);
+
+		if (m_Inventory[i])
+			itemlist.push_back(m_Inventory[i]->GetScript<ER_DataScript_Item>()->m_eItemCode);
+	}
+
+	m_CraftList.clear();
+
+	for (int Litem = 0; Litem < itemlist.size(); ++Litem)
+	{
+		for (int Ritem = Litem + 1; Ritem < itemlist.size(); ++Ritem)
+		{
+			int tmp = -1;
+
+			// 제작가능한 아이템이다.
+			if (S_OK == ER_ItemMgr::GetInst()->SearchRecipe(itemlist[Litem], itemlist[Ritem], tmp))
+			{
+				// 해당아이템이 제작필요 목록에 있는지 여부
+				if(m_IngredientList.end() != m_IngredientList.find(tmp))
+					m_CraftList.push_back(tmp);
+			}
+		}
+	}
+}
+
+bool ER_DataScript_Character::CraftItem(UINT _Item)
+{
+	// 해당 아이템을 만들기위한 재료 슬롯 검색
+	ER_RECIPE recipe = {};
+	recipe.recipe = ER_ItemMgr::GetInst()->m_umapIngredient.find(_Item)->second;
+
+	CGameObject** ItemSlot1 = nullptr;
+	CGameObject** ItemSlot2 = nullptr;
+
+	for (int i = 0; i < 10; ++i)
+	{
+		// 2개 아이템을 다 찾은경우 탐색 종료
+		if (ItemSlot1 && ItemSlot2)
+			break;
+
+		// 장비창에 아이템이 있는 경우
+		if (i < 5 && m_Equipment[i])
+		{
+			UINT Itemid = m_Equipment[i]->GetScript<ER_DataScript_Item>()->GetCode();
+			
+			if (!ItemSlot1 && Itemid == recipe.ingredient_1)
+				ItemSlot1 = &m_Equipment[i];
+			else if (!ItemSlot2 && Itemid == recipe.ingredient_2)
+				ItemSlot2 = &m_Equipment[i];
+		}
+
+		// 인벤토리에 아이템이 있는경우
+		if (m_Inventory[i])
+		{
+			UINT Itemid = m_Inventory[i]->GetScript<ER_DataScript_Item>()->GetCode();
+
+			if (!ItemSlot1 && Itemid == recipe.ingredient_1)
+				ItemSlot1 = &m_Inventory[i];
+			else if (!ItemSlot2 && Itemid == recipe.ingredient_2)
+				ItemSlot2 = &m_Inventory[i];
+		}
+	}
+
+	// 기존 두 재료 슬롯의 아이템 delete
+	delete (*ItemSlot1);
+	(*ItemSlot1) = nullptr;
+	delete (*ItemSlot2);
+	(*ItemSlot2) = nullptr;
+	
+	// 제작한 아이템 매니저에서 클론으로 가져온다.
+	CGameObject* NewItem = ER_ItemMgr::GetInst()->GetItemObj(_Item)->Clone();
+
+	int InventoryIdx = -1;
+	// 비어있는 인벤토리에 아이템을 넣는다.
+	for (int i = 0; i < 10; ++i)
+	{
+		if (nullptr == m_Inventory[i])
+		{
+			m_Inventory[i] = NewItem;
+			InventoryIdx = i;
+			break;
+		}
+	}
+
+	// 아이템슬롯타입을 확인하고 해당 슬롯이 비어있거나 등급이 더 높은경우 SwapItem을 진행한다.
+	ER_DataScript_Item* NewItemInfo = NewItem->GetScript<ER_DataScript_Item>();
+	if (!m_Equipment[NewItemInfo->GetSlot()] || m_Equipment[NewItemInfo->GetSlot()]->GetScript<ER_DataScript_Item>()->GetGrade() < NewItemInfo->GetGrade())
+	{
+		SwapItem(&m_Inventory[InventoryIdx], &m_Equipment[NewItemInfo->GetSlot()]);
+	}
+
+
+	// 제작한 아이템이 필요 제작 목록에 있는경우 카운트를 내리고 0이된경우 지워준다.
+	unordered_map<UINT, int>::iterator iter = m_IngredientList.find(_Item);
+	if (iter->second == 1)
+		m_IngredientList.erase(iter);
+	else
+		iter->second--;
+
+	ItemInfoUpdate();
+
+	return true;
 }
 
 void ER_DataScript_Character::BeginOverlap(CCollider3D* _Other)

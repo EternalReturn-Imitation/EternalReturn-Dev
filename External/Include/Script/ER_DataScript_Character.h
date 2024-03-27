@@ -7,6 +7,7 @@ class ER_DataScript_Character :
     public CScript
 {
 private:
+    // [ Info ]
     wstring                     m_strKey;
     wstring                     m_strName;              // 실험체 이름
     ER_Initial_Stats            m_STDStats;             // 실험체 초기 능력치
@@ -16,23 +17,25 @@ private:
     Ptr<CTexture>               m_MapTex;               // 미니맵 텍스쳐
     vector<ER_SKILL*>           m_SkillList;            // 보유 스킬             
 
-    // 실험체 최종 능력치 (초기능력치 * 레벨, + 아이템, + 스킬효과)
+    // [ Stats ]
     tIngame_Stats*              m_Stats;                // 게임 능력치
-    ER_SKILL*                   m_Skill[4];             // 실제사용스킬
 
+    // [ Skill ]
+    ER_SKILL*                   m_Skill[4];             // 실제사용스킬
     UINT                        m_SkillPoint;           // 스킬 레벨업 투자 가능 포인트
     float                       m_fSPRegenTime;         // SPRegen Tiem
 
-    // 상태판단
+    // [ Status Effect ]
     tStatus_Effect*             m_StatusEffect;         // 상태효과 구조체
     bool                        m_bGameDead;            // 캐릭터 사망판단
     bool                        m_bOutofContorl;        // 제어불가상태
 
-
-    // 장비창
-    CGameObject*                m_Equipment[(UINT)ER_ITEM_SLOT::END];   // 장비칸
-    // 인벤토리
-    CGameObject*                m_Inventory[10];                        // 인벤토리 10칸
+    // [ Item ]
+    CGameObject*                m_Equipment[(UINT)ER_ITEM_SLOT::END];   // 장비창
+    CGameObject*                m_Inventory[10];                        // 인벤토리
+    UINT                        m_RootItem[5];                          // 최종 목표 아이템
+    vector<UINT>                m_CraftList;                            // 제작가능 아이템 목록
+    unordered_map<UINT, int>    m_IngredientList;                       // 재료 아이템 목록;
 
 public:
     // [상태 갱신]
@@ -56,7 +59,7 @@ public:
     UINT*               GetSkillPoint() { return &m_SkillPoint; }
 
     Ptr<CTexture>       GetPortraitTex() { return m_PortraitTex; }
-    
+
     tStatus_Effect*     GetStatusEffect() { return m_StatusEffect; }
     void                SetGameDead() { m_bGameDead = true; }
     const bool          IsDeadState() { return m_bGameDead; }
@@ -66,23 +69,32 @@ public:
     vector<ER_SKILL*>&  GetSkillList() { return m_SkillList; }
     ER_SKILL*           GetSkill(int _Idx) { return m_Skill[_Idx]; }
     ER_SKILL**          GetSkillAdress(int _Idx) { return &m_Skill[_Idx]; }
-    
+
     void                ChangeSkill(int _Idx);
     void                SkillSlotInit();
 
     // [Item]
     CGameObject**       GetAllEquipItem() { return m_Equipment; }
-    CGameObject*        GetEquipItem(UINT _SlotType) { return m_Equipment[_SlotType]; }
+    CGameObject**       GetEquipItem(UINT _SlotType) { return &m_Equipment[_SlotType]; }
+    vector<UINT>*       GetCraftListAdress() { return &m_CraftList; }
 
     CGameObject**       GetAllInvenItem() { return m_Inventory; }
     CGameObject*        GetInvenItem(UINT _SlotX, UINT _SlotY) { return m_Equipment[_SlotX * 5 + _SlotY]; }
     CGameObject*        GetInvenItem(UINT _SlotType) { return m_Equipment[_SlotType]; }
 
-    CGameObject*        ItemAcquisition(CGameObject* _ItemObj);
+    void                SetRootItem(UINT* _RootItem, int _cnt)
+    {
+        for (int i = 0; i < _cnt; ++i)
+        {
+            m_RootItem[i] = _RootItem[i];
+        }
+    }
+    UINT*               GetRootItem() { return m_RootItem; }
 
     bool                SwapItem(CGameObject** _DragItem, CGameObject** _DropItem);
     void                AcquireItem(CGameObject** _BoxSlot);  // 목적지슬롯
-    void                CraftItem(CGameObject** _iSlot1, CGameObject** _iSlot2);    // 조합, 재료슬롯,재료슬롯
+    void                ItemInfoUpdate();
+    bool                CraftItem(UINT _Item);    // 조합, 재료슬롯,재료슬롯
 
 public:
     virtual void        BeginOverlap(CCollider3D* _Other) override;

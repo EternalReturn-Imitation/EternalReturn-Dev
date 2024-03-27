@@ -28,6 +28,7 @@ void ER_GameSystem::GameStart()
 {
 	ER_UIMgr::GetInst()->SpawnUI();
 	SpawnGameObject(m_pCursor, L"UI");
+	ER_ItemMgr::GetInst()->SpawnItemLevel();
 }
 
 void ER_GameSystem::init()

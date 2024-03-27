@@ -15,6 +15,7 @@ ER_DataScript_ItemBox::ER_DataScript_ItemBox()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_ITEMBOX)
 	, m_pItemList{}
 	, m_UIBoxTag(nullptr)
+	, m_SetItemCnt(0)
 {
 }
 
@@ -91,6 +92,25 @@ void ER_DataScript_ItemBox::EndRayOverlap()
 		int a = 1;
 		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
 	}
+}
+
+bool ER_DataScript_ItemBox::RegistItem(UINT _ItemID)
+{
+	if (m_SetItemCnt == 5)
+		return false;
+
+	for (int i = m_SetItemCnt; i < (UINT)ITEMBOXSLOT::END; ++i)
+	{
+		// 슬롯이 비어있는 경우 아이템매니저에서 클론으로 생성해준다.
+		if (!m_pItemList[i])
+		{
+			m_pItemList[i] = ER_ItemMgr::GetInst()->GetItemObj(_ItemID)->Clone();
+			m_SetItemCnt = i + 1;
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 void ER_DataScript_ItemBox::CreateBoxUI()

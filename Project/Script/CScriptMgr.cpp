@@ -20,6 +20,7 @@
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
 #include "ER_ProjectileScript.h"
+#include "ER_UIScript_CraftSlot.h"
 #include "ER_UIScript_Gauge.h"
 #include "ER_UIScript_ItemBox.h"
 #include "ER_UIScript_ItemSlot.h"
@@ -49,6 +50,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_ProjectileScript");
+	_vec.push_back(L"ER_UIScript_CraftSlot");
 	_vec.push_back(L"ER_UIScript_Gauge");
 	_vec.push_back(L"ER_UIScript_ItemBox");
 	_vec.push_back(L"ER_UIScript_ItemSlot");
@@ -98,6 +100,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_PlayerScript_Range;
 	if (L"ER_ProjectileScript" == _strScriptName)
 		return new ER_ProjectileScript;
+	if (L"ER_UIScript_CraftSlot" == _strScriptName)
+		return new ER_UIScript_CraftSlot;
 	if (L"ER_UIScript_Gauge" == _strScriptName)
 		return new ER_UIScript_Gauge;
 	if (L"ER_UIScript_ItemBox" == _strScriptName)
@@ -175,6 +179,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PROJECTILESCRIPT:
 		return new ER_ProjectileScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
+		return new ER_UIScript_CraftSlot;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
 		return new ER_UIScript_Gauge;
@@ -279,6 +286,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_PROJECTILESCRIPT:
 		return L"ER_ProjectileScript";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
+		return L"ER_UIScript_CraftSlot";
 		break;
 
 	case SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
