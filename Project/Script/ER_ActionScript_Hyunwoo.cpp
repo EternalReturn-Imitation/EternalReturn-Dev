@@ -5,6 +5,8 @@
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
 
+#include "ER_ItemMgr.h"
+
 #include <Engine/CAnim3D.h>
 
 ER_ActionScript_Hyunwoo::ER_ActionScript_Hyunwoo()
@@ -118,7 +120,6 @@ void ER_ActionScript_Hyunwoo::FarmingEnter(tFSMData& param)
     ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
     ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
 }
-
 void ER_ActionScript_Hyunwoo::FarmingExit(tFSMData& param)
 {
     ER_UIMgr::GetInst()->CloseItemBoxUI();
@@ -215,6 +216,37 @@ void ER_ActionScript_Hyunwoo::DeadExit(tFSMData& param)
 {
 }
 
+void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
+    int ItemGrade = ER_ItemMgr::GetInst()->GetItemObj(param.iData[0])->GetScript<ER_DataScript_Item>()->GetGrade();
+    int CraftTime = 2 + (2 * ItemGrade);
+    param.bData[0] = true;
+    param.iData[1] = (int)CraftTime;
+    param.fData = 0.f;
+
+    ERCHARSOUND(CRAFT_SOUND);
+}
+void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
+{
+    param.fData += DT;
+
+    if (param.iData[1] <= param.fData || Animator3D()->IsFinish())
+    {
+        // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
+}
+void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.iData[1] = 0;
+    param.fData = 0.f;
+    STOPSOUND(CRAFT_SOUND);
+}
 
 void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
 {
@@ -320,29 +352,6 @@ void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
 {
     param.bData[0] = false;
     SetStateGrade(eAccessGrade::BASIC);
-}
-
-void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
-{
-    Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
-    ERCHARSOUND(CRAFT_SOUND);
-}
-
-void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
-{
-    if (GetOwner()->Animator3D()->IsFinish())
-    {
-        STOPSOUND(CRAFT_SOUND);
-        // 아이탬 생성함수
-        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
-
-        param.bData[0] = false;
-        ChangeState(ER_CHAR_ACT::WAIT);
-    }
-}
-
-void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)
-{
 }
 
 void ER_ActionScript_Hyunwoo::Skill_Q(tFSMData& _Data)

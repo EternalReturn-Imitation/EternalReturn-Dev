@@ -14,7 +14,7 @@
 
 #define GETPROJECTILE(Type) ER_ProjectilePool::GetInst()->GetProjectile(ER_ProjectilePool::eProjType::Type)
 
-#define ERCHARSOUND(Key) m_pSounds[(UINT)CharacterSound::Key]->Play(1,0.5,true)
+#define ERCHARSOUND(Key) PlaySound((UINT)CharacterSound::Key)
 #define STOPSOUND(Key) m_pSounds[(UINT)CharacterSound::Key]->Stop()
 
 enum class ER_ITEM_GRADE

@@ -14,8 +14,8 @@ ER_UIScript_ItemSlot::ER_UIScript_ItemSlot()
 	: CScript((UINT)SCRIPT_TYPE::ER_UISCRIPT_ITEMSLOT)
 	, m_Slot(nullptr)
 	, m_ItemData(nullptr)
-	, m_CurItemID(0)
-	, m_PrevItemID(0)
+	, m_CurItemID(-1)
+	, m_PrevItemID(-1)
 	, m_SlotType(eSlotType::COMMON)
 {
 }
@@ -107,7 +107,7 @@ void ER_UIScript_ItemSlot::CsrOn()
 	}
 	
 	// 아이템이 있는경우의 마우스 오른쪽클리 동작
-	if ((*m_Slot) && KEY_TAP(KEY::RBTN))
+	if (!(KEY_PRESSED(KEY::LBTN)) && (*m_Slot) && KEY_TAP(KEY::RBTN))
 	{
 		ER_DataScript_Item* Item = (*m_Slot)->GetScript<ER_DataScript_Item>();
 
@@ -135,7 +135,7 @@ void ER_UIScript_ItemSlot::CsrOn()
 
 void ER_UIScript_ItemSlot::CsrTap()
 {
-	if ((*m_Slot))
+	if ((*m_Slot) && !(KEY_PRESSED(KEY::RBTN)))
 	{
 		ER_UIMgr::GetInst()->RegistDragItemSlot(this);
 		ER_GameSystem::GetInst()->GetCursor()->GetDragItemTex()->MeshRender()->SetMaterial(MeshRender()->GetMaterial(0), 0);

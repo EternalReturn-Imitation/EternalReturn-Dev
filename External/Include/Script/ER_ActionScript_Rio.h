@@ -86,6 +86,7 @@ private:
     void DeadExit(tFSMData& param);
 
     virtual bool SoundLoad();
+    virtual void PlaySound(UINT _SoundKey);
 
 public:
     ER_ActionScript_Rio();

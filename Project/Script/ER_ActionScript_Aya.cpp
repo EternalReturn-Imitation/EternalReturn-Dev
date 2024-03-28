@@ -7,6 +7,8 @@
 #include "ER_ProjectilePool.h"
 #include "ER_ProjectileScript.h"
 
+#include "ER_ItemMgr.h"
+
 #include <Engine/CAnim3D.h>
 
 
@@ -130,7 +132,6 @@ void ER_ActionScript_Aya::FarmingEnter(tFSMData& param)
     ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
     ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
 }
-
 void ER_ActionScript_Aya::FarmingExit(tFSMData& param)
 {
     ER_UIMgr::GetInst()->CloseItemBoxUI();
@@ -227,7 +228,38 @@ void ER_ActionScript_Aya::DeadExit(tFSMData& param)
 {
 }
 
+void ER_ActionScript_Aya::CraftEnter(tFSMData& param)
+{
+    GetOwner()->Animator3D()->SelectAnimation(L"Aya_Craft", false);
+    
+    int ItemGrade = ER_ItemMgr::GetInst()->GetItemObj(param.iData[0])->GetScript<ER_DataScript_Item>()->GetGrade();
+    int CraftTime = 2 + (2 * ItemGrade);
+    param.bData[0] = true;
+    param.iData[1] = (int)CraftTime;
+    param.fData = 0.f;
 
+    ERCHARSOUND(CRAFT_SOUND);
+}
+void ER_ActionScript_Aya::CraftUpdate(tFSMData& param)
+{
+    param.fData += DT;
+
+    if (param.iData[1] <= param.fData || Animator3D()->IsFinish())
+    {
+        // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
+}
+void ER_ActionScript_Aya::CraftExit(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.iData[1] = 0;
+    param.fData = 0.f;
+    STOPSOUND(CRAFT_SOUND);
+}
 
 void ER_ActionScript_Aya::AttackEnter(tFSMData& param)
 {
@@ -337,31 +369,6 @@ void ER_ActionScript_Aya::AttackExit(tFSMData& param)
 {
     param.bData[0] = false;
     SetStateGrade(eAccessGrade::BASIC);
-}
-
-void ER_ActionScript_Aya::CraftEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Aya_Craft", false);
-    ERCHARSOUND(CRAFT_SOUND);
-}
-
-void ER_ActionScript_Aya::CraftUpdate(tFSMData& param)
-{
-
-    if (GetOwner()->Animator3D()->IsFinish())
-    {
-        STOPSOUND(CRAFT_SOUND);
-        // 아이탬 생성함수
-        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
-
-        param.bData[0] = false;
-        ChangeState(ER_CHAR_ACT::WAIT);
-    }
-}
-
-void ER_ActionScript_Aya::CraftExit(tFSMData& param)
-{
-    
 }
 
 void ER_ActionScript_Aya::Skill_Q(tFSMData& _Data)
