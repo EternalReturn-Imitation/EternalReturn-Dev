@@ -121,15 +121,6 @@
     <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
       <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER\EffectScript">
-      <UniqueIdentifier>{d64b10fc-5727-4bb3-abb6-d4e8d7ece293}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\EffectScript\Aya">
-      <UniqueIdentifier>{bce599cb-594f-4d4f-a233-93edda7265d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\EffectScript\Aya\AyaQ">
-      <UniqueIdentifier>{67ceac4c-5daf-4e6b-9cae-a740cc00a22c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -145,6 +136,9 @@
       <Filter>Script\Default</Filter>
     </ClInclude>
     <ClInclude Include="CMonsterScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlanetScript.h">
       <Filter>Script\Default</Filter>
     </ClInclude>
     <ClInclude Include="ER_define.h">
@@ -242,15 +236,6 @@
     </ClInclude>
     <ClInclude Include="ER_UIScript_ItemSlot.h">
       <Filter>Script\UI\Item\Slot</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_EffectScript.h">
-      <Filter>Script\ER\EffectScript</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlanetScript.h">
-      <Filter>Script\Default</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_AyaQEffect.h">
-      <Filter>Script\ER\EffectScript\Aya\AyaQ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -373,12 +358,6 @@
     </ClCompile>
     <ClCompile Include="ER_UIScript_ItemSlot.cpp">
       <Filter>Script\UI\Item\Slot</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_EffectScript.cpp">
-      <Filter>Script\ER\EffectScript</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_AyaQEffect.cpp">
-      <Filter>Script\ER\EffectScript\Aya\AyaQ</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

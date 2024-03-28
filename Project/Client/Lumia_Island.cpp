@@ -71,12 +71,12 @@ void CreateLumiaIsland()
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Aya", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Rio", Vec3(-69.3f, 0.0f, 37.6f));
 }
 void CreateTestEnemy()
 {
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-71.9f, 0.0f, 37.6f));
 
@@ -116,6 +116,43 @@ void TestObject()
 
 	// 마우스 커서위치
 
+	//CGameObject* testParticle = new CGameObject;
+	//AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
+	//CParticleSystem* Particle = testParticle->ParticleSystem();
+	//
+	//tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
+	//
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = false;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
+	//
+	//particle_data.StartScale = 1.5f;
+	//particle_data.EndScale = 3.0f;
+	//
+	//particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
+	//particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
+	//particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
+	//
+	//particle_data.MinLifeTime = 1.f;
+	//particle_data.MaxLifeTime = 1.f;
+	//
+	//particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
+	//particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
+	//
+	//particle_data.SpawnRate = 1;
+	//particle_data.iMaxParticleCount = 1;
+	//
+	//Particle->SetMaxParticleCount(1);
+	//Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
+	//Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"AyaQ_FirstTake.png"));
+	//
+	//SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+
 	CGameObject* testParticle = new CGameObject;
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
@@ -147,28 +184,16 @@ void TestObject()
 	particle_data.AddVelocityType = 0;
 	particle_data.vVelocityDir = Vec3(0.f, 1.f, 0.f);
 	particle_data.Speed = 2.5f;
-	
+
 	particle_data.SpawnRate = 25;
-	
+
 	particle_data.EndDrag = -1.f;
-	
-	Particle->SetSpawnRate(1);
+
 	Particle->SetMaxParticleCount(25);
 	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Smoke.png"));
 	Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
 	
 	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	CGameObject* tdExample = new CGameObject();
-	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
-	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"AyaQ_FirstTake.png");
-	tdExample->Animator2D()->CreateAnimation(L"AyaQ_FirstTake", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	tdExample->Animator2D()->Play(L"AyaQ_FirstTake", true);
-
-	SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 }
 
 void SetLayer(CLevel* _Level)

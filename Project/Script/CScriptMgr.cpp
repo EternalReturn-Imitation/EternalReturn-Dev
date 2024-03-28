@@ -11,14 +11,12 @@
 #include "ER_ActionScript_Jackie.h"
 #include "ER_ActionScript_Rio.h"
 #include "ER_ActionScript_Yuki.h"
-#include "ER_AyaQEffect.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_Item.h"
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_LandMeshBase.h"
-#include "ER_EffectScript.h"
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
 #include "ER_ProjectileScript.h"
@@ -42,14 +40,12 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ActionScript_Jackie");
 	_vec.push_back(L"ER_ActionScript_Rio");
 	_vec.push_back(L"ER_ActionScript_Yuki");
-	_vec.push_back(L"ER_AyaQEffect");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Character");
 	_vec.push_back(L"ER_DataScript_Item");
 	_vec.push_back(L"ER_DataScript_ItemBox");
 	_vec.push_back(L"ER_DataScript_LandMeshBase");
-	_vec.push_back(L"ER_EffectScript");
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_ProjectileScript");
@@ -84,8 +80,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_ActionScript_Rio;
 	if (L"ER_ActionScript_Yuki" == _strScriptName)
 		return new ER_ActionScript_Yuki;
-	if (L"ER_AyaQEffect" == _strScriptName)
-		return new ER_AyaQEffect;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
@@ -98,8 +92,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_DataScript_ItemBox;
 	if (L"ER_DataScript_LandMeshBase" == _strScriptName)
 		return new ER_DataScript_LandMeshBase;
-	if (L"ER_EffectScript" == _strScriptName)
-		return new ER_EffectScript;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
 	if (L"ER_PlayerScript_Range" == _strScriptName)
@@ -157,9 +149,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_YUKI:
 		return new ER_ActionScript_Yuki;
 		break;
-	case (UINT)SCRIPT_TYPE::ER_AYAQEFFECT:
-		return new ER_AyaQEffect;
-		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
 		break;
@@ -177,9 +166,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE:
 		return new ER_DataScript_LandMeshBase;
-		break;
-	case (UINT)SCRIPT_TYPE::ER_EFFECTSCRIPT:
-		return new ER_EffectScript;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
@@ -259,10 +245,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_ActionScript_Yuki";
 		break;
 
-	case SCRIPT_TYPE::ER_AYAQEFFECT:
-		return L"ER_AyaQEffect";
-		break;
-
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return L"ER_CamControllerScript";
 		break;
@@ -285,10 +267,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE:
 		return L"ER_DataScript_LandMeshBase";
-		break;
-
-	case SCRIPT_TYPE::ER_EFFECTSCRIPT:
-		return L"ER_EffectScript";
 		break;
 
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT:
