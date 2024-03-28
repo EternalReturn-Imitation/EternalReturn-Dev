@@ -14,6 +14,9 @@ private:
     float m_fSec;
     Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
+public:
+    virtual void begin();
+
 protected:
     virtual FSMState* CreateWait();
     virtual FSMState* CreateMove();
@@ -84,6 +87,7 @@ private:
     void DeadExit(tFSMData& param);
 
     virtual bool SoundLoad();
+
 
 public:
     ER_ActionScript_Aya();

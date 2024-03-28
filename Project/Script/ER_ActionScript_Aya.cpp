@@ -9,7 +9,8 @@
 
 #include <Engine/CAnim3D.h>
 
-
+//ÀÌÆåÆ® ÄÚµå
+#include "ER_AyaQEffect.h"
 
 ER_ActionScript_Aya::ER_ActionScript_Aya()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA)
@@ -21,6 +22,10 @@ ER_ActionScript_Aya::~ER_ActionScript_Aya()
 {
 }
 
+void ER_ActionScript_Aya::begin()
+{
+    //GetOwner()->AddComponent(new ER_AyaQEffect());
+}
 
 void ER_ActionScript_Aya::WaitEnter(tFSMData& param)
 {
@@ -666,7 +671,6 @@ void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
 void ER_ActionScript_Aya::Skill_RExit(tFSMData& param)
 {
 }
-
 
 FSMState* ER_ActionScript_Aya::CreateWait()
 {

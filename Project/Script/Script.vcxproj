@@ -186,6 +186,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_ActionScript_Jackie.h" />
     <ClInclude Include="ER_ActionScript_Rio.h" />
     <ClInclude Include="ER_ActionScript_Yuki.h" />
+    <ClInclude Include="ER_AyaQEffect.h" />
     <ClInclude Include="ER_BattleSystem.h" />
     <ClInclude Include="ER_CamControllerScript.h" />
     <ClInclude Include="ER_CharacterMgr.h" />
@@ -195,6 +196,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_DataScript_LandMeshBase.h" />
     <ClInclude Include="ER_define.h" />
     <ClInclude Include="ER_DataScript_ItemBox.h" />
+    <ClInclude Include="ER_EffectScript.h" />
     <ClInclude Include="ER_GameSystem.h" />
     <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="ER_PlayerScript.h" />
@@ -228,6 +230,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_ActionScript_Init.cpp" />
     <ClCompile Include="ER_ActionScript_Rio.cpp" />
     <ClCompile Include="ER_ActionScript_Yuki.cpp" />
+    <ClCompile Include="ER_AyaQEffect.cpp" />
     <ClCompile Include="ER_BattleSystem.cpp" />
     <ClCompile Include="ER_CamControllerScript.cpp" />
     <ClCompile Include="ER_CharacterMgr.cpp" />
@@ -237,6 +240,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_DataScript_Item.cpp" />
     <ClCompile Include="ER_DataScript_ItemBox.cpp" />
     <ClCompile Include="ER_DataScript_LandMeshBase.cpp" />
+    <ClCompile Include="ER_EffectScript.cpp" />
     <ClCompile Include="ER_GameSystem.cpp" />
     <ClCompile Include="ER_ItemMgr.cpp" />
     <ClCompile Include="ER_ItemMgr_Init.cpp" />
