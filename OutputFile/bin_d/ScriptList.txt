@@ -14,6 +14,7 @@ ER_DataScript_Character
 ER_DataScript_Item
 ER_DataScript_ItemBox
 ER_DataScript_LandMeshBase
+ER_EffectScript
 ER_PlayerScript
 ER_PlayerScript_Range
 ER_ProjectileScript

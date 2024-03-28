@@ -121,6 +121,12 @@
     <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
       <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript">
+      <UniqueIdentifier>{49905061-cebc-4a66-8a41-a3e586a073e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio">
+      <UniqueIdentifier>{f0ef82ab-009a-4d8a-a375-ca9331eba4c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -236,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="ER_UIScript_ItemSlot.h">
       <Filter>Script\UI\Item\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_EffectScript.h">
+      <Filter>Script\ER\EffectScript</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -358,6 +367,9 @@
     </ClCompile>
     <ClCompile Include="ER_UIScript_ItemSlot.cpp">
       <Filter>Script\UI\Item\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_EffectScript.cpp">
+      <Filter>Script\ER\EffectScript</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
