@@ -26,7 +26,8 @@ private:
     Ptr<CTexture>               m_pParticleTexture; // 파티클 텍스쳐
 
     bool                        m_bTickToggle;
-    int                         m_aSpawnNum[2];
+    float                       m_aSpawnNum[2];
+    bool                        m_bDestoryTrigger;
 
 public:
     const int* GetModuleCheckList() { return m_ModuleData.ModuleCheck; }
@@ -46,6 +47,10 @@ public:
     void SetMaxParticleCount(int _SpawnCnt) { m_ModuleData.iMaxParticleCount = _SpawnCnt; }         // 최대 파티클 최대 생성 개수
 
     void SetParticleTexture(Ptr<CTexture> _tex) { m_pParticleTexture = _tex; }
+
+    void SetParticleSpawnNum(int _i) { m_aSpawnNum[1] = (float)_i * m_ModuleData.SpawnRate; }
+
+    void SetDestoryTrigger(bool _b) { m_bDestoryTrigger = _b; }
 
     // 파티클 데이터 얻기
     const tParticleModule& GetParticleData() { return m_ModuleData; }

@@ -9,7 +9,10 @@ private:
     float m_fTime;
 
 public:
-    void EffectRotation(CGameObject*& _targetObj, Vec3 _startScale, Vec3 _endScale, bool _rotDirection, float _endTime);
+    virtual void SpawnEffect() {};
+    
+    void EffectRotation(CGameObject* _targetObj, Vec3 _startScale, Vec3 _endScale, bool _rotDirection, float _endTime);
+
 
 private:
     virtual void begin() override;

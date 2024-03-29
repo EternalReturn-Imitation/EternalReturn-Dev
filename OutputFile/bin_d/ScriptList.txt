@@ -19,6 +19,7 @@ ER_PlayerScript
 ER_PlayerScript_Range
 ER_ProjectileScript
 ER_RioBAEffect
+ER_RioQEffect
 ER_UIScript_Gauge
 ER_UIScript_ItemBox
 ER_UIScript_ItemSlot

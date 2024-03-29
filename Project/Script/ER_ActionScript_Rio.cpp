@@ -11,6 +11,7 @@
 
 //이펙트 관련
 #include "ER_RioBAEffect.h"
+#include "ER_RioQEffect.h"
 
 ER_ActionScript_Rio::ER_ActionScript_Rio()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_RIO)
@@ -26,6 +27,7 @@ void ER_ActionScript_Rio::begin()
 {
     ER_ActionScript_Character::begin();
     GetOwner()->AddComponent(new ER_RioBAEffect);
+    GetOwner()->AddComponent(new ER_RioQEffect);
 }
 
 void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
@@ -274,6 +276,8 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
         else
             ERCHARSOUND(SHORT_NORMAL_ATTACK);
 
+        GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect();
+
         // 캐릭터 고유 공격 알고리즘
 
         // 투사체 생성
@@ -398,6 +402,8 @@ void ER_ActionScript_Rio::Skill_QEnter(tFSMData& param)
         GetOwner()->Animator3D()->SelectAnimation(L"Rio_Short_Skill_Q", false);
 
     SetStateGrade(eAccessGrade::ADVANCED);
+
+    GetOwner()->GetScript<ER_RioQEffect>()->SpawnEffect();
 }
 void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
 {

@@ -22,8 +22,9 @@ CParticleSystem::CParticleSystem()
 	, m_AccTime(0.f)
 	, m_PointPos{}
 	, m_pParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire.png"))
-	, m_aSpawnNum{0,1}
+	, m_aSpawnNum{0.f,1.f}
 	, m_bTickToggle(false)
+	, m_bDestoryTrigger(false)
 {
 	m_ModuleData.iMaxParticleCount = 3000;
 
@@ -147,8 +148,11 @@ void CParticleSystem::tick()
 
 void CParticleSystem::finaltick()
 {
-	if (m_aSpawnNum[0] > m_aSpawnNum[1])
+	if (m_aSpawnNum[0] > m_aSpawnNum[1]) {
+		if(m_bDestoryTrigger)
+			DestroyObject(GetOwner());
 		return;
+	}
 
 	// 스폰 레이트 계산
 	// 1개 스폰 시간
@@ -168,7 +172,7 @@ void CParticleSystem::finaltick()
 		tRWParticleBuffer rwbuffer = { (int)fData, };
 		m_RWBuffer->SetData(&rwbuffer);
 
-		if(m_bTickToggle)
+		if (m_bTickToggle)
 			++m_aSpawnNum[0];
 	}
 

@@ -22,6 +22,7 @@
 #include "ER_PlayerScript_Range.h"
 #include "ER_ProjectileScript.h"
 #include "ER_RioBAEffect.h"
+#include "ER_RioQEffect.h"
 #include "ER_UIScript_Gauge.h"
 #include "ER_UIScript_ItemBox.h"
 #include "ER_UIScript_ItemSlot.h"
@@ -53,6 +54,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_ProjectileScript");
 	_vec.push_back(L"ER_RioBAEffect");
+	_vec.push_back(L"ER_RioQEffect");
 	_vec.push_back(L"ER_UIScript_Gauge");
 	_vec.push_back(L"ER_UIScript_ItemBox");
 	_vec.push_back(L"ER_UIScript_ItemSlot");
@@ -106,6 +108,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_ProjectileScript;
 	if (L"ER_RioBAEffect" == _strScriptName)
 		return new ER_RioBAEffect;
+	if (L"ER_RioQEffect" == _strScriptName)
+		return new ER_RioQEffect;
 	if (L"ER_UIScript_Gauge" == _strScriptName)
 		return new ER_UIScript_Gauge;
 	if (L"ER_UIScript_ItemBox" == _strScriptName)
@@ -189,6 +193,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_RIOBAEFFECT:
 		return new ER_RioBAEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_RIOQEFFECT:
+		return new ER_RioQEffect;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
 		return new ER_UIScript_Gauge;
@@ -301,6 +308,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_RIOBAEFFECT:
 		return L"ER_RioBAEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_RIOQEFFECT:
+		return L"ER_RioQEffect";
 		break;
 
 	case SCRIPT_TYPE::ER_UISCRIPT_GAUGE:

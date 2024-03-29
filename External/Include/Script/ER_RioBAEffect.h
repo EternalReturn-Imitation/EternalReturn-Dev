@@ -7,12 +7,14 @@ class ER_RioBAEffect :
 private:
     CGameObject*    m_aEffect[2];
 
-public:
-    void EffectSpawn();
+
 
 private:
     virtual void begin() override;
     virtual void tick() override;
+
+public:
+    virtual void SpawnEffect() override;
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

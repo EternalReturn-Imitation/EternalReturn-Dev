@@ -203,6 +203,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_ProjectilePool.h" />
     <ClInclude Include="ER_ProjectileScript.h" />
     <ClInclude Include="ER_RioBAEffect.h" />
+    <ClInclude Include="ER_RioQEffect.h" />
     <ClInclude Include="ER_struct.h" />
     <ClInclude Include="ER_UIMgr.h" />
     <ClInclude Include="ER_UIScript_Gauge.h" />
@@ -245,6 +246,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_ItemMgr_Init.cpp" />
     <ClCompile Include="ER_PlayerScript.cpp" />
     <ClCompile Include="ER_RioBAEffect.cpp" />
+    <ClCompile Include="ER_RioQEffect.cpp" />
     <ClCompile Include="ER_UIMgr.cpp" />
     <ClCompile Include="ER_PlayerScript_Range.cpp" />
     <ClCompile Include="ER_ProjectilePool.cpp" />

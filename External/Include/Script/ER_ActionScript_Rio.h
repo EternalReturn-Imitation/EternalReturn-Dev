@@ -16,6 +16,9 @@ private:
     Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
 public:
+    bool GetBowType() { return m_BowType; }
+
+public:
     virtual void begin() override;
 
 protected:
