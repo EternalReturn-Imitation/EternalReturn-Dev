@@ -6,13 +6,19 @@ class ER_ActionScript_Aya :
 {
     enum class CharacterSound
     {
-        NONE,
+        NORMAL_ATTACK,
+        SKILLQ,
+        SKILLW,
+        SKILLE,
+        SKILLE_CHAR,
+        SKILLR_READY,
+        SKILLR_CHAR,
+        SKILLR_ACTION,
         CRAFT_SOUND,
         END,
     };
 
 private:
-    float m_fSec;
     Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
 protected:
@@ -86,6 +92,11 @@ private:
 
     virtual bool SoundLoad();
     virtual void PlaySound(UINT _SoundKey);
+
+    int SkillQ1();
+    int SkillQ2();
+    int SkillW();
+    int SkillR();
 
 public:
     ER_ActionScript_Aya();

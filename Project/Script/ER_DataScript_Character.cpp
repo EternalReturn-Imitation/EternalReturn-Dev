@@ -18,6 +18,7 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_SkillPoint(0)
 	, m_STDStats{}
 	, m_RootItem{}
+	, DebugMode(false)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -40,6 +41,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_fSPRegenTime(0.f)
 	, m_SkillPoint(0)
 	, m_RootItem{}
+	, DebugMode(false)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -223,6 +225,20 @@ void ER_DataScript_Character::tick()
 {
 	// 스킬 쿨타임 갱신
 	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
+
+
+	// [CoolTime Delete Mode]
+	if (KEY_TAP(KEY::F3))
+	{
+		DebugMode = !DebugMode;
+	}
+
+	if (DebugMode)
+	{
+		m_Stats->iSP = m_Stats->iMaxSP;
+		CoolDownRatio = 500.f;
+	}
+
 	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
 		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
 	
@@ -495,9 +511,14 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 	}
 
 	// 기존 두 재료 슬롯의 아이템 delete
-	odelete(*ItemSlot1);
+	// odelete(*ItemSlot1);
+	// (*ItemSlot1) = nullptr;
+	// odelete (*ItemSlot2);
+	// (*ItemSlot2) = nullptr;
+
+	delete *ItemSlot1;
 	(*ItemSlot1) = nullptr;
-	odelete (*ItemSlot2);
+	delete *ItemSlot2;
 	(*ItemSlot2) = nullptr;
 	
 	// 제작한 아이템 매니저에서 클론으로 가져온다.
