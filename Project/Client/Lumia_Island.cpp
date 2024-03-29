@@ -35,9 +35,11 @@
 #include <Script\ER_DataScript_ItemBox.h>
 #include <Script\ER_DataScript_LandMeshBase.h>
 
-#include <Script\ER_CharacterMgr.h>
-#include <Script\ER_UIMgr.h>
 #include <Script\ER_GameSystem.h>
+#include <Script\ER_CharacterMgr.h>
+#include <Script\ER_ItemMgr.h>
+#include <Script\ER_UIMgr.h>
+#include <Script\ER_define.h>
 
 // [Editor]
 #include "CEditorObjMgr.h"
@@ -45,8 +47,6 @@
 #include "LevelMgr.h"
 
 #pragma endregion
-
-#include <Script\ER_ProjectileScript.h>
 
 void CreateLumiaIsland()
 {
@@ -58,15 +58,15 @@ void CreateLumiaIsland()
 	SetCamera();
 	SetLight();
 	SetMapCollider();
-
+	
 	CreateTestPlayer();
 	CreateTestEnemy();
-
+	
 	LumiaIsland();
 	
 	ER_GameSystem::GetInst()->GameStart();
-
-	TestObject();
+	
+	// TestObject();
 }
 
 void CreateTestPlayer()
@@ -107,7 +107,6 @@ void SetLayer(CLevel* _Level)
 	
 	_Level->GetLayer(5)->SetName(L"ItemBox");
 	_Level->GetLayer(6)->SetName(L"ItemBoxTag");
-	_Level->GetLayer(11)->SetName(L"Monster");
 	_Level->GetLayer(12)->SetName(L"Character");
 	_Level->GetLayer(13)->SetName(L"Player");
 	
@@ -119,11 +118,8 @@ void SetLayer(CLevel* _Level)
 	_Level->GetLayer(31)->SetName(L"UI");
 
 	// Collision Set
-	CCollisionMgr::GetInst()->LayerCheck(L"Monster", L"Monster");
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Base");
 	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"MapCollider");
-	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Character");
-	CCollisionMgr::GetInst()->LayerCheck(L"ItemBox", L"Player");
 
 	CCollisionMgr::GetInst()->LayerCheck(L"Player", L"Projectile");
 	CCollisionMgr::GetInst()->LayerCheck(L"Character", L"Projectile");
@@ -131,16 +127,16 @@ void SetLayer(CLevel* _Level)
 	// Ray LayerCheck
 	CCollisionMgr::GetInst()->RayLayerCheck(L"ItemBox");
 	CCollisionMgr::GetInst()->RayLayerCheck(L"Character");
-	CCollisionMgr::GetInst()->RayLayerCheck(L"Monster");
 
 }
 void SetCamera()
 {
 	// [ Main ]
-	CGameObject* MainCamera = new CGameObject;
+	CGameObject* MainCamera = onew(CGameObject);
 	MainCamera->SetName(L"MainCamera");
 	AddComponents(MainCamera, _TRANSFORM | _CAMERA);
-	MainCamera->AddComponent(new ER_CamControllerScript);
+	ER_CamControllerScript* CamControllScript = onew(ER_CamControllerScript);
+	MainCamera->AddComponent(CamControllScript);
 
 	// Transform
 	MainCamera->Transform()->SetRelativeRot(Vec3(Deg2Rad(54.f), Deg2Rad(-45.f), 0.f));
@@ -157,7 +153,7 @@ void SetCamera()
 
 	// [ UI ]
 
-	CGameObject* UICamera = new CGameObject;
+	CGameObject* UICamera = onew(CGameObject);
 	UICamera->SetName(L"UICamera");
 	AddComponents(UICamera, _TRANSFORM | _CAMERA);
 
@@ -178,12 +174,13 @@ void SetCamera()
 }
 void SetLight()
 {
-	CGameObject* pLightObj = new CGameObject;
+	CGameObject* pLightObj = onew(CGameObject);
 	pLightObj->SetName(L"MainLight");
 
 	AddComponents(pLightObj, _TRANSFORM | _LIGHT3D);
-	pLightObj->AddComponent(new CFollowMainCamScript);
-	pLightObj->GetScript<CFollowMainCamScript>()->SetTarget(Vec3(-14.f, 0.f, 0.f));
+	CFollowMainCamScript* FollowCamScript = onew(CFollowMainCamScript);
+	pLightObj->AddComponent(FollowCamScript);
+	FollowCamScript->SetTarget(Vec3(-14.f, 0.f, 0.f));
 	pLightObj->Transform()->SetRelativeScale(Vec3(1.f, 1.f, 1.f));
 	pLightObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(55.f), 0.f, Deg2Rad(5.f)));
 
@@ -205,7 +202,7 @@ void SetLight()
 }
 void SetMapCollider()
 {
-	CGameObject* MapCollider = new CGameObject;
+	CGameObject* MapCollider = onew(CGameObject);
 	MapCollider->SetName(L"MapCollider");
 	AddComponents(MapCollider, _TRANSFORM | _COLLIDER2D);
 	
@@ -251,14 +248,15 @@ void Create_Archery()
 
 
 	// [ Collider ]
-	CGameObject* RoofEnable = new CGameObject;
+	CGameObject* RoofEnable = onew(CGameObject);
 	RoofEnable->SetName(L"Archery_Base_Collider3D");
 	AddComponents(RoofEnable, _TRANSFORM | _COLLIDER3D);
 
 	RoofEnable->LoadAllPrefabFromObjName();
 
-	RoofEnable->AddComponent(new ER_DataScript_LandMeshBase);
-	RoofEnable->GetScript<ER_DataScript_LandMeshBase>()->SetRoof(Roof);
+	ER_DataScript_LandMeshBase* LandMeshScript = onew(ER_DataScript_LandMeshBase);
+	RoofEnable->AddComponent(LandMeshScript);
+	LandMeshScript->SetRoof(Roof);
 
 	SpawnGameObject(RoofEnable, L"Base");
 
@@ -278,11 +276,13 @@ void Create_Archery()
 	{
 		AddComponents(box, _COLLIDER3D);
 		box->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
-		box->AddComponent(new ER_DataScript_ItemBox);
-		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_DataScript_ItemBox* ItemBoxScript = onew(ER_DataScript_ItemBox);
+		box->AddComponent(ItemBoxScript);
+		ItemBoxScript->init();
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::ARCHERY);
 	}
 }
 void Create_Forest()
@@ -320,9 +320,11 @@ void Create_Forest()
 		box->MeshRender()->GetDynamicMaterial(0);
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
-
-		box->AddComponent(new ER_DataScript_ItemBox);
-		box->GetScript<ER_DataScript_ItemBox>()->init();
+		
+		ER_DataScript_ItemBox* ItemBoxScript = onew(ER_DataScript_ItemBox);
+		box->AddComponent(ItemBoxScript);
+		ItemBoxScript->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::FOREST);
 	}
 }
 void Create_Hotel()
@@ -344,12 +346,13 @@ void Create_Hotel()
 	SpawnGameObject(Roof, L"Roof");
 
 	// [ Collider ]
-	CGameObject* RoofEnable = new CGameObject;
+	CGameObject* RoofEnable = onew(CGameObject);
 	RoofEnable->SetName(L"Hotel_Base_Collider3D");
 	AddComponents(RoofEnable, _TRANSFORM | _COLLIDER3D);
 	RoofEnable->LoadAllPrefabFromObjName();
-
-	RoofEnable->AddComponent(new ER_DataScript_LandMeshBase);
+	ER_DataScript_LandMeshBase* LandMeshScript = onew(ER_DataScript_LandMeshBase);
+	
+	RoofEnable->AddComponent(LandMeshScript);
 	RoofEnable->GetScript<ER_DataScript_LandMeshBase>()->SetRoof(Roof);
 	
 	SpawnGameObject(RoofEnable, L"Base");
@@ -376,8 +379,10 @@ void Create_Hotel()
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
 
-		box->AddComponent(new ER_DataScript_ItemBox);
-		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_DataScript_ItemBox* ItemBoxScript = onew(ER_DataScript_ItemBox);
+		box->AddComponent(ItemBoxScript);
+		ItemBoxScript->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::HOTEL);
 	}
 }
 void Create_SandyBeach()
@@ -416,8 +421,10 @@ void Create_SandyBeach()
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
 
-		box->AddComponent(new ER_DataScript_ItemBox);
-		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_DataScript_ItemBox* ItemBoxScript = onew(ER_DataScript_ItemBox);
+		box->AddComponent(ItemBoxScript);
+		ItemBoxScript->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::SANDYBEACH);
 	}
 }
 void Create_School()
@@ -442,9 +449,9 @@ void Create_School()
 
 	CGameObject* RoofEnableCollidr[3] = {};
 
-	RoofEnableCollidr[0] = new CGameObject;
-	RoofEnableCollidr[1] = new CGameObject;
-	RoofEnableCollidr[2] = new CGameObject;
+	RoofEnableCollidr[0] = onew(CGameObject);
+	RoofEnableCollidr[1] = onew(CGameObject);
+	RoofEnableCollidr[2] = onew(CGameObject);
 
 	RoofEnableCollidr[0]->SetName(L"School_Base_Collider3D01");
 	RoofEnableCollidr[1]->SetName(L"School_Base_Collider3D02");
@@ -453,8 +460,9 @@ void Create_School()
 	for (auto &collider : RoofEnableCollidr)
 	{
 		AddComponents(collider, _TRANSFORM | _COLLIDER3D);
-		collider->AddComponent(new ER_DataScript_LandMeshBase);
-		collider->GetScript<ER_DataScript_LandMeshBase>()->SetRoof(Roof);
+		ER_DataScript_LandMeshBase* LandMeshScript = onew(ER_DataScript_LandMeshBase);
+		collider->AddComponent(LandMeshScript);
+		LandMeshScript->SetRoof(Roof);
 		collider->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 		collider->LoadAllPrefabFromObjName();
 	}
@@ -485,8 +493,10 @@ void Create_School()
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
 
-		box->AddComponent(new ER_DataScript_ItemBox);
-		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_DataScript_ItemBox* ItemBoxScript = onew(ER_DataScript_ItemBox);
+		box->AddComponent(ItemBoxScript);
+		ItemBoxScript->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::SCHOOL);
 	}
 }
 void Create_Uptown()
@@ -525,8 +535,10 @@ void Create_Uptown()
 		box->LoadAllPrefabFromObjName();
 		SpawnGameObject(box, L"ItemBox");
 		
-		box->AddComponent(new ER_DataScript_ItemBox);
-		box->GetScript<ER_DataScript_ItemBox>()->init();
+		ER_DataScript_ItemBox* ItemBoxScript = onew(ER_DataScript_ItemBox);
+		box->AddComponent(ItemBoxScript);
+		ItemBoxScript->init();
+		ER_ItemMgr::GetInst()->RegistItemBox(box, LUMIAISLAND::UPTOWN);
 	}
 }
 

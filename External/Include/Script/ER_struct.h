@@ -161,7 +161,7 @@ public:
 	{
 		int UsedSP = *_CharacterSP - iUseSP[iSkillLevel];
 		
-		if (UsedSP < 0)
+		if (iSkillLevel == 0 || UsedSP < 0)
 			return false;
 
 		if (IsUsable)

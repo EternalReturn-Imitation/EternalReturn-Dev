@@ -23,9 +23,9 @@ private:
     float                   m_fBounding;        // FrustumCheck 용도 경계범위
     bool                    m_bDynamicShadow;
 
-    Ptr<CMaterial>          m_pSharedMtrl;  // 원본 메테리얼
-    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial 복사본
-    Ptr<CMaterial>          m_pCurrentMtrl;  // 현재 사용 중인 재질
+    Ptr<CMaterial>          m_pSharedMtrl;      // 원본 메테리얼
+    Ptr<CMaterial>          m_pDynamicMtrl;     // SharedMaterial 복사본
+    Ptr<CMaterial>          m_pCurrentMtrl;     // 현재 사용 중인 재질
 
     bool                    m_bFrustumCheck; // 절두체 컬링 체크 유무
 

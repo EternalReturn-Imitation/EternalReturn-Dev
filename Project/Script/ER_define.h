@@ -7,14 +7,15 @@
 #define STATEDATA_SET(State, FSMData) StateList[(UINT)ER_CHAR_ACT::State]->SetData(FSMData)
 #define STATEDATA_GET(State) StateList[(UINT)ER_CHAR_ACT::State]->GetData()
 
-#define BATTLE_SKILL(AttackObj, HittedObj, className, CalcFunc, SkillInfo) ER_BattleSystem::GetInst()->Battle_Skill(AttackObj, HittedObj, this, (SKILL_DMG_CALC)&className::CalcFunc, SkillInfo)
+#define BATTLE_SKILL(AttackObj, HittedObj, className, CalcFunc) ER_BattleSystem::GetInst()->Battle_Skill(AttackObj, HittedObj, this, (SKILL_DMG_CALC)&className::CalcFunc)
 #define BATTLE_COMMON(AttackObj, HittedObj) ER_BattleSystem::GetInst()->Battle_Common(AttackObj, (CGameObject*)HittedObj)
 
 #define GETITEMSTATS(ItemObj) ItemObj->GetScript<ER_DataScript_Item>()->GetStats()
 
 #define GETPROJECTILE(Type) ER_ProjectilePool::GetInst()->GetProjectile(ER_ProjectilePool::eProjType::Type)
 
-#define ERCHARSOUND(Key) m_pSounds[(UINT)CharacterSound::Key]->Play(1,0.5,true)
+#define ERCHARSOUND(Key) PlaySound((UINT)CharacterSound::Key)
+#define STOPSOUND(Key) m_pSounds[(UINT)CharacterSound::Key]->Stop()
 
 enum class ER_ITEM_GRADE
 {
@@ -123,3 +124,14 @@ enum class eStatus_Effect
 	FEAR			= 1 << 8,	// 공포
 	STUN			= 1 << 9,	// 기절
 }typedef BUFNDEBUF_ENUM;
+
+enum class eAreaName
+{
+	ARCHERY,
+	FOREST,
+	HOTEL,
+	SANDYBEACH,
+	SCHOOL,
+	UPTOWN,
+	END,
+}typedef LUMIAISLAND;

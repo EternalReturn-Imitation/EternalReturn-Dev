@@ -9,9 +9,10 @@
 #include "ER_DataScript_Character.h"
 #include "ER_UIScript_SkillSlot.h"
 #include "ER_UIScript_SkillUpBtn.h"
-#include "ER_UIScript_StatusBarGauge.h""
+#include "ER_UIScript_StatusBarGauge.h"
 
 #include "ER_UIScript_ItemSlot.h"
+#include "ER_UIScript_CraftSlot.h"
 #include "ER_DataScript_Item.h"
 
 #include "ER_UIScript_ItemBox.h"
@@ -35,6 +36,7 @@ ER_UIMgr::ER_UIMgr()
 
 ER_UIMgr::~ER_UIMgr()
 {
+
 }
 
 void ER_UIMgr::LobbyUI()
@@ -51,7 +53,7 @@ void ER_UIMgr::InGameUI()
 void ER_UIMgr::CreateCenter()
 {
 	// [ 중앙 UI 보드 생성 ]
-	StatusBar_Center = new CGameObject;
+	StatusBar_Center = onew(CGameObject);
 	StatusBar_Center->SetName(L"UI_StatusBar_Center");
 	AddComponents(StatusBar_Center, _TRANSFORM | _MESHRENDER | _UICOMPONENT);
 	
@@ -65,14 +67,16 @@ void ER_UIMgr::CreateCenter()
 	for (int i = 0; i < 4; ++i)
 	{
 		// [ 스킬레벨업 외부 스킬슬롯 별도 생성 ]
-		StatusBar_SkillLevelUpBtn[i] = new CGameObject;
-		StatusBar_SkillLevelUpBtn[i]->AddComponent(new ER_UIScript_SkillUpBtn);
-		StatusBar_SkillLevelUpBtn[i]->GetScript<ER_UIScript_SkillUpBtn>()->SetUI(i);
+		StatusBar_SkillLevelUpBtn[i] = onew(CGameObject);
+		ER_UIScript_SkillUpBtn* SkillUpBtnScript = onew(ER_UIScript_SkillUpBtn);
+		StatusBar_SkillLevelUpBtn[i]->AddComponent(SkillUpBtnScript);
+		SkillUpBtnScript->SetUI(i);
 		
 		// [ 중앙보드 내부 스킬슬롯 UI 생성 ]
-		StatusBar_SkillSlot[i] = new CGameObject;
-		StatusBar_SkillSlot[i]->AddComponent(new ER_UIScript_SkillSlot);
-		StatusBar_SkillSlot[i]->GetScript<ER_UIScript_SkillSlot>()->SetUI(i, StatusBar_SkillLevelUpBtn[i]);
+		StatusBar_SkillSlot[i] = onew(CGameObject);
+		ER_UIScript_SkillSlot* SkillSlotScript = onew(ER_UIScript_SkillSlot);
+		StatusBar_SkillSlot[i]->AddComponent(SkillSlotScript);
+		SkillSlotScript->SetUI(i, StatusBar_SkillLevelUpBtn[i]);
 		
 		// 스크립트 추가해주고 인자로 세팅함수 넣어주기
 		StatusBar_Center->AddChild(StatusBar_SkillSlot[i]);
@@ -81,9 +85,10 @@ void ER_UIMgr::CreateCenter()
 	// [ 스테이터스바 게이지 UI 생성 ]
 	for (int i = 0; i < 2; ++i)
 	{
-		StatusBar_Gauge[i] = new CGameObject;
-		StatusBar_Gauge[i]->AddComponent(new ER_UIScript_StatusBarGauge);
-		StatusBar_Gauge[i]->GetScript<ER_UIScript_StatusBarGauge>()->SetUI(i);
+		StatusBar_Gauge[i] = onew(CGameObject);
+		ER_UIScript_StatusBarGauge* StatusBarGaugeScript = onew(ER_UIScript_StatusBarGauge);
+		StatusBar_Gauge[i]->AddComponent(StatusBarGaugeScript);
+		StatusBarGaugeScript->SetUI(i);
 
 		StatusBar_Center->AddChild(StatusBar_Gauge[i]);
 	}
@@ -93,7 +98,7 @@ void ER_UIMgr::CreateCenter()
 void ER_UIMgr::CreateCharacterInfo()
 {
 	// [ 캐릭터정보 UI 보드 생성 ]
-	StatusBar_CharacterInfo = new CGameObject;
+	StatusBar_CharacterInfo = onew(CGameObject);
 	StatusBar_CharacterInfo->SetName(L"UI_StatusBar_CharacterInfo");
 	AddComponents(StatusBar_CharacterInfo, _TRANSFORM | _MESHRENDER | _TEXT | _UICOMPONENT);
 
@@ -104,7 +109,7 @@ void ER_UIMgr::CreateCharacterInfo()
 	StatusBar_CharacterInfo->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"StatusBar_CharacterInfo.png"));
 	StatusBar_CharacterInfo->LoadAllPrefabFromObjName();
 
-	StatusBar_CharacterInfo_Portrait = new CGameObject;
+	StatusBar_CharacterInfo_Portrait = onew(CGameObject);
 	StatusBar_CharacterInfo_Portrait->SetName(L"UI_StatusBar_CharacterInfo_Portrait");
 	AddComponents(StatusBar_CharacterInfo_Portrait, _TRANSFORM | _MESHRENDER);
 	StatusBar_CharacterInfo_Portrait->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -112,7 +117,7 @@ void ER_UIMgr::CreateCharacterInfo()
 	StatusBar_CharacterInfo_Portrait->MeshRender()->GetDynamicMaterial(0);
 	StatusBar_CharacterInfo_Portrait->LoadAllPrefabFromObjName();
 	
-	StatusBar_CharacterInfo_Level = new CGameObject;
+	StatusBar_CharacterInfo_Level = onew(CGameObject);
 	StatusBar_CharacterInfo_Level->SetName(L"UI_StatusBar_CharacterInfo_Level");
 	AddComponents(StatusBar_CharacterInfo_Level, _TRANSFORM | _MESHRENDER | _TEXT);
 	StatusBar_CharacterInfo_Level->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
@@ -128,10 +133,11 @@ void ER_UIMgr::CreateCharacterInfo()
 	for (int i = 0; i < 5; ++i)
 	{
 		wstring name = L"StatusBar_CharacterInfo_EquipMent" + std::to_wstring(i);
-		StatusBar_CharacterInfo_EquipMent[i] = new CGameObject;
+		StatusBar_CharacterInfo_EquipMent[i] = onew(CGameObject);
 		StatusBar_CharacterInfo_EquipMent[i]->SetName(name);
-		StatusBar_CharacterInfo_EquipMent[i]->AddComponent(new ER_UIScript_ItemSlot);
-		StatusBar_CharacterInfo_EquipMent[i]->GetScript<ER_UIScript_ItemSlot>()->init();
+		ER_UIScript_ItemSlot* ItemSlotUIScript = onew(ER_UIScript_ItemSlot);
+		StatusBar_CharacterInfo_EquipMent[i]->AddComponent(ItemSlotUIScript);
+		ItemSlotUIScript->init();
 		StatusBar_CharacterInfo->AddChild(StatusBar_CharacterInfo_EquipMent[i]);
 		StatusBar_CharacterInfo_EquipMent[i]->LoadAllPrefabFromObjName();
 		StatusBar_CharacterInfo_EquipMent[i]->MeshRender()->GetMaterial(0)->SetTexParam(TEX_6, CResMgr::GetInst()->FindRes<CTexture>(EquipTypeTexKey[i]));
@@ -144,7 +150,7 @@ void ER_UIMgr::CreateCharacterInfo()
 void ER_UIMgr::CreateInventory()
 {
 	// [ 인벤토리 UI 보드 생성 ]
-	StatusBar_Inventory = new CGameObject;
+	StatusBar_Inventory = onew(CGameObject);
 	StatusBar_Inventory->SetName(L"UI_StatusBar_Inventory");
 	AddComponents(StatusBar_Inventory, _TRANSFORM | _MESHRENDER | _UICOMPONENT);
 
@@ -158,20 +164,32 @@ void ER_UIMgr::CreateInventory()
 	for (int i = 0; i < 10; ++i)
 	{
 		wstring name = L"StatusBar_Inventory_Slot_" + std::to_wstring(i);
-		StatusBar_Inventory_Slot[i] = new CGameObject;
+		StatusBar_Inventory_Slot[i] = onew(CGameObject);
 		StatusBar_Inventory_Slot[i]->SetName(name);
-		StatusBar_Inventory_Slot[i]->AddComponent(new ER_UIScript_ItemSlot);
-		StatusBar_Inventory_Slot[i]->GetScript<ER_UIScript_ItemSlot>()->init();
+		ER_UIScript_ItemSlot* ItemSlotUIScript = onew(ER_UIScript_ItemSlot);
+		StatusBar_Inventory_Slot[i]->AddComponent(ItemSlotUIScript);
+		ItemSlotUIScript->init();
 		StatusBar_Inventory->AddChild(StatusBar_Inventory_Slot[i]);
 		StatusBar_Inventory_Slot[i]->LoadAllPrefabFromObjName();
+
+		if (i < 7)
+		{
+			name = L"StatusBar_CraftList_Slot_" + std::to_wstring(i);
+			StatusBar_CraftList[i] = onew(CGameObject);
+			StatusBar_CraftList[i]->SetName(name);
+			ER_UIScript_CraftSlot* CraftSlotScript = onew(ER_UIScript_CraftSlot);
+			StatusBar_CraftList[i]->AddComponent(CraftSlotScript);
+			CraftSlotScript->init();
+		}
 	}
 }
 
 void ER_UIMgr::CreateItemBoxUI()
 {
-	ItemBoxUI = new CGameObject;
-	ItemBoxUI->AddComponent(new ER_UIScript_ItemBox);
-	ItemBoxUI->GetScript<ER_UIScript_ItemBox>()->init();
+	ItemBoxUI = onew(CGameObject);
+	ER_UIScript_ItemBox* ItemBoxScript = onew(ER_UIScript_ItemBox);
+	ItemBoxUI->AddComponent(ItemBoxScript);
+	ItemBoxScript->init();
 }
 
 void ER_UIMgr::init()
@@ -185,6 +203,10 @@ void ER_UIMgr::init()
 
 void ER_UIMgr::tick()
 {
+	for (int i = 0; i < 7; ++i)
+	{
+		StatusBar_CraftList[i]->tick();
+	}
 }
 
 void ER_UIMgr::SpawnUI()
@@ -199,6 +221,10 @@ void ER_UIMgr::SpawnUI()
 
 	// 스킬 레벨업 버튼
 	for (auto Btn : StatusBar_SkillLevelUpBtn)
+		SpawnGameObject(Btn, L"UI");
+
+	// 제작가능 아이템 버튼
+	for (auto Btn : StatusBar_CraftList)
 		SpawnGameObject(Btn, L"UI");
 }
 
@@ -251,6 +277,10 @@ void ER_UIMgr::RegistPlayerCharacetr()
 	for (int i = 0; i < 10; ++i)
 	{
 		StatusBar_Inventory_Slot[i]->GetScript<ER_UIScript_ItemSlot>()->RegistSlotAdress(&PlayerCharacter->GetAllInvenItem()[i], ER_UIScript_ItemSlot::eSlotType::COMMON);
+		if (i < 7)
+		{
+			StatusBar_CraftList[i]->GetScript< ER_UIScript_CraftSlot>()->RegistCraftvector(PlayerCharacter->GetCraftListAdress(), i);
+		}
 	}
 
 }
@@ -265,6 +295,11 @@ void ER_UIMgr::OpenItemBoxUI(ER_DataScript_ItemBox* _ItemBox)
 void ER_UIMgr::CloseItemBoxUI()
 {
 	ItemBoxUI->SetEnable(false);
+}
+
+void ER_UIMgr::SetToggle(int i)
+{
+	StatusBar_SkillSlot[i]->GetScript<ER_UIScript_SkillSlot>()->SetToggle();
 }
 
 void ER_UIMgr::RegistDragItemSlot(ER_UIScript_ItemSlot* _SrcSlot)

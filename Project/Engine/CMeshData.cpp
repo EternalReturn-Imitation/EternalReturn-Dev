@@ -32,9 +32,8 @@ CGameObject* CMeshData::Instantiate()
 	// 단일메시
 	if (1 == iMeshDataCnt)
 	{
-		pNewObj = new CGameObject;
-		pNewObj->AddComponent(new CTransform);
-		pNewObj->AddComponent(new CMeshRender);
+		pNewObj = onew(CGameObject);
+		AddComponents(pNewObj, _TRANSFORM | _MESHRENDER);
 		pNewObj->MeshRender()->SetMesh(m_vecMeshData[0]->m_pMesh);
 
 		//vector<tIndexInfo> idxInfos = pNewObj->MeshRender()->GetMesh()->GetIdxInfo();
@@ -55,16 +54,16 @@ CGameObject* CMeshData::Instantiate()
 		
 		for (size_t i = 0; i < iMeshDataCnt; ++i)
 		{
-			CGameObject* pNewChildObj = new CGameObject;
+			CGameObject* pNewChildObj = onew(CGameObject);
 
 			pNewChildObj->SetName(m_vecMeshData[i]->m_strObjName);
-			pNewChildObj->AddComponent(new CTransform);
+			AddComponents(pNewChildObj, _TRANSFORM);
 			pNewChildObj->Transform()->SetAbsolute(false);
 
 			// 렌더 오브젝트
 			if (!(m_vecMeshData[i]->m_bGroupObj))
 			{
-				pNewChildObj->AddComponent(new CMeshRender);
+				AddComponents(pNewChildObj, _MESHRENDER);
 				pNewChildObj->MeshRender()->SetMesh(m_vecMeshData[i]->m_pMesh);
 
 				for (UINT j = 0; j < m_vecMeshData[i]->m_vecMtrl.size(); ++j)
@@ -106,8 +105,7 @@ void CMeshData::Instantiate(CGameObject* _obj)
 	// 단일메시
 	if (1 == iMeshDataCnt)
 	{
-		pNewObj->AddComponent(new CTransform);
-		pNewObj->AddComponent(new CMeshRender);
+		AddComponents(pNewObj, _TRANSFORM | _MESHRENDER);
 		pNewObj->MeshRender()->SetMesh(m_vecMeshData[0]->m_pMesh);
 
 		//vector<tIndexInfo> idxInfos = pNewObj->MeshRender()->GetMesh()->GetIdxInfo();
@@ -128,16 +126,16 @@ void CMeshData::Instantiate(CGameObject* _obj)
 
 		for (size_t i = 0; i < iMeshDataCnt; ++i)
 		{
-			CGameObject* pNewChildObj = new CGameObject;
+			CGameObject* pNewChildObj = onew(CGameObject);
 
 			pNewChildObj->SetName(m_vecMeshData[i]->m_strObjName);
-			pNewChildObj->AddComponent(new CTransform);
+			AddComponents(pNewChildObj, _TRANSFORM);
 			pNewChildObj->Transform()->SetAbsolute(false);
 
 			// 렌더 오브젝트
 			if (!(m_vecMeshData[i]->m_bGroupObj))
 			{
-				pNewChildObj->AddComponent(new CMeshRender);
+				AddComponents(pNewChildObj, _MESHRENDER);
 				pNewChildObj->MeshRender()->SetMesh(m_vecMeshData[i]->m_pMesh);
 
 				for (UINT j = 0; j < m_vecMeshData[i]->m_vecMtrl.size(); ++j)
@@ -197,7 +195,7 @@ void CMeshData::InstantiateAnimation(CGameObject* _NewObj)
 
 	if (0 < AnimClipCnt)
 	{
-		CAnimator3D* pAnimator = new CAnimator3D;
+		CAnimator3D* pAnimator = onew(CAnimator3D);
 		_NewObj->AddComponent(pAnimator);
 
 		vector<Ptr<CBone>>::iterator iter = vectorBone.begin();

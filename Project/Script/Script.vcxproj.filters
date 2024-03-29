@@ -34,9 +34,6 @@
     <Filter Include="GameSystem\Battle">
       <UniqueIdentifier>{9c8c5026-9c9a-4c8c-9ce5-d9043b036923}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameSystem\ObjPool">
-      <UniqueIdentifier>{5e4e2628-94c6-48cd-adcb-07eab12e405a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\UI\Item">
       <UniqueIdentifier>{25325e07-cbc0-498a-824b-b5bca5deb842}</UniqueIdentifier>
     </Filter>
@@ -112,14 +109,23 @@
     <Filter Include="Script\ER\SystemScript\Cam">
       <UniqueIdentifier>{afcad44f-5ae1-4bcc-9276-fe611232c7ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER\SystemScript\Projectile">
-      <UniqueIdentifier>{bbd448f0-1bcf-442a-967b-388a679dd4d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\SystemScript\Cursor">
-      <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
       <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Slot\CraftSlot">
+      <UniqueIdentifier>{9c6a4bc4-a8a4-4271-ab0e-9dd45dad9d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Cursor">
+      <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Projectile">
+      <UniqueIdentifier>{248621bf-3453-403e-a8c6-21a9d22af562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Projectile\Arrow">
+      <UniqueIdentifier>{6d21b1cb-d34e-498e-98e1-f39edddc7085}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Projectile\Bullet">
+      <UniqueIdentifier>{5adec4b1-440f-415d-9b7e-5a06c838d816}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -131,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
-    </ClInclude>
-    <ClInclude Include="CMissileScript.h">
-      <Filter>Script\Default</Filter>
     </ClInclude>
     <ClInclude Include="CMonsterScript.h">
       <Filter>Script\Default</Filter>
@@ -201,12 +204,6 @@
     <ClInclude Include="ER_PlayerScript_Range.h">
       <Filter>Script\ER\PlayerScript</Filter>
     </ClInclude>
-    <ClInclude Include="ER_ProjectilePool.h">
-      <Filter>GameSystem\ObjPool</Filter>
-    </ClInclude>
-    <ClInclude Include="ER_ProjectileScript.h">
-      <Filter>Script\ER\SystemScript\Projectile</Filter>
-    </ClInclude>
     <ClInclude Include="ER_UIScript_ItemBox.h">
       <Filter>Script\UI\Item\Box</Filter>
     </ClInclude>
@@ -229,13 +226,25 @@
       <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
     </ClInclude>
     <ClInclude Include="ER_Cursor.h">
-      <Filter>Script\ER\SystemScript\Cursor</Filter>
+      <Filter>Script\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="ER_UIScript_TrackingStatusBar.h">
       <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
     </ClInclude>
     <ClInclude Include="ER_UIScript_ItemSlot.h">
       <Filter>Script\UI\Item\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_CraftSlot.h">
+      <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Projectile.h">
+      <Filter>Script\ER\DataScript\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Arrow.h">
+      <Filter>Script\ER\DataScript\Projectile\Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Bullet.h">
+      <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,9 +256,6 @@
     </ClCompile>
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
-    </ClCompile>
-    <ClCompile Include="CMissileScript.cpp">
-      <Filter>Script\Default</Filter>
     </ClCompile>
     <ClCompile Include="CMonsterScript.cpp">
       <Filter>Script\Default</Filter>
@@ -320,12 +326,6 @@
     <ClCompile Include="ER_PlayerScript_Range.cpp">
       <Filter>Script\ER\PlayerScript</Filter>
     </ClCompile>
-    <ClCompile Include="ER_ProjectilePool.cpp">
-      <Filter>GameSystem\ObjPool</Filter>
-    </ClCompile>
-    <ClCompile Include="ER_ProjectileScript.cpp">
-      <Filter>Script\ER\SystemScript\Projectile</Filter>
-    </ClCompile>
     <ClCompile Include="ER_ActionScript_Init.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
     </ClCompile>
@@ -351,13 +351,25 @@
       <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
     </ClCompile>
     <ClCompile Include="ER_Cursor.cpp">
-      <Filter>Script\ER\SystemScript\Cursor</Filter>
+      <Filter>Script\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="ER_UIScript_TrackingStatusBar.cpp">
       <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
     </ClCompile>
     <ClCompile Include="ER_UIScript_ItemSlot.cpp">
       <Filter>Script\UI\Item\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_CraftSlot.cpp">
+      <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Projectile.cpp">
+      <Filter>Script\ER\DataScript\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Arrow.cpp">
+      <Filter>Script\ER\DataScript\Projectile\Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Bullet.cpp">
+      <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

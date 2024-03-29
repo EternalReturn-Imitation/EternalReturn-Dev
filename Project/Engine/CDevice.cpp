@@ -12,14 +12,14 @@ CDevice::CDevice()
     : m_hWnd(nullptr)  
     , m_ViewPort{}
     , m_arrConstBuffer{}
+    , m_pDebug(nullptr)
 {
 }
 
 CDevice::~CDevice()
 {
-  
-
     Safe_Del_Array(m_arrConstBuffer);
+    m_pDebug->Release();
 }
 
 int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
@@ -103,12 +103,22 @@ int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
         return E_FAIL;
     }
 
+    // 디버거 생성
+    if (SUCCEEDED(m_Device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_pDebug)))) 
+    {
+        // 디버그 인터페이스를 사용하여 디버깅 작업 수행
+    }
 
     // 상수버퍼 생성
     CreateConstBuffer();
 
 
     return S_OK; // E_FAIL;
+}
+
+void CDevice::ReportLiveObjects()
+{
+    m_pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 }
 
 int CDevice::CreateSwapChain()

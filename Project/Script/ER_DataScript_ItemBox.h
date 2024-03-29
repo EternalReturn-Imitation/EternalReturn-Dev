@@ -21,6 +21,8 @@ private:
     // [Data]
     CGameObject* m_pItemList[(UINT)ITEMBOXSLOT::END];           // 아이템 슬롯
 
+    UINT         m_SetItemCnt; // ItemMgr 초기 아이템 세팅확인용
+
     // [UI]
     CGameObject* m_UIBoxTag;
 
@@ -36,6 +38,9 @@ public:
     virtual void    BeginRayOverlap() override;
     virtual void    OnRayOverlap() override;
     virtual void    EndRayOverlap() override;
+
+public:
+    bool RegistItem(UINT _ItemID);
 
 public:
     void CreateBoxUI();

@@ -30,7 +30,7 @@ CEditorObjMgr::~CEditorObjMgr()
 	Safe_Del_Array(m_DebugShape);
 	
 	if (nullptr != m_pTexRenderObj)
-		delete m_pTexRenderObj;
+		odelete(m_pTexRenderObj);
 }
 
 void CEditorObjMgr::init()

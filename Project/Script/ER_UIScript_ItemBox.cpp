@@ -59,10 +59,11 @@ void ER_UIScript_ItemBox::init()
 	for (int i = 0; i < (UINT)ITEMBOXSLOT::END; ++i)
 	{
 		wstring name = L"UI_ItemBox_Slot_" + std::to_wstring(i);
-		m_pSlotUI[i] = new CGameObject;
+		m_pSlotUI[i] = onew(CGameObject);
 		m_pSlotUI[i]->SetName(name);
-		m_pSlotUI[i]->AddComponent(new ER_UIScript_ItemSlot);
-		m_pSlotUI[i]->GetScript<ER_UIScript_ItemSlot>()->init();
+		ER_UIScript_ItemSlot* ItemSlotScript = onew(ER_UIScript_ItemSlot);
+		m_pSlotUI[i]->AddComponent(ItemSlotScript);
+		ItemSlotScript->init();
 		GetOwner()->AddChild(m_pSlotUI[i]);
 	}
 	GetOwner()->LoadAllPrefabFromObjName();

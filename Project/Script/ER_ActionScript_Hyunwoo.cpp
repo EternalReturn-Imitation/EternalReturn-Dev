@@ -5,6 +5,8 @@
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
 
+#include "ER_ItemMgr.h"
+
 #include <Engine/CAnim3D.h>
 
 ER_ActionScript_Hyunwoo::ER_ActionScript_Hyunwoo()
@@ -22,21 +24,21 @@ void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)
 {
     Animator3D()->SelectAnimation(L"Hyunwoo_Wait");
     SetStateGrade(eAccessGrade::BASIC);
-    param.fData = 0.f;
+    param.fData[0] = 0.f;
 }
 void ER_ActionScript_Hyunwoo::WaitUpdate(tFSMData& param)
 {
     // 0.5초마다 체력회복
-    param.fData += DT;
+    param.fData[0] += DT;
 
-    if (0.5f <= param.fData)
+    if (0.5f <= param.fData[0])
     {
         // HP/SP 자연 회복
         m_Data->HPRegen();
         m_Data->SPRegen();
 
         // 체력재생 카운트 초기화
-        param.fData -= 0.5f;
+        param.fData[0] -= 0.5f;
     }
 }
 void ER_ActionScript_Hyunwoo::WaitExit(tFSMData& param)
@@ -72,7 +74,7 @@ void ER_ActionScript_Hyunwoo::MoveUpdate(tFSMData& param)
     // 타겟 추적중
     if (param.bData[0])
     {
-        if (IsInRange((CGameObject*)param.lParam, param.fData))
+        if (IsInRange((CGameObject*)param.lParam, param.fData[0]))
         {
             param.bData[0] = false;     // 추적 종료    
             FindPath()->ClearPath();    // 이동 경로 초기화
@@ -118,7 +120,6 @@ void ER_ActionScript_Hyunwoo::FarmingEnter(tFSMData& param)
     ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
     ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
 }
-
 void ER_ActionScript_Hyunwoo::FarmingExit(tFSMData& param)
 {
     ER_UIMgr::GetInst()->CloseItemBoxUI();
@@ -131,7 +132,7 @@ void ER_ActionScript_Hyunwoo::RestEnter(tFSMData& param)
    fData    = 체력재생시간 카운트
    */
     param.iData[0] = 0;
-    param.fData = 0.f;
+    param.fData[0] = 0.f;
     Animator3D()->SelectAnimation(L"Hyunwoo_Rest_Start", false);
 }
 void ER_ActionScript_Hyunwoo::RestUpdate(tFSMData& param)
@@ -156,16 +157,16 @@ void ER_ActionScript_Hyunwoo::RestUpdate(tFSMData& param)
     {
         // 캔슬 불가
         // 0.5초마다 회복
-        param.fData += DT;
+        param.fData[0] += DT;
 
-        if (0.5f <= param.fData)
+        if (0.5f <= param.fData[0])
         {
             // HP/SP 자연 회복 5배 빠르게 회복
             m_Data->HPRegen(5.f);
             m_Data->SPRegen(5.f);
 
             // 자원재생 카운트 초기화
-            param.fData -= 0.5f;
+            param.fData[0] -= 0.5f;
         }
 
         if (KEY_TAP(KEY::RBTN) || KEY_TAP(KEY::X))
@@ -215,6 +216,37 @@ void ER_ActionScript_Hyunwoo::DeadExit(tFSMData& param)
 {
 }
 
+void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
+{
+    Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
+    int ItemGrade = ER_ItemMgr::GetInst()->GetItemObj(param.iData[0])->GetScript<ER_DataScript_Item>()->GetGrade();
+    int CraftTime = 2 + (2 * ItemGrade);
+    param.bData[0] = true;
+    param.iData[1] = (int)CraftTime;
+    param.fData[0] = 0.f;
+
+    ERCHARSOUND(CRAFT_SOUND);
+}
+void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
+{
+    param.fData[0] += DT;
+
+    if (param.iData[1] <= param.fData[0] || Animator3D()->IsFinish())
+    {
+        // 아이탬 생성함수
+        GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
+
+        
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
+}
+void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)
+{
+    param.bData[0] = false;
+    param.iData[1] = 0;
+    param.fData[0] = 0.f;
+    STOPSOUND(CRAFT_SOUND);
+}
 
 void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
 {
@@ -320,19 +352,6 @@ void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
 {
     param.bData[0] = false;
     SetStateGrade(eAccessGrade::BASIC);
-}
-
-void ER_ActionScript_Hyunwoo::CraftEnter(tFSMData& param)
-{
-    GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Craft", false);
-}
-
-void ER_ActionScript_Hyunwoo::CraftUpdate(tFSMData& param)
-{
-}
-
-void ER_ActionScript_Hyunwoo::CraftExit(tFSMData& param)
-{
 }
 
 void ER_ActionScript_Hyunwoo::Skill_Q(tFSMData& _Data)

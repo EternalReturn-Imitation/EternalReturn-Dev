@@ -20,6 +20,8 @@ private:
     CGameObject* SpawnCharacter(const wstring& _key);
 public:
     void init();
+    
+    CGameObject* GetCharacetr(const wstring& _Key) { return m_mapCharacters.find(_Key)->second; }
 
     CGameObject* SpawnCharacter_Player(const wstring& _key,Vec3 _Pos);
     CGameObject* SpawnCharacter_Enemy(const wstring& _key, Vec3 _Pos);
