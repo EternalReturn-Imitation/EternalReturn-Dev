@@ -6,7 +6,10 @@
 #include <Engine\CResMgr.h>
 #include <Engine\CTexture.h>
 
+#include "ER_DataScript_Character.h"
+#include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
+#include "ER_CharacterMgr.h"
 
 int ER_ItemMgr::Save()
 {
@@ -113,9 +116,8 @@ int ER_ItemMgr::SaveItemData(CGameObject* _Item, FILE* _File)
 CGameObject* ER_ItemMgr::LoadItemData(FILE* _File)
 {
 	CGameObject* pItem = new CGameObject;
-	pItem->AddComponent(new ER_DataScript_Item());
-
-	ER_DataScript_Item* ItemContext = pItem->GetScript<ER_DataScript_Item>();
+	ER_DataScript_Item* ItemContext = new ER_DataScript_Item;
+	pItem->AddComponent(ItemContext);
 
 	// Item Name
 	wstring strName;
@@ -162,7 +164,10 @@ void ER_ItemMgr::RecipeUpdate()
 		ER_DataScript_Item* ItemContext = m_vecItem[i]->GetScript<ER_DataScript_Item>();
 
 		if (0 != ItemContext->m_uniRecipe.recipe)
+		{
 			m_umapRecipe.insert(make_pair(ItemContext->m_uniRecipe.recipe, i));
+			m_umapIngredient.insert(make_pair(i, ItemContext->m_uniRecipe.recipe));
+		}
 	};
 }
 
@@ -192,4 +197,66 @@ int ER_ItemMgr::SearchRecipe(UINT _ingr_1, UINT _ingr_2, int& _res)
 	_res = iter->second;
 
 	return S_OK;
+}
+
+void ER_ItemMgr::SpawnItemLevel()
+{
+	// 전체 캐릭터 목표아이템을 불러와 한번 섞는다.
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	const wchar_t* CharKey[5] = {L"Aya",L"Hyunwoo",L"Jackie",L"Rio",L"Yuki"};
+
+	vector<UINT> vecRootItem;
+
+	for (int i = 0; i < 5; ++i)
+	{
+		UINT* RootItem = ER_CharacterMgr::GetInst()->GetCharacetr(CharKey[i])->GetScript<ER_DataScript_Character>()->GetRootItem();
+		
+		for (int j = 0; j < 5; ++j)
+		{
+			vecRootItem.push_back(RootItem[j]);
+		}
+	}
+
+	std::shuffle(vecRootItem.begin(), vecRootItem.end(), gen);
+
+	// 최하위 재료까지 탐색해 아이템 박스를 돌아가며 스폰아이템 목록큐에 넣는다.
+	
+	int Idx = 0;
+	
+	std::queue<UINT> ingredientItem;
+	
+	while (Idx < vecRootItem.size())
+	{
+		// 최하위 재료아이템까지 검사
+		GetIngredient(vecRootItem[Idx], &ingredientItem);
+		Idx++;
+	}
+
+	bool ItemSetEnd = false;
+
+	// 전체 루트에 아이템을 넣어준다.
+	for (int i = 0; i < (UINT)LUMIAISLAND::END; ++i)
+	{
+		for (int j = 0; j < m_vecItemBox[i].size(); ++j)
+		{
+			UINT itemId = ingredientItem.front();
+			
+			// 아이템박스에 아이템이 들어갔다면 
+			ER_DataScript_ItemBox* ItemBox = m_vecItemBox[i][j]->GetScript<ER_DataScript_ItemBox>();
+			
+			while (ItemBox->RegistItem(itemId))
+			{
+				ingredientItem.pop();
+				
+				if (ingredientItem.empty())
+				{
+					return;
+				}
+
+				itemId = ingredientItem.front();
+			}
+		}
+	}
 }

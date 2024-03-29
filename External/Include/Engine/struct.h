@@ -177,7 +177,7 @@ struct tParticleModule
 struct tFSMData
 {
 	Vec2		v2Data;
-	float		fData;
+	float		fData[4];
 	int			iData[4];
 	Vec4		v4Data;
 	bool		bData[4];

@@ -90,60 +90,100 @@ void DestroyObject(CGameObject* _DeletObject)
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 
-void EraseObject(CGameObject* _EraseObject)
-{
-	if (!_EraseObject->IsOutofLayer())
-		return;
-
-	tEvent evn = {};
-
-	evn.Type = EVENT_TYPE::ERASE_OBJECT;
-	evn.wParam = (DWORD_PTR)_EraseObject;
-
-	CEventMgr::GetInst()->AddEvent(evn);
-}
-
 void AddComponents(CGameObject* _Object, int CreateCompType)
 {
 	if (CreateCompType & _TRANSFORM)
-		_Object->AddComponent(new CTransform);
+	{
+		CTransform* comp = onew(CTransform);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _COLLIDER2D)
-		_Object->AddComponent(new CCollider2D);
+	{
+		CCollider2D* comp = onew(CCollider2D);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _COLLIDER3D)
-		_Object->AddComponent(new CCollider3D);
+	{
+		CCollider3D* comp = onew(CCollider3D);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _ANIMATOR2D)
-		_Object->AddComponent(new CAnimator2D);
+	{
+		CAnimator2D* comp = onew(CAnimator2D);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _ANIMATOR3D)
-		_Object->AddComponent(new CAnimator3D);
+	{
+		CAnimator3D* comp = onew(CAnimator3D);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _LIGHT2D)
-		_Object->AddComponent(new CLight2D);
+	{
+		CLight2D* comp = onew(CLight2D);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _LIGHT3D)
-		_Object->AddComponent(new CLight3D);
+	{
+		CLight3D* comp = onew(CLight3D);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _CAMERA)
-		_Object->AddComponent(new CCamera);
+	{
+		CCamera* comp = onew(CCamera);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _TEXT)
-		_Object->AddComponent(new CText);
+	{
+		CText* comp = onew(CText);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _BEHAVIORTREE)
-		_Object->AddComponent(new CBehaviorTree);
+	{
+		CBehaviorTree* comp = onew(CBehaviorTree);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _FINDPATH)
-		_Object->AddComponent(new CFindPath);
+	{
+		CFindPath* comp = onew(CFindPath);
+		_Object->AddComponent(comp);
+	}
 
 	if (CreateCompType & _UICOMPONENT)
-		_Object->AddComponent(new CUIComponent);
+	{
+		CUIComponent* comp = onew(CUIComponent);
+		_Object->AddComponent(comp);
+	}
 
 	if (CreateCompType & _MESHRENDER)
-		_Object->AddComponent(new CMeshRender);
+	{
+		CMeshRender* comp = onew(CMeshRender);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _PARTICLESYSTEM)
-		_Object->AddComponent(new CParticleSystem);
+	{
+		CParticleSystem* comp = onew(CParticleSystem);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _TILEMAP)
-		_Object->AddComponent(new CTileMap);
+	{
+		CTileMap* comp = onew(CTileMap);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _LANDSCAPE)
-		_Object->AddComponent(new CLandScape);
+	{
+		CLandScape* comp = onew(CLandScape);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _SKYBOX)
-		_Object->AddComponent(new CSkyBox);
+	{
+		CSkyBox* comp = onew(CSkyBox);
+		_Object->AddComponent(comp);
+	}
 	if (CreateCompType & _DECAL)
-		_Object->AddComponent(new CDecal);
-
+	{
+		CDecal* comp = onew(CDecal);
+		_Object->AddComponent(comp);
+	}
 }
 
 void DrawDebugRect(Vec3 _vWorldPos, Vec2 _vWorldScale, Vec4 _vColor

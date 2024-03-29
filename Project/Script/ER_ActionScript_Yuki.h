@@ -6,6 +6,7 @@ class ER_ActionScript_Yuki :
 {
     enum class CharacterSound
     {
+        CRAFT_SOUND,
         END,
     };
 
@@ -81,6 +82,7 @@ private:
     void DeadExit(tFSMData& param);
 
     virtual bool SoundLoad();
+    virtual void PlaySound(UINT _SoundKey);
 
 public:
     int SkillQ(const tSkill_Info* skilldata);

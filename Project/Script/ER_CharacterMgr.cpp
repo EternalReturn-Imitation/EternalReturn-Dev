@@ -26,18 +26,20 @@ void ER_CharacterMgr::init()
 
 CGameObject* ER_CharacterMgr::SpawnCharacter(const wstring& _key)
 {
-    CGameObject* Character = new CGameObject(*m_mapCharacters.find(_key)->second);
+    CGameObject* Character = m_mapCharacters.find(_key)->second->Clone();
     AddComponents(Character, _COLLIDER3D | _FINDPATH);
     Character->GetScript<ER_DataScript_Character>()->begin();
 
     Character->Collider3D()->SetCollider3DType(COLLIDER3D_TYPE::CUBE);
 
     Character->Transform()->SetRelativeScale(Vec3(1.1f, 1.1f, 1.1f));
-    Character->Collider3D()->SetOffsetScale(Vec3(1.0f, 2.0f, 1.0f));
-    Character->Collider3D()->SetOffsetPos(Vec3(0.f, 1.0f, 0.f));
+    Character->Collider3D()->SetOffsetScale(Vec3(1.0f, 4.0f, 1.0f));
+    Character->Collider3D()->SetOffsetPos(Vec3(0.f, 0.5f, 0.f));
+    ER_UIScript_TrackingStatusBar* StatusBar = new ER_UIScript_TrackingStatusBar;
+    Character->AddComponent(StatusBar);
+    StatusBar->init(Character);
 
-    Character->AddComponent(new ER_UIScript_TrackingStatusBar);
-    Character->GetScript<ER_UIScript_TrackingStatusBar>()->init(Character);
+    ER_GameSystem::GetInst()->RegistCurLevelCharacter(Character);
 
     return Character;
 }
@@ -46,9 +48,9 @@ CGameObject* ER_CharacterMgr::SpawnCharacter_Player(const wstring& _key, Vec3 _P
 {
     CGameObject* Player = SpawnCharacter(_key);
     
+    ER_PlayerScript* PlayerScript = new ER_PlayerScript;
     // Player Script
-
-    Player->AddComponent(new ER_PlayerScript);
+    Player->AddComponent(PlayerScript);
 
     // CurLevel Spawn
     SpawnGameObject(Player, _Pos, L"Player");

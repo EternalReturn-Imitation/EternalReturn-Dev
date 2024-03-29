@@ -15,11 +15,13 @@ ER_DataScript_ItemBox::ER_DataScript_ItemBox()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_ITEMBOX)
 	, m_pItemList{}
 	, m_UIBoxTag(nullptr)
+	, m_SetItemCnt(0)
 {
 }
 
 ER_DataScript_ItemBox::~ER_DataScript_ItemBox()
 {
+	Safe_Del_Array(m_pItemList);
 }
 
 Vec3 ER_DataScript_ItemBox::GetUIPos()
@@ -93,9 +95,28 @@ void ER_DataScript_ItemBox::EndRayOverlap()
 	}
 }
 
+bool ER_DataScript_ItemBox::RegistItem(UINT _ItemID)
+{
+	if (m_SetItemCnt == 5)
+		return false;
+
+	for (int i = m_SetItemCnt; i < (UINT)ITEMBOXSLOT::END; ++i)
+	{
+		// 슬롯이 비어있는 경우 아이템매니저에서 클론으로 생성해준다.
+		if (!m_pItemList[i])
+		{
+			m_pItemList[i] = ER_ItemMgr::GetInst()->GetItemObj(_ItemID)->Clone();
+			m_SetItemCnt = i + 1;
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 void ER_DataScript_ItemBox::CreateBoxUI()
 {
-	m_UIBoxTag = new CGameObject;
+	m_UIBoxTag = onew(CGameObject);
 	m_UIBoxTag->SetName(GetOwner()->GetName() + L"_TagUI");
 	AddComponents(m_UIBoxTag, _TRANSFORM | _MESHRENDER);
 

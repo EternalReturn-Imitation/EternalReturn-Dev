@@ -15,6 +15,8 @@ private:
 
 	ComPtr<IDXGISwapChain>			m_SwapChain;
 
+	ID3D11Debug*					m_pDebug;
+
 	Ptr<CTexture>					m_RTTex;
 	Ptr<CTexture>					m_DSTex;
 
@@ -41,6 +43,8 @@ public:
 	int init(HWND _hWnd, UINT _iWidth, UINT _iHeight);
 	void Present() { m_SwapChain->Present(0, 0); }
 	Vec2 GetRenderResolution() { return m_vRenderResolution; }
+
+	void ReportLiveObjects();
 
 private:
 	int CreateSwapChain();

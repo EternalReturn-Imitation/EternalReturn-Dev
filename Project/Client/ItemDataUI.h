@@ -46,6 +46,8 @@ public:
     virtual void tick() override;
     virtual void finaltick() override;
     virtual int render_update() override;
+    
+    vector<string>      GetItemNameList() { return m_vecItemName; }
 
     void RegistItemMgr();
 

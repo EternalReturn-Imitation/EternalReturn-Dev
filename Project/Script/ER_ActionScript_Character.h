@@ -71,6 +71,7 @@ protected:
 
     // [ Transform Func ]
     Vec3 GetFocusPoint();                                           // 타겟 좌표 확인
+    Vec3 GetFocusDir();                                             // 타겟 방향 확인
     Vec3 GetClearPoint(const Vec3& vDir, float dist);               // 이동 가능 지점 확인
     float GetClearDistance(const Vec3& vDir, float dist);           // 이동 가능 거리 확인
     float GetClearDistanceByWall(const Vec3& vDir, float dist);     // 벽까지 이동가능한 거리 확인
@@ -79,12 +80,17 @@ protected:
     bool IsInRange(CGameObject* Target, float _fRange);             // 거리범위 확인
     Vec3 GetProjSpawnPos(DWORD_PTR _Target);
 
-
     // [ State Manage ]
     void StateInit();                                                                // 상태 초기화 세팅
     bool ChangeState(ER_CHAR_ACT _state, eAccessGrade _Grade = eAccessGrade::BASIC); // 상태 변경
     void SetStateGrade(eAccessGrade _Grade) { m_AccessGrade = _Grade; }              // 상태 접근 가능 등급
     bool IsAbleChange(eAccessGrade _Grade);                                          // 접근 등급 비교
+
+    // [ Sound ]
+    virtual void PlaySound(UINT _SoundKey) {}
+
+    // [ Player Check ]
+    bool IsPlayer();
 
 
 public:

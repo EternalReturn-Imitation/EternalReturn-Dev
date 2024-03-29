@@ -70,18 +70,6 @@ void CEventMgr::tick()
 			}			
 		}
 			break;
-		case EVENT_TYPE::ERASE_OBJECT:
-		{
-			CGameObject* EraseObject = (CGameObject*)m_vecEvent[i].wParam;
-
-			if (EraseObject->m_bOutofLayer)
-			{
-				EraseObject->m_bOutofLayer = false;
-				CLayer* eraseLayer = CLevelMgr::GetInst()->GetCurLevel()->GetLayer(EraseObject->GetLayerIndex());
-				eraseLayer->RemoveFromParentList(EraseObject);
-			}
-		}
-			break;
 		case EVENT_TYPE::ADD_CHILD:
 			// wParam : ParentObject, lParam : ChildObject
 		{

@@ -25,6 +25,7 @@ ER_ActionScript_Character::~ER_ActionScript_Character()
 			delete StateList[i];
 	}
 }
+
 void ER_ActionScript_Character::begin()
 {
 	StateInit();
@@ -37,7 +38,6 @@ void ER_ActionScript_Character::tick()
 {
 	FSMContext->UpdateState();
 }
-
 void ER_ActionScript_Character::Wait(tFSMData& _Data)
 {
 	// 기본 대기상태
@@ -94,8 +94,9 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 	{
 		_Data.bData[0]	= PrevData.bData[0];	// 공격 상태 유지
 		_Data.bData[1]	= PrevData.bData[1];	// Hit 판정 유지
-		_Data.fData		= PrevData.fData;		// 공격 가능 거리 유지
-		_Data.iData[0]  = PrevData.iData[0];		// HitFrame 유지
+		_Data.fData[0]	= PrevData.fData[0];		// 공격 가능 거리 유지
+		_Data.iData[0]  = PrevData.iData[0];    // HitFrame 유지
+		_Data.iData[1]	= PrevData.iData[1];	// Stack 유지
 
 		// 새로운 타겟을 지정했는가
 		if (!(PrevData.lParam) && _Data.lParam != PrevData.lParam)
@@ -111,10 +112,10 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 	// 타겟 추적중이다
 	else
 	{
-		_Data.fData = GetStatus()->fAtkRange;		// 일반공격 가능 거리;
+		_Data.fData[0] = GetStatus()->fAtkRange;		// 일반공격 가능 거리;
 
 		// 공격 사정거리 범위 판단
-		if (IsInRange((CGameObject*)_Data.lParam, _Data.fData))
+		if (IsInRange((CGameObject*)_Data.lParam, _Data.fData[0]))
 		{
 			STATEDATA_SET(ATTACK, _Data);			// 입력받은 데이터로 세팅
 			SetStateGrade(eAccessGrade::BASIC);	// 모션중 취소가능
@@ -126,7 +127,7 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 			tFSMData MoveData = {};
 			MoveData.lParam		= _Data.lParam;		// 타겟
 			MoveData.bData[0]	= true;				// 타겟 추적중
-			MoveData.fData		= _Data.fData;		// 공격 가능 거리
+			MoveData.fData[0] = _Data.fData[0];		// 공격 가능 거리
 			MoveData.iData[0]	= 1;				// 타겟 타입 : 1 공격대상
 			MoveData.v4Data		= ((CGameObject*)_Data.lParam)->Transform()->GetRelativePos();
 			Move(MoveData);
@@ -197,7 +198,7 @@ void ER_ActionScript_Character::Farming(tFSMData& _Data)
 			MoveData.bData[0]	= true;				// 파밍박스 추적중
 			MoveData.iData[0]   = 2;				// 타겟 타입 : 2 - 아이템박스
 			MoveData.lParam = _Data.lParam;
-			MoveData.fData = fFarmingDist;
+			MoveData.fData[0] = fFarmingDist;
 			MoveData.v4Data = ((CGameObject*)_Data.lParam)->Transform()->GetRelativePos();
 			Move(MoveData);
 		}
@@ -220,11 +221,9 @@ void ER_ActionScript_Character::Craft(tFSMData& _Data)
 	[CRAFT]
 	bData[0]	: 제작중 여부
 	iData[0]	: 제작할 아이템 코드
-	iData[1]	: 재료1 아이템 슬롯 번호
-	iData[2]	: 재료2 아이템 슬롯 번호
 	*/
 
-	// 이전 공격상태의 데이터를 받아온다
+	// 이전 제작상태의 데이터를 받아온다
 	tFSMData PrevData = STATEDATA_GET(CRAFT);
 
 	//  현재 아이템 제작중인가

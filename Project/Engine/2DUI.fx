@@ -49,9 +49,6 @@ float4 PS_2DUI(VS_OUT _in) : SV_Target
 // [ CoolDown ]
 #define Texture1        g_tex_0
 #define Texture2        g_tex_1
-#define Texture3        g_tex_2
-#define Texture4        g_tex_3
-#define CoolDownTex     g_tex_4
 #define TexIdx          g_int_0
 #define CoolDownRatio   g_float_0
 
@@ -59,33 +56,53 @@ float4 PS_2DUI_CoolDown(VS_OUT _in) : SV_Target
 {
     float4 vOutColor = (float4) 0.f;
     
-    
-    if (g_int_0 == 0 && g_btex_0)
+    if(TexIdx == 0 && g_btex_0)
     {
         vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
     }
-    else if (g_int_0 == 1 && g_btex_1)
+    else if (TexIdx == 1 && g_btex_1)
     {
         vOutColor = g_tex_1.Sample(g_sam_0, _in.vUV);
     }
-    else if (g_int_0 == 2 && g_btex_2)
-    {
-        vOutColor = g_tex_2.Sample(g_sam_0, _in.vUV);
-    }
-    else if (g_int_0 == 3 && g_btex_3)
-    {
-        vOutColor = g_tex_3.Sample(g_sam_0, _in.vUV);
-    }
     
+    if (1.f <= CoolDownRatio || 0.f == CoolDownRatio)
+        return vOutColor;
     
-    if (g_btex_4)
-    {
-        // ratio 알파값
-        float4 CooldownColor = g_tex_4.Sample(g_sam_0, _in.vUV);
-        CooldownColor.w = g_float_0;
+    // CoolDownColor
+    float2 center = float2(0.5f, 0.5f);
+    float thickness = 0.05f;
         
-        vOutColor = lerp(CooldownColor, vOutColor, CooldownColor.a);
+    // 중앙부터 uv픽셀까지의 벡터
+    float2 direction = _in.vUV - center;
+    
+    // 중앙으로부터 해당 픽셀까지의 각도 계산(라디안 단위), 12시방향 기준
+    float angle = atan2(direction.y, direction.x) + (0.5f * PI);
+    
+    // 라디안각도를 0 ~ 1까지 값으로 졍규화
+    float Normalizeangle = frac(angle / (2.f * PI));
+    
+    float Coolratio = (1.f - CoolDownRatio);
+    
+    // 쿨다운 비율에 따라 각도판단하여 그리기
+    if (Coolratio <= Normalizeangle)
+    {
+        // [ 블렌딩 계산 ]
+        // float alpha = 0.7f; // 알파값 설정
+        // float4 CoolDownColor = float4(0.5f, 0.5f, 0.5f, alpha); // 회색 모노톤
+        // vOutColor = (1 - CoolDownColor.w) * vOutColor + CoolDownColor * CoolDownColor.w;
+
+        // [ 모노톤 ] 
+        float avgColor = (vOutColor.r + vOutColor.g + vOutColor.b) / 3.f;
+        avgColor = saturate(avgColor - 0.2f);
+        vOutColor = float4(avgColor, avgColor, avgColor, 1.f);
     }
+    else if (0.98f < Coolratio)
+    {
+        float alpha = ((1.f - Coolratio) / 0.02f);
+        float4 CoolDownColor = float4(1.f, 1.f, 1.f, alpha); // 회색 모노톤
+        vOutColor = (1 - CoolDownColor.w) * vOutColor + CoolDownColor * CoolDownColor.w;
+    }
+    
     
     return vOutColor;
 }

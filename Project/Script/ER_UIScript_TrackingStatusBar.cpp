@@ -26,7 +26,7 @@ void ER_UIScript_TrackingStatusBar::init(CGameObject* _CharacterObj)
 
 	m_CharaterData = _data->GetStatus();
 
-	Board = new CGameObject;
+	Board = onew(CGameObject);
 	AddComponents(Board, _TRANSFORM | _MESHRENDER | _TEXT);
 	Board->SetName(L"UI_TrackingStatusBar_Board");
 
@@ -39,15 +39,17 @@ void ER_UIScript_TrackingStatusBar::init(CGameObject* _CharacterObj)
 
 	
 
-	HPGuage = new CGameObject;
-	HPGuage->AddComponent(new ER_UIScript_Gauge);
-	HPGuage->GetScript<ER_UIScript_Gauge>()->SetUI(0);
-	HPGuage->GetScript<ER_UIScript_Gauge>()->RegistCharacetr(_data);
+	HPGuage = onew(CGameObject);
+	ER_UIScript_Gauge* HPGuageScript = onew(ER_UIScript_Gauge);
+	HPGuage->AddComponent(HPGuageScript);
+	HPGuageScript->SetUI(0);
+	HPGuageScript->RegistCharacetr(_data);
 
-	SPGuage = new CGameObject;
-	SPGuage->AddComponent(new ER_UIScript_Gauge);
-	SPGuage->GetScript<ER_UIScript_Gauge>()->SetUI(1);
-	SPGuage->GetScript<ER_UIScript_Gauge>()->RegistCharacetr(_data);
+	SPGuage = onew(CGameObject);
+	ER_UIScript_Gauge* SPGuageScript = onew(ER_UIScript_Gauge);
+	SPGuage->AddComponent(SPGuageScript);
+	SPGuageScript->SetUI(1);
+	SPGuageScript->RegistCharacetr(_data);
 
 	Board->AddChild(HPGuage);
 	Board->AddChild(SPGuage);
@@ -88,6 +90,6 @@ void ER_UIScript_TrackingStatusBar::TrackingCharacterPos()
 	FinalPos.y = -FinalPos.y;
 	FinalPos.z = 0.f;
 
-	Board->Transform()->SetRelativePos(Vec3(FinalPos.x, FinalPos.y + 135.f, -1.1f));
+	Board->Transform()->SetRelativePos(Vec3(FinalPos.x, FinalPos.y + 135.f, -1.2f));
 }
 

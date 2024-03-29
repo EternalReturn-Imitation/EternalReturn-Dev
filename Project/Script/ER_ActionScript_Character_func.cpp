@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "ER_ActionScript_Character.h"
 #include "ER_DataScript_Character.h"
-#include "ER_ProjectilePool.h"
-#include "ER_ProjectileScript.h"
+
+#include "ER_PlayerScript.h"
 
 #include <Engine/CPathFindMgr.h>
 #include <Engine/CRenderMgr.h>
@@ -43,6 +43,29 @@ Vec3 ER_ActionScript_Character::GetFocusPoint()
 
 	return TargetPos;
 }
+
+Vec3 ER_ActionScript_Character::GetFocusDir()
+{
+	// 비교용 Map Collider 받기
+	CGameObject* Map = CPathFindMgr::GetInst()->GetMapCollider();
+
+	// 비교용 Main Camera의 Ray 받기
+	CCamera* mainCam = CRenderMgr::GetInst()->GetMainCam();
+	tRay ray = mainCam->GetRay();
+
+	// 교차점 위치 얻기
+	IntersectResult result = CCollisionMgr::GetInst()->IsCollidingBtwRayRect(ray, Map);
+	Vec3 TargetPos = result.vCrossPoint;
+	Vec3 vPos = Transform()->GetRelativePos();
+	
+	TargetPos.y = 0.f;
+	vPos.y = 0.f;
+
+	Vec3 Dir = (TargetPos - vPos).Normalize();
+
+	return Dir;
+}
+
 Vec3 ER_ActionScript_Character::GetClearPoint(const Vec3& vDir, float dist)
 {
 	Vec3 vPos	= GetOwner()->Transform()->GetRelativePos();
@@ -170,8 +193,8 @@ bool ER_ActionScript_Character::ChangeState(ER_CHAR_ACT _state, eAccessGrade _Gr
 	if (IsAbleChange(_Grade))
 	{
 		m_iPrevState = m_iCurState;
-		FSMContext->ChangeState(StateList[(UINT)_state]);
 		m_iCurState = (UINT)_state;
+		FSMContext->ChangeState(StateList[(UINT)_state]);
 	}
 
 	return true;
@@ -183,4 +206,12 @@ bool ER_ActionScript_Character::IsAbleChange(eAccessGrade _Grade)
 	// 현재설정된 동작변경가능 수준과 같거나 높아야 true 반환.
 
 	return m_AccessGrade <= _Grade;
+}
+
+
+bool ER_ActionScript_Character::IsPlayer()
+{
+	ER_PlayerScript* IsPlayer = GetOwner()->GetScript<ER_PlayerScript>();
+	
+	return nullptr != IsPlayer;
 }
