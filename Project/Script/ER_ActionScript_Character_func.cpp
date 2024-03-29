@@ -134,7 +134,7 @@ Vec3 ER_ActionScript_Character::GetProjSpawnPos(DWORD_PTR _Target)
 	Vec3 vDir = { vPos.x, 0.f, vPos.z };
 	vDir = (vTargetPos - vDir).Normalize();
 
-	vPos.y += 1.1f;
+	vPos.y += 1.3f;
 	vPos += vDir * 0.5f;
 
 	return vPos;

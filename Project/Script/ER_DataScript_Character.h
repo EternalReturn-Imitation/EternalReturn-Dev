@@ -36,6 +36,9 @@ private:
     vector<UINT>                m_CraftList;                            // 제작가능 아이템 목록
     unordered_map<UINT, int>    m_IngredientList;                       // 재료 아이템 목록;
 
+    // [ Debug / CoolDown Delete ]
+    bool                        DebugMode;
+
 public:
     // [상태 갱신]
     void                        StatusUpdate();                            // Status 갱신 함수 : 레벨업 , 아이템변경, 버프/버프
