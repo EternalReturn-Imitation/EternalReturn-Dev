@@ -12,7 +12,7 @@ class ER_ItemMgr
 private:
 	vector<CGameObject*> m_vecItem;												// 아이템 리스트
 	unordered_map<DWORD_PTR, UINT> m_umapRecipe;								// 조합식 목록
-	unordered_map<UINT, DWORD_PTR> m_umapIngredient;								// 재료 목록
+	unordered_map<UINT, DWORD_PTR> m_umapIngredient;							// 재료 목록
 
 	vector<CGameObject*> m_vecItemBox[(UINT)LUMIAISLAND::END];					// 현재 레벨에 있는 아이템 박스 리스트
 	

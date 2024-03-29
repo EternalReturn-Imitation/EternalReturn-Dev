@@ -71,6 +71,7 @@ protected:
 
     // [ Transform Func ]
     Vec3 GetFocusPoint();                                           // 타겟 좌표 확인
+    Vec3 GetFocusDir();                                             // 타겟 방향 확인
     Vec3 GetClearPoint(const Vec3& vDir, float dist);               // 이동 가능 지점 확인
     float GetClearDistance(const Vec3& vDir, float dist);           // 이동 가능 거리 확인
     float GetClearDistanceByWall(const Vec3& vDir, float dist);     // 벽까지 이동가능한 거리 확인
@@ -87,6 +88,9 @@ protected:
 
     // [ Sound ]
     virtual void PlaySound(UINT _SoundKey) {}
+
+    // [ Player Check ]
+    bool IsPlayer();
 
 
 public:

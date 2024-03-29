@@ -22,7 +22,6 @@ void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 
 // 오브젝트 삭제
 void DestroyObject(CGameObject* _DeletObject);
-void EraseObject(CGameObject* _EraseObject);
 
 // 컴포넌트 추가
 void AddComponents(CGameObject* _Object, int CreateCompType);
@@ -112,16 +111,45 @@ std::vector<int> WStringToIntArray(const std::wstring& str);
 
 
 
-
-template<typename T, UINT Size>
-void Safe_Del_Array(T* (&arr)[Size])
-{
+//일반적인 벡터 삭제
+template<typename T, UINT Size, typename std::enable_if<!std::is_base_of<CEntity, T>::value, T>::type* = nullptr>
+void Safe_Del_Array(T* (&arr)[Size]) {
 	for (UINT i = 0; i < Size; ++i)
 	{
 		if (nullptr != arr[i])
 			delete arr[i];
-	}	
+	}
 }
+
+// CEntity 또는 그 파생 클래스인 경우
+template<typename T, UINT Size, typename std::enable_if<std::is_base_of<CEntity, T>::value, T>::type* = nullptr>
+void Safe_Del_Array(T* (&arr)[Size]) {
+	for (UINT i = 0; i < Size; ++i)
+	{
+		if (arr[i] == nullptr)
+			continue;
+
+		if (static_cast<CEntity*>(arr[i])->GetManagedByMemory()) {
+			static_cast<CEntity*>(arr[i])->SetManagedByMemory(false);
+			//xdelete<CEntity>(item); // 메모리 풀 버전
+			odelete(arr[i]); //오브젝트 풀 버전
+		}
+		else {
+			delete arr[i];
+		}
+	}
+}
+
+// template<typename T, UINT Size>
+// void Safe_Del_Array(T* (&arr)[Size])
+// {
+// 	for (UINT i = 0; i < Size; ++i)
+// 	{
+// 		if (nullptr != arr[i])
+// 			delete arr[i];
+// 	}	
+// }
+
 
 //template<typename T>
 //void Safe_Del_Vec(vector<T*>& _vec)

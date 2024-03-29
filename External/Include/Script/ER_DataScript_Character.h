@@ -21,7 +21,6 @@ private:
     tIngame_Stats*              m_Stats;                // 게임 능력치
 
     // [ Skill ]
-    ER_SKILL*                   m_Skill[4];             // 실제사용스킬
     UINT                        m_SkillPoint;           // 스킬 레벨업 투자 가능 포인트
     float                       m_fSPRegenTime;         // SPRegen Tiem
 
@@ -46,7 +45,7 @@ public:
     void                        LevelUP();                                 // 레벨업 시 동작하는 함수 집합
 
 public:
-    void init();
+    void         init();
     virtual void begin() override;
     virtual void tick() override;
 
@@ -67,11 +66,8 @@ public:
 
     // [Skill]
     vector<ER_SKILL*>&  GetSkillList() { return m_SkillList; }
-    ER_SKILL*           GetSkill(int _Idx) { return m_Skill[_Idx]; }
-    ER_SKILL**          GetSkillAdress(int _Idx) { return &m_Skill[_Idx]; }
-
-    void                ChangeSkill(int _Idx);
-    void                SkillSlotInit();
+    ER_SKILL*           GetSkill(int _Idx) { return m_SkillList[_Idx]; }
+    ER_SKILL**          GetSkillAdress(int _Idx) { return &m_SkillList[_Idx]; }
 
     // [Item]
     CGameObject**       GetAllEquipItem() { return m_Equipment; }

@@ -746,9 +746,6 @@ void CResMgr::CreateDefaultGraphicsShader()
 	// Parameter
 	// g_tex_0				: Texture1        
 	// g_tex_1				: Texture2        
-	// g_tex_2				: Texture3        
-	// g_tex_3				: Texture4        
-	// g_tex_3				: CoolDownTex     
 	// g_int_0				: TexIdx          
 	// g_float_0			: CoolDownRatio   
 	// ============================
@@ -769,9 +766,6 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	pShader->AddTexParam(TEX_0, "Texture1");
 	pShader->AddTexParam(TEX_1, "Texture2");
-	pShader->AddTexParam(TEX_2, "Texture3");
-	pShader->AddTexParam(TEX_3, "Texture4");
-	pShader->AddTexParam(TEX_4, "CoolDownTex");
 
 	AddRes(pShader->GetKey(), pShader);
 

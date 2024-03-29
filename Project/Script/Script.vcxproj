@@ -176,7 +176,6 @@ call CodeGen.exe</Command>
   <ItemGroup>
     <ClInclude Include="CEditCamControlScript.h" />
     <ClInclude Include="CFollowMainCamScript.h" />
-    <ClInclude Include="CMissileScript.h" />
     <ClInclude Include="CMonsterScript.h" />
     <ClInclude Include="CPlanetScript.h" />
     <ClInclude Include="CScriptMgr.h" />
@@ -190,17 +189,18 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_CamControllerScript.h" />
     <ClInclude Include="ER_CharacterMgr.h" />
     <ClInclude Include="ER_Cursor.h" />
+    <ClInclude Include="ER_DataScript_Arrow.h" />
+    <ClInclude Include="ER_DataScript_Bullet.h" />
     <ClInclude Include="ER_DataScript_Character.h" />
     <ClInclude Include="ER_DataScript_Item.h" />
     <ClInclude Include="ER_DataScript_LandMeshBase.h" />
+    <ClInclude Include="ER_DataScript_Projectile.h" />
     <ClInclude Include="ER_define.h" />
     <ClInclude Include="ER_DataScript_ItemBox.h" />
     <ClInclude Include="ER_GameSystem.h" />
     <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="ER_PlayerScript.h" />
     <ClInclude Include="ER_PlayerScript_Range.h" />
-    <ClInclude Include="ER_ProjectilePool.h" />
-    <ClInclude Include="ER_ProjectileScript.h" />
     <ClInclude Include="ER_struct.h" />
     <ClInclude Include="ER_UIMgr.h" />
     <ClInclude Include="ER_UIScript_CraftSlot.h" />
@@ -217,7 +217,6 @@ call CodeGen.exe</Command>
   <ItemGroup>
     <ClCompile Include="CEditCamControlScript.cpp" />
     <ClCompile Include="CFollowMainCamScript.cpp" />
-    <ClCompile Include="CMissileScript.cpp" />
     <ClCompile Include="CMonsterScript.cpp" />
     <ClCompile Include="CPlanetScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
@@ -234,18 +233,19 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_CharacterMgr.cpp" />
     <ClCompile Include="ER_CharacterMgr_Init.cpp" />
     <ClCompile Include="ER_Cursor.cpp" />
+    <ClCompile Include="ER_DataScript_Arrow.cpp" />
+    <ClCompile Include="ER_DataScript_Bullet.cpp" />
     <ClCompile Include="ER_DataScript_Character.cpp" />
     <ClCompile Include="ER_DataScript_Item.cpp" />
     <ClCompile Include="ER_DataScript_ItemBox.cpp" />
     <ClCompile Include="ER_DataScript_LandMeshBase.cpp" />
+    <ClCompile Include="ER_DataScript_Projectile.cpp" />
     <ClCompile Include="ER_GameSystem.cpp" />
     <ClCompile Include="ER_ItemMgr.cpp" />
     <ClCompile Include="ER_ItemMgr_Init.cpp" />
     <ClCompile Include="ER_PlayerScript.cpp" />
     <ClCompile Include="ER_UIMgr.cpp" />
     <ClCompile Include="ER_PlayerScript_Range.cpp" />
-    <ClCompile Include="ER_ProjectilePool.cpp" />
-    <ClCompile Include="ER_ProjectileScript.cpp" />
     <ClCompile Include="ER_UIScript_CraftSlot.cpp" />
     <ClCompile Include="ER_UIScript_Gauge.cpp" />
     <ClCompile Include="ER_UIScript_ItemBox.cpp" />

@@ -28,7 +28,7 @@ CAnimEditObj::CAnimEditObj()
 CAnimEditObj::~CAnimEditObj()
 {
 	if (nullptr != m_pRenderObj)
-		delete m_pRenderObj;
+		odelete(m_pRenderObj);
 }
 
 void CAnimEditObj::tick()
@@ -81,24 +81,24 @@ void CAnimEditObj::tick()
 void CAnimEditObj::setobject(Ptr<CMeshData> _MeshData)
 {
 	if (nullptr != m_pRenderObj)
-		delete m_pRenderObj;
+		odelete(m_pRenderObj);
 
 	m_pRenderObj = _MeshData->Instantiate();
 	m_pRenderObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
 	m_pRenderObj->SetName(L"AnimEditObj");
 
-	if(!m_pRenderObj->Animator3D())
-		m_pRenderObj->AddComponent(new CAnimator3D);
+	if (!m_pRenderObj->Animator3D())
+		AddComponents(m_pRenderObj, _ANIMATOR3D);
 
 	// 카메라 연결
-	m_pControlObj = new CGameObject;
+	m_pControlObj = onew(CGameObject);
 	m_pControlObj->SetName(L"AnimEditControlObj");
-	m_pControlObj->AddComponent(new CTransform);
+	AddComponents(m_pControlObj, _TRANSFORM);
 	m_pControlObj->Transform()->SetRelativePos(Vec3(0.f, 1.f, 0.f));
 
-	m_pCamObj = new CGameObject;
+	m_pCamObj = onew(CGameObject);
 	m_pCamObj->SetName(L"AnimEditCamObj");
-	m_pCamObj->AddComponent(new CTransform);
+	AddComponents(m_pCamObj, _TRANSFORM);
 	m_pCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -2.5f));
 
 	m_pRenderObj->AddChild(m_pControlObj);

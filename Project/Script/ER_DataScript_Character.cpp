@@ -10,7 +10,6 @@ ER_DataScript_Character::ER_DataScript_Character()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
 	, m_Stats(nullptr)
 	, m_StatusEffect(nullptr)
-	, m_Skill{}
 	, m_bGameDead(false)
 	, m_bOutofContorl(false)
 	, m_Equipment{}
@@ -33,7 +32,6 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_PortraitTex(_origin.m_PortraitTex)
 	, m_FullTax(_origin.m_FullTax)
 	, m_MapTex(_origin.m_MapTex)
-	, m_Skill{}
 	, m_bGameDead(false)
 	, m_bOutofContorl(false)
 	, m_Equipment{}
@@ -54,11 +52,6 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 		m_SkillList.push_back(tmp);
 	}
 
-	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
-	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
-	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
-	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
-
 	for (int i = 0; i < 5; ++i)
 	{
 		m_RootItem[i] = _origin.m_RootItem[i];
@@ -76,6 +69,8 @@ ER_DataScript_Character::~ER_DataScript_Character()
 		delete m_StatusEffect;
 
 	Safe_Del_Vec(m_SkillList);
+	Safe_Del_Array(m_Equipment);
+	Safe_Del_Array(m_Inventory);
 
 	// 인벤토리, 장착 아이템 delete 작업
 }
@@ -203,7 +198,6 @@ void ER_DataScript_Character::begin()
 	}
 	
 	StatusUpdate();
-	SkillSlotInit();
 
 	UINT StartWeapon = 0;
 	if (m_strKey == L"Aya")
@@ -213,7 +207,11 @@ void ER_DataScript_Character::begin()
 	else if (m_strKey == L"Jackie")
 		StartWeapon = 108;
 	else if (m_strKey == L"Rio")
+	{
+		m_SkillList[(UINT)SKILLIDX::Q_1]->iSkillLevel = 1;
+		m_SkillList[(UINT)SKILLIDX::Q_2]->iSkillLevel = 1;
 		StartWeapon = 28;
+	}
 	else if (m_strKey == L"Yuki")
 		StartWeapon = 9;
 
@@ -244,19 +242,6 @@ void ER_DataScript_Character::tick()
 		m_SkillPoint++;
 	}
 
-}
-
-void ER_DataScript_Character::ChangeSkill(int _Idx)
-{
-
-}
-
-void ER_DataScript_Character::SkillSlotInit()
-{
-	m_Skill[(UINT)SKILLIDX::Q_1] = m_SkillList[(UINT)SKILLIDX::Q_1];
-	m_Skill[(UINT)SKILLIDX::W_1] = m_SkillList[(UINT)SKILLIDX::W_1];
-	m_Skill[(UINT)SKILLIDX::E_1] = m_SkillList[(UINT)SKILLIDX::E_1];
-	m_Skill[(UINT)SKILLIDX::R_1] = m_SkillList[(UINT)SKILLIDX::R_1];
 }
 
 bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _DropItem)
@@ -510,9 +495,9 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 	}
 
 	// 기존 두 재료 슬롯의 아이템 delete
-	delete (*ItemSlot1);
+	odelete(*ItemSlot1);
 	(*ItemSlot1) = nullptr;
-	delete (*ItemSlot2);
+	odelete (*ItemSlot2);
 	(*ItemSlot2) = nullptr;
 	
 	// 제작한 아이템 매니저에서 클론으로 가져온다.
@@ -618,7 +603,7 @@ void ER_DataScript_Character::LoadFromLevelFile(FILE* _File)
 
 	for (int i = 0; i < SkillSize; ++i)
 	{
-		ER_SKILL* Skill = new ER_SKILL;
+		ER_SKILL* Skill = onew(ER_SKILL);
 		Skill->Load(_File);
 		LoadResRef(Skill->TexSkill, _File);
 

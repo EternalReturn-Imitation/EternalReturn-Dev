@@ -275,6 +275,7 @@ float CFindPath::findMaxClearDistance(const Vec3& _dir, float _min, float _max)
 		}
 	}
 
+
 	return maxClearDistance;
 }
 

@@ -41,20 +41,20 @@ private:
     // [ CraftList ]
     // =============
 
-    CGameObject* StatusBar_CraftList[7];
+    CGameObject*            StatusBar_CraftList[7];
 
     // ===========
     // [ ItemBox ]
     // ===========
 
-    CGameObject* ItemBoxUI;
+    CGameObject*            ItemBoxUI;
 
     // ===============
     // [ Cursor Func ]
     // ===============
-    CGameObject* m_pCurDragItem;
-    ER_UIScript_ItemSlot* m_pDragItemSlot;                               // drag n drop temp Obj
-    ER_UIScript_ItemSlot* m_pDropItemSlot;
+    CGameObject*            m_pCurDragItem;
+    ER_UIScript_ItemSlot*   m_pDragItemSlot;                               // drag n drop temp Obj
+    ER_UIScript_ItemSlot*   m_pDropItemSlot;
 
 private:
     void LobbyUI();
@@ -74,6 +74,10 @@ public:
 
     void OpenItemBoxUI(ER_DataScript_ItemBox* _ItemBox);
     void CloseItemBoxUI();
+
+public:
+    // [ Skill Slot Func ]
+    void SetToggle(int i);
 
 public:
     void RegistDragItemSlot(ER_UIScript_ItemSlot* _SrcSlot);

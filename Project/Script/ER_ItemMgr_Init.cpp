@@ -116,9 +116,8 @@ int ER_ItemMgr::SaveItemData(CGameObject* _Item, FILE* _File)
 CGameObject* ER_ItemMgr::LoadItemData(FILE* _File)
 {
 	CGameObject* pItem = new CGameObject;
-	pItem->AddComponent(new ER_DataScript_Item());
-
-	ER_DataScript_Item* ItemContext = pItem->GetScript<ER_DataScript_Item>();
+	ER_DataScript_Item* ItemContext = new ER_DataScript_Item;
+	pItem->AddComponent(ItemContext);
 
 	// Item Name
 	wstring strName;

@@ -19,6 +19,15 @@ CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 
 CRenderComponent::~CRenderComponent()
 {
+	if (!m_vecMtrls.empty())
+	{
+		for (auto Mtrls : m_vecMtrls)
+		{
+			Mtrls.pCurMtrl = nullptr;
+			Mtrls.pDynamicMtrl = nullptr;
+			Mtrls.pSharedMtrl = nullptr;
+		}
+	}
 }
 
 void CRenderComponent::render_shadowmap()

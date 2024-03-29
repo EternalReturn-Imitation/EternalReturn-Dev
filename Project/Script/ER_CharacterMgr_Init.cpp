@@ -94,9 +94,9 @@ int ER_CharacterMgr::SaveCharacterData(CGameObject* _Character, FILE* _File)
 CGameObject* ER_CharacterMgr::LoadCharacterData(FILE* _File)
 {
     CGameObject* pCharacter = new CGameObject;
-    pCharacter->AddComponent(new ER_DataScript_Character());
+    ER_DataScript_Character* CharacterContext = new ER_DataScript_Character;
+    pCharacter->AddComponent(CharacterContext);
 
-    ER_DataScript_Character* CharacterContext = pCharacter->GetScript<ER_DataScript_Character>();
 
     // Character Key
     LoadWString(CharacterContext->m_strKey, _File);

@@ -20,9 +20,8 @@ CLight3D::CLight3D()
 	, m_bDebug(false)
 {
 
-	m_pCamObj = new CGameObject;
-	m_pCamObj->AddComponent(new CTransform);
-	m_pCamObj->AddComponent(new CCamera);
+	m_pCamObj = onew(CGameObject);
+	AddComponents(m_pCamObj, _TRANSFORM | _CAMERA);
 
 	m_pCamObj->Camera()->SetLayerMaskAll(true);
 	m_pCamObj->Camera()->SetLayerMask(31, false);
@@ -44,7 +43,7 @@ CLight3D::CLight3D(const CLight3D& _Origin)
 CLight3D::~CLight3D()
 {
 	if (nullptr != m_pCamObj)
-		delete m_pCamObj;
+		odelete(m_pCamObj);
 }
 
 void CLight3D::finaltick()

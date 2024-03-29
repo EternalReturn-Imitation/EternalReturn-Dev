@@ -30,7 +30,7 @@ void ER_Cursor::init()
 	Transform()->SetRelativeScale(Vec3(35.f, 35.f, 1.f));
 	Transform()->SetOffsetTrigger(true);
 
-	m_pDragItemTex = new CGameObject;
+	m_pDragItemTex = onew(CGameObject);
 	m_pDragItemTex->SetName(L"Cursor_ItemDragTex");
 	AddComponents(m_pDragItemTex, _TRANSFORM | _MESHRENDER);
 	m_pDragItemTex->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));

@@ -21,6 +21,7 @@ ER_DataScript_ItemBox::ER_DataScript_ItemBox()
 
 ER_DataScript_ItemBox::~ER_DataScript_ItemBox()
 {
+	Safe_Del_Array(m_pItemList);
 }
 
 Vec3 ER_DataScript_ItemBox::GetUIPos()
@@ -115,7 +116,7 @@ bool ER_DataScript_ItemBox::RegistItem(UINT _ItemID)
 
 void ER_DataScript_ItemBox::CreateBoxUI()
 {
-	m_UIBoxTag = new CGameObject;
+	m_UIBoxTag = onew(CGameObject);
 	m_UIBoxTag->SetName(GetOwner()->GetName() + L"_TagUI");
 	AddComponents(m_UIBoxTag, _TRANSFORM | _MESHRENDER);
 

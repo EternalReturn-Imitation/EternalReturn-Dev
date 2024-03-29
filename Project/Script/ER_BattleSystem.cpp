@@ -27,8 +27,11 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 
 	// 공격력 ( 공격력 *100 / ( 100 + 대상방어력) * ( 1+ 치명타여부 0.65)
 	
-	int AtkPower = AtkInfo->iAttackPower;
-	int Def = HitInfo->iDefense;
+	tStatus_Effect* ATKStatusEfc = AtkObj->GetScript<ER_DataScript_Character>()->GetStatusEffect();
+	tStatus_Effect* HitStatusEfc = HitObj->GetScript<ER_DataScript_Character>()->GetStatusEffect();
+
+	int AtkPower = AtkInfo->iAttackPower + ATKStatusEfc->GetIncATK() - ATKStatusEfc->GetDecATK();
+	int Def = HitInfo->iDefense + HitStatusEfc->GetIncDEF() - HitStatusEfc->GetDecDEF();
 
 	int CriticalDmg = IsCritical(AtkInfo);
 
@@ -52,10 +55,37 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker
 	, CGameObject* _HitObj
 	, CScript* _Inst
-	, SKILL_DMG_CALC _calc
-	, const tSkill_Info* _SkillData)
+	, SKILL_DMG_CALC _calc)
 {
-	int a = (_Inst->*_calc)(_SkillData);
+	tIngame_Stats* AtkInfo = GetStatsInfo(_Attacker);
+	tIngame_Stats* HitInfo = GetStatsInfo(_HitObj);
+
+	// 공격력 ( 공격력 *100 / ( 100 + 대상방어력) * ( 1+ 치명타여부 0.65)
+
+	tStatus_Effect* ATKStatusEfc = _Attacker->GetScript<ER_DataScript_Character>()->GetStatusEffect();
+	tStatus_Effect* HitStatusEfc = _HitObj->GetScript<ER_DataScript_Character>()->GetStatusEffect();
+
+	int SkillDmg = (_Inst->*_calc)();
+	SkillDmg += SkillDmg * AtkInfo->iSkillAmplification;
+	int Def = HitInfo->iDefense + HitStatusEfc->GetIncDEF() - HitStatusEfc->GetDecDEF();
+
+	int CriticalDmg = IsCritical(AtkInfo);
+
+	int FinalDmg = (int)(((SkillDmg * 100) / (100 + Def)) + (CriticalDmg * 0.65));
+
+	// 사망처리
+	if (HitInfo->iHP - FinalDmg <= 0)
+	{
+		// 타겟의 HP를 0으로 만든다.
+		HitInfo->iHP = 0;
+
+		tFSMData deaddata = {};
+		_HitObj->GetScript<ER_ActionScript_Character>()->Dead(deaddata);
+		return;
+	}
+	HitInfo->iHP -= FinalDmg;
+
+	// 데미지폰트 출력
 }
 
 

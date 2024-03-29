@@ -4,8 +4,8 @@
 
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
-#include "ER_ProjectilePool.h"
-#include "ER_ProjectileScript.h"
+
+#include "ER_DataScript_Bullet.h"
 
 #include "ER_ItemMgr.h"
 
@@ -28,21 +28,21 @@ void ER_ActionScript_Aya::WaitEnter(tFSMData& param)
 {
     Animator3D()->SelectAnimation(L"Aya_Idle", true);
     SetStateGrade(eAccessGrade::BASIC);
-    param.fData = 0.f;
+    param.fData[0] = 0.f;
 }
 void ER_ActionScript_Aya::WaitUpdate(tFSMData& param)
 {
     // 0.5초마다 체력회복
-    param.fData += DT;
+    param.fData[0] += DT;
 
-    if (0.5f <= param.fData)
+    if (0.5f <= param.fData[0])
     {
         // HP/SP 자연 회복
         m_Data->HPRegen();
         m_Data->SPRegen();
 
         // 체력재생 카운트 초기화
-        param.fData -= 0.5f;
+        param.fData[0] -= 0.5f;
     }
 }
 void ER_ActionScript_Aya::WaitExit(tFSMData& param)
@@ -86,7 +86,7 @@ void ER_ActionScript_Aya::MoveUpdate(tFSMData& param)
     // 타겟 추적중
     if (param.bData[0])
     {
-        if (IsInRange((CGameObject*)param.lParam, param.fData))
+        if (IsInRange((CGameObject*)param.lParam, param.fData[0]))
         {
             param.bData[0] = false;     // 추적 종료    
             FindPath()->ClearPath();    // 이동 경로 초기화
@@ -144,7 +144,7 @@ void ER_ActionScript_Aya::RestEnter(tFSMData& param)
    fData    = 체력재생시간 카운트
    */
     param.iData[0] = 0;
-    param.fData = 0.f;
+    param.fData[0] = 0.f;
     Animator3D()->SelectAnimation(L"Aya_Rest_Start", false);
 }
 void ER_ActionScript_Aya::RestUpdate(tFSMData& param)
@@ -169,16 +169,16 @@ void ER_ActionScript_Aya::RestUpdate(tFSMData& param)
     {
         // 캔슬 불가
         // 0.5초마다 회복
-        param.fData += DT;
+        param.fData[0] += DT;
 
-        if (0.5f <= param.fData)
+        if (0.5f <= param.fData[0])
         {
             // HP/SP 자연 회복 5배 빠르게 회복
             m_Data->HPRegen(5.f);
             m_Data->SPRegen(5.f);
 
             // 자원재생 카운트 초기화
-            param.fData -= 0.5f;
+            param.fData[0] -= 0.5f;
         }
 
         if (KEY_TAP(KEY::RBTN) || KEY_TAP(KEY::X))
@@ -236,15 +236,15 @@ void ER_ActionScript_Aya::CraftEnter(tFSMData& param)
     int CraftTime = 2 + (2 * ItemGrade);
     param.bData[0] = true;
     param.iData[1] = (int)CraftTime;
-    param.fData = 0.f;
+    param.fData[0] = 0.f;
 
     ERCHARSOUND(CRAFT_SOUND);
 }
 void ER_ActionScript_Aya::CraftUpdate(tFSMData& param)
 {
-    param.fData += DT;
+    param.fData[0] += DT;
 
-    if (param.iData[1] <= param.fData || Animator3D()->IsFinish())
+    if (param.iData[1] <= param.fData[0] || Animator3D()->IsFinish())
     {
         // 아이탬 생성함수
         GetOwner()->GetScript<ER_DataScript_Character>()->CraftItem(param.iData[0]);
@@ -257,7 +257,7 @@ void ER_ActionScript_Aya::CraftExit(tFSMData& param)
 {
     param.bData[0] = false;
     param.iData[1] = 0;
-    param.fData = 0.f;
+    param.fData[0] = 0.f;
     STOPSOUND(CRAFT_SOUND);
 }
 
@@ -318,15 +318,14 @@ void ER_ActionScript_Aya::AttackUpdate(tFSMData& param)
         // 총알양 반영할지
 
         // 투사체 생성
-        ER_ProjectileScript* Bullet = GETPROJECTILE(BULLET);
 
-        Bullet->ShotTarget(GetOwner(),                  // 공격 오브젝트
-            (CGameObject*)param.lParam,                 // 타겟 오브젝트
-            GetProjSpawnPos(param.lParam),              // 투사체 생성 위치
-            ER_ProjectileScript::eDmgType::NORMAL,      // 데미지 타입
-            20.f);                                      // 투사체 속도
+        CGameObject* Bullet = onew(CGameObject);
+        ER_DataScript_Bullet* BulletScript = onew(ER_DataScript_Bullet);
+        Bullet->AddComponent(BulletScript);
 
-        Bullet->Shot();                                 // 투사체 발사
+        BulletScript->init();
+        BulletScript->SetForTarget(GetOwner(), (CGameObject*)param.lParam, GetProjSpawnPos(param.lParam), 20.f);
+        BulletScript->Spawn();
 
         param.bData[1] = true;                          // Battle Event 완료
         SetStateGrade(eAccessGrade::BASIC);
@@ -448,7 +447,7 @@ void ER_ActionScript_Aya::Skill_WEnter(tFSMData& param)
     param.v4Data.z = vPos.z;
 
     param.iData[0] = 0;
-    param.fData = 0.f;
+    param.fData[0] = 0.f;
 
     param.bData[0] = false;
 
@@ -490,7 +489,7 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         param.v4Data.z = vDestPoint.z;
 
         //angleDeg에는 방향이 들어감.
-        param.fData = angleDeg;
+        param.fData[0] = angleDeg;
 
         param.bData[0] = true;
 
@@ -500,19 +499,19 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
     //애니메이션이 끝날때마다 이동 애니메이션 갱신
     if ((abs(vPos.x- param.v4Data.x)>0.1f || abs(vPos.z - param.v4Data.z)>0.1f) && param.bData[0]) {
         // 방향 결정
-        if (param.fData > -45 && param.fData <= 45) {
+        if (param.fData[0] > -45 && param.fData[0] <= 45) {
             if (param.iData[0] != 1) {
                 Animator->SelectAnimation(L"Aya_SkillW_Forward", true);
                 param.iData[0] = 1;
             }
         }
-        else if (param.fData > 45 && param.fData <= 135) {
+        else if (param.fData[0] > 45 && param.fData[0] <= 135) {
             if (param.iData[0] != 2) {
                 Animator->SelectAnimation(L"Aya_SkillW_Left", true);
                 param.iData[0] = 2;
             }
         }
-        else if (param.fData > -135 && param.fData <= -45) {
+        else if (param.fData[0] > -135 && param.fData[0] <= -45) {
             if (param.iData[0] != 3) {
                 Animator->SelectAnimation(L"Aya_SkillW_Right", true);
                 param.iData[0] = 3;
@@ -542,7 +541,7 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         SetStateGrade(eAccessGrade::BASIC);
         ChangeState(ER_CHAR_ACT::WAIT);
         param.iData[0] = 0;
-        param.fData = 0.f;
+        param.fData[0] = 0.f;
         param.v2Data = Vec2();
         param.v4Data = Vec4();
         m_fSec = 0.f;

@@ -8,6 +8,14 @@ class ER_ActionScript_Rio :
     {
         LONG_NORMAL_ATTACK,
         SHORT_NORMAL_ATTACK,
+        
+        SKILLQ_CHANGE,
+        SKILLQ_LONG,
+        SKILLQ_SHORT,
+
+        SKILLE_START,
+        SKILLE_END,
+        BUFSKILL,
         CRAFT_SOUND,
         END,
     };
@@ -84,6 +92,14 @@ private:
     void DeadEnter(tFSMData& param);
     void DeadUpdate(tFSMData& param);
     void DeadExit(tFSMData& param);
+
+    int SkillW1();
+    int SkillW2();
+    int SkillE1();
+    int SkillE2();
+    int SkillR1_1();
+    int SkillR1_2();
+    int SkillR2();
 
     virtual bool SoundLoad();
     virtual void PlaySound(UINT _SoundKey);

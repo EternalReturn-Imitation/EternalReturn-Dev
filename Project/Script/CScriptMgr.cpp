@@ -3,7 +3,6 @@
 
 #include "CEditCamControlScript.h"
 #include "CFollowMainCamScript.h"
-#include "CMissileScript.h"
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
 #include "ER_ActionScript_Aya.h"
@@ -13,13 +12,14 @@
 #include "ER_ActionScript_Yuki.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
+#include "ER_DataScript_Arrow.h"
+#include "ER_DataScript_Bullet.h"
 #include "ER_DataScript_Character.h"
 #include "ER_DataScript_Item.h"
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_LandMeshBase.h"
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
-#include "ER_ProjectileScript.h"
 #include "ER_UIScript_CraftSlot.h"
 #include "ER_UIScript_Gauge.h"
 #include "ER_UIScript_ItemBox.h"
@@ -33,7 +33,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
 	_vec.push_back(L"CEditCamControlScript");
 	_vec.push_back(L"CFollowMainCamScript");
-	_vec.push_back(L"CMissileScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
 	_vec.push_back(L"ER_ActionScript_Aya");
@@ -43,13 +42,14 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ActionScript_Yuki");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
+	_vec.push_back(L"ER_DataScript_Arrow");
+	_vec.push_back(L"ER_DataScript_Bullet");
 	_vec.push_back(L"ER_DataScript_Character");
 	_vec.push_back(L"ER_DataScript_Item");
 	_vec.push_back(L"ER_DataScript_ItemBox");
 	_vec.push_back(L"ER_DataScript_LandMeshBase");
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
-	_vec.push_back(L"ER_ProjectileScript");
 	_vec.push_back(L"ER_UIScript_CraftSlot");
 	_vec.push_back(L"ER_UIScript_Gauge");
 	_vec.push_back(L"ER_UIScript_ItemBox");
@@ -66,8 +66,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CEditCamControlScript;
 	if (L"CFollowMainCamScript" == _strScriptName)
 		return new CFollowMainCamScript;
-	if (L"CMissileScript" == _strScriptName)
-		return new CMissileScript;
 	if (L"CMonsterScript" == _strScriptName)
 		return new CMonsterScript;
 	if (L"CPlanetScript" == _strScriptName)
@@ -86,6 +84,10 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
 		return new ER_Cursor;
+	if (L"ER_DataScript_Arrow" == _strScriptName)
+		return new ER_DataScript_Arrow;
+	if (L"ER_DataScript_Bullet" == _strScriptName)
+		return new ER_DataScript_Bullet;
 	if (L"ER_DataScript_Character" == _strScriptName)
 		return new ER_DataScript_Character;
 	if (L"ER_DataScript_Item" == _strScriptName)
@@ -98,8 +100,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_PlayerScript;
 	if (L"ER_PlayerScript_Range" == _strScriptName)
 		return new ER_PlayerScript_Range;
-	if (L"ER_ProjectileScript" == _strScriptName)
-		return new ER_ProjectileScript;
 	if (L"ER_UIScript_CraftSlot" == _strScriptName)
 		return new ER_UIScript_CraftSlot;
 	if (L"ER_UIScript_Gauge" == _strScriptName)
@@ -129,9 +129,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::FOLLOWMAINCAMSCRIPT:
 		return new CFollowMainCamScript;
 		break;
-	case (UINT)SCRIPT_TYPE::MISSILESCRIPT:
-		return new CMissileScript;
-		break;
 	case (UINT)SCRIPT_TYPE::MONSTERSCRIPT:
 		return new CMonsterScript;
 		break;
@@ -159,6 +156,12 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_CURSOR:
 		return new ER_Cursor;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_ARROW:
+		return new ER_DataScript_Arrow;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_BULLET:
+		return new ER_DataScript_Bullet;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:
 		return new ER_DataScript_Character;
 		break;
@@ -176,9 +179,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
 		return new ER_PlayerScript_Range;
-		break;
-	case (UINT)SCRIPT_TYPE::ER_PROJECTILESCRIPT:
-		return new ER_ProjectileScript;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
 		return new ER_UIScript_CraftSlot;
@@ -220,10 +220,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CFollowMainCamScript";
 		break;
 
-	case SCRIPT_TYPE::MISSILESCRIPT:
-		return L"CMissileScript";
-		break;
-
 	case SCRIPT_TYPE::MONSTERSCRIPT:
 		return L"CMonsterScript";
 		break;
@@ -260,6 +256,14 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_Cursor";
 		break;
 
+	case SCRIPT_TYPE::ER_DATASCRIPT_ARROW:
+		return L"ER_DataScript_Arrow";
+		break;
+
+	case SCRIPT_TYPE::ER_DATASCRIPT_BULLET:
+		return L"ER_DataScript_Bullet";
+		break;
+
 	case SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER:
 		return L"ER_DataScript_Character";
 		break;
@@ -282,10 +286,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
 		return L"ER_PlayerScript_Range";
-		break;
-
-	case SCRIPT_TYPE::ER_PROJECTILESCRIPT:
-		return L"ER_ProjectileScript";
 		break;
 
 	case SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:

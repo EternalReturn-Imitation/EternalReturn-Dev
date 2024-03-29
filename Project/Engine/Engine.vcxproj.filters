@@ -23,13 +23,13 @@
       <Filter>Source\01. Engine</Filter>
     </ClInclude>
     <ClInclude Include="CSingleton.h">
-      <Filter>Source\08. ShaderCode\09. Module</Filter>
+      <Filter>Source\09. Module</Filter>
     </ClInclude>
     <ClInclude Include="CDevice.h">
       <Filter>Source\02. Device</Filter>
     </ClInclude>
     <ClInclude Include="SimpleMath.h">
-      <Filter>Source\08. ShaderCode\09. Module\SimpleMath</Filter>
+      <Filter>Source\09. Module\SimpleMath</Filter>
     </ClInclude>
     <ClInclude Include="CPathMgr.h">
       <Filter>Source\03. Manager\01. PathMgr</Filter>
@@ -161,7 +161,7 @@
       <Filter>Source\06. Component\RenderComponent\4. Decal</Filter>
     </ClInclude>
     <ClInclude Include="CFBXLoader.h">
-      <Filter>Source\08. ShaderCode\09. Module\FBXLoader</Filter>
+      <Filter>Source\09. Module\FBXLoader</Filter>
     </ClInclude>
     <ClInclude Include="CMeshData.h">
       <Filter>Source\07. Resource\7. MeshData</Filter>
@@ -210,31 +210,31 @@
       <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourStatus.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourAlloc.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourAssert.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourCommon.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourMath.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMesh.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMeshBuilder.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNavMeshQuery.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="Detour\DetourNode.h">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClInclude>
     <ClInclude Include="CPathFindMgr.h">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
@@ -246,7 +246,7 @@
       <Filter>Source\03. Manager\14. Debug</Filter>
     </ClInclude>
     <ClInclude Include="FSM.h">
-      <Filter>Source\08. ShaderCode\09. Module\FSM</Filter>
+      <Filter>Source\09. Module\FSM</Filter>
     </ClInclude>
     <ClInclude Include="CCollider3D.h">
       <Filter>Source\06. Component\3. Collider3D</Filter>
@@ -431,7 +431,7 @@
       <Filter>Source\06. Component\4. Camera\Frustum</Filter>
     </ClCompile>
     <ClCompile Include="CFBXLoader.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\FBXLoader</Filter>
+      <Filter>Source\09. Module\FBXLoader</Filter>
     </ClCompile>
     <ClCompile Include="CMeshData.cpp">
       <Filter>Source\07. Resource\7. MeshData</Filter>
@@ -482,25 +482,25 @@
       <Filter>Source\08. ShaderCode\Compute</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourAlloc.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourAssert.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourCommon.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMesh.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMeshBuilder.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNavMeshQuery.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="Detour\DetourNode.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\NaviMesh</Filter>
+      <Filter>Source\09. Module\NaviMesh</Filter>
     </ClCompile>
     <ClCompile Include="CPathFindMgr.cpp">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
@@ -515,7 +515,7 @@
       <Filter>Source\03. Manager\14. Debug</Filter>
     </ClCompile>
     <ClCompile Include="FSM.cpp">
-      <Filter>Source\08. ShaderCode\09. Module\FSM</Filter>
+      <Filter>Source\09. Module\FSM</Filter>
     </ClCompile>
     <ClCompile Include="3DCCollisionMgr.cpp">
       <Filter>Source\03. Manager\07. CollisionMgr</Filter>
@@ -783,25 +783,25 @@
     <Filter Include="Source\03. Manager\16. MemoryMgr\03. ObjectPool">
       <UniqueIdentifier>{e6d362e2-2393-45e8-9006-6b5f4dde54f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\09. Module">
+    <Filter Include="Source\09. Module">
       <UniqueIdentifier>{77da0800-3a79-4f9b-aa08-9bf7e06d17d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\09. Module\SimpleMath">
+    <Filter Include="Source\09. Module\SimpleMath">
       <UniqueIdentifier>{c3fbf7d1-977b-4a8d-916b-bc3be792b42f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\09. Module\FBXLoader">
+    <Filter Include="Source\09. Module\FBXLoader">
       <UniqueIdentifier>{5e0d6f76-4f1d-4782-a05e-bc1c743ce2b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\09. Module\FSM">
+    <Filter Include="Source\09. Module\FSM">
       <UniqueIdentifier>{09ba7341-2cb3-4d3d-a4c9-ff4291930efa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\08. ShaderCode\09. Module\NaviMesh">
+    <Filter Include="Source\09. Module\NaviMesh">
       <UniqueIdentifier>{c25b9dd0-ff9a-4a62-90d2-179c3de94787}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
-      <Filter>Source\08. ShaderCode\09. Module\SimpleMath</Filter>
+      <Filter>Source\09. Module\SimpleMath</Filter>
     </None>
     <None Include="cpp.hint" />
   </ItemGroup>
