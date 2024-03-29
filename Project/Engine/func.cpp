@@ -50,6 +50,17 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _L
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 
+void SpawnGameObjectToParent(CGameObject* _NewObject, CGameObject* _ParentObject)
+{
+	tEvent evn = {};
+
+	evn.Type = EVENT_TYPE::CREATE_OBJECT_TO_PARENT;
+	evn.wParam = (DWORD_PTR)_NewObject;
+	evn.lParam = (DWORD_PTR)_ParentObject;
+
+	CEventMgr::GetInst()->AddEvent(evn);
+}
+
 void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 {
 	vector<CGameObject*> vecChildObj = _ParentObject->GetChild();

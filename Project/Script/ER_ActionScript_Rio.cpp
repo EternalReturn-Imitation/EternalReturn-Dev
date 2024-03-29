@@ -9,6 +9,9 @@
 
 #include <Engine\CAnim3D.h>
 
+//ÀÌÆåÆ® °ü·Ã
+#include "ER_RioBAEffect.h"
+
 ER_ActionScript_Rio::ER_ActionScript_Rio()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_RIO)
     , m_BowType(false)
@@ -17,6 +20,12 @@ ER_ActionScript_Rio::ER_ActionScript_Rio()
 
 ER_ActionScript_Rio::~ER_ActionScript_Rio()
 {
+}
+
+void ER_ActionScript_Rio::begin()
+{
+    ER_ActionScript_Character::begin();
+    GetOwner()->AddComponent(new ER_RioBAEffect);
 }
 
 void ER_ActionScript_Rio::WaitEnter(tFSMData& param)

@@ -127,6 +127,9 @@
     <Filter Include="Script\ER\EffectScript\Rio">
       <UniqueIdentifier>{f0ef82ab-009a-4d8a-a375-ca9331eba4c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\BasicAttackEffect">
+      <UniqueIdentifier>{4d5476b6-af07-4e16-8a83-b1297451af93}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -245,6 +248,9 @@
     </ClInclude>
     <ClInclude Include="ER_EffectScript.h">
       <Filter>Script\ER\EffectScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_RioBAEffect.h">
+      <Filter>Script\ER\EffectScript\Rio\BasicAttackEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +376,9 @@
     </ClCompile>
     <ClCompile Include="ER_EffectScript.cpp">
       <Filter>Script\ER\EffectScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_RioBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Rio\BasicAttackEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

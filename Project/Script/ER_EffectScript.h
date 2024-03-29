@@ -1,11 +1,15 @@
 #pragma once
 #include <Engine/CScript.h>
+#include <future>
 
 class ER_EffectScript :
     public CScript
 {
 private:
     float m_fTime;
+
+public:
+    void EffectRotation(CGameObject*& _targetObj, Vec3 _startScale, Vec3 _endScale, bool _rotDirection, float _endTime);
 
 private:
     virtual void begin() override;

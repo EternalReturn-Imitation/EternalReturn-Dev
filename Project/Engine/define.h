@@ -264,6 +264,7 @@ enum class SHADER_DOMAIN
 enum class EVENT_TYPE
 {
 	CREATE_OBJECT,	// wParam : GameObject, lParam : Layer Index
+	CREATE_OBJECT_TO_PARENT, // wParam : ChildObject, lParam : ParentObject
 	DELETE_OBJECT,  // wParam : GameObject
 	ERASE_OBJECT,	// wParam : GameObject,
 
