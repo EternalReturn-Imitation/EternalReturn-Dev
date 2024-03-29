@@ -94,24 +94,6 @@ void TestObject()
 
 
 #pragma region AyaEffectTest
-	// // 텍스트 출력 필수요소 : _TRANSFORM | _MESHRENDER | _TEXT
-	// // Std2DUIMtrl 사용
-	// testTextObj->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 0.f));
-	// testTextObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	// testTextObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DUIMtrl"), 0);
-	// 
-	// // 텍스쳐없어도되지만 텍스쳐지정 안하면 마젠타색상출력돼서 쉐이더코드처리필요
-	// // testTextObj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"Ico_ItemGradebg_01.png"));
-	// 
-	// 
-	// // 폰트 넥슨Lv2고딕 과, FW1_CENTER | FW1_VCENTER Flags는 기본값으로설정해놓음.
-	// // 예시 : 폰트 패밀리이름(파일이름아님), OffsetPos, FontSize, RGBA값, 폰트출력 Flag.
-	// testTextObj->Text()->TextInit(L"넥슨Lv2고딕", Vec2(0.f, 0.f), 50.f, FONT_RGBA(255, 255, 255, 255), FW1_CENTER | FW1_VCENTER);
-	// testTextObj->Text()->InputString(L"테스트");
-	// 
-	// SpawnGameObject(testTextObj, Vec3(0.f, 0.f, 0.f), L"UI");
-
-
 	// Particle
 
 	// 마우스 커서위치
@@ -203,6 +185,105 @@ void TestObject()
 	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"AyaQ_FirstTake.png");
 	//tdExample->Animator2D()->CreateAnimation(L"AyaQ_FirstTake", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
 	//tdExample->Animator2D()->Play(L"AyaQ_FirstTake", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Spark4.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Spark4", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Spark4", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Spark4.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Spark4", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Spark4", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Ring", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Ring", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring2.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Ring2", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Ring2", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring3.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Ring3", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Ring3", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring4.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Ring4", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Ring4", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring5.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Ring5", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Ring5", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring6.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Ring6", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Ring6", true);
+	//
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring7.png");
+	//tdExample->Animator2D()->CreateAnimation(L"Ring7", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	//tdExample->Animator2D()->Play(L"Ring7", true);
 	//
 	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 
