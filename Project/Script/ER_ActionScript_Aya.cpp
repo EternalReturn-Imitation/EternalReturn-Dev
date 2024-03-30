@@ -723,7 +723,7 @@ void ER_ActionScript_Aya::Skill_EEnter(tFSMData& param)
         SkillW->fCoolDown = SkillW->fCoolDown - WCoolRatio <= 0.5f ? 0.5f : SkillW->fCoolDown - WCoolRatio;
     }
 
-    // 일정거리(40%) 텔레포트판정
+    // 일정거리(20%) 텔레포트판정
     Vec3 vMoveDir(param.v2Data.x, 0.f, param.v2Data.y);
     
     float fMoveDist = param.fData[1] * 0.2f;

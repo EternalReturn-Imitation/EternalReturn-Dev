@@ -215,3 +215,10 @@ bool ER_ActionScript_Character::IsPlayer()
 	
 	return nullptr != IsPlayer;
 }
+
+bool ER_ActionScript_Character::IsCharacter(CGameObject* _Obj)
+{
+	ER_DataScript_Character* CharacterScript = _Obj->GetScript<ER_DataScript_Character>();
+	
+	return nullptr != CharacterScript;
+}

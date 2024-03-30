@@ -91,6 +91,7 @@ protected:
 
     // [ Player Check ]
     bool IsPlayer();
+    bool IsCharacter(CGameObject* _Obj);
 
 
 public:

@@ -31,6 +31,17 @@ bool ER_ActionScript_Yuki::SoundLoad()
 bool ER_ActionScript_Hyunwoo::SoundLoad()
 {
     SOUNDLOAD(CRAFT_SOUND, L"chracter_Craft_Tool_8sec.wav");
+    SOUNDLOAD(ATTACK_NORMAL1, L"attackGlove_Normal01.wav");
+    SOUNDLOAD(ATTACK_NORMAL2, L"attackGlove_Normal02.wav");
+    SOUNDLOAD(HITSOUND, L"attackGlove_Normal_Hit_P.wav");
+    SOUNDLOAD(SKILLQ_MOTION, L"hyunwoo_Skill01_Attack_v1.wav");
+    SOUNDLOAD(SKILLQ_HIT, L"hyunwoo_Skill01_Hit.wav");
+    SOUNDLOAD(SKILLW, L"hyunwoo_Skill02_Activation.wav");
+    SOUNDLOAD(SKILLE_SLIDE, L"hyunwoo_Skill03_Slide.wav");
+    SOUNDLOAD(SKILLE_HIT, L"hyunwoo_Skill03_Hit.wav");
+    SOUNDLOAD(SKILLR_CHARGING, L"hyunwoo_Skill04_Charging.wav");
+    SOUNDLOAD(SKILLR_HIT, L"hyunwoo_Skill04_Hit.wav");
+
     return true;
 }
 

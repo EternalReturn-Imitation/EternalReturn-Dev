@@ -14,6 +14,7 @@
 
 ER_ActionScript_Rio::ER_ActionScript_Rio()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_RIO)
+    , m_pSounds{}
     , m_BowType(false)
 {
 }
