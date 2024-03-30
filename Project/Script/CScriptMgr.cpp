@@ -10,6 +10,7 @@
 #include "ER_ActionScript_Jackie.h"
 #include "ER_ActionScript_Rio.h"
 #include "ER_ActionScript_Yuki.h"
+#include "ER_ArrowEffectScript.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
 #include "ER_DataScript_Arrow.h"
@@ -21,7 +22,6 @@
 #include "ER_EffectScript.h"
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
-#include "ER_ProjectileScript.h"
 #include "ER_RioBAEffect.h"
 #include "ER_RioQEffect.h"
 #include "ER_UIScript_CraftSlot.h"
@@ -44,6 +44,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ActionScript_Jackie");
 	_vec.push_back(L"ER_ActionScript_Rio");
 	_vec.push_back(L"ER_ActionScript_Yuki");
+	_vec.push_back(L"ER_ArrowEffectScript");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Arrow");
@@ -55,7 +56,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_EffectScript");
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
-	_vec.push_back(L"ER_ProjectileScript");
 	_vec.push_back(L"ER_RioBAEffect");
 	_vec.push_back(L"ER_RioQEffect");
 	_vec.push_back(L"ER_UIScript_CraftSlot");
@@ -88,6 +88,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_ActionScript_Rio;
 	if (L"ER_ActionScript_Yuki" == _strScriptName)
 		return new ER_ActionScript_Yuki;
+	if (L"ER_ArrowEffectScript" == _strScriptName)
+		return new ER_ArrowEffectScript;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
@@ -110,8 +112,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_PlayerScript;
 	if (L"ER_PlayerScript_Range" == _strScriptName)
 		return new ER_PlayerScript_Range;
-	if (L"ER_ProjectileScript" == _strScriptName)
-		return new ER_ProjectileScript;
 	if (L"ER_RioBAEffect" == _strScriptName)
 		return new ER_RioBAEffect;
 	if (L"ER_RioQEffect" == _strScriptName)
@@ -166,6 +166,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_YUKI:
 		return new ER_ActionScript_Yuki;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_ARROWEFFECTSCRIPT:
+		return new ER_ArrowEffectScript;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
 		break;
@@ -199,14 +202,14 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
 		return new ER_PlayerScript_Range;
 		break;
-	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
-		return new ER_UIScript_CraftSlot;
-		break;
 	case (UINT)SCRIPT_TYPE::ER_RIOBAEFFECT:
 		return new ER_RioBAEffect;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_RIOQEFFECT:
 		return new ER_RioQEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
+		return new ER_UIScript_CraftSlot;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_GAUGE:
 		return new ER_UIScript_Gauge;
@@ -273,6 +276,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_ActionScript_Yuki";
 		break;
 
+	case SCRIPT_TYPE::ER_ARROWEFFECTSCRIPT:
+		return L"ER_ArrowEffectScript";
+		break;
+
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return L"ER_CamControllerScript";
 		break;
@@ -317,16 +324,16 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_PlayerScript_Range";
 		break;
 
-	case SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
-		return L"ER_UIScript_CraftSlot";
-		break;
-
 	case SCRIPT_TYPE::ER_RIOBAEFFECT:
 		return L"ER_RioBAEffect";
 		break;
 
 	case SCRIPT_TYPE::ER_RIOQEFFECT:
 		return L"ER_RioQEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
+		return L"ER_UIScript_CraftSlot";
 		break;
 
 	case SCRIPT_TYPE::ER_UISCRIPT_GAUGE:

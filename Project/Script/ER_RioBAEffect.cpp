@@ -44,8 +44,7 @@ void ER_RioBAEffect::SpawnEffect()
 	else {
 		std::thread t(&ER_EffectScript::EffectRotation, this, tdExample, Vec3(1.0f, 1.0f, 1.0f), Vec3(1.0f, 1.0f, 1.0f), true, 0.2f);
 		t.detach();
-	}
-	
+	}	
 }
 
 void ER_RioBAEffect::SaveToLevelFile(FILE* _File)

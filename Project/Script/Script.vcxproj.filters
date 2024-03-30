@@ -139,6 +139,9 @@
     <Filter Include="Script\ER\DataScript\Projectile\Bullet">
       <UniqueIdentifier>{5adec4b1-440f-415d-9b7e-5a06c838d816}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\ArrowEffect">
+      <UniqueIdentifier>{ee14ab7a-05cd-4a90-a024-83143b16434d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -266,6 +269,10 @@
     </ClInclude>
     <ClInclude Include="ER_DataScript_Bullet.h">
       <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ProjectileScript.h" />
+    <ClInclude Include="ER_ArrowEffectScript.h">
+      <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -400,6 +407,9 @@
     </ClCompile>
     <ClCompile Include="ER_DataScript_Bullet.cpp">
       <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ArrowEffectScript.cpp">
+      <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@ ER_ActionScript_Hyunwoo
 ER_ActionScript_Jackie
 ER_ActionScript_Rio
 ER_ActionScript_Yuki
+ER_ArrowEffectScript
 ER_CamControllerScript
 ER_Cursor
 ER_DataScript_Arrow
@@ -18,7 +19,6 @@ ER_DataScript_LandMeshBase
 ER_EffectScript
 ER_PlayerScript
 ER_PlayerScript_Range
-ER_ProjectileScript
 ER_RioBAEffect
 ER_RioQEffect
 ER_UIScript_CraftSlot

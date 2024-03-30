@@ -354,7 +354,7 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
             ERCHARSOUND(SHORT_NORMAL_ATTACK);
 
         GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect();
-
+        
         // 캐릭터 고유 공격 알고리즘
 
         // 투사체 생성
@@ -364,7 +364,7 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
         
         ArrowScript->init();
         ArrowScript->SetForTarget(
-            GetOwner(), 
+            GetOwner(),
             (CGameObject*)param.lParam, 
             GetProjSpawnPos(param.lParam), 
             15.f);
@@ -552,7 +552,7 @@ void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
     {
         SetStateGrade(eAccessGrade::BASIC);
 
-        ChangeState(ER_CHAR_ACT::WAIT);
+        ChangeState(ER_CHAR_ACT::WAIT);        
     }
 }
 void ER_ActionScript_Rio::Skill_QExit(tFSMData& param)
