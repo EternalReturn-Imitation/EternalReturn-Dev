@@ -24,6 +24,9 @@ protected:
 
     CScript*        m_SkillInst;
     SKILL_DMG_CALC  m_SkillFunc;
+    tSkill_Info*    m_SkillData;
+    int             m_SkillHitStep;
+
     
     float           m_fSpeed;
     float           m_fLifeTime;
@@ -41,11 +44,13 @@ public:
     void SetForTarget(CGameObject* _Shooter, CGameObject* _Target, Vec3 _SpawnPos, float _fSpeed);
     void SetForDir(CGameObject* _Shooter, Vec3 _SpawnPos, float _fSpeed, float _fLifeTime);
 
-    void SetSkill(CScript* _Inst, SKILL_DMG_CALC _Func)
+    void SetSkill(CScript* _Inst, SKILL_DMG_CALC _Func, tSkill_Info* _skillData, int _hitstep)
     {
         m_DmgType = eDmgType::SKILL;
         m_SkillInst = _Inst;
         m_SkillFunc = _Func;
+        m_SkillData = _skillData;
+        m_SkillHitStep = _hitstep;
     };
 
 public:

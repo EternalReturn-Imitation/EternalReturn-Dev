@@ -485,13 +485,15 @@ void ER_ActionScript_Aya::Skill_QUpdate(tFSMData& param)
         if (param.bData[2])
         {
             ERCHARSOUND(SKILLQ);
-            BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ2);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+            BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ2, skill, 1);
         }
         // 1타
         else
         {
             ERCHARSOUND(NORMAL_ATTACK);
-            BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ1);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+            BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ1, skill, 0);
         }
 
         BulletScript->Spawn();
@@ -577,7 +579,8 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
             1.f);
 
         ERCHARSOUND(SKILLW);
-        BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillW);
+        tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+        BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillW, skill, 0);
 
         BulletScript->Spawn();
 
@@ -846,7 +849,8 @@ void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
                 // 스턴효과 
 
                 // 스킬공격 데미지
-                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Aya, SkillR);
+                const tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Aya, SkillR, skill, 0);
             }
 
             Animator3D()->SelectAnimation(L"Aya_SkillR_End", false);

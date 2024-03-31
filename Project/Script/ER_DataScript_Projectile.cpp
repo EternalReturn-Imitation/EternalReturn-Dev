@@ -16,6 +16,8 @@ ER_DataScript_Projectile::ER_DataScript_Projectile(SCRIPT_TYPE _type)
 	, m_SkillFunc(nullptr)
 	, m_fSpeed(0.f)
 	, m_fLifeTime(0.f)
+	, m_SkillData(nullptr)
+	, m_SkillHitStep(0)
 {
 }
 
@@ -175,7 +177,7 @@ void ER_DataScript_Projectile::BeginOverlap(CCollider3D* _Other)
 			{
 				if (m_SkillInst && m_SkillFunc)
 				{
-					ER_BattleSystem::GetInst()->Battle_Skill(m_pShooter, _Other->GetOwner(), m_SkillInst, m_SkillFunc);
+					ER_BattleSystem::GetInst()->Battle_Skill(m_pShooter, _Other->GetOwner(), m_SkillInst, m_SkillFunc, m_SkillData, m_SkillHitStep);
 
 					// 사운드 재생
 					if (nullptr != m_pSound)
