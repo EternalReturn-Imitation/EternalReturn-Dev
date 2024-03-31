@@ -66,6 +66,7 @@ void CreateLumiaIsland()
 	
 	ER_GameSystem::GetInst()->GameStart();
 	
+	pCurLevel->ChangeState(LEVEL_STATE::PLAY);
 	// TestObject();
 }
 

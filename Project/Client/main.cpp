@@ -54,13 +54,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Editor 초기화
     CEditorObjMgr::GetInst()->init();
-    
 
     // ImGui 초기화
     ImGuiMgr::GetInst()->init(g_hWnd);
     
     // GameSystem 초기화
     ER_GameSystem::GetInst()->init();
+    
+    // 에디터용, 에디터미사용시 지워도 되는코드
     ImGuiMgr::GetInst()->InitGameSystem();
     
     // 테스트 용 레벨 생성
@@ -136,7 +137,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   g_hWnd = CreateWindowW(L"MyWindow", L"MyGame", WS_CAPTION | WS_POPUP,
+   g_hWnd = CreateWindowW(L"MyWindow", L"Eternal Return", WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX),
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!g_hWnd)

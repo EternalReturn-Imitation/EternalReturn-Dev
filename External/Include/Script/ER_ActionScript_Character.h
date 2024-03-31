@@ -93,6 +93,7 @@ protected:
     // [ Player Check ]
     bool IsPlayer();
     bool IsCharacter(CGameObject* _Obj);
+    bool IsDead(CGameObject* _Obj);
 
 
 public:

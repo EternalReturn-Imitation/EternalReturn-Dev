@@ -843,7 +843,7 @@ void ER_ActionScript_Yuki::BeginOverlap(CCollider3D* _Other)
     // SkillE 시전중이고 이동상태일때
     if (SkillE.bData[0]  && 1 == SkillE.iData[0])
     {
-        if (!IsCharacter(Target))
+        if (!IsCharacter(Target) || IsDead(Target))
             return;
 
         // param.fData[0] : 스킬 거리(속도)
