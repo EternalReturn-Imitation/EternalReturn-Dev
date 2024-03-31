@@ -9,6 +9,9 @@
 #include "ptr.h"
 #include "CResMgr.h"
 #include "components.h"
+#include <mutex>
+
+mutex m_aFuncMutex;
 
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 {
@@ -26,6 +29,8 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 
 void SpawnGameObject(CGameObject* _NewObject, const wstring& _LayerName)
 {
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
 	_NewObject->SetOutOfLayer(false);
 	tEvent evn = {};
 
@@ -38,6 +43,8 @@ void SpawnGameObject(CGameObject* _NewObject, const wstring& _LayerName)
 
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName)
 {
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
 	_NewObject->SetOutOfLayer(false);
 	_NewObject->Transform()->SetRelativePos(_vWorldPos);
 
@@ -52,6 +59,8 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _L
 
 void SpawnGameObjectToParent(CGameObject* _NewObject, CGameObject* _ParentObject)
 {
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
 	tEvent evn = {};
 
 	evn.Type = EVENT_TYPE::CREATE_OBJECT_TO_PARENT;
@@ -63,6 +72,8 @@ void SpawnGameObjectToParent(CGameObject* _NewObject, CGameObject* _ParentObject
 
 void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 {
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
 	vector<CGameObject*> vecChildObj = _ParentObject->GetChild();
 	
 	int iChildCnt = (int)vecChildObj.size();
@@ -79,6 +90,8 @@ void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
 
 void DestroyObject(CGameObject* _DeletObject)
 {
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
 	if (_DeletObject->IsDead())
 		return;
 

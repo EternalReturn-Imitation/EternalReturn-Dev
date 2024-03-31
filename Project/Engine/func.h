@@ -2,6 +2,9 @@
 #include "MemoryPool.h"
 #include "MemoryMgr.h"
 #include "CEntity.h"
+#include <mutex>
+
+extern mutex m_aFuncMutex;
 
 template <typename T, UINT _Size>
 void DeleteArray(T* (&Arr)[_Size])

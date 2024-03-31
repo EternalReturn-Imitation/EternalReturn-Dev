@@ -642,7 +642,7 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
             SpawnPos.z += CenterDir.z * 0.5f;
             SpawnPos.y = SpawnPos.y + 1.1f;
 
-            ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.7f)
+            ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.7f);
 
             tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_2);
             ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW2, skill, 0);
@@ -653,8 +653,6 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
             param.bData[1] = true;                          // Battle Event ¿Ï·á
 
             SetStateGrade(eAccessGrade::BASIC);
-
-
         }
     }
     else

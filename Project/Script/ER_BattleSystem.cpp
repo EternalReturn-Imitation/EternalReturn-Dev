@@ -7,6 +7,9 @@
 //테스트용
 #include "ER_GameSystem.h"
 
+//이펙트용
+#include "ER_EffectSystem.h"
+
 ER_BattleSystem::ER_BattleSystem()
 {
 }
@@ -36,6 +39,8 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 	int CriticalDmg = IsCritical(AtkInfo);
 
 	int FinalDmg = (int)(((AtkPower * 100) / (100 + Def)) + (CriticalDmg * 0.65));
+
+	ER_EffectSystem::GetInst()->SpawnHitEffect(AtkObj, HitObj);
 
 	// 사망처리
 	if (HitInfo->iHP - FinalDmg <= 0)

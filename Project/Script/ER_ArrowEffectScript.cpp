@@ -38,9 +38,9 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = false;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
 
 	particle_data.StartScale = 5.f;
@@ -50,8 +50,8 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
 	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
 
-	particle_data.MinLifeTime = 3.f;
-	particle_data.MaxLifeTime = 3.f;
+	particle_data.MinLifeTime = 2.f;
+	particle_data.MaxLifeTime = 2.f;
 
 	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
 	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);

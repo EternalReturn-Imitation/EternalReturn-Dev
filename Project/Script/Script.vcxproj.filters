@@ -142,6 +142,9 @@
     <Filter Include="Script\ER\EffectScript\Rio\ArrowEffect">
       <UniqueIdentifier>{ee14ab7a-05cd-4a90-a024-83143b16434d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameSystem\Effect">
+      <UniqueIdentifier>{f6e05562-d1ba-46af-b123-b120d224acef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -273,6 +276,9 @@
     <ClInclude Include="ER_ProjectileScript.h" />
     <ClInclude Include="ER_ArrowEffectScript.h">
       <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_EffectSystem.h">
+      <Filter>GameSystem\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -410,6 +416,9 @@
     </ClCompile>
     <ClCompile Include="ER_ArrowEffectScript.cpp">
       <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_EffectSystem.cpp">
+      <Filter>GameSystem\Effect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
