@@ -52,6 +52,8 @@ public:
 
     void SetDestoryTrigger(bool _b) { m_bDestoryTrigger = _b; }
 
+    void SetParticleRot(Vec3 _rot) { m_ModuleData.vRot.x = _rot.x, m_ModuleData.vRot.y = _rot.y, m_ModuleData.vRot.z = _rot.z; }
+
     // 파티클 데이터 얻기
     const tParticleModule& GetParticleData() { return m_ModuleData; }
 

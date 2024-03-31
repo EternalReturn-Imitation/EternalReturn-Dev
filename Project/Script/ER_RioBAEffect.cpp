@@ -27,6 +27,7 @@ void ER_RioBAEffect::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
 
+	float test = XMConvertToDegrees(_dir.y);
 	tdExample->Transform()->SetRelativeRot(_dir);
 
 	tdExample->Transform()->SetAbsolute(true);
@@ -36,7 +37,7 @@ void ER_RioBAEffect::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	tdExample->Animator2D()->Play(L"wWind", true);
 
 	m_aEffect[0] = tdExample;
-	 
+
 	SpawnGameObject(tdExample, _pos, L"Effect");
 
 	if (GetOwner()->GetScript<ER_ActionScript_Rio>()->GetBowType()) {

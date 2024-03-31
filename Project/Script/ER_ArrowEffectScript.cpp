@@ -43,8 +43,8 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = true;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
 
-	particle_data.StartScale = 1.f;
-	particle_data.EndScale = 1.f;
+	particle_data.StartScale = 5.f;
+	particle_data.EndScale = 5.f;
 
 	particle_data.vSpawnScaleMin = Vec3(0.3f, 0.3f, 0.3f);
 	particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
@@ -61,12 +61,24 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	particle_data.vVelocityDir = Vec3(1.f, 0.f, 1.f);
 	particle_data.Speed = 2.5f;
 
-	particle_data.SpawnRate = 20;
+	particle_data.SpawnRate = 40.f;
 
 	particle_data.EndDrag = -1.f;
 
 	particle_data.fNoiseTerm = 2.f;
 	particle_data.fNoiseForce = 2.f;
+
+	float angle = Rad2Deg(GetOwner()->Transform()->GetRelativeRot().y);
+
+	float offset = 45.f;
+	angle -= offset;
+	
+	if (angle < 0) {
+		angle = 360.f + angle;
+	}
+
+
+	particle_data.vRot = Vec4(0.f,0.f, angle ,0.f);
 
 	//Particle->SetMaxParticleCount(10);
 	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire_Orange.png"));

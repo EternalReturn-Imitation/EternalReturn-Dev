@@ -53,22 +53,6 @@ void ER_EffectScript::EffectRotation(CGameObject* _targetObj, Vec3 _startScale, 
 	DestroyObject(_targetObj);
 }
 
-float ER_EffectScript::GetFrontDir(Vec3 _dir)
-{
-	// 앞쪽 방향 계산
-	float yRad = atan2(-DirectX::XMVectorGetX(_dir),
-		sqrt(DirectX::XMVectorGetY(_dir) *
-			DirectX::XMVectorGetY(_dir) +
-			DirectX::XMVectorGetZ(_dir) *
-			DirectX::XMVectorGetZ(_dir)));
-
-	// 벡터가 양수인 경우 180도 회전
-	if (_dir.z > 0.0f)
-		yRad = (DirectX::XM_PI - yRad);
-
-	return yRad;
-}
-
 void ER_EffectScript::begin()
 {
 }

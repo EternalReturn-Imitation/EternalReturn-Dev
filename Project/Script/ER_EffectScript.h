@@ -13,8 +13,6 @@ public:
     
     void EffectRotation(CGameObject* _targetObj, Vec3 _startScale, Vec3 _endScale, bool _rotDirection, float _endTime);
 
-    float GetFrontDir(Vec3 _dir);
-
 private:
     virtual void begin() override;
     virtual void tick() override;

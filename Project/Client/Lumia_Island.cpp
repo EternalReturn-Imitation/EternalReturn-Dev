@@ -299,12 +299,12 @@ void TestObject()
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = true;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
+	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
 	
-	particle_data.StartScale = 2.f;
-	particle_data.EndScale = 2.f;
+	particle_data.StartScale = 15.f;
+	particle_data.EndScale = 15.f;
 	
 	particle_data.vSpawnScaleMin = Vec3(0.3f, 0.3f, 0.3f);
 	particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
@@ -321,19 +321,19 @@ void TestObject()
 	particle_data.vVelocityDir = Vec3(1.f, 0.f, 1.f);
 	particle_data.Speed = 2.5f;
 	
-	particle_data.SpawnRate = 20;
+	particle_data.SpawnRate = 1;
 	
 	particle_data.EndDrag = -1.f;
 
 	particle_data.fNoiseTerm = 2.f;
 	particle_data.fNoiseForce = 2.f;
-	
+		
 	//Particle->SetMaxParticleCount(10);
 	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire_Orange.png"));
 	Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
 	Particle->SetParticleSpawnNum(100);
 	
-	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);	
+	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 
 	//CGameObject* tdExample = new CGameObject();
 	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
