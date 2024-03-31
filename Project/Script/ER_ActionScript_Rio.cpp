@@ -15,6 +15,7 @@
 //이펙트 관련
 #include "ER_RioBAEffect.h"
 #include "ER_RioQEffect.h"
+#include "ER_ArrowEffectScript.h"
 
 
 ER_ActionScript_Rio::ER_ActionScript_Rio()
@@ -353,7 +354,7 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
         else
             ERCHARSOUND(SHORT_NORMAL_ATTACK);
 
-        GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect();
+        
         
         // 캐릭터 고유 공격 알고리즘
 
@@ -368,10 +369,17 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
             (CGameObject*)param.lParam, 
             GetProjSpawnPos(param.lParam), 
             15.f);
+
+        ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+        Arrow->AddComponent(arrowEffect);
+
         ArrowScript->Spawn();
 
         param.bData[1] = true;                          // Battle Event 완료
 
+        Vec3 dir = GetProjSpawnPos(param.lParam) - GetOwner()->Transform()->GetRelativePos();
+
+        GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect(GetProjSpawnPos(param.lParam), GetOwner()->Transform()->GetRelativeRot());
 
         // 리오 고유 2타 공격
         if (param.iData[0] < 11 && !m_BowType)
@@ -631,11 +639,17 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
 
             ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.7f);
             ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW2);
-            ArrowScript->Spawn();
+
+            ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+            Arrow->AddComponent(arrowEffect);
+
+            ArrowScript->Spawn();            
 
             param.bData[1] = true;                          // Battle Event 완료
 
             SetStateGrade(eAccessGrade::BASIC);
+
+
         }
     }
     else
@@ -671,6 +685,10 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
 
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
                 ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW1);
+
+                ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+                Arrow->AddComponent(arrowEffect);
+
                 ArrowScript->Spawn();
             }
 

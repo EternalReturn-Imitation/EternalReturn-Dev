@@ -69,9 +69,6 @@ CParticleSystem::CParticleSystem()
 	m_ModuleData.vMaxVelocityScale = Vec3(1.f, 1.f, 1.f);
 	m_ModuleData.vMaxSpeed = 1.f;
 
-
-
-
 	// 입자 메쉬
 	SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh"));
 

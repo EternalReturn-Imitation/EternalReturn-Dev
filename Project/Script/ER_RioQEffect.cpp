@@ -18,7 +18,7 @@ void ER_RioQEffect::tick()
 {
 }
 
-void ER_RioQEffect::SpawnEffect()
+void ER_RioQEffect::SpawnEffect(Vec3 _pos, Vec3 _dir)
 {
 	CGameObject* testParticle = new CGameObject;
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);

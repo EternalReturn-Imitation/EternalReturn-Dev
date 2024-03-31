@@ -235,8 +235,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
             particle.vColor = ModuleData.vStartColor + particle.NomalizedAge * (ModuleData.vEndColor - ModuleData.vStartColor);
         }               
         
-    }    
-    
+    }
     // 변경점 적용
     ParticleBuffer[_ID.x] = particle;
 }
