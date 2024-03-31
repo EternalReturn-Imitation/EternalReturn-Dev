@@ -620,7 +620,8 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
             SpawnPos.y = SpawnPos.y + 1.1f;
 
             ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.7f);
-            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW2);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_2);
+            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW2, skill, 0);
             ArrowScript->Spawn();
 
             param.bData[1] = true;                          // Battle Event ¿Ï·á
@@ -660,7 +661,8 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
                 SpawnPos.y = SpawnPos.y + 1.1f;
 
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
-                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW1);
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW1, skill, 0);
                 ArrowScript->Spawn();
             }
 
@@ -776,7 +778,8 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
                     ArrowScript->init();
 
                     ArrowScript->SetForTarget(GetOwner(), Target, vPos, 15.f);
-                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE2);
+                    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_2);
+                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE2, skill, 0);
                     ArrowScript->Spawn();
 
                 }
@@ -789,7 +792,8 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
                     ArrowScript->init();
 
                     ArrowScript->SetForTarget(GetOwner(), Target, vPos, 15.f);
-                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE1);
+                    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE1, skill, 0);
                     ArrowScript->Spawn();
                 }
             }
@@ -933,7 +937,8 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
 
 
             ArrowScript->SetForDir(GetOwner(), param.v4Data, 12.f, 5.f);
-            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR2);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_2);
+            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR2, skill, 0);
             ArrowScript->Spawn();
 
             param.bData[1] = true;
@@ -960,7 +965,8 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
                 ArrowScript->init();
 
                 ArrowScript->SetForDir(GetOwner(), param.v4Data, 15.f, 0.4f);
-                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_1);
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_1, skill, 0);
                 ArrowScript->Spawn();
 
                 param.bData[1] = true;
@@ -1005,7 +1011,8 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
                 SpawnPos.y = SpawnPos.y + 1.1f;
 
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
-                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_2);
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_2, skill, 1);
                 ArrowScript->Spawn();
 
                 param.bData[1] = true;

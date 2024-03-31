@@ -55,7 +55,9 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
 void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker
 	, CGameObject* _HitObj
 	, CScript* _Inst
-	, SKILL_DMG_CALC _calc)
+	, SKILL_DMG_CALC _calc
+	, const tSkill_Info* _SkillInfo
+	, const int _HitStep)
 {
 	tIngame_Stats* AtkInfo = GetStatsInfo(_Attacker);
 	tIngame_Stats* HitInfo = GetStatsInfo(_HitObj);

@@ -7,7 +7,7 @@
 #define STATEDATA_SET(State, FSMData) StateList[(UINT)ER_CHAR_ACT::State]->SetData(FSMData)
 #define STATEDATA_GET(State) StateList[(UINT)ER_CHAR_ACT::State]->GetData()
 
-#define BATTLE_SKILL(AttackObj, HittedObj, className, CalcFunc) ER_BattleSystem::GetInst()->Battle_Skill(AttackObj, HittedObj, this, (SKILL_DMG_CALC)&className::CalcFunc)
+#define BATTLE_SKILL(AttackObj, HittedObj, className, CalcFunc, skilldata, hitstep) ER_BattleSystem::GetInst()->Battle_Skill(AttackObj, HittedObj, this, (SKILL_DMG_CALC)&className::CalcFunc, skilldata, hitstep)
 #define BATTLE_COMMON(AttackObj, HittedObj) ER_BattleSystem::GetInst()->Battle_Common(AttackObj, (CGameObject*)HittedObj)
 
 #define GETITEMSTATS(ItemObj) ItemObj->GetScript<ER_DataScript_Item>()->GetStats()

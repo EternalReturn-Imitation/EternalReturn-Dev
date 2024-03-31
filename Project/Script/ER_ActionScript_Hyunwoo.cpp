@@ -456,7 +456,8 @@ void ER_ActionScript_Hyunwoo::Skill_QUpdate(tFSMData& param)
             
 
             // 스킬 타격
-            BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillQ);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+            BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillQ, skill, 0);
         }
     }
 
@@ -616,7 +617,8 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
                 if (2.f < dist)
                     continue;
                 
-                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillEWall);
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillEWall, skill, 1);
             }
         }
 
@@ -733,7 +735,8 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
                     continue;
 
                 // 스킬 타격
-                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillR);
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillR, skill, 0);
 
                 // 방어력 감소 디버프
                 Target->GetScript<ER_DataScript_Character>()->GetStatusEffect()->
@@ -944,7 +947,8 @@ void ER_ActionScript_Hyunwoo::BeginOverlap(CCollider3D* _Other)
     if (SkillE.bData[0] && IsCharacter(Target))
     {
         // E Skill 1타 데미지
-        BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillE);
+        tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+        BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillE, skill, 0);
     }
 }
 
