@@ -2,10 +2,12 @@
 #include "ER_ActionScript_Hyunwoo.h"
 #include "ER_DataScript_Character.h"
 
+#include "ER_GameSystem.h"
+#include "ER_ItemMgr.h"
+
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
-
-#include "ER_ItemMgr.h"
+#include "ER_PlayerScript.h"
 
 #include <Engine/CAnim3D.h>
 
@@ -269,11 +271,13 @@ void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
     if (param.bData[3])
     {
         Animator3D()->SelectAnimation(L"Hyunwoo_Attack0", false);
+        ERCHARSOUND(ATTACK_NORMAL1);
         param.iData[0] = 6;
     }
     else
     {
         Animator3D()->SelectAnimation(L"Hyunwoo_Attack1", false);
+        ERCHARSOUND(ATTACK_NORMAL2);
         param.iData[0] = 6;
     }
 
@@ -307,7 +311,7 @@ void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
     if (!param.bData[1] && param.iData[0] < Animator3D()->GetCurFrame())
     {
         // 사운드 재생
-
+        ERCHARSOUND(HITSOUND);
         // 캐릭터 고유 공격 알고리즘
         BATTLE_COMMON(GetOwner(), param.lParam);
         param.bData[1] = true;
@@ -356,77 +360,147 @@ void ER_ActionScript_Hyunwoo::AttackExit(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::Skill_Q(tFSMData& _Data)
 {
+    tFSMData Prevdata = STATEDATA_GET(SKILL_Q);
+    if (Prevdata.bData[0])
+        return;
+    
     STATEDATA_SET(SKILL_Q, _Data);
-
     ChangeState(ER_CHAR_ACT::SKILL_Q);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_W(tFSMData& _Data)
 {
+    tFSMData Prevdata = STATEDATA_GET(SKILL_W);
+    if (Prevdata.bData[0])
+        return;
+
+    ChangeState(ER_CHAR_ACT::SKILL_W);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_E(tFSMData& _Data)
 {
-    STATEDATA_SET(SKILL_E, _Data);
+    tFSMData Prevdata = STATEDATA_GET(SKILL_E);
+    if (Prevdata.bData[0])
+        return;
 
-    ChangeState(ER_CHAR_ACT::SKILL_E, eAccessGrade::ADVANCED);
+    STATEDATA_SET(SKILL_E, _Data);
+    ChangeState(ER_CHAR_ACT::SKILL_E);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_R(tFSMData& _Data)
 {
-    STATEDATA_SET(SKILL_R, _Data);
+    tFSMData Prevdata = STATEDATA_GET(SKILL_R);
+    if (Prevdata.bData[0])
+        return;
 
-    ChangeState(ER_CHAR_ACT::SKILL_R, eAccessGrade::ADVANCED);
+    STATEDATA_SET(SKILL_R, _Data);
+    ChangeState(ER_CHAR_ACT::SKILL_R);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_QEnter(tFSMData& param)
 {
     tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    
     if (Skill->Use(&GetStatus()->iSP, true))
     {
         float SpdValue = Skill->Float1();
         float Time = Skill->fActionTime;
+
+        // 자체 이속증가 버프
         m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_SPD, Time, SpdValue);
-        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_SkillQ", false);
+        
+        param.bData[0] = true;
+        param.bData[1] = false;
+        param.iData[0] = 10;
+
+        ERCHARSOUND(SKILLQ_MOTION);
+
+        Animator3D()->SelectAnimation(L"Hyunwoo_SkillQ", false);
+        SetRotationToTarget(param.v4Data);
+        param.v4Data = GetFocusDir();
+
+        SetStateGrade(eAccessGrade::UTMOST);
     }
     else
-        GetOwner()->Animator3D()->SelectAnimation(L"Hyunwoo_Wait", false);
-
-    SetRotationToTarget(param.v4Data);
-    SetStateGrade(eAccessGrade::UTMOST);
-
-    SetRotationToTarget(param.v4Data);
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_QUpdate(tFSMData& param)
 {
-    CAnimator3D* animator = GetOwner()->Animator3D();
+    if (!param.bData[1] && param.iData[0] < Animator3D()->GetCurFrame())
+    {
+        ERCHARSOUND(SKILLQ_HIT);
+        param.bData[1] = true;
 
-    int curFrame = animator->GetCurFrame();
+        vector<CGameObject*> vecChar = ER_GameSystem::GetInst()->GetCharacters();
+        Vec3 vPos = Transform()->GetRelativePos();
+        Vec3 SkillPos = vPos + (param.v4Data * 1.f);
 
-    if (animator->IsFinish())
+        for (auto Target : vecChar)
+        {
+            if (Target == GetOwner())
+                continue;
+
+            Vec3 TargetPos = Target->Transform()->GetRelativePos();
+            float dist = Vec3::Distance(SkillPos, TargetPos);
+
+            float DebufTime = 2.f;
+            float SpeedValue = 0.4f;
+
+            if (2.f < dist)
+                continue;
+
+            // 이속 감소 디버프
+            Target->GetScript<ER_DataScript_Character>()->GetStatusEffect()->
+                ActiveEffect((UINT)eStatus_Effect::DECREASE_SPD, DebufTime, SpeedValue);
+            
+
+            // 스킬 타격
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+            BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillQ, skill, 0);
+        }
+    }
+
+    if (Animator3D()->IsFinish())
     {
         SetStateGrade(eAccessGrade::BASIC);
         ChangeState(ER_CHAR_ACT::WAIT);
-        param.iData[0] = 0;
-    }
-
-    if (curFrame > 10) {
-        SetStateGrade(eAccessGrade::BASIC);
         param.iData[0] = 0;
     }
 }
 
 void ER_ActionScript_Hyunwoo::Skill_QExit(tFSMData& param)
 {
+    param.bData[0] = false;
+    param.bData[1] = false;
 }
 
 void ER_ActionScript_Hyunwoo::Skill_WEnter(tFSMData& param)
 {
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+
+    if (Skill->Use(&GetStatus()->iSP, true))
+    {
+        // 공격력/방어력증가 버프
+        int AtkValue = Skill->Int1();
+        int DefValue = (GetStatus()->iDefense * Skill->Float1());
+        float ActionTime = Skill->ActionTime();
+
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_ATK, ActionTime, AtkValue);
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_DEF, ActionTime, DefValue);
+
+        // 이펙트 효과 재생
+
+        ERCHARSOUND(SKILLW);
+    }
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_WUpdate(tFSMData& param)
 {
+    SetStateGrade(eAccessGrade::BASIC);
+    ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_WExit(tFSMData& param)
@@ -435,78 +509,133 @@ void ER_ActionScript_Hyunwoo::Skill_WExit(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::Skill_EEnter(tFSMData& param)
 {
-    CAnimator3D* Animator = GetOwner()->Animator3D();
-    Animator->SelectAnimation(L"Hyunwoo_SkillE_Start", false);
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
 
-    SetRotationToTarget(param.v4Data);
+    if (Skill->Use(&GetStatus()->iSP, true))
+    {
+        Animator3D()->SelectAnimation(L"Hyunwoo_SkillE_Start", false);
+        SetRotationToTarget(param.v4Data);
 
-    // 방향 저장
-    Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
-    Vec3 vDir = (param.v4Data - vPos).Normalize();
+        // 방향 저장
+        Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+        Vec3 vDir = (param.v4Data - vPos).Normalize();
 
-    // param.v4Data 에 받아온 방향정보를 v2Data로 이동
-    param.v2Data.x = vDir.x;
-    param.v2Data.y = vDir.z;
+        // param.v4Data 에 받아온 방향정보를 v2Data로 이동
+        // 스킬 동작 여부
+        param.bData[0] = true;
 
-    param.v4Data[0] = 30.f;                                              // 스킬 거리
-    float ClearDist = GetClearDistanceByWall(vDir, param.v4Data[0]);
-    param.v4Data[1] = ClearDist;                                        // 이동 가능 거리
-    param.v4Data[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
-    param.v4Data[3] = 0.f;                                              // 이동한 거리 초기화.
+        // 충돌 여부부
+        param.bData[1] = false; 
 
-    SetStateGrade(eAccessGrade::ADVANCED);
+        param.v2Data.x = vDir.x;
+        param.v2Data.y = vDir.z;
+
+        param.v4Data = Vec4(0.f,0.f,0.f,0.f);
+
+        param.fData[0] = 15.f;                                                        // 스킬 거리
+        float ClearDist = GetClearDistanceByWall(vDir, param.fData[0]);
+        
+        param.fData[1] = ClearDist;                                                   // 이동 가능 거리
+        param.fData[2] = (float)Animator3D()->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
+        param.fData[3] = 0.f;                                                         // 이동한 거리 초기화.
+
+
+        // 일정거리(20%) 텔레포트판정
+        Vec3 vMoveDir(param.v2Data.x, 0.f, param.v2Data.y);
+
+        float fMoveDist = param.fData[1] * 0.1f;
+        param.fData[3] += fMoveDist;
+        vPos += vMoveDir * fMoveDist;
+
+        // 캐릭터 이동
+        Transform()->SetRelativePos(vPos);
+
+        SetStateGrade(eAccessGrade::UTMOST);
+
+        ERCHARSOUND(SKILLE_SLIDE);
+    }
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
 {
-    CTransform* transform = GetOwner()->Transform();
-    int curFrame = GetOwner()->Animator3D()->GetCurFrame();
-    //끝나는 프레임은 31
-    int EndFrame = GetOwner()->Animator3D()->GetCurAnim()->GetAnimClip().iEndFrame;
+    Animator3D()->PlaySpeedValue(1.f);
 
     // 이동한거리가 이동가능거리를 넘지 않았는지 판단.
-    if (param.v4Data[3] < param.v4Data[1] * 0.8)
+    if (param.fData[3] < param.fData[1])
     {
-        // param.v4Data[0] : 스킬 거리(속도)
-        // param.v4Data[1] : 이동 가능 거리
-        // param.v4Data[2] : 전체 애니메이션 재생 시간
-        // param.v4Data[3] : 이동한 거리
+        // param.fData[0] : 스킬 거리(속도)
+        // param.fData[1] : 이동 가능 거리
+        // param.fData[2] : 전체 애니메이션 재생 시간
+        // param.fData[3] : 이동한 거리
 
-        Vec3 vPos = transform->GetRelativePos();
+        // 처음 부딪혔을 때 데미지
+        
+
+        Vec3 vPos = Transform()->GetRelativePos();
         Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
 
-        float speed = param.v4Data[0];
+        float speed = param.fData[0];
 
-        if (param.v4Data[3] > (param.v4Data[1] / 5.f))
-            speed = (float)(param.v4Data[0] * 1.5f);
+        if (param.fData[3] > (param.fData[1] / 5.f))
+            speed = param.fData[0] * 1.5f;
 
-        float CurFrameMoveDist = speed * param.v4Data[2] * DT;
+        float CurFrameMoveDist = speed * param.fData[2] * DT;
 
-        param.v4Data[3] += CurFrameMoveDist;
+        param.fData[3] += CurFrameMoveDist;
 
         vPos += vDir * CurFrameMoveDist;
 
         // 캐릭터 이동
-        transform->SetRelativePos(vPos);
-    }
-    else {
-        //끝까지 애니메이션 출력안해도 목표위치에 도달하면 캔슬 가능
-        SetStateGrade(eAccessGrade::BASIC);
-        param.v4Data = Vec4();
-        param.v4Data = Vec2();
-        param.iData[0] = 0;
-        ChangeState(ER_CHAR_ACT::WAIT);
+        Transform()->SetRelativePos(vPos);
     }
 
-   if (GetOwner()->Animator3D()->IsFinish())
-   {
-       SetStateGrade(eAccessGrade::BASIC);
-       // clear
-       param.v4Data = Vec4();
-       param.v4Data = Vec2();
-   
-       ChangeState(ER_CHAR_ACT::WAIT);
-   }
+
+    if (Animator3D()->IsFinish() || param.fData[3] >= param.fData[1])
+    {
+        // 캐릭터와 충돌했고, 이동불가지점(벽)에 부딪힌 경우
+        // clearDist = param.fData[1]이 충돌안전거리인 10.f 보다 작은 경우 벽과충돌로 판단
+        
+        if (param.bData[1] && param.fData[1] <= 10.f)
+        {
+            Vec3 vPos = Transform()->GetRelativePos();
+            vector<CGameObject*> vecChar = ER_GameSystem::GetInst()->GetCharacters();
+            
+            ERCHARSOUND(SKILLE_HIT);
+
+            for (auto Target : vecChar)
+            {
+                // 본인 검사
+                if (Target == GetOwner())
+                    continue;
+
+                // 거리 검사
+                Vec3 TargetPos = Target->Transform()->GetRelativePos();
+                float dist = Vec3::Distance(vPos, TargetPos);
+
+                if (2.f < dist)
+                    continue;
+                
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillEWall, skill, 1);
+            }
+        }
+
+        SetStateGrade(eAccessGrade::BASIC);
+        // clear
+        param.bData[0] = false;
+        param.bData[1] = false;
+
+        param.fData[0] = 0.f;
+        param.fData[1] = 0.f;
+        param.fData[2] = 0.f;
+        param.fData[3] = 0.f;
+        param.v2Data = Vec2();
+        param.iData[0] = 0;
+
+        ChangeState(ER_CHAR_ACT::WAIT);
+    }
 }
 
 void ER_ActionScript_Hyunwoo::Skill_EExit(tFSMData& param)
@@ -515,57 +644,125 @@ void ER_ActionScript_Hyunwoo::Skill_EExit(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::Skill_REnter(tFSMData& param)
 {
-    CAnimator3D* Animator = GetOwner()->Animator3D();
-    Animator->SelectAnimation(L"Hyunwoo_SkillR_Start", false);
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
 
-    SetRotationToTarget(param.v4Data);
+    if (Skill->Use(&GetStatus()->iSP, true))
+    {
+        param.bData[0] = true;
+        param.bData[1] = false;
 
-    param.iData[0] = 0;
+        param.iData[0] = 0;
+        
+        // ratio
+        param.fData[0] = 0.f;
 
-    SetStateGrade(eAccessGrade::UTMOST);
+        Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_Start", false);
+        // 이펙트 효과 재생
+
+        SetRotationToTarget(param.v4Data);
+        param.v4Data = GetFocusDir();
+
+        ERCHARSOUND(SKILLR_CHARGING);
+        SetStateGrade(eAccessGrade::UTMOST);
+    }
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
 {
-    CAnimator3D* Animator = GetOwner()->Animator3D();
-    int curFrame = GetOwner()->Animator3D()->GetCurFrame();
-
-    if (KEY_PRESSED(KEY::R)) {
-        if (Animator->IsFinish()) {
-            //Start가 끝났을때,
-            if (param.iData[0] == 0) {
-                Animator->SelectAnimation(L"Hyunwoo_SkillR_Loop", false);
-            }
-            else if (param.iData[0] == 1) {
-                Animator->SelectAnimation(L"Hyunwoo_SkillR_End", false);
-            }
-            ++param.iData[0];
+    if (param.iData[0] <= 1)
+    {
+        if (KEY_PRESSED(KEY::R))
+        {
+            param.fData[0] += DT;
         }
-    }
-    else {
-        if (param.iData[0] != 2) {
-            Animator->SelectAnimation(L"Hyunwoo_SkillR_End", false);
+        else if (KEY_RELEASE(KEY::R))
+        {
+            STOPSOUND(SKILLR_CHARGING);
+            ERCHARSOUND(SKILLR_HIT);
+            Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_End", false);
             param.iData[0] = 2;
         }
     }
 
-    if (param.iData[0] == 2 && curFrame > 16) {
-        SetStateGrade(eAccessGrade::BASIC);
+    switch (param.iData[0])
+    {
+    case 0:
+    {
+
+        if (Animator3D()->IsFinish())
+        {
+            Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_Loop", false);
+            param.iData[0]++;
+        }
+
+        break;
     }
+    case 1:
+    {
+        if (Animator3D()->IsFinish())
+        {
+            ERCHARSOUND(SKILLR_HIT);
+            param.fData[0] = 4.f;
+            Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_End", false);
+            param.iData[0]++;
+        }
+        break;
+    }
+    case 2:
+    {
+        if (!param.bData[1] && 3.f < Animator3D()->GetCurFrame())
+        {
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
 
-    if (param.iData[0] == 2 && Animator->IsFinish()) {
-        SetStateGrade(eAccessGrade::BASIC);
-        param.iData[0] = 0;
+            vector<CGameObject*> vecChar = ER_GameSystem::GetInst()->GetCharacters();
+            Vec3 vPos = Transform()->GetRelativePos();
+            Vec3 SkillPos = vPos + (param.v4Data * 0.5f);
 
-        ChangeState(ER_CHAR_ACT::WAIT);
+            for (auto Target : vecChar)
+            {
+                if (Target == GetOwner())
+                    continue;
+
+                Vec3 TargetPos = Target->Transform()->GetRelativePos();
+                float dist = Vec3::Distance(SkillPos, TargetPos);
+
+                float DebufTime = 6.f;
+                float DecreaseDef = skill->Float2();
+
+                if (2.f < dist)
+                    continue;
+
+                // 스킬 타격
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillR, skill, 0);
+
+                // 방어력 감소 디버프
+                Target->GetScript<ER_DataScript_Character>()->GetStatusEffect()->
+                    ActiveEffect((UINT)eStatus_Effect::DECREASE_DEF, DebufTime, DecreaseDef);
+            }
+
+            param.bData[1] = true;
+        }
+
+        if (Animator3D()->IsFinish())
+        {
+            SetStateGrade(eAccessGrade::BASIC);
+            ChangeState(ER_CHAR_ACT::WAIT);
+        }
+        break;
+    }
     }
 }
 
 void ER_ActionScript_Hyunwoo::Skill_RExit(tFSMData& param)
 {
+    param.bData[0] = false;
+    param.bData[1] = false;
+    param.iData[0] = 0;
+    param.fData[0] = 0.f;
 }
-
-
 
 
 FSMState* ER_ActionScript_Hyunwoo::CreateWait()
@@ -698,4 +895,103 @@ FSMState* ER_ActionScript_Hyunwoo::CreateSkill_R()
     STATEDELEGATE_EXIT(state, Hyunwoo, Skill_R);
 
     return state;
+}
+
+
+int ER_ActionScript_Hyunwoo::SkillQ()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.4f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Hyunwoo::SkillE()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.55f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Hyunwoo::SkillEWall()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+    int Dmg = (int)(skill->Int2() + GetStatus()->iAttackPower * 0.55f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Hyunwoo::SkillR()
+{
+    tFSMData SkillR = STATEDATA_GET(SKILL_R);
+
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+    
+    int MinDmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.35f);
+    int MaxDmg = (int)(skill->Int2() + GetStatus()->iAttackPower * 1.05f);
+    
+    float fratio = SkillR.fData[0] / 4.f;
+
+    // 차징한 만큼 0 ~ 1까지의 비율을 곱해서 데미지에 더해준다
+    int Dmg = MinDmg + ((MaxDmg - MinDmg) * fratio);
+
+    return Dmg;
+}
+
+void ER_ActionScript_Hyunwoo::BeginOverlap(CCollider3D* _Other)
+{
+    tFSMData SkillE = STATEDATA_GET(SKILL_E);
+    CGameObject* Target = _Other->GetOwner();
+
+    if (SkillE.bData[0] && IsCharacter(Target))
+    {
+        // E Skill 1타 데미지
+        tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+        BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Hyunwoo, SkillE, skill, 0);
+    }
+}
+
+void ER_ActionScript_Hyunwoo::OnOverlap(CCollider3D* _Other)
+{
+    tFSMData SkillE = STATEDATA_GET(SKILL_E);
+    CGameObject* Target = _Other->GetOwner();
+
+    // 스킬이 실행중이고 충돌판정이 켜져있을 때
+    if (SkillE.bData[0] && IsCharacter(Target))
+    {
+        // 충돌한 캐릭터가 있는경우 안전거리 확보
+        if (!SkillE.bData[1])
+        {
+            // 충돌함으로 표시
+            SkillE.bData[1] = true;
+            SkillE.fData[1] = SkillE.fData[1] - 1.2f <= 0.f ? 0.f : SkillE.fData[1] - 1.2f;
+            STATEDATA_SET(SKILL_E, SkillE);
+        }
+
+        // 이동 방향
+        // 이동 거리
+        Vec3 vPos = Target->Transform()->GetRelativePos();
+        Vec3 vDir(SkillE.v2Data.x, 0.f, SkillE.v2Data.y);
+
+        float speed = SkillE.fData[0];
+
+        if (SkillE.fData[3] > (SkillE.fData[1] / 5.f))
+            speed = SkillE.fData[0] * 1.5f;
+
+        float CurFrameMoveDist = speed * SkillE.fData[2] * DT;
+
+        // 최대 이동가능 거리 이상으로 이동하는 경우
+        if (SkillE.fData[1] < SkillE.fData[3] + CurFrameMoveDist)
+            return;
+
+        vPos += vDir * CurFrameMoveDist;
+
+        // 캐릭터 이동
+        Target->Transform()->SetRelativePos(vPos);
+    }
+}
+
+void ER_ActionScript_Hyunwoo::EndOverlap(CCollider3D* _Other)
+{
 }

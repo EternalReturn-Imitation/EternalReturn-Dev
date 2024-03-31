@@ -20,6 +20,7 @@
 
 ER_ActionScript_Rio::ER_ActionScript_Rio()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_RIO)
+    , m_pSounds{}
     , m_BowType(false)
 {
 }
@@ -493,9 +494,13 @@ void ER_ActionScript_Rio::Skill_R(tFSMData& _Data)
 {
     tFSMData PrevData = STATEDATA_GET(SKILL_R);
 
+    if (PrevData.bData[0])
+        return;
+
     _Data.bData[0] = PrevData.bData[0];
     _Data.bData[1] = PrevData.bData[1];
     _Data.iData[0] = PrevData.iData[0];
+    _Data.v4Data = PrevData.v4Data;
 
     STATEDATA_SET(SKILL_R, _Data);
     ChangeState(ER_CHAR_ACT::SKILL_R);
@@ -637,13 +642,13 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
             SpawnPos.z += CenterDir.z * 0.5f;
             SpawnPos.y = SpawnPos.y + 1.1f;
 
-            ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.7f);
-            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW2);
+            ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.7f)
 
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_2);
+            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW2, skill, 0);
             ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
             Arrow->AddComponent(arrowEffect);
-
-            ArrowScript->Spawn();            
+            ArrowScript->Spawn();
 
             param.bData[1] = true;                          // Battle Event 완료
 
@@ -684,7 +689,9 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
                 SpawnPos.y = SpawnPos.y + 1.1f;
 
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
-                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW1);
+
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW1, skill, 0);
 
                 ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
                 Arrow->AddComponent(arrowEffect);
@@ -804,7 +811,8 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
                     ArrowScript->init();
 
                     ArrowScript->SetForTarget(GetOwner(), Target, vPos, 15.f);
-                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE2);
+                    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_2);
+                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE2, skill, 0);
                     ArrowScript->Spawn();
 
                 }
@@ -817,7 +825,8 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
                     ArrowScript->init();
 
                     ArrowScript->SetForTarget(GetOwner(), Target, vPos, 15.f);
-                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE1);
+                    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+                    ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE1, skill, 0);
                     ArrowScript->Spawn();
                 }
             }
@@ -877,6 +886,7 @@ void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
             SetRotationToTarget(GetFocusPoint());
             
             param.iData[0] = 0;
+            param.bData[0] = true;
             param.bData[1] = false;
 
             param.iData[1] = 39;
@@ -901,7 +911,18 @@ void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
                 Animator3D()->SelectAnimation(L"Rio_Short_Skill_R_Start", false);
                 SetRotationToTarget(GetFocusPoint());
 
-                param.bData[0] = false;
+
+                Vec3 CenterDir = GetFocusDir();
+                Vec3 vPos = Transform()->GetRelativePos();
+                Vec3 SpawnPos = {};
+                SpawnPos = vPos;
+                SpawnPos.x += CenterDir.x * 0.5f;
+                SpawnPos.z += CenterDir.z * 0.5f;
+                SpawnPos.y = SpawnPos.y + 1.1f;
+
+                param.v4Data = SpawnPos;
+
+                param.bData[0] = true;
                 param.bData[1] = false;
                 param.iData[1] = 9; // 투사체 프레임
                 SetStateGrade(eAccessGrade::UTMOST);
@@ -915,10 +936,12 @@ void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
         }
         else if (1 == param.iData[0])
         {
+            param.bData[0] = true;
             param.bData[1] = false;
             param.iData[1] = 9;
             // 두번째 시전
             Animator3D()->SelectAnimation(L"Rio_Short_Skill_R_End", false);
+            SetRotationToTarget(GetFocusPoint());
             SetStateGrade(eAccessGrade::UTMOST);
         }
         else
@@ -937,10 +960,6 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
     {
         if (!param.bData[1] && param.iData[1] < Animator3D()->GetCurFrame())
         {
-            Vec3 CenterDir = GetFocusDir();
-            Vec3 vPos = Transform()->GetRelativePos();
-            Vec3 SpawnPos = {};
-
             CGameObject* Arrow = onew(CGameObject);
             ER_DataScript_Arrow* ArrowScript = onew(ER_DataScript_Arrow);
             Arrow->AddComponent(ArrowScript);
@@ -949,13 +968,10 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
             Arrow->Collider3D()->SetOffsetScale(Vec3(0.4f, 0.2f, 0.4f));
             Arrow->Transform()->SetRelativeScale(Vec3(4.f, 2.f, 4.f));
 
-            SpawnPos = vPos;
-            SpawnPos.x += CenterDir.x * 0.5f;
-            SpawnPos.z += CenterDir.z * 0.5f;
-            SpawnPos.y = SpawnPos.y + 1.1f;
 
-            ArrowScript->SetForDir(GetOwner(), SpawnPos, 12.f, 5.f);
-            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR2);
+            ArrowScript->SetForDir(GetOwner(), param.v4Data, 12.f, 5.f);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_2);
+            ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR2, skill, 0);
             ArrowScript->Spawn();
 
             param.bData[1] = true;
@@ -976,22 +992,14 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
         {
             if (!param.bData[1] && param.iData[1] < Animator3D()->GetCurFrame())
             {
-                Vec3 CenterDir = GetFocusDir();
-                Vec3 vPos = Transform()->GetRelativePos();
-                Vec3 SpawnPos = {};
-
                 CGameObject* Arrow = onew(CGameObject);
                 ER_DataScript_Arrow* ArrowScript = onew(ER_DataScript_Arrow);
                 Arrow->AddComponent(ArrowScript);
                 ArrowScript->init();
 
-                SpawnPos = vPos;
-                SpawnPos.x += CenterDir.x * 0.5f;
-                SpawnPos.z += CenterDir.z * 0.5f;
-                SpawnPos.y = SpawnPos.y + 1.1f;
-
-                ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
-                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_1);
+                ArrowScript->SetForDir(GetOwner(), param.v4Data, 15.f, 0.4f);
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_1, skill, 0);
                 ArrowScript->Spawn();
 
                 param.bData[1] = true;
@@ -1036,7 +1044,8 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
                 SpawnPos.y = SpawnPos.y + 1.1f;
 
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
-                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_2);
+                tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_2, skill, 1);
                 ArrowScript->Spawn();
 
                 param.bData[1] = true;
@@ -1050,6 +1059,7 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
                 param.iData[0] = 0;
                 param.bData[0] = false;
                 param.bData[1] = false;
+                param.v4Data = Vec4(0.f,0.f,0.f,0.f);
             }
             break;
         }
@@ -1058,6 +1068,7 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
 }
 void ER_ActionScript_Rio::Skill_RExit(tFSMData& param)
 {
+    param.bData[0] = false;
 }
 
 

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ER_DataScript_Projectile.h"
 
+#include "ER_DataScript_Character.h"
+
 #define PROJECTILE_LAYER 14
 
 ER_DataScript_Projectile::ER_DataScript_Projectile(SCRIPT_TYPE _type)
@@ -14,6 +16,8 @@ ER_DataScript_Projectile::ER_DataScript_Projectile(SCRIPT_TYPE _type)
 	, m_SkillFunc(nullptr)
 	, m_fSpeed(0.f)
 	, m_fLifeTime(0.f)
+	, m_SkillData(nullptr)
+	, m_SkillHitStep(0)
 {
 }
 
@@ -153,29 +157,34 @@ void ER_DataScript_Projectile::BeginOverlap(CCollider3D* _Other)
 	
 	if (!m_pTarget && _Other->GetOwner() != m_pShooter)
 	{
-		// 데미지 타입별로 연산함수 
-		if (eDmgType::NORMAL == m_DmgType)
-		{
-			// 데미지연산함수
-			BATTLE_COMMON(m_pShooter, m_pTarget);
+		ER_DataScript_Character* CharacterScript = _Other->GetOwner()->GetScript<ER_DataScript_Character>();
 
-			// 사운드 재생
-			if (nullptr != m_pSound)
-				m_pSound->Play(1, 0.5f, true);
-
-			DestroyObject(GetOwner());
-		}
-		else if (eDmgType::SKILL == m_DmgType)
+		if (CharacterScript && !CharacterScript->IsDeadState())
 		{
-			if (m_SkillInst && m_SkillFunc)
+			// 데미지 타입별로 연산함수 
+			if (eDmgType::NORMAL == m_DmgType)
 			{
-				ER_BattleSystem::GetInst()->Battle_Skill(m_pShooter, _Other->GetOwner(), m_SkillInst, m_SkillFunc);
+				// 데미지연산함수
+				BATTLE_COMMON(m_pShooter, m_pTarget);
 
 				// 사운드 재생
 				if (nullptr != m_pSound)
 					m_pSound->Play(1, 0.5f, true);
 
 				DestroyObject(GetOwner());
+			}
+			else if (eDmgType::SKILL == m_DmgType)
+			{
+				if (m_SkillInst && m_SkillFunc)
+				{
+					ER_BattleSystem::GetInst()->Battle_Skill(m_pShooter, _Other->GetOwner(), m_SkillInst, m_SkillFunc, m_SkillData, m_SkillHitStep);
+
+					// 사운드 재생
+					if (nullptr != m_pSound)
+						m_pSound->Play(1, 0.5f, true);
+
+					DestroyObject(GetOwner());
+				}
 			}
 		}
 	}

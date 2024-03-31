@@ -2,20 +2,18 @@
 #include "ER_ActionScript_Aya.h"
 #include "ER_DataScript_Character.h"
 
+#include "ER_GameSystem.h"
+#include "ER_ItemMgr.h"
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_Item.h"
-
-#include "ER_DataScript_Bullet.h"
-
-#include "ER_ItemMgr.h"
+#include "ER_PlayerScript.h"
 
 #include <Engine/CAnim3D.h>
 
-
+#include "ER_DataScript_Bullet.h"
 
 ER_ActionScript_Aya::ER_ActionScript_Aya()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA)
-    , m_fSec(0.f)
 {
 }
 
@@ -279,7 +277,7 @@ void ER_ActionScript_Aya::AttackEnter(tFSMData& param)
     param.bData[1] = false;
 
     Animator3D()->SelectAnimation(L"Aya_Attack", false);
-    param.iData[0] = 9;
+    param.iData[0] = 5;
 
     // 타겟방향으로 회전
     SetRotationToTarget(((CGameObject*)param.lParam)->Transform()->GetRelativePos());
@@ -319,12 +317,17 @@ void ER_ActionScript_Aya::AttackUpdate(tFSMData& param)
 
         // 투사체 생성
 
+        ERCHARSOUND(NORMAL_ATTACK);
+
         CGameObject* Bullet = onew(CGameObject);
         ER_DataScript_Bullet* BulletScript = onew(ER_DataScript_Bullet);
         Bullet->AddComponent(BulletScript);
 
         BulletScript->init();
-        BulletScript->SetForTarget(GetOwner(), (CGameObject*)param.lParam, GetProjSpawnPos(param.lParam), 20.f);
+        BulletScript->SetForTarget(GetOwner(), 
+            (CGameObject*)param.lParam, 
+            GetProjSpawnPos(param.lParam), 
+            30.f);
         BulletScript->Spawn();
 
         param.bData[1] = true;                          // Battle Event 완료
@@ -372,69 +375,163 @@ void ER_ActionScript_Aya::AttackExit(tFSMData& param)
 
 void ER_ActionScript_Aya::Skill_Q(tFSMData& _Data)
 {
-    STATEDATA_SET(SKILL_Q, _Data);
+    // 스킬 사용중인지
+    tFSMData PrevData = STATEDATA_GET(SKILL_Q);
+    if (PrevData.bData[0] || 0 == _Data.lParam)
+        return;
 
-    ChangeState(ER_CHAR_ACT::SKILL_Q);
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+
+    if (IsInRange((CGameObject*)_Data.lParam, Skill->Range()))
+    {
+        if (Skill->Use(&GetStatus()->iSP))
+        {
+            STATEDATA_SET(SKILL_Q, _Data);
+            ChangeState(ER_CHAR_ACT::SKILL_Q);
+            SetStateGrade(eAccessGrade::UTMOST);
+        }
+    }
 }
 
 void ER_ActionScript_Aya::Skill_W(tFSMData& _Data)
 {
-    STATEDATA_SET(SKILL_W, _Data);
+    if (IsSkillOn(SKILLIDX::W_1))
+        return;
 
-    ChangeState(ER_CHAR_ACT::SKILL_W);
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+
+    if (Skill->Use(&GetStatus()->iSP))
+    {
+        STATEDATA_SET(SKILL_W, _Data);
+        ChangeState(ER_CHAR_ACT::SKILL_W);
+        SetStateGrade(eAccessGrade::UTMOST);
+    }
 }
 
 void ER_ActionScript_Aya::Skill_E(tFSMData& _Data)
 {
-    STATEDATA_SET(SKILL_E, _Data);
+    tFSMData PrevData = STATEDATA_GET(SKILL_E);
 
-    ChangeState(ER_CHAR_ACT::SKILL_E, eAccessGrade::ADVANCED);
+    if (PrevData.bData[0])
+        return;
+
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+
+    if (Skill->Use(&GetStatus()->iSP))
+    {
+        STATEDATA_SET(SKILL_E, _Data);
+        ChangeState(ER_CHAR_ACT::SKILL_E);
+        SetStateGrade(eAccessGrade::UTMOST);
+    }
 }
 
 void ER_ActionScript_Aya::Skill_R(tFSMData& _Data)
 {
-    ChangeState(ER_CHAR_ACT::SKILL_R);
+    tFSMData PrevData = STATEDATA_GET(SKILL_R);
+
+    if (PrevData.bData[0])
+        return;
+
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+
+    if (Skill->Use(&GetStatus()->iSP))
+    {
+        STATEDATA_SET(SKILL_R, _Data);
+        ChangeState(ER_CHAR_ACT::SKILL_R);
+        SetStateGrade(eAccessGrade::UTMOST);
+    }
 }
 
 void ER_ActionScript_Aya::Skill_QEnter(tFSMData& param)
 {
-    GetOwner()->Animator3D()->SelectAnimation(L"Aya_SkillQ", false);
+    // 7 , 16
+
+    Animator3D()->SelectAnimation(L"Aya_SkillQ", false);
     SetRotationToTarget(param.v4Data);
-    SetStateGrade(eAccessGrade::UTMOST);
+    param.bData[0] = true;
+    param.bData[1] = false;
+    param.iData[0] = 7;
+    param.bData[2] = false;
 }
 
 void ER_ActionScript_Aya::Skill_QUpdate(tFSMData& param)
 {
-    CAnimator3D* animator = GetOwner()->Animator3D();
+    // 버프/디버프 확인
+    tStatus_Effect* statusefc = GetStatusEffect();
+    float Atkspd = GetStatus()->fAttackSpeed;
+    Atkspd += (Atkspd * statusefc->GetIncAPD()) - (Atkspd * statusefc->GetDecAPD());
 
-    int curFrame = animator->GetCurFrame();
+    // 애니메이션 속도 증가
+    Animator3D()->PlaySpeedValue(Atkspd);
 
-    if (animator->IsFinish())
+
+    if (!param.bData[1] && param.iData[0] < Animator3D()->GetCurFrame())
     {
-        SetStateGrade(eAccessGrade::BASIC);
-        ChangeState(ER_CHAR_ACT::WAIT);
-        param.iData[0] = 0;
+        // 캐릭터 고유 공격 알고리즘
+
+        // 투사체 생성
+        CGameObject* Bullet = onew(CGameObject);
+        ER_DataScript_Bullet* BulletScript = onew(ER_DataScript_Bullet);
+        Bullet->AddComponent(BulletScript);
+
+        BulletScript->init();
+        BulletScript->SetForTarget(
+            GetOwner(),
+            (CGameObject*)param.lParam,
+            GetProjSpawnPos(param.lParam),
+            30.f);
+
+        // 2타
+        if (param.bData[2])
+        {
+            ERCHARSOUND(SKILLQ);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+            BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ2, skill, 1);
+        }
+        // 1타
+        else
+        {
+            ERCHARSOUND(NORMAL_ATTACK);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+            BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ1, skill, 0);
+        }
+
+        BulletScript->Spawn();
+
+        param.bData[1] = true;                          // Battle Event 완료
+
+
+        /// 아야 2타 스킬공격변환
+        if (param.iData[0] < 16)
+        {
+            param.iData[0] = 16;
+            param.bData[1] = false;
+            param.bData[2] = true;
+        }
     }
 
-    if (curFrame > 16) {
+    if (Animator3D()->IsFinish())
+    {
+        param.bData[0] = false;
+
         SetStateGrade(eAccessGrade::BASIC);
-        param.iData[0] = 0;
+        ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
 
 void ER_ActionScript_Aya::Skill_QExit(tFSMData& param)
 {
+    param.bData[0] = false;
 }
 
 void ER_ActionScript_Aya::Skill_WEnter(tFSMData& param)
 {
-    CAnimator3D* Animator = GetOwner()->Animator3D();
-    Animator->SelectAnimation(L"Aya_SkillW_Shot", false);
+    Animator3D()->SelectAnimation(L"Aya_SkillW_Shot", false);
 
     SetRotationToTarget(param.v4Data);
 
     // 방향 저장
-    Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+    Vec3 vPos = Transform()->GetRelativePos();
     Vec3 vDir = (param.v4Data - vPos).Normalize();
 
     // param.v4Data 에 받아온 방향정보를 v2Data로 이동
@@ -448,22 +545,53 @@ void ER_ActionScript_Aya::Skill_WEnter(tFSMData& param)
 
     param.iData[0] = 0;
     param.fData[0] = 0.f;
+    param.fData[1] = 0.f;
+    param.fData[2] = 0.f;
 
     param.bData[0] = false;
-
-    SetStateGrade(eAccessGrade::ADVANCED);
 }
 
 void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
 {
-    m_fSec += DT;
+    param.fData[1] += DT;
+    param.fData[2] += DT;
 
-    CAnimator3D* Animator = GetOwner()->Animator3D();
+    // 총알 발사, 2초간 6~ 8발
+    if (0.3f < param.fData[2])
+    {
+        CGameObject* Bullet = onew(CGameObject);
+        ER_DataScript_Bullet* BulletScript = onew(ER_DataScript_Bullet);
+        Bullet->AddComponent(BulletScript);
+
+        // 초기 스킬사용시 방향으로 발사
+        Vec3 vPos = Transform()->GetRelativePos();
+
+        Vec3 vDir = { param.v2Data.x, 0.f, param.v2Data.y };
+
+        vPos.y += 1.3f;
+        vPos += vDir * 0.7f;
+
+        BulletScript->init();
+        BulletScript->SetForDir(
+            GetOwner(),
+            vPos,
+            30.f,
+            1.f);
+
+        ERCHARSOUND(SKILLW);
+        tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+        BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillW, skill, 0);
+
+        BulletScript->Spawn();
+
+        param.fData[2] = 0.f;
+    }
 
     // 방향 저장
-    Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+    Vec3 vPos = Transform()->GetRelativePos();
     Vec2 vDir;//이동시 이동하는 곳의 방향.
     Vec3 vDestPoint; //이동시 목적지의 위치
+    
     if (KEY_TAP(KEY::RBTN)) {
         vDestPoint = GetFocusPoint();
         Vec3 tempDir = vDestPoint - vPos;
@@ -501,33 +629,34 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         // 방향 결정
         if (param.fData[0] > -45 && param.fData[0] <= 45) {
             if (param.iData[0] != 1) {
-                Animator->SelectAnimation(L"Aya_SkillW_Forward", true);
+                Animator3D()->SelectAnimation(L"Aya_SkillW_Forward", true);
                 param.iData[0] = 1;
             }
         }
         else if (param.fData[0] > 45 && param.fData[0] <= 135) {
             if (param.iData[0] != 2) {
-                Animator->SelectAnimation(L"Aya_SkillW_Left", true);
+                Animator3D()->SelectAnimation(L"Aya_SkillW_Left", true);
                 param.iData[0] = 2;
             }
         }
         else if (param.fData[0] > -135 && param.fData[0] <= -45) {
             if (param.iData[0] != 3) {
-                Animator->SelectAnimation(L"Aya_SkillW_Right", true);
+                Animator3D()->SelectAnimation(L"Aya_SkillW_Right", true);
                 param.iData[0] = 3;
             }
         }
         else {
             if (param.iData[0] != 4) {
-                Animator->SelectAnimation(L"Aya_SkillW_Back", true);
+                Animator3D()->SelectAnimation(L"Aya_SkillW_Back", true);
                 param.iData[0] = 4;
             }
         }
         param.bData[0] = false;
     }
+    
     //같으면 그냥 쏨.
     else if((abs(vPos.x - param.v4Data.x) < 0.1f && abs(vPos.z - param.v4Data.z) < 0.1f)){
-        Animator->SelectAnimation(L"Aya_SkillW_Shot", false);
+        Animator3D()->SelectAnimation(L"Aya_SkillW_Shot", false);
         param.iData[0] = 0;
     }
 
@@ -537,19 +666,26 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         GetOwner()->FindPath()->PathMove(speed, false);
     }
 
-    if (m_fSec > 1.5f) {
+    if (param.fData[1] > 2.f) {
         SetStateGrade(eAccessGrade::BASIC);
         ChangeState(ER_CHAR_ACT::WAIT);
         param.iData[0] = 0;
-        param.fData[0] = 0.f;
         param.v2Data = Vec2();
         param.v4Data = Vec4();
-        m_fSec = 0.f;
+        param.fData[0] = 0.f;
+        param.fData[1] = 0.f;
+        param.fData[2] = 0.f;
     }
 }
 
 void ER_ActionScript_Aya::Skill_WExit(tFSMData& param)
 {
+    param.iData[0] = 0;
+    param.v2Data = Vec2();
+    param.v4Data = Vec4();
+    param.fData[0] = 0.f;
+    param.fData[1] = 0.f;
+    param.fData[2] = 0.f;
 }
 
 void ER_ActionScript_Aya::Skill_EEnter(tFSMData& param)
@@ -560,68 +696,91 @@ void ER_ActionScript_Aya::Skill_EEnter(tFSMData& param)
     SetRotationToTarget(param.v4Data);
 
     // 방향 저장
-    Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+    Vec3 vPos = Transform()->GetRelativePos();
     Vec3 vDir = (param.v4Data - vPos).Normalize();
 
     // param.v4Data 에 받아온 방향정보를 v2Data로 이동
     param.v2Data.x = vDir.x;
     param.v2Data.y = vDir.z;
 
-    param.v4Data[0] = 8.f;                                              // 스킬 거리
-    float ClearDist = GetClearDistance(vDir, param.v4Data[0]);
-    param.v4Data[1] = ClearDist;                                        // 이동 가능 거리
-    param.v4Data[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;   // 전체 애니메이션 재생 시간
-    param.v4Data[3] = 0.f;                                              // 이동한 거리 초기화.
+    param.fData[0] = 5.f;                                                       // 스킬 거리
+    float ClearDist = GetClearDistance(vDir, param.fData[0]);
+    param.fData[1] = ClearDist;                                                 // 이동 가능 거리
+    param.fData[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;     // 전체 애니메이션 재생 시간
+    param.fData[3] = 0.f;                                                       // 이동한 거리 초기화.
+
+    param.bData[0] = true;
+
+    // Q,W 스킬 쿨타임의 20%를 되돌려받는다
+    tSkill_Info* SkillQ = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    tSkill_Info* SkillW = m_Data->GetSkill((UINT)SKILLIDX::W_1);
+
+    if (!SkillQ->IsUsable)
+    {
+        float QCoolRatio = SkillQ->MaxCooldown() * 0.2f;
+        SkillQ->fCoolDown = SkillQ->fCoolDown - QCoolRatio <= 0.5f ? 0.5f : SkillQ->fCoolDown - QCoolRatio;
+    }
+    if (!SkillW->IsUsable)
+    {
+        float WCoolRatio = SkillW->MaxCooldown() * 0.2f;
+        SkillW->fCoolDown = SkillW->fCoolDown - WCoolRatio <= 0.5f ? 0.5f : SkillW->fCoolDown - WCoolRatio;
+    }
+
+    // 일정거리(20%) 텔레포트판정
+    Vec3 vMoveDir(param.v2Data.x, 0.f, param.v2Data.y);
+    
+    float fMoveDist = param.fData[1] * 0.2f;
+    param.fData[3] += fMoveDist;
+    vPos += vMoveDir * fMoveDist;
+
+    // 캐릭터 이동
+    Transform()->SetRelativePos(vPos);
 
     SetStateGrade(eAccessGrade::ADVANCED);
+
+    ERCHARSOUND(SKILLE);
 }
 
 void ER_ActionScript_Aya::Skill_EUpdate(tFSMData& param)
 {
-    CTransform* transform = GetOwner()->Transform();
-    int curFrame = GetOwner()->Animator3D()->GetCurFrame();
-    //끝나는 프레임은 31
-    int EndFrame = GetOwner()->Animator3D()->GetCurAnim()->GetAnimClip().iEndFrame;
+    Animator3D()->PlaySpeedValue(1.5f);
 
     // 이동한거리가 이동가능거리를 넘지 않았는지 판단.
-    if (param.v4Data[3] < param.v4Data[1] * 0.8)
+    if (param.fData[3] < param.fData[1])
     {
-        // param.v4Data[0] : 스킬 거리(속도)
-        // param.v4Data[1] : 이동 가능 거리
-        // param.v4Data[2] : 전체 애니메이션 재생 시간
-        // param.v4Data[3] : 이동한 거리
+        // param.fData[0] : 스킬 거리(속도)
+        // param.fData[1] : 이동 가능 거리
+        // param.fData[2] : 전체 애니메이션 재생 시간
+        // param.fData[3] : 이동한 거리
 
-        Vec3 vPos = transform->GetRelativePos();
+        Vec3 vPos = Transform()->GetRelativePos();
         Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
 
-        float speed = param.v4Data[0];
+        float speed = param.fData[0];
 
-        if (param.v4Data[3] > (param.v4Data[1] / 5.f))
-            speed = param.v4Data[0] * 1.5f;
+        if (param.fData[3] > (param.fData[1] / 5.f))
+            speed = param.fData[0] * 2.f;
 
-        float CurFrameMoveDist = speed * param.v4Data[2] * DT;
+        float CurFrameMoveDist = speed * param.fData[2] * DT;
 
-        param.v4Data[3] += CurFrameMoveDist;
+        param.fData[3] += CurFrameMoveDist;
 
         vPos += vDir * CurFrameMoveDist;
 
         // 캐릭터 이동
-        transform->SetRelativePos(vPos);
-    }
-    else {
-        //끝까지 애니메이션 출력안해도 목표위치에 도달하면 캔슬 가능
-        SetStateGrade(eAccessGrade::BASIC);
-        param.v4Data = Vec4();
-        param.v4Data = Vec2();
-        param.iData[0] = 0;
+        Transform()->SetRelativePos(vPos);
     }
 
-    if (GetOwner()->Animator3D()->IsFinish())
+    if (Animator3D()->IsFinish())
     {
         SetStateGrade(eAccessGrade::BASIC);
         // clear
-        param.v4Data = Vec4();
-        param.v4Data = Vec2();
+        param.fData[0] = 0.f;
+        param.fData[1] = 0.f;
+        param.fData[2] = 0.f;
+        param.fData[3] = 0.f;
+        param.v2Data = Vec2();
+        param.iData[0] = 0;
 
         ChangeState(ER_CHAR_ACT::WAIT);
     }
@@ -629,54 +788,81 @@ void ER_ActionScript_Aya::Skill_EUpdate(tFSMData& param)
 
 void ER_ActionScript_Aya::Skill_EExit(tFSMData& param)
 {
+    SetStateGrade(eAccessGrade::BASIC);
+    param.fData[0] = 0.f;
+    param.fData[1] = 0.f;
+    param.fData[2] = 0.f;
+    param.fData[3] = 0.f;
+    param.v2Data = Vec2();
+    param.iData[0] = 0;
+
+    param.bData[0] = false;
 }
 
 void ER_ActionScript_Aya::Skill_REnter(tFSMData& param)
 {
+    Animator3D()->SelectAnimation(L"Aya_SkillR_Start", false);
+    param.bData[0] = true;
+    
+    param.bData[1] = false;
+    param.bData[2] = false;
+    param.bData[3] = false; // 사운드 재생 싱크
+
+    ERCHARSOUND(SKILLR_READY);
+    ERCHARSOUND(SKILLR_CHAR);
 }
 
 void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
 {
-    CAnimator3D* animator = GetOwner()->Animator3D();
-    switch (param.iData[0])
+    if (!param.bData[3] && 46 < Animator3D()->GetCurFrame())
     {
-    //시전 중 캐슬불가
-    case 0:
-    {
-        animator->SelectAnimation(L"Aya_SkillR_Start", false);
-        SetStateGrade(eAccessGrade::UTMOST);
-        ++param.iData[0];
+        ERCHARSOUND(SKILLR_ACTION);
+        param.bData[3] = true;
     }
-        break;
-    //후딜 캐슬 가능
-    case 1:
+
+    if (Animator3D()->IsFinish())
     {
-        if (animator->IsFinish())
+        if (param.bData[1])
         {
-            animator->SelectAnimation(L"Aya_SkillR_End", false);
-            SetStateGrade(eAccessGrade::BASIC);
-            ++param.iData[0];
-            param.iData[0] = 0;
-        }
-    }
-        break;
-    case 2:
-    {
-        if (animator->IsFinish())
-        {
+            // 스킬 종료
             SetStateGrade(eAccessGrade::BASIC);
             ChangeState(ER_CHAR_ACT::WAIT);
-            param.iData[0] =0;
         }
-    }
-        break;
-    default:
-        break;
+        else
+        {
+            vector<CGameObject*> vecChar = ER_GameSystem::GetInst()->GetCharacters();
+            Vec3 vPos = Transform()->GetRelativePos();
+
+            for (auto Target : vecChar)
+            {
+                // 본인 검사
+                if (Target == GetOwner())
+                    continue;
+
+                // 거리 검사
+                Vec3 TargetPos = Target->Transform()->GetRelativePos();
+                float dist = Vec3::Distance(vPos, TargetPos);
+
+                if (8.f < dist)
+                    continue;
+
+                // 스턴효과 
+
+                // 스킬공격 데미지
+                const tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Aya, SkillR, skill, 0);
+            }
+
+            Animator3D()->SelectAnimation(L"Aya_SkillR_End", false);
+            param.bData[1] = true;
+        }
     }
 }
 
 void ER_ActionScript_Aya::Skill_RExit(tFSMData& param)
 {
+    param.bData[0] = false;
+    param.bData[1] = false;
 }
 
 
@@ -810,4 +996,38 @@ FSMState* ER_ActionScript_Aya::CreateSkill_R()
     STATEDELEGATE_EXIT(state, Aya, Skill_R);
 
     return state;
+}
+
+
+int ER_ActionScript_Aya::SkillQ1()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    int Dmg = (int)(GetStatus()->iAttackPower * 1.f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Aya::SkillQ2()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.3f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Aya::SkillW()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.5f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Aya::SkillR()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.2f);
+    Dmg += Dmg * GetStatus()->iSkillAmplification;
+
+    return Dmg;
 }

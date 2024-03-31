@@ -6,7 +6,16 @@ class ER_ActionScript_Hyunwoo :
 {
     enum class CharacterSound
     {
-        NONE,
+        ATTACK_NORMAL1,
+        ATTACK_NORMAL2,
+        HITSOUND,
+        SKILLQ_MOTION,
+        SKILLQ_HIT,
+        SKILLW,
+        SKILLE_SLIDE,
+        SKILLE_HIT,
+        SKILLR_CHARGING,
+        SKILLR_HIT,
         CRAFT_SOUND,
         END,
     };
@@ -84,6 +93,17 @@ private:
 
     virtual bool SoundLoad();
     virtual void PlaySound(UINT _SoundKey);
+
+    int SkillQ();
+    int SkillE();
+    int SkillEWall();
+    int SkillR();
+
+public:
+    virtual void BeginOverlap(CCollider3D* _Other);
+    virtual void OnOverlap(CCollider3D* _Other);
+    virtual void EndOverlap(CCollider3D* _Other);
+
 
 public:
     ER_ActionScript_Hyunwoo();

@@ -25,6 +25,8 @@ void ER_DataScript_Bullet::init()
 
 	Transform()->SetRelativeScale(Vec3(0.2f, 0.2f, 0.2f));
 	Transform()->SetRelativeRot(Vec3(Deg2Rad(-90.f), 0.f, 0.f));
+
+	m_pSound = CResMgr::GetInst()->FindRes<CSound>(L"Pistol_Hit.wav");
 }
 
 void ER_DataScript_Bullet::begin()
