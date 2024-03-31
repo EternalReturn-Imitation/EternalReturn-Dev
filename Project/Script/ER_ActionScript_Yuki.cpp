@@ -91,10 +91,12 @@ void ER_ActionScript_Yuki::MoveUpdate(tFSMData& param)
         }
     }
 
-    // 애니메이션 변경 판단
-
     // 버프/디버프 효과 반영
     tStatus_Effect* SpeedEfc = m_Data->GetStatusEffect();
+
+    // 애니메이션 반영
+    float SpdEfcAnim = ((SpeedEfc->GetIncSPD()) * 10.f) + ((SpeedEfc->GetDecSPD()) * -10.f);
+    Animator3D()->PlaySpeedValue(SpdEfcAnim);
 
     // 이동속도 설정
     float fMoveSpeed = GetStatus()->fMovementSpeed;
