@@ -315,7 +315,7 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
         if (m_BowType)
         {
             tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_2);
-            GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_ATK, 3.f, skill->Int1());
+            GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_ATK, 3.f, (float)skill->Int1());
         }
         else
         {

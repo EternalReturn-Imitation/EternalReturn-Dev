@@ -24,6 +24,23 @@ bool ER_ActionScript_Rio::SoundLoad()
 bool ER_ActionScript_Yuki::SoundLoad()
 {
     SOUNDLOAD(CRAFT_SOUND, L"chracter_Craft_Tool_8sec.wav");
+    SOUNDLOAD(ATTACK_NORMAL1, L"attackTwoHandSword_r1.wav");
+    SOUNDLOAD(ATTACK_NORMAL2, L"attackTwoHandSword_r2.wav");
+    SOUNDLOAD(HITSOUND, L"Yuki_Passive_Hit_r2.wav");
+    SOUNDLOAD(SKILLQ_MOTION, L"Yuki_Skill01_Active.wav");
+    SOUNDLOAD(SKILLQ_ATTACK, L"Yuki_Skill01_Attack.wav");
+    SOUNDLOAD(SKILLQ_HIT1, L"Yuki_Skill01_Hit_r1.wav");
+    SOUNDLOAD(SKILLQ_HIT2, L"Yuki_Skill01_Hit_r2.wav");
+    SOUNDLOAD(SKILLW_MOTION, L"Yuki_Skill02_Active.wav");
+    SOUNDLOAD(SKILLE_MOTION, L"Yuki_Skill03_Move.wav");
+    SOUNDLOAD(SKILLE_ATTACK, L"Yuki_Skill03_Attack.wav");
+    SOUNDLOAD(SKILLE_HIT1, L"Yuki_Skill03_Hit_r1.wav");
+    SOUNDLOAD(SKILLE_HIT2, L"Yuki_Skill03_Hit_r2.wav");
+    SOUNDLOAD(SKILLR_ACTIVE, L"Yuki_Skill04_Active.wav");
+    SOUNDLOAD(SKILLR_ATTACK, L"Yuki_Skill04_Attack.wav");
+    SOUNDLOAD(SKILLR_HIT, L"Yuki_Skill04_Hit.wav");
+    SOUNDLOAD(SKILLR_END, L"Yuki_Skill04_End.wav");
+
     return true;
 }
 

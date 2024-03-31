@@ -94,7 +94,7 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 	{
 		_Data.bData[0]	= PrevData.bData[0];	// 공격 상태 유지
 		_Data.bData[1]	= PrevData.bData[1];	// Hit 판정 유지
-		_Data.fData[0]	= PrevData.fData[0];		// 공격 가능 거리 유지
+		_Data.fData[0]	= PrevData.fData[0];	// 공격 가능 거리 유지
 		_Data.iData[0]  = PrevData.iData[0];    // HitFrame 유지
 		_Data.iData[1]	= PrevData.iData[1];	// Stack 유지
 

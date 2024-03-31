@@ -6,6 +6,22 @@ class ER_ActionScript_Yuki :
 {
     enum class CharacterSound
     {
+        ATTACK_NORMAL1,
+        ATTACK_NORMAL2,
+        HITSOUND,
+        SKILLQ_MOTION,
+        SKILLQ_ATTACK,
+        SKILLQ_HIT1,
+        SKILLQ_HIT2,
+        SKILLW_MOTION,
+        SKILLE_MOTION,
+        SKILLE_ATTACK,
+        SKILLE_HIT1,
+        SKILLE_HIT2,
+        SKILLR_ACTIVE,
+        SKILLR_ATTACK,
+        SKILLR_HIT,
+        SKILLR_END,
         CRAFT_SOUND,
         END,
     };
@@ -84,13 +100,19 @@ private:
     virtual bool SoundLoad();
     virtual void PlaySound(UINT _SoundKey);
 
-public:
-    int SkillQ(const tSkill_Info* skilldata);
+    int SkillQ();
+    int SkillE();
+    int SkillR1();
+    int SkillR2();
 
+public:
+    virtual void BeginOverlap(CCollider3D* _Other);
+    virtual void OnOverlap(CCollider3D* _Other);
+    virtual void EndOverlap(CCollider3D* _Other);
+        
 public:
     ER_ActionScript_Yuki();
     ~ER_ActionScript_Yuki();
 
     CLONE(ER_ActionScript_Yuki);
 };
-
