@@ -7,8 +7,6 @@ class ER_RioBAEffect :
 private:
     CGameObject*    m_aEffect[2];
 
-
-
 private:
     virtual void begin() override;
     virtual void tick() override;

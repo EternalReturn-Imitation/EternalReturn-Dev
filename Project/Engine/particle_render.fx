@@ -138,7 +138,7 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
         { 0, 0, 1 }
     };
 
-// 기존 GS_ParticleRender 함수 내부에서 NewPos 정점에 회전 적용 부분 직전에 추가
+    // 기존 GS_ParticleRender 함수 내부에서 NewPos 정점에 회전 적용 부분 직전에 추가
     for (int i = 0; i < 4; ++i)
     {
     // View 공간으로 변환된 정점 위치에 Y축 회전 적용
