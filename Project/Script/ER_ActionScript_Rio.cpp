@@ -456,6 +456,7 @@ void ER_ActionScript_Rio::Skill_W(tFSMData& _Data)
     {
         _Data.bData[0] = PrevData.bData[0];	// 공격 상태 유지
         _Data.bData[1] = PrevData.bData[1];	// Hit 판정 유지
+        _Data.v4Data = PrevData.v4Data;
         return;								// 상태를 변경하지 않고 종료
     }
     else
@@ -572,6 +573,7 @@ void ER_ActionScript_Rio::Skill_WEnter(tFSMData& param)
             SetStateGrade(eAccessGrade::ADVANCED);
             param.bData[0] = true;
             param.bData[1] = false;
+            param.v4Data = GetFocusDir();
         }
         else
         {
@@ -591,6 +593,7 @@ void ER_ActionScript_Rio::Skill_WEnter(tFSMData& param)
             SetStateGrade(eAccessGrade::ADVANCED);
             param.bData[0] = true;
             param.bData[1] = false;
+            param.v4Data = GetFocusDir();
         }
         else
         {
@@ -608,7 +611,7 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
         // 장궁
         if (!param.bData[1] && 9 == Animator3D()->GetCurFrame())
         {
-            Vec3 CenterDir = GetFocusDir();
+            Vec3 CenterDir = param.v4Data;
             Vec3 vPos = Transform()->GetRelativePos();
             CenterDir.y -= 0.2618f * 2.f;
             Vec3 SpawnPos = {};
@@ -642,7 +645,7 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
             // 7.5도 : 0.1309f
 
             float fRad = 0.2618f;
-            Vec3 CenterDir = GetFocusDir();
+            Vec3 CenterDir = param.v4Data;
             Vec3 vPos = Transform()->GetRelativePos();
             CenterDir.y -= 0.2618f * 2.f;
             Vec3 SpawnPos = {};
@@ -860,6 +863,8 @@ void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
             param.bData[0] = true;
             param.bData[1] = false;
 
+            param.v4Data = GetFocusDir();;
+
             param.iData[1] = 39;
             SetStateGrade(eAccessGrade::UTMOST);
         }
@@ -882,16 +887,7 @@ void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
                 Animator3D()->SelectAnimation(L"Rio_Short_Skill_R_Start", false);
                 SetRotationToTarget(GetFocusPoint());
 
-
-                Vec3 CenterDir = GetFocusDir();
-                Vec3 vPos = Transform()->GetRelativePos();
-                Vec3 SpawnPos = {};
-                SpawnPos = vPos;
-                SpawnPos.x += CenterDir.x * 0.5f;
-                SpawnPos.z += CenterDir.z * 0.5f;
-                SpawnPos.y = SpawnPos.y + 1.1f;
-
-                param.v4Data = SpawnPos;
+                param.v4Data = GetFocusDir();;
 
                 param.bData[0] = true;
                 param.bData[1] = false;
@@ -910,6 +906,8 @@ void ER_ActionScript_Rio::Skill_REnter(tFSMData& param)
             param.bData[0] = true;
             param.bData[1] = false;
             param.iData[1] = 9;
+
+            param.v4Data = GetFocusDir();;
             // 두번째 시전
             Animator3D()->SelectAnimation(L"Rio_Short_Skill_R_End", false);
             SetRotationToTarget(GetFocusPoint());
@@ -931,6 +929,16 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
     {
         if (!param.bData[1] && param.iData[1] < Animator3D()->GetCurFrame())
         {
+            ERCHARSOUND(SHORT_NORMAL_ATTACK);
+            Vec3 CenterDir = param.v4Data;
+            Vec3 vPos = Transform()->GetRelativePos();
+            Vec3 SpawnPos = {};
+
+            SpawnPos = vPos;
+            SpawnPos.x += CenterDir.x * 0.5f;
+            SpawnPos.z += CenterDir.z * 0.5f;
+            SpawnPos.y = SpawnPos.y + 1.1f;
+
             CGameObject* Arrow = onew(CGameObject);
             ER_DataScript_Arrow* ArrowScript = onew(ER_DataScript_Arrow);
             Arrow->AddComponent(ArrowScript);
@@ -940,7 +948,7 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
             Arrow->Transform()->SetRelativeScale(Vec3(4.f, 2.f, 4.f));
 
 
-            ArrowScript->SetForDir(GetOwner(), param.v4Data, 12.f, 5.f);
+            ArrowScript->SetForDir(GetOwner(), SpawnPos, 12.f, 5.f);
             tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_2);
             ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR2, skill, 0);
             ArrowScript->Spawn();
@@ -963,12 +971,22 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
         {
             if (!param.bData[1] && param.iData[1] < Animator3D()->GetCurFrame())
             {
+                ERCHARSOUND(SHORT_NORMAL_ATTACK);
                 CGameObject* Arrow = onew(CGameObject);
                 ER_DataScript_Arrow* ArrowScript = onew(ER_DataScript_Arrow);
                 Arrow->AddComponent(ArrowScript);
                 ArrowScript->init();
 
-                ArrowScript->SetForDir(GetOwner(), param.v4Data, 15.f, 0.4f);
+                Vec3 CenterDir = param.v4Data;
+                Vec3 vPos = Transform()->GetRelativePos();
+                Vec3 SpawnPos = {};
+
+                SpawnPos = vPos;
+                SpawnPos.x += CenterDir.x * 0.5f;
+                SpawnPos.z += CenterDir.z * 0.5f;
+                SpawnPos.y = SpawnPos.y + 1.1f;
+
+                ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
                 tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
                 ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_1, skill, 0);
                 ArrowScript->Spawn();
@@ -1000,7 +1018,8 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
             // 애니메이션 길이만큼 시전게이지 UI 출력
             if (!param.bData[1] && param.iData[1] < Animator3D()->GetCurFrame())
             {
-                Vec3 CenterDir = GetFocusDir();
+                ERCHARSOUND(SHORT_NORMAL_ATTACK);
+                Vec3 CenterDir = param.v4Data;
                 Vec3 vPos = Transform()->GetRelativePos();
                 Vec3 SpawnPos = {};
 
