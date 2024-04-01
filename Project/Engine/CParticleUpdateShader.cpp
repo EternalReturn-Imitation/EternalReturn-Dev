@@ -15,7 +15,6 @@ CParticleUpdateShader::CParticleUpdateShader(UINT _iGroupPerThreadX, UINT _iGrou
 
 CParticleUpdateShader::~CParticleUpdateShader()
 {
-
 }
 
 void CParticleUpdateShader::SetParticleBuffer(CStructuredBuffer* _Buffer)

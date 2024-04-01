@@ -14,7 +14,7 @@ ER_EffectScript::~ER_EffectScript()
 {
 }
 
-void ER_EffectScript::EffectRotation(CGameObject* _targetObj, Vec3 _startScale, Vec3 _endScale, bool _rotDirection, float _endTime)
+void ER_EffectScript::EffectRotation(CGameObject* _targetObj, Vec3 _startScale, Vec3 _endScale, bool _rotDirection, float _endTime, CGameObject* _dummpyParent)
 {
 	auto startTime = std::chrono::high_resolution_clock::now();
 	int restTime = 10;
@@ -40,17 +40,21 @@ void ER_EffectScript::EffectRotation(CGameObject* _targetObj, Vec3 _startScale, 
 		_targetObj->Transform()->SetRelativeScale(_startScale);
 
 		//회전 변경
-		//Vec3 rot = _targetObj->Transform()->GetRelativeRot();
-		//if(_rotDirection)
-		//	rot.z += exeCount / 1000.f;
-		//else
-		//	rot.z -= exeCount / 1000.f;
-		//_targetObj->Transform()->SetRelativeRot(rot);
+		Vec3 rot = _targetObj->Transform()->GetRelativeRot();
+		if(_rotDirection)
+			rot.z += exeCount / 100.f;
+		else
+			rot.z -= exeCount / 100.f;
+		_targetObj->Transform()->SetRelativeRot(rot);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
 	}
 
-	DestroyObject(_targetObj);
+	if (_dummpyParent != nullptr)
+		DestroyObject(_dummpyParent);
+	else {
+		DestroyObject(_targetObj);
+	}
 }
 
 void ER_EffectScript::begin()

@@ -11,6 +11,10 @@
 #include "ER_ActionScript_Rio.h"
 #include "ER_ActionScript_Yuki.h"
 #include "ER_ArrowEffectScript.h"
+#include "ER_AyaBAEffect.h"
+#include "ER_AyaQEffect.h"
+#include "ER_AyaWBulletEffect.h"
+#include "ER_BulletEffectScript.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
 #include "ER_DataScript_Arrow.h"
@@ -45,6 +49,10 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ActionScript_Rio");
 	_vec.push_back(L"ER_ActionScript_Yuki");
 	_vec.push_back(L"ER_ArrowEffectScript");
+	_vec.push_back(L"ER_AyaBAEffect");
+	_vec.push_back(L"ER_AyaQEffect");
+	_vec.push_back(L"ER_AyaWBulletEffect");
+	_vec.push_back(L"ER_BulletEffectScript");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Arrow");
@@ -90,6 +98,14 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_ActionScript_Yuki;
 	if (L"ER_ArrowEffectScript" == _strScriptName)
 		return new ER_ArrowEffectScript;
+	if (L"ER_AyaBAEffect" == _strScriptName)
+		return new ER_AyaBAEffect;
+	if (L"ER_AyaQEffect" == _strScriptName)
+		return new ER_AyaQEffect;
+	if (L"ER_AyaWBulletEffect" == _strScriptName)
+		return new ER_AyaWBulletEffect;
+	if (L"ER_BulletEffectScript" == _strScriptName)
+		return new ER_BulletEffectScript;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
@@ -168,6 +184,18 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_ARROWEFFECTSCRIPT:
 		return new ER_ArrowEffectScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYABAEFFECT:
+		return new ER_AyaBAEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYAQEFFECT:
+		return new ER_AyaQEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYAWBULLETEFFECT:
+		return new ER_AyaWBulletEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_BULLETEFFECTSCRIPT:
+		return new ER_BulletEffectScript;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
@@ -278,6 +306,22 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_ARROWEFFECTSCRIPT:
 		return L"ER_ArrowEffectScript";
+		break;
+
+	case SCRIPT_TYPE::ER_AYABAEFFECT:
+		return L"ER_AyaBAEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_AYAQEFFECT:
+		return L"ER_AyaQEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_AYAWBULLETEFFECT:
+		return L"ER_AyaWBulletEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_BULLETEFFECTSCRIPT:
+		return L"ER_BulletEffectScript";
 		break;
 
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:

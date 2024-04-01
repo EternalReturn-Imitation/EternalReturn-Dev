@@ -10,10 +10,11 @@ void ER_ArrowEffectScript::tick()
 {
 }
 
-void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
+void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 {
 #pragma region effect
 	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"arrowEffect01");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
@@ -30,6 +31,7 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
 
 #pragma region particle
 	CGameObject* testParticle = new CGameObject;
+	testParticle->SetName(L"arrowParticle01");
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
 
@@ -43,15 +45,15 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
 
-	particle_data.StartScale = 5.f;
-	particle_data.EndScale = 5.f;
+	particle_data.StartScale = 4.f;
+	particle_data.EndScale = 4.f;
 
 	particle_data.vSpawnScaleMin = Vec3(0.3f, 0.3f, 0.3f);
 	particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
 	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
 
-	particle_data.MinLifeTime = 2.f;
-	particle_data.MaxLifeTime = 2.f;
+	particle_data.MinLifeTime = 0.4f;
+	particle_data.MaxLifeTime = 0.4f;
 
 	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
 	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
@@ -61,7 +63,7 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	particle_data.vVelocityDir = Vec3(1.f, 0.f, 1.f);
 	particle_data.Speed = 2.5f;
 
-	particle_data.SpawnRate = 40.f;
+	particle_data.SpawnRate = 30.f;
 
 	particle_data.EndDrag = -1.f;
 

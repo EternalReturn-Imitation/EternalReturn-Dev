@@ -22,9 +22,10 @@ CParticleSystem::CParticleSystem()
 	, m_AccTime(0.f)
 	, m_PointPos{}
 	, m_pParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire.png"))
-	, m_aSpawnNum{0.f,1.f}
+	, m_aSpawnNum{0.f,100.f}
 	, m_bTickToggle(false)
 	, m_bDestoryTrigger(false)
+	, m_fTime(0.f)
 {
 	m_ModuleData.iMaxParticleCount = 3000;
 
@@ -97,14 +98,16 @@ CParticleSystem::CParticleSystem()
 
 CParticleSystem::~CParticleSystem()
 {
-	if (nullptr != m_ParticleBuffer)
+	if (nullptr != m_ParticleBuffer) {
 		delete m_ParticleBuffer;
+	}
 
 	if (nullptr != m_RWBuffer)
 		delete m_RWBuffer;
 
-	if (nullptr != m_ModuleDataBuffer)
+	if (nullptr != m_ModuleDataBuffer) {
 		delete m_ModuleDataBuffer;
+	}
 }
 
 
@@ -143,6 +146,8 @@ Vec3 CParticleSystem::GetWorldPos(Vec3 _relativePos, Vec3 _relativeRot)
 void CParticleSystem::tick()
 {
 	m_bTickToggle = true;
+
+	m_fTime += DT;
 }
 
 void CParticleSystem::finaltick()
@@ -202,6 +207,7 @@ void CParticleSystem::finaltick()
 	
 
 	m_UpdateCS->Execute();
+
 }
 
 void CParticleSystem::render()

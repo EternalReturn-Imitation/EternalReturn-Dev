@@ -8,6 +8,10 @@ ER_ActionScript_Jackie
 ER_ActionScript_Rio
 ER_ActionScript_Yuki
 ER_ArrowEffectScript
+ER_AyaBAEffect
+ER_AyaQEffect
+ER_AyaWBulletEffect
+ER_BulletEffectScript
 ER_CamControllerScript
 ER_Cursor
 ER_DataScript_Arrow

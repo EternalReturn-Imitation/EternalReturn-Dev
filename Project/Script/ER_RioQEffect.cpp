@@ -18,7 +18,7 @@ void ER_RioQEffect::tick()
 {
 }
 
-void ER_RioQEffect::SpawnEffect(Vec3 _pos, Vec3 _dir)
+void ER_RioQEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 {
 	CGameObject* testParticle = new CGameObject;
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
@@ -62,9 +62,13 @@ void ER_RioQEffect::SpawnEffect(Vec3 _pos, Vec3 _dir)
 	Particle->SetParticleSpawnNum(1);
 	Particle->SetDestoryTrigger(true);
 
-	Particle->Transform()->SetRelativePos(Vec3(0.6f, 1.8f, 0.38f));
+	Particle->Transform()->SetRelativePos(Vec3(0.6f,1.8f,0.38f));
 
 	SpawnGameObjectToParent(testParticle, GetOwner());
+
+	//Vec3 ownerPos = GetOwner()->Transform()->GetRelativePos();
+	//Particle->Transform()->SetRelativePos(Vec3(ownerPos.x+0.6f, ownerPos.y+1.8f, ownerPos.z+0.38f));
+	//SpawnGameObject(testParticle, L"Effect");
 }
 
 void ER_RioQEffect::SaveToLevelFile(FILE* _File)

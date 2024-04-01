@@ -28,6 +28,7 @@ private:
     bool                        m_bTickToggle;
     float                       m_aSpawnNum[2];
     bool                        m_bDestoryTrigger;
+    float                       m_fTime;
 
 public:
     const int* GetModuleCheckList() { return m_ModuleData.ModuleCheck; }
@@ -62,6 +63,8 @@ public:
 
     void GetRayPos();
     Vec3 GetWorldPos(Vec3 _relativePos, Vec3 _relrativeRot);
+
+    Ptr<CParticleUpdateShader>  GetCS() { return m_UpdateCS; }
 
 public:
     virtual void tick() override;

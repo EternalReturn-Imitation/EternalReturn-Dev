@@ -186,7 +186,11 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_ActionScript_Rio.h" />
     <ClInclude Include="ER_ActionScript_Yuki.h" />
     <ClInclude Include="ER_ArrowEffectScript.h" />
+    <ClInclude Include="ER_AyaBAEffect.h" />
+    <ClInclude Include="ER_AyaQEffect.h" />
+    <ClInclude Include="ER_AyaWBulletEffect.h" />
     <ClInclude Include="ER_BattleSystem.h" />
+    <ClInclude Include="ER_BulletEffectScript.h" />
     <ClInclude Include="ER_CamControllerScript.h" />
     <ClInclude Include="ER_CharacterMgr.h" />
     <ClInclude Include="ER_Cursor.h" />
@@ -235,7 +239,11 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_ActionScript_Rio.cpp" />
     <ClCompile Include="ER_ActionScript_Yuki.cpp" />
     <ClCompile Include="ER_ArrowEffectScript.cpp" />
+    <ClCompile Include="ER_AyaBAEffect.cpp" />
+    <ClCompile Include="ER_AyaQEffect.cpp" />
+    <ClCompile Include="ER_AyaWBulletEffect.cpp" />
     <ClCompile Include="ER_BattleSystem.cpp" />
+    <ClCompile Include="ER_BulletEffectScript.cpp" />
     <ClCompile Include="ER_CamControllerScript.cpp" />
     <ClCompile Include="ER_CharacterMgr.cpp" />
     <ClCompile Include="ER_CharacterMgr_Init.cpp" />

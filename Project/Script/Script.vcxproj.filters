@@ -145,6 +145,21 @@
     <Filter Include="GameSystem\Effect">
       <UniqueIdentifier>{f6e05562-d1ba-46af-b123-b120d224acef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya">
+      <UniqueIdentifier>{fb3bab7d-17b3-4268-8e40-f4fc9a1f097c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\BulletEffect">
+      <UniqueIdentifier>{75d83bab-4fd5-478d-b9af-5691fc4a8e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\BasicAttackEffect">
+      <UniqueIdentifier>{65868b39-e8ff-4a81-9b72-92aca3c9be76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\QEffect">
+      <UniqueIdentifier>{a8a6b10e-7e17-449e-8fe0-edd26278b223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\WBulletEffect">
+      <UniqueIdentifier>{361ffa0a-7f03-4deb-80c8-fdb7fd89bbfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -279,6 +294,18 @@
     </ClInclude>
     <ClInclude Include="ER_EffectSystem.h">
       <Filter>GameSystem\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaBAEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_BulletEffectScript.h">
+      <Filter>Script\ER\EffectScript\Aya\BulletEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaQEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaWBulletEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -422,6 +449,18 @@
     </ClCompile>
     <ClCompile Include="ER_GameSystem_ResourceLoad.cpp">
       <Filter>GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_BulletEffectScript.cpp">
+      <Filter>Script\ER\EffectScript\Aya\BulletEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaWBulletEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

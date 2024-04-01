@@ -12,6 +12,12 @@
 
 #include "ER_DataScript_Bullet.h"
 
+//이펙트 관련
+#include "ER_AyaBAEffect.h"
+#include "ER_BulletEffectScript.h"
+#include "ER_AyaQEffect.h"
+#include "ER_AyaWBulletEffect.h"
+
 ER_ActionScript_Aya::ER_ActionScript_Aya()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA)
 {
@@ -21,6 +27,15 @@ ER_ActionScript_Aya::~ER_ActionScript_Aya()
 {
 }
 
+void ER_ActionScript_Aya::begin()
+{
+    ER_ActionScript_Character::begin();
+    ER_AyaBAEffect* BAEffect = onew(ER_AyaBAEffect);
+    ER_AyaQEffect* QEffect = onew(ER_AyaQEffect);
+
+    GetOwner()->AddComponent(BAEffect);
+    GetOwner()->AddComponent(QEffect);
+}
 
 void ER_ActionScript_Aya::WaitEnter(tFSMData& param)
 {
@@ -332,7 +347,18 @@ void ER_ActionScript_Aya::AttackUpdate(tFSMData& param)
             (CGameObject*)param.lParam, 
             GetProjSpawnPos(param.lParam), 
             30.f);
+
+        ER_BulletEffectScript* bulletEffect = onew(ER_BulletEffectScript);
+        Bullet->AddComponent(bulletEffect);
+
         BulletScript->Spawn();
+
+        Vec3 _dir = GetProjSpawnPos(param.lParam) - GetOwner()->Transform()->GetRelativePos();
+        _dir.y = 0.f;
+        _dir.Normalize();
+        Vec3 resultPos = GetProjSpawnPos(param.lParam) + _dir*0.6f;
+        resultPos.y += 0.2f;
+        GetOwner()->GetScript<ER_AyaBAEffect>()->SpawnEffect(resultPos, GetOwner()->Transform()->GetRelativeRot());
 
         param.bData[1] = true;                          // Battle Event 완료
         SetStateGrade(eAccessGrade::BASIC);
@@ -478,6 +504,9 @@ void ER_ActionScript_Aya::Skill_QUpdate(tFSMData& param)
         ER_DataScript_Bullet* BulletScript = onew(ER_DataScript_Bullet);
         Bullet->AddComponent(BulletScript);
 
+        ER_BulletEffectScript* bulletEffect = onew(ER_BulletEffectScript);
+        Bullet->AddComponent(bulletEffect);
+
         BulletScript->init();
         BulletScript->SetForTarget(
             GetOwner(),
@@ -491,6 +520,8 @@ void ER_ActionScript_Aya::Skill_QUpdate(tFSMData& param)
             ERCHARSOUND(SKILLQ);
             tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
             BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ2, skill, 1);
+
+            GetOwner()->GetScript<ER_AyaQEffect>()->SpawnEffect(GetProjSpawnPos(param.lParam), GetOwner()->Transform()->GetRelativeRot());
         }
         // 1타
         else
@@ -498,6 +529,8 @@ void ER_ActionScript_Aya::Skill_QUpdate(tFSMData& param)
             ERCHARSOUND(NORMAL_ATTACK);
             tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
             BulletScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Aya::SkillQ1, skill, 0);
+
+            GetOwner()->GetScript<ER_AyaQEffect>()->SpawnEffect(GetProjSpawnPos(param.lParam), GetOwner()->Transform()->GetRelativeRot());
         }
 
         BulletScript->Spawn();
@@ -567,6 +600,8 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         ER_DataScript_Bullet* BulletScript = onew(ER_DataScript_Bullet);
         Bullet->AddComponent(BulletScript);
 
+        
+
         // 초기 스킬사용시 방향으로 발사
         Vec3 vPos = Transform()->GetRelativePos();
 
@@ -581,6 +616,12 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
             vPos,
             30.f,
             1.f);
+
+        GetOwner()->GetScript<ER_AyaQEffect>()->SpawnEffect(vPos, GetOwner()->Transform()->GetRelativeRot());
+
+        ER_AyaWBulletEffect* bulletEffect = onew(ER_AyaWBulletEffect);
+        bulletEffect->SetEffectDir(GetOwner()->Transform()->GetRelativeRot());
+        Bullet->AddComponent(bulletEffect);
 
         ERCHARSOUND(SKILLW);
         tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
@@ -868,7 +909,6 @@ void ER_ActionScript_Aya::Skill_RExit(tFSMData& param)
     param.bData[0] = false;
     param.bData[1] = false;
 }
-
 
 FSMState* ER_ActionScript_Aya::CreateWait()
 {
