@@ -6,6 +6,7 @@
 #include "ER_DataScript_Item.h"
 
 #include "ER_ItemMgr.h"
+#include "ER_GameSystem.h"
 
 #include <Engine\CAnim3D.h>
 
@@ -90,10 +91,12 @@ void ER_ActionScript_Yuki::MoveUpdate(tFSMData& param)
         }
     }
 
-    // 애니메이션 변경 판단
-
     // 버프/디버프 효과 반영
     tStatus_Effect* SpeedEfc = m_Data->GetStatusEffect();
+
+    // 애니메이션 반영
+    float SpdEfcAnim = ((SpeedEfc->GetIncSPD()) * 10.f) + ((SpeedEfc->GetDecSPD()) * -10.f);
+    Animator3D()->PlaySpeedValue(SpdEfcAnim);
 
     // 이동속도 설정
     float fMoveSpeed = GetStatus()->fMovementSpeed;
@@ -256,6 +259,7 @@ void ER_ActionScript_Yuki::AttackEnter(tFSMData& param)
    bData[2]	    : 다음 타겟 지정 여부
    bData[3]     : 공격모션 변경
    iData[0]	    : 타격지점 애니메이션 프레임 = Hit Frame
+   iData[1]     : 공격모션 구분
    lParam		: 타겟 오브젝트
    RParam		: 타겟 예정 오브젝트
    */
@@ -265,21 +269,28 @@ void ER_ActionScript_Yuki::AttackEnter(tFSMData& param)
     param.bData[1] = false;
     param.bData[3] = !param.bData[3];
 
-    // Q스킬 적용 여부
+    // Q스킬 적용 여부 : 강화평타
     if (IsSkillOn(SKILLIDX::Q_1))
     {
         Animator3D()->SelectAnimation(L"Yuki_SkillQ", false);
-        param.iData[0] = 6;
+        m_Data->GetSkill((UINT)SKILLIDX::Q_1)->ActionOver();
+        param.iData[0] = 7;
+        param.iData[1] = 2;
+        ERCHARSOUND(SKILLQ_ATTACK);
     }
-    else if (param.bData[3])
+    else if (!param.bData[3])
     {
         Animator3D()->SelectAnimation(L"Yuki_Attack0", false);
-        param.iData[0] = 6;
+        param.iData[0] = 8;
+        param.iData[1] = 0;
+        ERCHARSOUND(ATTACK_NORMAL1);
     }
     else
     {
         Animator3D()->SelectAnimation(L"Yuki_Attack1", false);
-        param.iData[0] = 6;
+        param.iData[0] = 8;
+        param.iData[1] = 1;
+        ERCHARSOUND(ATTACK_NORMAL2);
     }
     
     // 타겟방향으로 회전
@@ -293,7 +304,7 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
      bData[0]	: 공격동작 진행중인지 여부
      bData[1]	: Battle Event 실행 여부
      bData[2]	: 다음 타겟 지정 여부
-     bData[3]    : 공격모션 변경
+     bData[3]   : 공격모션 변경
      iData[0]	: 타격지점 애니메이션 프레임 = Hit Frame
      lParam		: 타겟 오브젝트
      RParam		: 타겟 예정 오브젝트
@@ -310,18 +321,25 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
 
     if (!param.bData[1] && param.iData[0] < Animator3D()->GetCurFrame())
     {
-        // 사운드 재생
-
-        // 캐릭터 고유 공격 알고리즘
-        
-        if (IsSkillOn(SKILLIDX::Q_1))
+        switch (param.iData[1])
         {
-            // 강화평타로 동시적용
-            // 스킬 데미지 
-            // 평타 데미지
-        }
-        else
+        case 0:
+        case 1:
+        {
+            // 기본 공격
             BATTLE_COMMON(GetOwner(), param.lParam);
+            ERCHARSOUND(HITSOUND);
+            break;
+        }
+        case 2:
+        {
+            // 강화평타
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+            BATTLE_SKILL(GetOwner(), (CGameObject*)param.lParam, ER_ActionScript_Yuki, SkillQ, skill, 0);
+            ERCHARSOUND(SKILLQ_HIT1);
+            break;
+        }
+        }
 
         param.bData[1] = true;
         SetStateGrade(eAccessGrade::BASIC);
@@ -367,20 +385,27 @@ void ER_ActionScript_Yuki::AttackExit(tFSMData& param)
 
 void ER_ActionScript_Yuki::Skill_Q(tFSMData& _Data)
 {
+    STATEDATA_SET(SKILL_Q, _Data);
     ChangeState(ER_CHAR_ACT::SKILL_Q);
 }
 
 void ER_ActionScript_Yuki::Skill_W(tFSMData& _Data)
 {
+    tFSMData Prevdata = STATEDATA_GET(SKILL_W);
+    if (Prevdata.bData[0])
+        return;
+
+    STATEDATA_SET(SKILL_W, _Data);
     ChangeState(ER_CHAR_ACT::SKILL_W);
 }
 
 void ER_ActionScript_Yuki::Skill_E(tFSMData& _Data)
 {
-    // 시전중이 아니라면
-    if (!STATEDATA_GET(SKILL_E).iData)
-        STATEDATA_SET(SKILL_E, _Data);
+    tFSMData Prevdata = STATEDATA_GET(SKILL_E);
+    if (Prevdata.bData[0])
+        return;
 
+    STATEDATA_SET(SKILL_E, _Data);
     ChangeState(ER_CHAR_ACT::SKILL_E);
 }
 
@@ -394,7 +419,13 @@ void ER_ActionScript_Yuki::Skill_QEnter(tFSMData& param)
 {
     // 강화 평타 전달
     tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
-    Skill->Use(&GetStatus()->iSP, true);
+    if (Skill->Use(&GetStatus()->iSP, true))
+    {
+        // 이펙트 재생
+        ERCHARSOUND(SKILLQ_MOTION);
+    }
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Yuki::Skill_QUpdate(tFSMData& param)
@@ -405,6 +436,8 @@ void ER_ActionScript_Yuki::Skill_QUpdate(tFSMData& param)
 
     if ((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
         ChangeState(ER_CHAR_ACT::MOVE);
+    else if ((UINT)ER_CHAR_ACT::ATTACK == m_iPrevState)
+        ChangeState(ER_CHAR_ACT::ATTACK);
     else
         ChangeState(ER_CHAR_ACT::WAIT);
 }
@@ -416,130 +449,165 @@ void ER_ActionScript_Yuki::Skill_QExit(tFSMData& param)
 void ER_ActionScript_Yuki::Skill_WEnter(tFSMData& param)
 {
     tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
-    Skill->Use(&GetStatus()->iSP, true);
+    
+    if (Skill->Use(&GetStatus()->iSP, true))
+    {
+        param.bData[0] = true;
 
-    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillW_Upper_Wait", false);
-    SetStateGrade(eAccessGrade::ADVANCED);
+        // 빗겨치기 쿨다운 3초 감소 int2
+        tSkill_Info* SkillE = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+        if (!SkillE->IsUsable)
+        {
+            float QCoolRatio = (float)Skill->Int2();
+            SkillE->fCoolDown = SkillE->fCoolDown - QCoolRatio <= 0.5f ? 0.5f : SkillE->fCoolDown - QCoolRatio;
+        }
+
+        // [ 버프 ]
+        // 공격력 증가 int1
+        // 방어력 30% 증가 float1,
+        int AtkValue = Skill->Int1();
+        int DefValue = (int)((GetStatus()->iDefense * Skill->Float1()));
+        float ActionTime = Skill->ActionTime();
+
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_ATK, ActionTime, (float)AtkValue);
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_DEF, ActionTime, (float)DefValue);
+
+        ERCHARSOUND(SKILLW_MOTION);
+
+        Animator3D()->SelectAnimation(L"Yuki_SkillW_Upper_Wait", false);
+        SetStateGrade(eAccessGrade::UTMOST);
+    }
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
+
 }
 
 void ER_ActionScript_Yuki::Skill_WUpdate(tFSMData& param)
 {
     if (GetOwner()->Animator3D()->IsFinish())
     {
+        param.bData[0] = false;
         SetStateGrade(eAccessGrade::BASIC);
         ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
 void ER_ActionScript_Yuki::Skill_WExit(tFSMData& param)
 {
+    param.bData[0] = false;
 }
-;
 
 void ER_ActionScript_Yuki::Skill_EEnter(tFSMData& param)
 {
     tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
-    Skill->Use(&GetStatus()->iSP);
+    
+    if (Skill->Use(&GetStatus()->iSP))
+    {
+        Animator3D()->SelectAnimation(L"Yuki_SkillE_Move", false);
+        SetRotationToTarget(param.v4Data);
 
-    CAnimator3D* Animator = GetOwner()->Animator3D();
-    Animator->SelectAnimation(L"Yuki_SkillE_Move", false);
+        // 스킬 동작 여부
+        param.bData[0] = true;
 
-    // 방향 전환
-    SetRotationToTarget(param.v4Data);
+        // 공격 판정
+        param.bData[1] = false;
 
-    // 방향 저장
-    Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
-    Vec3 vDir = (param.v4Data - vPos).Normalize();
+        // 방향 저장
+        Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+        Vec3 vDir = (param.v4Data - vPos).Normalize();
 
-    // param.v4Data 에 받아온 방향정보를 v2Data로 이동
-    param.v2Data.x = vDir.x;
-    param.v2Data.y = vDir.z;
+        // 충돌 동작 구분
+        param.iData[0] = 0;
 
-    param.v4Data[0] = 5.f;                                                      // 스킬 거리
-    float ClearDist = GetClearDistance(vDir, param.v4Data[0]);
-    param.v4Data[1] = ClearDist;                                                // 이동 가능 거리
-    param.v4Data[2] = (float)Animator->GetCurAnim()->GetAnimClip().dEndTime;    // 전체 애니메이션 재생 시간
-    param.v4Data[3] = 0.f;                                                      // 이동한 거리 초기화.
+        // param.v4Data 에 받아온 방향정보를 v2Data로 이동
+        param.v2Data.x = vDir.x;
+        param.v2Data.y = vDir.z;
 
-    param.iData[0] = 1;                                                            // 적 개체 충돌여부
+        param.fData[0] = 6.f;                                                          // 스킬 거리
+        float ClearDist = GetClearDistance(vDir, param.fData[0]);
+        param.fData[1] = ClearDist;                                                    // 이동 가능 거리
+        param.fData[2] = (float)Animator3D()->GetCurAnim()->GetAnimClip().dEndTime;    // 전체 애니메이션 재생 시간
+        param.fData[3] = 0.f;                                                          // 이동한 거리 초기화.
 
-    SetStateGrade(eAccessGrade::UTMOST);
+        SetStateGrade(eAccessGrade::UTMOST);
+
+        ERCHARSOUND(SKILLE_MOTION);
+    }
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Yuki::Skill_EUpdate(tFSMData& param)
 {
-    CTransform* transform = GetOwner()->Transform();
+    // Animator3D()->PlaySpeedValue(1.5f);
 
     switch (param.iData[0])
     {
-    case 1: // 이동
+    case 0:
     {
         // 4frm 이후부터 이동
-        if (GetOwner()->Animator3D()->GetCurFrame() < 4)
-            return;
-        
-        
-        // 적개체 충돌판단
+        if (4 < Animator3D()->GetCurFrame())
         {
-            // 임의로 이동거리의 80% 지점에서 충돌했다고 가정 : TEST 코드
-            if (param.v4Data[1] * 0.8 < param.v4Data[3])
-            {
-                GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillE_Attack", false);
-                param.iData[0]++;
-                return;
-            }
+            param.iData[0] = 1;
+            return;
         }
 
+        break;
+    }
+    case 1:
+    {
         // 이동한거리가 이동가능거리를 넘지 않았는지 판단.
-        if (param.v4Data[3] < param.v4Data[1])
+        if (param.fData[3] < param.fData[1] - 1.f)
         {
+            // param.fData[0] : 스킬 거리(속도)
+            // param.fData[1] : 이동 가능 거리
+            // param.fData[2] : 전체 애니메이션 재생 시간
+            // param.fData[3] : 이동한 거리
 
-            // param.v4Data[0] : 스킬 거리(속도)
-            // param.v4Data[1] : 이동 가능 거리
-            // param.v4Data[2] : 전체 애니메이션 재생 시간
-            // param.v4Data[3] : 이동한 거리
-
-            Vec3 vPos = transform->GetRelativePos();
+            Vec3 vPos = Transform()->GetRelativePos();
             Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
 
-            float speed = param.v4Data[0] * 4;
+            float speed = param.fData[0];
 
-            float CurFrameMoveDist = speed * param.v4Data[2] * DT;
+            if (param.fData[3] > (param.fData[1] / 5.f))
+                speed = param.fData[0] * 1.2f;
 
-            param.v4Data[3] += CurFrameMoveDist;
+            float CurFrameMoveDist = speed * param.fData[0] * DT;
+
+            param.fData[3] += CurFrameMoveDist;
 
             vPos += vDir * CurFrameMoveDist;
 
             // 캐릭터 이동
-            transform->SetRelativePos(vPos);
+            Transform()->SetRelativePos(vPos);
         }
 
-        // 이동범위 내에 충돌이 발생하지 않고 애니메이션 종료.
-        if (GetOwner()->Animator3D()->IsFinish())
-            ChangeState(ER_CHAR_ACT::WAIT,eAccessGrade::UTMOST);
-
+        if (Animator3D()->IsFinish())
+        {
+            SetStateGrade(eAccessGrade::BASIC);
+            ChangeState(ER_CHAR_ACT::WAIT);
+        }
         break;
     }
-    case 2: // 공격 애니메이션
+    case 2:
     {
-        Vec3 vPos = transform->GetRelativePos();
+        if (!param.bData[1])
+        {
+            // 스킬 타격
+            STOPSOUND(SKILLE_MOTION);
+            ERCHARSOUND(SKILLE_ATTACK);
+            ERCHARSOUND(SKILLE_HIT1);
 
-        // 4m 추가이동으로 갱신
-        Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+            BATTLE_SKILL(GetOwner(), (CGameObject*)param.lParam, ER_ActionScript_Yuki, SkillE, skill, 0);
 
-        param.v4Data[0] = 0.5f;                                              // 스킬 거리
-        float ClearDist = GetClearDistance(vDir, param.v4Data[0]);
+            param.bData[1] = true;
+        }
 
-        vPos += vDir * ClearDist;
-        transform->SetRelativePos(vPos);
-
-        param.iData[0]++;
-        break;
-    }
-    case 3: // 애니메이션 종료
-    {
-        if (GetOwner()->Animator3D()->IsFinish())
-            ChangeState(ER_CHAR_ACT::WAIT, eAccessGrade::UTMOST);
-        
+        if (Animator3D()->IsFinish())
+        {
+            SetStateGrade(eAccessGrade::BASIC);
+            ChangeState(ER_CHAR_ACT::WAIT);
+        }
         break;
     }
     }
@@ -547,59 +615,172 @@ void ER_ActionScript_Yuki::Skill_EUpdate(tFSMData& param)
 
 void ER_ActionScript_Yuki::Skill_EExit(tFSMData& param)
 {
+    // 스킬 동작 여부
+    param.bData[0] = false;
+    param.bData[1] = false;
+    // 충돌 동작 구분
     param.iData[0] = 0;
+    param.v2Data = Vec2();
+
+    param.fData[0] = 0.f;
+    param.fData[1] = 0.f;
+    param.fData[2] = 0.f;
+    param.fData[3] = 0.f;
 }
 
 void ER_ActionScript_Yuki::Skill_REnter(tFSMData& param)
 {
-    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Wait", true);
-    param.iData[0] = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
+    tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+
+    // 스킬을 사용할 수 있는지 여부 판단
+    if (Skill->IsUsable && Skill->UseSP() <= GetStatus()->iSP)
+    {
+        GetOwner()->Animator3D()->SelectAnimation(L"Yuki_Wait", true);
+
+        param.bData[0] = false;
+        param.bData[1] = false;
+        param.iData[0] = 0;     // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
+        param.iData[1] = 31;    // End Anim Hit Frame
+    }
+    else if((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
+        ChangeState(ER_CHAR_ACT::MOVE);
+    else if ((UINT)ER_CHAR_ACT::ATTACK == m_iPrevState)
+        ChangeState(ER_CHAR_ACT::ATTACK);
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
 {
     switch (param.iData[0])
     {
-    case 1:
+    case 0:
     {
+        // 스킬 조준
+        Vec3 vTargetPoint = GetFocusPoint();
+        SetRotationToTarget(vTargetPoint);
+
         if (KEY_TAP(KEY::LBTN) || KEY_TAP(KEY::R))
         {
-            // 스킬 조준
-            Vec3 vTargetPoint = GetFocusPoint();
-            SetRotationToTarget(vTargetPoint);
+            tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
 
-            // 스킬 발동
-            GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_Loop", false);
-            SetStateGrade(eAccessGrade::UTMOST);
-            param.iData[0]++;
+            if (Skill->Use(&GetStatus()->iSP))
+            {
+                param.bData[0] = true;
+                param.bData[1] = false;
+                param.iData[0] = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
+                param.iData[1] = 31;    // End Anim Hit Frame
+
+                // 스킬 발동
+                GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_Loop", false);
+                SetStateGrade(eAccessGrade::UTMOST);
+                ERCHARSOUND(SKILLR_ACTIVE);
+            }
+            else
+            {
+                ChangeState(ER_CHAR_ACT::WAIT);
+            }
+        }
+        else if (KEY_TAP(KEY::ESC))
+        {
+            ChangeState(ER_CHAR_ACT::WAIT);
+        }
+        break;
+    }
+    case 1:
+    {
+        // 스킬 타격범위 애니메이션 출력
+        // 특정 프레임에 공격 모션과 함께 전투매니저호출
+
+
+        if (GetOwner()->Animator3D()->IsFinish())
+        {
+            ERCHARSOUND(SKILLR_ATTACK);
+            // 데미지 처리
+            
+            bool IsHit = false;
+
+            vector<CGameObject*> vecChar = ER_GameSystem::GetInst()->GetCharacters();
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+
+            for (auto Target : vecChar)
+            {
+                // 본인 검사
+                if (Target == GetOwner())
+                    continue;
+
+                // 반원형태 스킬범위 판단
+                if (!IsInRangeWithAngle(GetOwner(), Target, 5.f, 90.f))
+                    continue;
+
+                float DebufTime = 1.f;
+                float SpeedValue = 0.9f;
+
+                // float 1 공퍼
+                // float 2 최대뎀퍼퍼
+
+                // 이동속도 90% 디버프
+                Target->GetScript<ER_DataScript_Character>()->GetStatusEffect()->
+                    ActiveEffect((UINT)eStatus_Effect::DECREASE_SPD, DebufTime, SpeedValue);
+
+                // 데미지 판정
+                IsHit = true;
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Yuki, SkillR1, skill, 0);
+            }
+
+            if(IsHit)
+                ERCHARSOUND(SKILLR_HIT);
+
+            GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_End", false);
+            param.iData[0] = 2;
+            
         }
         break;
     }
     case 2:
     {
-        // 스킬 타격범위 애니메이션 출력
+        if (!param.bData[1] && param.iData[1] < Animator3D()->GetCurFrame())
+        {
+            bool IsHit = false;
 
-        // 특정 프레임에 공격 모션과 함께 전투매니저호출
+            param.bData[1] = true;
+
+            vector<CGameObject*> vecChar = ER_GameSystem::GetInst()->GetCharacters();
+            tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+
+            for (auto Target : vecChar)
+            {
+                // 본인 검사
+                if (Target == GetOwner())
+                    continue;
+
+                // 반원형태 스킬범위 판단
+                if (!IsInRangeWithAngle(GetOwner(), Target, 5.f, 90.f))
+                    continue;
+
+                // 스킬데미지에 타겟의 최대체력을 얻기위해 lParam 값으로 전달
+                param.lParam = (DWORD_PTR)Target;
+
+                // 데미지 판정
+                IsHit = true;
+                BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Yuki, SkillR2, skill, 1);
+            }
+
+            if (IsHit)
+            {
+                ERCHARSOUND(SKILLR_END);
+                ERCHARSOUND(SKILLR_HIT);
+            }
+        }
 
         if (GetOwner()->Animator3D()->IsFinish())
         {
-            GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_End", false);
-            param.iData[0]++;
+            SetStateGrade(eAccessGrade::BASIC);
+            ChangeState(ER_CHAR_ACT::WAIT);
         }
-        break;
-    }
-    case 3:
-    {
-
-        // 특정 프레임에 공격 모션과 함께 전투 매니저 호출
-
-        if (GetOwner()->Animator3D()->IsFinish())
-            ChangeState(ER_CHAR_ACT::WAIT, eAccessGrade::UTMOST);
 
         break;
     }
-    default:
-        break;
     }
 }
 
@@ -607,12 +788,98 @@ void ER_ActionScript_Yuki::Skill_RExit(tFSMData& param)
 {
     // 스킬조준 대기상태 해제
     param.iData[0] = 0;
+    param.bData[0] = false;
+    param.bData[1] = false;
 }
 
 
-int ER_ActionScript_Yuki::SkillQ(const tSkill_Info* skilldata)
+int ER_ActionScript_Yuki::SkillQ()
 {
-    return skilldata->iValue1[0] + (int)skilldata->fValue1[0];
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::Q_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 1.f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Yuki::SkillE()
+{
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.65f);
+
+    return Dmg;
+}
+
+int ER_ActionScript_Yuki::SkillR1()
+{
+    // float 1 공퍼
+    // float 2 최대뎀퍼퍼
+
+
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * skill->Float1());
+
+    return Dmg;
+}
+
+int ER_ActionScript_Yuki::SkillR2()
+{
+    tFSMData StateData = STATEDATA_GET(SKILL_R);
+    tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+    int TargetMaxHP = ((CGameObject*)StateData.lParam)->GetScript<ER_DataScript_Character>()->GetStatus()->iMaxHP;
+    
+    // 최대 HP 비례데미지
+    int Dmg = (int)(TargetMaxHP * skill->Float2());
+
+    return Dmg;
+}
+
+void ER_ActionScript_Yuki::BeginOverlap(CCollider3D* _Other)
+{
+    // 충돌체크 true, 안전거리 끝까지이동,
+    // Move Attack 재생
+    tFSMData SkillE = STATEDATA_GET(SKILL_E);
+    CGameObject* Target = _Other->GetOwner();
+
+    // SkillE 시전중이고 이동상태일때
+    if (SkillE.bData[0]  && 1 == SkillE.iData[0])
+    {
+        if (!IsCharacter(Target) || IsDead(Target))
+            return;
+
+        // param.fData[0] : 스킬 거리(속도)
+        // param.fData[1] : 이동 가능 거리
+        // param.fData[2] : 전체 애니메이션 재생 시간
+        // param.fData[3] : 이동한 거리
+
+        // 이때 첫 충돌한 오브젝트를 타겟으로 지정
+        SkillE.lParam = (DWORD_PTR)Target;
+
+        GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillE_Attack", false);
+        SkillE.iData[0] = 2;
+        
+        // 1.f 추가 순간 이동, 최대이동가능거리 제한
+        Vec3 vPos = Target->Transform()->GetRelativePos();
+        Vec3 vDir(SkillE.v2Data.x, 0.f, SkillE.v2Data.y);
+
+        // 안전이동거리 최대이동거리넘지않도록 제한
+        float ClearDist = SkillE.fData[3] + 1.f <= SkillE.fData[1] ? 1.f : SkillE.fData[1] - SkillE.fData[3];
+
+        vPos += vDir * ClearDist;
+
+        Transform()->SetRelativePos(vPos);
+
+        STATEDATA_SET(SKILL_E, SkillE);
+        return;
+    }
+
+}
+
+void ER_ActionScript_Yuki::OnOverlap(CCollider3D* _Other)
+{
+}
+
+void ER_ActionScript_Yuki::EndOverlap(CCollider3D* _Other)
+{
 }
 
 

@@ -144,7 +144,7 @@ void ER_DataScript_Projectile::BeginOverlap(CCollider3D* _Other)
 	if (m_pTarget && _Other->GetOwner() == m_pTarget)
 	{
 		// 데미지연산함수
-		BATTLE_COMMON(m_pShooter, m_pTarget);
+		ER_BattleSystem::GetInst()->Battle_Common(m_pShooter, m_pTarget, GetOwner());
 		
 		// 사운드 재생
 		if (nullptr != m_pSound)
@@ -165,7 +165,7 @@ void ER_DataScript_Projectile::BeginOverlap(CCollider3D* _Other)
 			if (eDmgType::NORMAL == m_DmgType)
 			{
 				// 데미지연산함수
-				BATTLE_COMMON(m_pShooter, m_pTarget);
+				ER_BattleSystem::GetInst()->Battle_Common(m_pShooter, m_pTarget, GetOwner());
 
 				// 사운드 재생
 				if (nullptr != m_pSound)
@@ -177,7 +177,7 @@ void ER_DataScript_Projectile::BeginOverlap(CCollider3D* _Other)
 			{
 				if (m_SkillInst && m_SkillFunc)
 				{
-					ER_BattleSystem::GetInst()->Battle_Skill(m_pShooter, _Other->GetOwner(), m_SkillInst, m_SkillFunc, m_SkillData, m_SkillHitStep);
+					ER_BattleSystem::GetInst()->Battle_Skill(m_pShooter, _Other->GetOwner(), m_SkillInst, m_SkillFunc, m_SkillData, m_SkillHitStep, GetOwner());
 
 					// 사운드 재생
 					if (nullptr != m_pSound)

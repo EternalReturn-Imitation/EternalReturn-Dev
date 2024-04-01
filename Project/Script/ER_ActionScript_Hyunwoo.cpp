@@ -98,6 +98,10 @@ void ER_ActionScript_Hyunwoo::MoveUpdate(tFSMData& param)
     // 버프/디버프 효과 반영
     tStatus_Effect* SpeedEfc = m_Data->GetStatusEffect();
 
+    // 애니메이션 반영
+    float SpdEfcAnim = ((SpeedEfc->GetIncSPD()) * 10.f) + ((SpeedEfc->GetDecSPD()) * -10.f);
+    Animator3D()->PlaySpeedValue(SpdEfcAnim);
+
     // 이동속도 설정
     float fMoveSpeed = GetStatus()->fMovementSpeed;
     fMoveSpeed += (fMoveSpeed * SpeedEfc->GetIncSPD()) - (fMoveSpeed * SpeedEfc->GetDecSPD());
@@ -483,11 +487,11 @@ void ER_ActionScript_Hyunwoo::Skill_WEnter(tFSMData& param)
     {
         // 공격력/방어력증가 버프
         int AtkValue = Skill->Int1();
-        int DefValue = (GetStatus()->iDefense * Skill->Float1());
+        int DefValue = (int)((GetStatus()->iDefense * Skill->Float1()));
         float ActionTime = Skill->ActionTime();
 
-        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_ATK, ActionTime, AtkValue);
-        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_DEF, ActionTime, DefValue);
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_ATK, ActionTime, (float)AtkValue);
+        m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_DEF, ActionTime, (float)DefValue);
 
         // 이펙트 효과 재생
 
@@ -500,7 +504,11 @@ void ER_ActionScript_Hyunwoo::Skill_WEnter(tFSMData& param)
 void ER_ActionScript_Hyunwoo::Skill_WUpdate(tFSMData& param)
 {
     SetStateGrade(eAccessGrade::BASIC);
-    ChangeState(ER_CHAR_ACT::WAIT);
+
+    if ((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
+        ChangeState(ER_CHAR_ACT::MOVE);
+    else
+        ChangeState(ER_CHAR_ACT::WAIT);
 }
 
 void ER_ActionScript_Hyunwoo::Skill_WExit(tFSMData& param)
@@ -524,7 +532,7 @@ void ER_ActionScript_Hyunwoo::Skill_EEnter(tFSMData& param)
         // 스킬 동작 여부
         param.bData[0] = true;
 
-        // 충돌 여부부
+        // 충돌 여부
         param.bData[1] = false; 
 
         param.v2Data.x = vDir.x;
@@ -560,8 +568,6 @@ void ER_ActionScript_Hyunwoo::Skill_EEnter(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
 {
-    Animator3D()->PlaySpeedValue(1.f);
-
     // 이동한거리가 이동가능거리를 넘지 않았는지 판단.
     if (param.fData[3] < param.fData[1])
     {
@@ -569,9 +575,6 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
         // param.fData[1] : 이동 가능 거리
         // param.fData[2] : 전체 애니메이션 재생 시간
         // param.fData[3] : 이동한 거리
-
-        // 처음 부딪혔을 때 데미지
-        
 
         Vec3 vPos = Transform()->GetRelativePos();
         Vec3 vDir(param.v2Data.x, 0.f, param.v2Data.y);
@@ -934,7 +937,7 @@ int ER_ActionScript_Hyunwoo::SkillR()
     float fratio = SkillR.fData[0] / 4.f;
 
     // 차징한 만큼 0 ~ 1까지의 비율을 곱해서 데미지에 더해준다
-    int Dmg = MinDmg + ((MaxDmg - MinDmg) * fratio);
+    int Dmg = (int)(MinDmg + ((MaxDmg - MinDmg) * fratio));
 
     return Dmg;
 }

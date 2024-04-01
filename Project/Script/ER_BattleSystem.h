@@ -18,14 +18,15 @@ public:
     void init();
 
 public:
-    void Battle_Common(CGameObject* AtkObj, CGameObject* HitObj);
+    void Battle_Common(CGameObject* AtkObj, CGameObject* HitObj, CGameObject* _Projectile = nullptr);
     void Battle_Skill(
         CGameObject* _Attacker, 
         CGameObject* _HitObj, 
         CScript* _Inst, 
         SKILL_DMG_CALC _calc, 
         const tSkill_Info* _SkillInfo,
-        const int _HitStep);
+        const int _HitStep,
+        CGameObject* _Projectile = nullptr);
     // 형식 예시 : ER_BattleSystem::GetInst()->Battle_Skill(GetOwner(), (CGameObject*)_Data.lParam, this, (SKILL_DMG_CALC)&ER_ActionScript_Yuki::SkillQ, skill);
 
 };

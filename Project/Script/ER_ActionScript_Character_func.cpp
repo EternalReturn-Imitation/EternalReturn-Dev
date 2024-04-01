@@ -125,6 +125,46 @@ bool ER_ActionScript_Character::IsInRange(CGameObject* Target, float _fRange)
 	return false;
 }
 
+bool ER_ActionScript_Character::IsInRangeWithAngle(CGameObject* _Owner, CGameObject* _Target, float _fRange, float _degree)
+{
+	Vec3 vOwnerPos = _Owner->Transform()->GetRelativePos();
+	Vec3 vTargetPos = _Target->Transform()->GetRelativePos();
+
+	// 좌우 판단만을 위한 y축 0으로 고정
+	vOwnerPos.y = 0.f;
+	vTargetPos.y = 0.f;
+
+	// [ 1차 거리 판단 ]
+	float dist = Vec3::Distance(vOwnerPos, vTargetPos);
+
+	if (_fRange < dist)
+		return false;
+
+	// [ 2차 각도 판단 ]
+	// A가 바라보는 방향벡터와 B까지의 벡터의 내적을 계산하여 각도확인
+	Vec3 vFront = _Owner->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 vToTarget = (vTargetPos - vOwnerPos).Normalize();
+
+	float dot = vFront.Dot(vToTarget);
+
+	// 방향벡터간의 각도 계산
+	float angle = acos(dot);
+
+	// 각도의 부호를 확인하여 양쪽 중 앞쪽으로 향하는 각도를 얻음
+	float frontAngle = (vFront.Cross(vToTarget).y > 0) ? angle : -angle;
+
+	// 각도를 0도에서 360도 범위로 변환
+	if (frontAngle < 0)
+		frontAngle += 2 * XM_PI;
+
+	float degree = (frontAngle * (180.f / XM_PI));
+	
+	// 앞쪽방향을 0도로 설정
+	degree = fabsf(180.f - degree);
+
+	return degree <= _degree;
+}
+
 Vec3 ER_ActionScript_Character::GetProjSpawnPos(DWORD_PTR _Target)
 {
 	Vec3 vPos = Transform()->GetRelativePos();
@@ -221,4 +261,11 @@ bool ER_ActionScript_Character::IsCharacter(CGameObject* _Obj)
 	ER_DataScript_Character* CharacterScript = _Obj->GetScript<ER_DataScript_Character>();
 	
 	return nullptr != CharacterScript;
+}
+
+bool ER_ActionScript_Character::IsDead(CGameObject* _Obj)
+{
+	ER_DataScript_Character* CharacterScript = _Obj->GetScript<ER_DataScript_Character>();
+	
+	return CharacterScript->IsDeadState();
 }

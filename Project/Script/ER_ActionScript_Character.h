@@ -78,6 +78,7 @@ protected:
     Vec3 SetRotationToTarget(const Vec3& vTarget);                  // 타겟 방향 회전
 
     bool IsInRange(CGameObject* Target, float _fRange);             // 거리범위 확인
+    bool IsInRangeWithAngle(CGameObject* _Owner, CGameObject* _Target, float _fRange, float _degree);
     Vec3 GetProjSpawnPos(DWORD_PTR _Target);
 
     // [ State Manage ]
@@ -92,6 +93,7 @@ protected:
     // [ Player Check ]
     bool IsPlayer();
     bool IsCharacter(CGameObject* _Obj);
+    bool IsDead(CGameObject* _Obj);
 
 
 public:

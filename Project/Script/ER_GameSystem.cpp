@@ -19,6 +19,7 @@ ER_GameSystem::~ER_GameSystem()
 	m_pCharacters.clear();
 }
 
+
 ER_Cursor* ER_GameSystem::GetCursor()
 {
 	return m_pCursor->GetScript<ER_Cursor>();
@@ -33,6 +34,9 @@ void ER_GameSystem::GameStart()
 
 void ER_GameSystem::init()
 {
+	// 리소스 로드 : ImGui 사용 안하는 경우 아래 함수로 리소스 로드
+	// AllResourceLoad();
+
 	ER_ItemMgr::GetInst()->init();
 	ER_CharacterMgr::GetInst()->init();
 	ER_BattleSystem::GetInst()->init();
