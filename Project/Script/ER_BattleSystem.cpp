@@ -20,7 +20,7 @@ void ER_BattleSystem::init()
 {
 }
 
-void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj)
+void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj, CGameObject* _Projectile)
 {
 	tIngame_Stats* AtkInfo = GetStatsInfo(AtkObj);
 	tIngame_Stats* HitInfo = GetStatsInfo(HitObj);
@@ -57,7 +57,8 @@ void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker
 	, CScript* _Inst
 	, SKILL_DMG_CALC _calc
 	, const tSkill_Info* _SkillInfo
-	, const int _HitStep)
+	, const int _HitStep
+	, CGameObject* _Projectile)
 {
 	tIngame_Stats* AtkInfo = GetStatsInfo(_Attacker);
 	tIngame_Stats* HitInfo = GetStatsInfo(_HitObj);

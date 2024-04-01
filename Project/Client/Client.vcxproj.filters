@@ -167,6 +167,9 @@
     <Filter Include="Level\Lumia">
       <UniqueIdentifier>{675dde2c-c551-47f9-a4d3-75ea2e5c126c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Level\Introduce">
+      <UniqueIdentifier>{641d53b3-061a-4ddf-8130-360cc18452c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -541,6 +544,9 @@
     </ClCompile>
     <ClCompile Include="Collider3DUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\05. Collider3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroduceLevel.cpp">
+      <Filter>Level\Introduce</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

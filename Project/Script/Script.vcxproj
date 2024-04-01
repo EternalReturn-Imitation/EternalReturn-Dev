@@ -261,6 +261,7 @@ call CodeGen.exe</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ER_GameSystem_ResourceLoad.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

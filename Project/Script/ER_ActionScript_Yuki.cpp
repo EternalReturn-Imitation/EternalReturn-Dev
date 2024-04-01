@@ -91,10 +91,12 @@ void ER_ActionScript_Yuki::MoveUpdate(tFSMData& param)
         }
     }
 
-    // 애니메이션 변경 판단
-
     // 버프/디버프 효과 반영
     tStatus_Effect* SpeedEfc = m_Data->GetStatusEffect();
+
+    // 애니메이션 반영
+    float SpdEfcAnim = ((SpeedEfc->GetIncSPD()) * 10.f) + ((SpeedEfc->GetDecSPD()) * -10.f);
+    Animator3D()->PlaySpeedValue(SpdEfcAnim);
 
     // 이동속도 설정
     float fMoveSpeed = GetStatus()->fMovementSpeed;
@@ -841,7 +843,7 @@ void ER_ActionScript_Yuki::BeginOverlap(CCollider3D* _Other)
     // SkillE 시전중이고 이동상태일때
     if (SkillE.bData[0]  && 1 == SkillE.iData[0])
     {
-        if (!IsCharacter(Target))
+        if (!IsCharacter(Target) || IsDead(Target))
             return;
 
         // param.fData[0] : 스킬 거리(속도)

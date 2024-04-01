@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine/CSingleton.h>
-	
+#include "ER_define.h"	
+
 class CGameObject;
 class ER_DataScript_Character;
 

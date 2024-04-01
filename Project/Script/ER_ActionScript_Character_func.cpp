@@ -262,3 +262,10 @@ bool ER_ActionScript_Character::IsCharacter(CGameObject* _Obj)
 	
 	return nullptr != CharacterScript;
 }
+
+bool ER_ActionScript_Character::IsDead(CGameObject* _Obj)
+{
+	ER_DataScript_Character* CharacterScript = _Obj->GetScript<ER_DataScript_Character>();
+	
+	return CharacterScript->IsDeadState();
+}

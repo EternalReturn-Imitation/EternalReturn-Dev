@@ -371,5 +371,8 @@
     <ClCompile Include="ER_DataScript_Bullet.cpp">
       <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
     </ClCompile>
+    <ClCompile Include="ER_GameSystem_ResourceLoad.cpp">
+      <Filter>GameSystem</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
