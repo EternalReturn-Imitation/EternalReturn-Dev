@@ -15,6 +15,8 @@
 #include "ER_UIScript_CraftSlot.h"
 #include "ER_DataScript_Item.h"
 
+#include "ER_UIScript_TimeUIBar.h"
+
 #include "ER_UIScript_ItemBox.h"
 #include "ER_DataScript_ItemBox.h"
 
@@ -31,6 +33,7 @@ ER_UIMgr::ER_UIMgr()
 	, m_pDropItemSlot(nullptr)
 	, StatusBar_CharacterInfo_EquipMent{}
 	, StatusBar_CharacterInfo_Portrait(nullptr)
+	, GameTimeUI(nullptr)
 {
 }
 
@@ -192,6 +195,14 @@ void ER_UIMgr::CreateItemBoxUI()
 	ItemBoxScript->init();
 }
 
+void ER_UIMgr::CreateTimeUI()
+{
+	GameTimeUI = onew(CGameObject);
+	ER_UIScript_TimeUIBar* timebar = onew(ER_UIScript_TimeUIBar);
+	GameTimeUI->AddComponent(timebar);
+	timebar->init();
+}
+
 void ER_UIMgr::init()
 {
 	// 스테이터스 UI 생성
@@ -199,6 +210,7 @@ void ER_UIMgr::init()
 	CreateCharacterInfo();
 	CreateInventory();
 	CreateItemBoxUI();
+	CreateTimeUI();
 }
 
 void ER_UIMgr::tick()
@@ -226,6 +238,9 @@ void ER_UIMgr::SpawnUI()
 	// 제작가능 아이템 버튼
 	for (auto Btn : StatusBar_CraftList)
 		SpawnGameObject(Btn, L"UI");
+
+	// 게임시간 UI
+	SpawnGameObject(GameTimeUI, L"UI");
 }
 
 void ER_UIMgr::RegistPlayerCharacetr()

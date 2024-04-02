@@ -18,11 +18,6 @@
 
 // [Component]
 #include <Engine\components.h>
-#include <Engine\CCollider2D.h>
-#include <Engine\CCollider3D.h>
-#include <Engine\CFindPath.h>
-#include <Engine\CText.h>
-#include <Engine\CUIComponent.h>
 
 // [Graphic]
 #include <Engine\CSetColorShader.h>
@@ -40,6 +35,8 @@
 #include <Script\ER_ItemMgr.h>
 #include <Script\ER_UIMgr.h>
 #include <Script\ER_define.h>
+
+#include <Script\ER_AIScript_Hyunwoo.h>
 
 // [Editor]
 #include "CEditorObjMgr.h"
@@ -67,33 +64,28 @@ void CreateLumiaIsland()
 	ER_GameSystem::GetInst()->GameStart();
 	
 	pCurLevel->ChangeState(LEVEL_STATE::PLAY);
-	// TestObject();
+	
+	TestObject();
 }
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Rio", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Yuki", Vec3(-69.3f, 0.0f, 37.6f));
 }
 void CreateTestEnemy()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-80.4f, 1.00345f, 44.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-76.9f, 0.0f, 37.6f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
-
 }
 
 void TestObject()
 {
-	// CGameObject* testParticle = new CGameObject();
-	// CGameObject* testParticle = xnew<CGameObject>();
-	// CGameObject* testParticle = new(CGameObject);
-	// 
-	CGameObject* testParticle111 = onew(CGameObject);
-	odelete(testParticle111);
-	// 
-	// testParticle->SetName(L"particleTest");
-	// AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	// CParticleSystem* Particle = testParticle->ParticleSystem();
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
+	CGameObject* Hyunwoo = ER_GameSystem::GetInst()->GetCharacters()[3];
+	
+	ER_AIScript_Hyunwoo* Ai = onew(ER_AIScript_Hyunwoo);
+	Hyunwoo->AddComponent(Ai);
+	Ai->init();
 }
 
 void SetLayer(CLevel* _Level)

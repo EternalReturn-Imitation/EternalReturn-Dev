@@ -11,6 +11,8 @@
 
 ER_GameSystem::ER_GameSystem()
 	: m_pCursor(nullptr)
+	, m_fGameTime(0.f)
+	, m_bGaming(false)
 {
 }
 
@@ -27,8 +29,16 @@ ER_Cursor* ER_GameSystem::GetCursor()
 
 void ER_GameSystem::GameStart()
 {
+	// 게임시작 시간 
+	m_bGaming = true;
+
+	// UI 스폰
 	ER_UIMgr::GetInst()->SpawnUI();
+
+	// 커서 추가
 	SpawnGameObject(m_pCursor, L"UI");
+
+	// 아이템 생성
 	ER_ItemMgr::GetInst()->SpawnItemLevel();
 }
 
@@ -55,4 +65,7 @@ void ER_GameSystem::progress()
 void ER_GameSystem::tick()
 {
 	ER_UIMgr::GetInst()->tick();
+
+	if (m_bGaming)
+		m_fGameTime += DT;
 }
