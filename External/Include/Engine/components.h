@@ -11,7 +11,6 @@
 #include "CAnimator2D.h"
 #include "CAnimator3D.h"
 #include "CBehaviorTree.h"
-#include "CBehaviorTreeMgr.h"
 
 #include "CMeshRender.h"
 #include "CTileMap.h"

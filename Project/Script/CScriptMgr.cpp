@@ -10,6 +10,8 @@
 #include "ER_ActionScript_Jackie.h"
 #include "ER_ActionScript_Rio.h"
 #include "ER_ActionScript_Yuki.h"
+#include "ER_AIScript_Hyunwoo.h"
+#include "ER_AIScript_Rio.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
 #include "ER_DataScript_Arrow.h"
@@ -19,7 +21,6 @@
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_LandMeshBase.h"
 #include "ER_PlayerScript.h"
-#include "ER_PlayerScript_Range.h"
 #include "ER_UIScript_CraftSlot.h"
 #include "ER_UIScript_Gauge.h"
 #include "ER_UIScript_ItemBox.h"
@@ -27,6 +28,7 @@
 #include "ER_UIScript_SkillSlot.h"
 #include "ER_UIScript_SkillUpBtn.h"
 #include "ER_UIScript_StatusBarGauge.h"
+#include "ER_UIScript_TimeUIBar.h"
 #include "ER_UIScript_TrackingStatusBar.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
@@ -40,6 +42,8 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ActionScript_Jackie");
 	_vec.push_back(L"ER_ActionScript_Rio");
 	_vec.push_back(L"ER_ActionScript_Yuki");
+	_vec.push_back(L"ER_AIScript_Hyunwoo");
+	_vec.push_back(L"ER_AIScript_Rio");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Arrow");
@@ -49,7 +53,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_DataScript_ItemBox");
 	_vec.push_back(L"ER_DataScript_LandMeshBase");
 	_vec.push_back(L"ER_PlayerScript");
-	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_UIScript_CraftSlot");
 	_vec.push_back(L"ER_UIScript_Gauge");
 	_vec.push_back(L"ER_UIScript_ItemBox");
@@ -57,6 +60,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_UIScript_SkillSlot");
 	_vec.push_back(L"ER_UIScript_SkillUpBtn");
 	_vec.push_back(L"ER_UIScript_StatusBarGauge");
+	_vec.push_back(L"ER_UIScript_TimeUIBar");
 	_vec.push_back(L"ER_UIScript_TrackingStatusBar");
 }
 
@@ -80,6 +84,10 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_ActionScript_Rio;
 	if (L"ER_ActionScript_Yuki" == _strScriptName)
 		return new ER_ActionScript_Yuki;
+	if (L"ER_AIScript_Hyunwoo" == _strScriptName)
+		return new ER_AIScript_Hyunwoo;
+	if (L"ER_AIScript_Rio" == _strScriptName)
+		return new ER_AIScript_Rio;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
@@ -98,8 +106,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_DataScript_LandMeshBase;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
-	if (L"ER_PlayerScript_Range" == _strScriptName)
-		return new ER_PlayerScript_Range;
 	if (L"ER_UIScript_CraftSlot" == _strScriptName)
 		return new ER_UIScript_CraftSlot;
 	if (L"ER_UIScript_Gauge" == _strScriptName)
@@ -114,6 +120,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_UIScript_SkillUpBtn;
 	if (L"ER_UIScript_StatusBarGauge" == _strScriptName)
 		return new ER_UIScript_StatusBarGauge;
+	if (L"ER_UIScript_TimeUIBar" == _strScriptName)
+		return new ER_UIScript_TimeUIBar;
 	if (L"ER_UIScript_TrackingStatusBar" == _strScriptName)
 		return new ER_UIScript_TrackingStatusBar;
 	return nullptr;
@@ -150,6 +158,12 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_ACTIONSCRIPT_YUKI:
 		return new ER_ActionScript_Yuki;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_HYUNWOO:
+		return new ER_AIScript_Hyunwoo;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_RIO:
+		return new ER_AIScript_Rio;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
 		break;
@@ -177,9 +191,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
 		break;
-	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
-		return new ER_PlayerScript_Range;
-		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
 		return new ER_UIScript_CraftSlot;
 		break;
@@ -200,6 +211,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
 		return new ER_UIScript_StatusBarGauge;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TIMEUIBAR:
+		return new ER_UIScript_TimeUIBar;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
 		return new ER_UIScript_TrackingStatusBar;
@@ -248,6 +262,14 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_ActionScript_Yuki";
 		break;
 
+	case SCRIPT_TYPE::ER_AISCRIPT_HYUNWOO:
+		return L"ER_AIScript_Hyunwoo";
+		break;
+
+	case SCRIPT_TYPE::ER_AISCRIPT_RIO:
+		return L"ER_AIScript_Rio";
+		break;
+
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return L"ER_CamControllerScript";
 		break;
@@ -284,10 +306,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_PlayerScript";
 		break;
 
-	case SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
-		return L"ER_PlayerScript_Range";
-		break;
-
 	case SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
 		return L"ER_UIScript_CraftSlot";
 		break;
@@ -314,6 +332,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
 		return L"ER_UIScript_StatusBarGauge";
+		break;
+
+	case SCRIPT_TYPE::ER_UISCRIPT_TIMEUIBAR:
+		return L"ER_UIScript_TimeUIBar";
 		break;
 
 	case SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:

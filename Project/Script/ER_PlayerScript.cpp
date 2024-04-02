@@ -24,7 +24,6 @@ ER_PlayerScript::ER_PlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT)
 	, m_Character(nullptr)
 	, m_pActionScript(nullptr)
-	, m_pRangeObject(nullptr)
 	, m_AttackCsr(false)
 {
 }
