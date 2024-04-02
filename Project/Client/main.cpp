@@ -6,6 +6,7 @@
 
 #include <Engine\CDevice.h>
 #include <Script\ER_GameSystem.h>
+#include <Script\ER_EffectSystem.h>
 #include "CEditorObjMgr.h"
 
 
@@ -91,10 +92,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             // 1 Frame
             // =======
             ER_GameSystem::GetInst()->progress();
+            ER_EffectSystem::GetInst()->progress();
             CEngine::GetInst()->progress();
-            CEditorObjMgr::GetInst()->progress();       
-
-           
+            CEditorObjMgr::GetInst()->progress();           
 
             ImGuiMgr::GetInst()->progress();            
             CDevice::GetInst()->Present(); // 렌더 종료

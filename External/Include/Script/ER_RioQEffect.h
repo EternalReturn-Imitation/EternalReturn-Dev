@@ -4,6 +4,11 @@ class ER_RioQEffect :
     public ER_EffectScript
 {
 private:
+    CGameObject* m_pParticle;
+    float   m_fTime[2];
+    bool    m_bParticleDeadTrigger;
+
+private:
     virtual void begin() override;
     virtual void tick() override;
 

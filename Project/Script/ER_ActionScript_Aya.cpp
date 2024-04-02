@@ -17,6 +17,7 @@
 #include "ER_BulletEffectScript.h"
 #include "ER_AyaQEffect.h"
 #include "ER_AyaWBulletEffect.h"
+#include "ER_AyaREffect.h"
 
 ER_ActionScript_Aya::ER_ActionScript_Aya()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_AYA)
@@ -855,6 +856,8 @@ void ER_ActionScript_Aya::Skill_REnter(tFSMData& param)
 
     ERCHARSOUND(SKILLR_READY);
     ERCHARSOUND(SKILLR_CHAR);
+
+    GetOwner()->GetScript<ER_AyaREffect>()->RangeSpawn(GetOwner()->Transform()->GetRelativePos());
 }
 
 void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
@@ -898,6 +901,7 @@ void ER_ActionScript_Aya::Skill_RUpdate(tFSMData& param)
                 BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Aya, SkillR, skill, 0);
             }
 
+            GetOwner()->GetScript<ER_AyaREffect>()->AttackSpawn(GetOwner()->Transform()->GetRelativePos());
             Animator3D()->SelectAnimation(L"Aya_SkillR_End", false);
             param.bData[1] = true;
         }

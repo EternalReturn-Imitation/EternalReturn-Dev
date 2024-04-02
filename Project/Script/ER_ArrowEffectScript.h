@@ -4,6 +4,9 @@ class ER_ArrowEffectScript :
     public ER_EffectScript
 {
 private:
+    CGameObject* m_pParticle;
+
+private:
     virtual void begin() override;
     virtual void tick() override;
 

@@ -5,6 +5,7 @@
 #include <chrono>
 
 #include "ER_ActionScript_Rio.h"
+#include "ER_ActionScript_Aya.h"
 
 ER_EffectSystem::ER_EffectSystem()
 {
@@ -16,6 +17,19 @@ ER_EffectSystem::~ER_EffectSystem()
 
 void ER_EffectSystem::init()
 {
+}
+
+void ER_EffectSystem::progress()
+{
+	for (int i = 0; i < m_vParticleLifeTime.size(); ++i) {
+		m_vParticleLifeTime[i] -= DT;
+		if (m_vParticleLifeTime[i] < 0.f) {
+			DestroyObject(m_vDeleteParticles[i]);
+			m_vDeleteParticles[i] = nullptr;
+			m_vDeleteParticles.erase(m_vDeleteParticles.begin() + i);
+			m_vParticleLifeTime.erase(m_vParticleLifeTime.begin() + i);
+		}
+	}
 }
 
 void ER_EffectSystem::SpawnHitEffect(CGameObject* _attacker, CGameObject* _hitter, CGameObject* _projectile, Vec3 _pos, Vec3 _dir)
@@ -57,6 +71,12 @@ void ER_EffectSystem::SpawnHitEffect(CGameObject* _attacker, CGameObject* _hitte
 		thread t(&ER_EffectSystem::SpawnRioHitEffect, this, hitEffectPos, hitEffectDir, effectMoveDir);
 		t.detach();
 	}
+	else if (_attacker->GetScript<ER_ActionScript_Aya>() != nullptr) {
+		Vec3 hitPosByAya = _hitter->Transform()->GetWorldPos();
+		hitPosByAya.y += 1.5f;
+		thread t(&ER_EffectSystem::SpawnAyaHitEffect, this, hitPosByAya);
+		t.detach();
+	}
 }
 
 void ER_EffectSystem::SpawnSkillHitEffect(CGameObject* _attacker, CGameObject* _hitter, const tSkill_Info* _skillInfo, CGameObject* _projectile,  Vec3 _pos, Vec3 _dir)
@@ -93,6 +113,8 @@ void ER_EffectSystem::SpawnSkillHitEffect(CGameObject* _attacker, CGameObject* _
 
 	}
 
+
+	//리오 스킬
 	if (_skillInfo->strName == L"Rio_W" || _skillInfo->strName == L"Rio_W2") {
 		thread t(&ER_EffectSystem::SpawnRioHitEffect, this, hitEffectPos, hitEffectDir, effectMoveDir);
 		t.detach();
@@ -101,6 +123,13 @@ void ER_EffectSystem::SpawnSkillHitEffect(CGameObject* _attacker, CGameObject* _
 	}
 	else if (_skillInfo->strName == L"Rio_R") {
 		thread t(&ER_EffectSystem::SpawnRioRHitEffect, this, hitEffectPos, hitEffectDir, effectMoveDir);
+		t.detach();
+	}
+	//아야 스킬
+	else if (_skillInfo->strName != L"Aya_R" && _skillInfo->strName.substr(0, 4) == L"Aya_") {
+		Vec3 hitPosByAya = _hitter->Transform()->GetWorldPos();
+		hitPosByAya.y += 1.5f;
+		thread t(&ER_EffectSystem::SpawnAyaHitEffect, this, hitPosByAya);
 		t.detach();
 	}
 }
@@ -130,7 +159,7 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 	windHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
 
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"wWind.png");
-	windHitEffect->Animator2D()->CreateAnimation(L"wWind", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
+	windHitEffect->Animator2D()->CreateAnimation(L"wWind", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 1, 15);
 	windHitEffect->Animator2D()->Play(L"wWind", true);
 
 	dummyParent01->AddChild(windHitEffect);
@@ -196,6 +225,50 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 
 	DestroyObject(dummyParent01);
 	DestroyObject(dummyParent02);
+}
+
+void ER_EffectSystem::SpawnAyaHitEffect(Vec3 _pos)
+{
+	//더미 부모 이펙트01 스폰
+	CGameObject* dummyParent01 = onew(CGameObject);
+	AddComponents(dummyParent01, _TRANSFORM);
+
+	dummyParent01->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
+
+	SpawnGameObject(dummyParent01, _pos, L"Effect");
+
+	//히트 이펙트1(총) 스폰
+	CGameObject* gunHitEffect = onew(CGameObject);
+	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+
+	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Fx_ShootGlowSE_04.png");
+	gunHitEffect->Animator2D()->CreateAnimation(L"Fx_ShootGlowSE_04", animAtlas, Vec2(0.f, 0.f), Vec2(64.f, 64.f), Vec2(64.f, 64.f), 4, 12);
+	gunHitEffect->Animator2D()->Play(L"Fx_ShootGlowSE_04", true);
+
+	dummyParent01->AddChild(gunHitEffect);
+
+	//쓰레드 설정 시작
+	auto startTime = std::chrono::high_resolution_clock::now();
+	int restTime = 10;
+
+	//0.4f는 실행된든 시간
+	float endTime = 0.20f;
+	float exeCount = endTime * 1000.f / restTime; //실행되는 횟수
+
+	while (true) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
+
+		//시간이 지나면 종료
+		if (elapsedTime.count() >= endTime * 1000.f)
+			break;
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
+	}
+
+	DestroyObject(dummyParent01);
 }
 
 void ER_EffectSystem::SpawnRioWHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDir, CGameObject* _hitter)
@@ -343,4 +416,25 @@ void ER_EffectSystem::SpawnRioRHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveD
 
 	DestroyObject(dummyParent01);
 	DestroyObject(dummyParent02);
+}
+
+void ER_EffectSystem::AddDeleteParticles(CGameObject* _obj, CGameObject* _parentObj)
+{
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
+	if (_obj->ParticleSystem() == nullptr)
+		assert(false);
+
+	CParticleSystem* Particle = _obj->ParticleSystem();
+	tParticleModule particle_data = Particle->GetParticleInfo();
+	m_vParticleLifeTime.push_back(particle_data.MaxLifeTime + 0.1f);
+	particle_data.MinLifeTime = 0.f;
+	particle_data.MaxLifeTime = 0.f;
+	particle_data.SpawnRate = 0;
+	Particle->SetParticleInfo(particle_data);
+
+	if(_parentObj != nullptr)
+		m_vDeleteParticles.push_back(_parentObj);
+	else 
+		m_vDeleteParticles.push_back(_obj);
 }

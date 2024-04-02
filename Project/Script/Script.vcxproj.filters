@@ -160,6 +160,18 @@
     <Filter Include="Script\ER\EffectScript\Aya\WBulletEffect">
       <UniqueIdentifier>{361ffa0a-7f03-4deb-80c8-fdb7fd89bbfd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\REffect">
+      <UniqueIdentifier>{a3b668c7-fbe9-4176-844f-d1f00ca6d941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki">
+      <UniqueIdentifier>{23d84920-f92f-446c-835b-740679761f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\BasicAttackEffect">
+      <UniqueIdentifier>{70baa0c2-c0af-4f04-961e-ef2d0738c362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\QEffect">
+      <UniqueIdentifier>{8224c224-8dab-4a3b-a38a-2e861584b588}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -306,6 +318,15 @@
     </ClInclude>
     <ClInclude Include="ER_AyaWBulletEffect.h">
       <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaREffect.h">
+      <Filter>Script\ER\EffectScript\Aya\REffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiBAEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiQEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -461,6 +482,15 @@
     </ClCompile>
     <ClCompile Include="ER_AyaWBulletEffect.cpp">
       <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaREffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\REffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

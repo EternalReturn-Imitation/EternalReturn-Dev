@@ -13,6 +13,7 @@
 #include "ER_ArrowEffectScript.h"
 #include "ER_AyaBAEffect.h"
 #include "ER_AyaQEffect.h"
+#include "ER_AyaREffect.h"
 #include "ER_AyaWBulletEffect.h"
 #include "ER_BulletEffectScript.h"
 #include "ER_CamControllerScript.h"
@@ -36,6 +37,8 @@
 #include "ER_UIScript_SkillUpBtn.h"
 #include "ER_UIScript_StatusBarGauge.h"
 #include "ER_UIScript_TrackingStatusBar.h"
+#include "ER_YukiBAEffect.h"
+#include "ER_YukiQEffect.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -51,6 +54,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ArrowEffectScript");
 	_vec.push_back(L"ER_AyaBAEffect");
 	_vec.push_back(L"ER_AyaQEffect");
+	_vec.push_back(L"ER_AyaREffect");
 	_vec.push_back(L"ER_AyaWBulletEffect");
 	_vec.push_back(L"ER_BulletEffectScript");
 	_vec.push_back(L"ER_CamControllerScript");
@@ -74,6 +78,8 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_UIScript_SkillUpBtn");
 	_vec.push_back(L"ER_UIScript_StatusBarGauge");
 	_vec.push_back(L"ER_UIScript_TrackingStatusBar");
+	_vec.push_back(L"ER_YukiBAEffect");
+	_vec.push_back(L"ER_YukiQEffect");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -102,6 +108,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_AyaBAEffect;
 	if (L"ER_AyaQEffect" == _strScriptName)
 		return new ER_AyaQEffect;
+	if (L"ER_AyaREffect" == _strScriptName)
+		return new ER_AyaREffect;
 	if (L"ER_AyaWBulletEffect" == _strScriptName)
 		return new ER_AyaWBulletEffect;
 	if (L"ER_BulletEffectScript" == _strScriptName)
@@ -148,6 +156,10 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_UIScript_StatusBarGauge;
 	if (L"ER_UIScript_TrackingStatusBar" == _strScriptName)
 		return new ER_UIScript_TrackingStatusBar;
+	if (L"ER_YukiBAEffect" == _strScriptName)
+		return new ER_YukiBAEffect;
+	if (L"ER_YukiQEffect" == _strScriptName)
+		return new ER_YukiQEffect;
 	return nullptr;
 }
 
@@ -190,6 +202,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_AYAQEFFECT:
 		return new ER_AyaQEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYAREFFECT:
+		return new ER_AyaREffect;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_AYAWBULLETEFFECT:
 		return new ER_AyaWBulletEffect;
@@ -260,6 +275,12 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
 		return new ER_UIScript_TrackingStatusBar;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIBAEFFECT:
+		return new ER_YukiBAEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIQEFFECT:
+		return new ER_YukiQEffect;
+		break;
 	}
 	return nullptr;
 }
@@ -314,6 +335,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_AYAQEFFECT:
 		return L"ER_AyaQEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_AYAREFFECT:
+		return L"ER_AyaREffect";
 		break;
 
 	case SCRIPT_TYPE::ER_AYAWBULLETEFFECT:
@@ -406,6 +431,14 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
 		return L"ER_UIScript_TrackingStatusBar";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIBAEFFECT:
+		return L"ER_YukiBAEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIQEFFECT:
+		return L"ER_YukiQEffect";
 		break;
 
 	}

@@ -205,9 +205,7 @@ void CParticleSystem::finaltick()
 	//worldpos.y += 1.f;
 	//m_UpdateCS->SetParticleObjectPos(worldpos);
 	
-
 	m_UpdateCS->Execute();
-
 }
 
 void CParticleSystem::render()

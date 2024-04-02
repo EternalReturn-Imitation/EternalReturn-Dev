@@ -133,8 +133,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
         particle.Age += g_DT;
         particle.NomalizedAge = saturate(particle.Age / particle.LifeTime);        
         particle.vForce.xyz = (float3) 0.f;
-        
-        
+                
         // 파티클의 수명이 끝나면, 다시 비활성화 상태로 되돌림
         if (particle.LifeTime <= particle.Age)
         {

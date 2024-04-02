@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ER_AyaWBulletEffect.h"
 
+#include "ER_EffectSystem.h"
+
 #include <random>
 
 void ER_AyaWBulletEffect::begin()
@@ -44,6 +46,10 @@ void ER_AyaWBulletEffect::tick()
 
 		m_fTime -= 0.05f;
 	}
+
+	//파티클 이동
+	if (m_pParticle != nullptr);
+	m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
 }
 
 void ER_AyaWBulletEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
@@ -86,8 +92,8 @@ void ER_AyaWBulletEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
 	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
 
-	particle_data.MinLifeTime = 1.f;
-	particle_data.MaxLifeTime = 1.f;
+	particle_data.MinLifeTime = 0.5f;
+	particle_data.MaxLifeTime = 0.5f;
 
 	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
 	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
@@ -97,7 +103,7 @@ void ER_AyaWBulletEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	particle_data.vVelocityDir = Vec3(0.f, 0.f, 0.f);
 	particle_data.Speed = 2.5f;
 
-	particle_data.SpawnRate = 10;
+	particle_data.SpawnRate =50;
 
 	particle_data.StartDrag = 0.1f;
 	particle_data.EndDrag = 0.f;
@@ -106,7 +112,9 @@ void ER_AyaWBulletEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Core.png"));
 	Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
 
-	SpawnGameObjectToParent(testParticle, GetOwner());
+	m_pParticle = testParticle;
+
+	SpawnGameObject(testParticle, L"Effect");
 #pragma endregion
 }
 
@@ -125,4 +133,5 @@ ER_AyaWBulletEffect::ER_AyaWBulletEffect()
 
 ER_AyaWBulletEffect::~ER_AyaWBulletEffect()
 {
+	ER_EffectSystem::GetInst()->AddDeleteParticles(m_pParticle);
 }

@@ -6,6 +6,7 @@ class ER_AyaWBulletEffect :
 private:
     float m_fTime;
     Vec3  m_vEffectDir;
+    CGameObject* m_pParticle;
 
 private:
     virtual void begin() override;

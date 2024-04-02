@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ER_BulletEffectScript.h"
 
+#include "ER_EffectSystem.h"
+
 void ER_BulletEffectScript::begin()
 {
 	SpawnEffect();
@@ -8,8 +10,8 @@ void ER_BulletEffectScript::begin()
 
 void ER_BulletEffectScript::tick()
 {
-	//if (m_pParticle != nullptr);
-	//	m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
+	if (m_pParticle != nullptr);
+		m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
 }
 
 void ER_BulletEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
@@ -52,18 +54,17 @@ void ER_BulletEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
 	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
 
-	particle_data.MinLifeTime = 1.f;
-	particle_data.MaxLifeTime = 1.f;
+	particle_data.MinLifeTime = 0.2f;
+	particle_data.MaxLifeTime = 0.2f;
 
 	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
 	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-
 
 	particle_data.AddVelocityType = 0;
 	particle_data.vVelocityDir = Vec3(0.f, 0.f, 0.f);
 	particle_data.Speed = 2.5f;
 
-	particle_data.SpawnRate = 10;
+	particle_data.SpawnRate = 50;
 
 	particle_data.StartDrag = 0.1f;
 	particle_data.EndDrag = 0.f;
@@ -75,8 +76,7 @@ void ER_BulletEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 
 	m_pParticle = testParticle;
 
-	SpawnGameObjectToParent(testParticle, GetOwner());
-	//SpawnGameObject(testParticle, GetOwner()->Transform()->GetRelativePos(), 15);
+	SpawnGameObject(testParticle, GetOwner()->Transform()->GetRelativePos(), 15);
 #pragma endregion
 }
 
@@ -95,6 +95,5 @@ ER_BulletEffectScript::ER_BulletEffectScript()
 
 ER_BulletEffectScript::~ER_BulletEffectScript()
 {
-	//if (m_pParticle != nullptr)
-	//	DestroyObject(m_pParticle);
+	ER_EffectSystem::GetInst()->AddDeleteParticles(m_pParticle);
 }

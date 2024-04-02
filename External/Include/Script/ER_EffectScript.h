@@ -12,6 +12,7 @@ public:
     virtual void SpawnEffect(Vec3 _pos = Vec3(0.f, 0.f, 0.f), Vec3 _dir = Vec3(0.f, 0.f, 0.f), float _scale = 0.f) {};
     
     void EffectRotation(CGameObject* _targetObj, Vec3 _startScale, Vec3 _endScale, bool _rotDirection, float _endTime, CGameObject* _dummpyParent = nullptr);
+    void SpawnAnimationEffect(CGameObject* _targetObj, float _endTime, CGameObject* _dummpyParent = nullptr);
 
 private:
     virtual void begin() override;

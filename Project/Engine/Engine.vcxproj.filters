@@ -22,9 +22,6 @@
     <ClInclude Include="CEngine.h">
       <Filter>Source\01. Engine</Filter>
     </ClInclude>
-    <ClInclude Include="CSingleton.h">
-      <Filter>Source\09. Module</Filter>
-    </ClInclude>
     <ClInclude Include="CDevice.h">
       <Filter>Source\02. Device</Filter>
     </ClInclude>
@@ -277,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="ObjectPool.h">
       <Filter>Source\03. Manager\16. MemoryMgr\03. ObjectPool</Filter>
+    </ClInclude>
+    <ClInclude Include="CSingleton.h">
+      <Filter>Source\09. Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

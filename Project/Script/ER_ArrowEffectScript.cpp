@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "ER_ArrowEffectScript.h"
 
+#include "ER_EffectSystem.h"
+
 void ER_ArrowEffectScript::begin()
 {
 	SpawnEffect();
@@ -8,6 +10,8 @@ void ER_ArrowEffectScript::begin()
 
 void ER_ArrowEffectScript::tick()
 {
+	if (m_pParticle != nullptr);
+		m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
 }
 
 void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
@@ -63,7 +67,7 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	particle_data.vVelocityDir = Vec3(1.f, 0.f, 1.f);
 	particle_data.Speed = 2.5f;
 
-	particle_data.SpawnRate = 30.f;
+	particle_data.SpawnRate = 50.f;
 
 	particle_data.EndDrag = -1.f;
 
@@ -90,7 +94,11 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	rot = Vec3(XMConvertToRadians(180.f), 0.f, XMConvertToRadians(90.f));
 	testParticle->Transform()->SetRelativeRot(rot);
 
-	SpawnGameObjectToParent(testParticle, GetOwner());
+	m_pParticle = testParticle;
+
+	//SpawnGameObjectToParent(testParticle, GetOwner());
+	SpawnGameObject(testParticle, L"Effect");
+
 #pragma endregion
 }
 
@@ -108,4 +116,5 @@ ER_ArrowEffectScript::ER_ArrowEffectScript()
 
 ER_ArrowEffectScript::~ER_ArrowEffectScript()
 {
+	ER_EffectSystem::GetInst()->AddDeleteParticles(m_pParticle);
 }

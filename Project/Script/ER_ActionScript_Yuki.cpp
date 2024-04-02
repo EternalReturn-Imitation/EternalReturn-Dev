@@ -10,6 +10,10 @@
 
 #include <Engine\CAnim3D.h>
 
+//이펙트 관련
+#include "ER_YukiBAEffect.h"
+#include "ER_YukiQEffect.h"
+
 ER_ActionScript_Yuki::ER_ActionScript_Yuki()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_YUKI)
 {
@@ -19,6 +23,15 @@ ER_ActionScript_Yuki::~ER_ActionScript_Yuki()
 {
 }
 
+void ER_ActionScript_Yuki::begin()
+{
+    ER_ActionScript_Character::begin();
+    ER_YukiBAEffect* BAEffect = onew(ER_YukiBAEffect);
+    ER_YukiQEffect* QEffect = onew(ER_YukiQEffect);
+
+    GetOwner()->AddComponent(BAEffect);
+    GetOwner()->AddComponent(QEffect);
+}
 
 void ER_ActionScript_Yuki::WaitEnter(tFSMData& param)
 {
@@ -324,6 +337,9 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
         switch (param.iData[1])
         {
         case 0:
+        {
+
+        }
         case 1:
         {
             // 기본 공격
@@ -339,6 +355,21 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
             ERCHARSOUND(SKILLQ_HIT1);
             break;
         }
+        }
+
+        Vec3 _dir = GetProjSpawnPos(param.lParam) - GetOwner()->Transform()->GetRelativePos();
+        _dir.y = 0.f;
+        _dir.Normalize();
+        Vec3 resultPos = GetProjSpawnPos(param.lParam) - _dir * 0.4f;
+        resultPos.y += 0.2f;
+        if (param.iData[1] == 0) {
+            GetOwner()->GetScript<ER_YukiBAEffect>()->SpawnSecondEffect(resultPos, GetOwner()->Transform()->GetRelativeRot());
+        }
+        else if (param.iData[1] == 1) {            
+            GetOwner()->GetScript<ER_YukiBAEffect>()->SpawnFirstEffect(resultPos, GetOwner()->Transform()->GetRelativeRot());
+        }
+        else if (param.iData[1] == 2) {
+            GetOwner()->GetScript<ER_YukiQEffect>()->SpawnAttackEffect(resultPos, GetOwner()->Transform()->GetRelativeRot());
         }
 
         param.bData[1] = true;
@@ -423,6 +454,9 @@ void ER_ActionScript_Yuki::Skill_QEnter(tFSMData& param)
     {
         // 이펙트 재생
         ERCHARSOUND(SKILLQ_MOTION);
+
+        Vec3 resultPos = Transform()->GetRelativePos();
+        GetOwner()->GetScript<ER_YukiQEffect>()->SpawnEffect(resultPos, Transform()->GetRelativeRot());
     }
     else
         ChangeState(ER_CHAR_ACT::WAIT);
@@ -881,7 +915,6 @@ void ER_ActionScript_Yuki::OnOverlap(CCollider3D* _Other)
 void ER_ActionScript_Yuki::EndOverlap(CCollider3D* _Other)
 {
 }
-
 
 FSMState* ER_ActionScript_Yuki::CreateWait()
 {

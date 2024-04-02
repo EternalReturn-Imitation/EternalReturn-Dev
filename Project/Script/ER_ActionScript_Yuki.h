@@ -28,6 +28,9 @@ class ER_ActionScript_Yuki :
 
     Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
+public:
+    virtual void begin();
+
 protected:
     virtual FSMState* CreateWait();
     virtual FSMState* CreateMove();

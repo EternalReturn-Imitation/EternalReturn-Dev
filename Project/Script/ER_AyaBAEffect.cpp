@@ -31,33 +31,8 @@ void ER_AyaBAEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 
 	dummyParent->AddChild(tdExample);
 
-	std::thread t(&ER_AyaBAEffect::SpawnAnimationEffect, this, tdExample, 0.2f, dummyParent);
+	std::thread t(&ER_EffectScript::SpawnAnimationEffect, this, tdExample, 0.2f, dummyParent);
 	t.detach();
-}
-
-void ER_AyaBAEffect::SpawnAnimationEffect(CGameObject* _targetObj, float _endTime, CGameObject* _dummpyParent)
-{
-	auto startTime = std::chrono::high_resolution_clock::now();
-	int restTime = 10;
-
-	float exeCount = _endTime * 1000.f / restTime; //실행되는 횟수
-
-	while (true) {
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
-
-		//시간이 지나면 종료
-		if (elapsedTime.count() >= _endTime * 1000.f)
-			break;
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
-	}
-
-	if (_dummpyParent != nullptr)
-		DestroyObject(_dummpyParent);
-	else {
-		DestroyObject(_targetObj);
-	}
 }
 
 void ER_AyaBAEffect::SaveToLevelFile(FILE* _File)

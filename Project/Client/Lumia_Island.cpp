@@ -72,223 +72,18 @@ void CreateLumiaIsland()
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Aya", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Yuki", Vec3(-69.3f, 0.0f, 37.6f));
 }
 void CreateTestEnemy()
 {
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-80.4f, 1.00345f, 44.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
 }
 
 void TestObject()
 {
-	// CGameObject* testParticle = new CGameObject();
-	// CGameObject* testParticle = xnew<CGameObject>();
-	// CGameObject* testParticle = new(CGameObject);
-	// 
-	CGameObject* testParticle111 = onew(CGameObject);
-	odelete(testParticle111);
-
-
-
-#pragma region AyaEffectTest
-	// Particle
-
-	// 마우스 커서위치
-
-	//CGameObject* testParticle = new CGameObject;
-	//AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	//CParticleSystem* Particle = testParticle->ParticleSystem();
-	//
-	//tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
-	//
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = false;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
-	//
-	//particle_data.StartScale = 1.5f;
-	//particle_data.EndScale = 3.0f;
-	//
-	//particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
-	//particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
-	//particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
-	//
-	//particle_data.MinLifeTime = 1.f;
-	//particle_data.MaxLifeTime = 1.f;
-	//
-	//particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
-	//particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-	//
-	//particle_data.SpawnRate = 1;
-	//particle_data.iMaxParticleCount = 1;
-	//
-	//Particle->SetMaxParticleCount(1);
-	//Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
-	//Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"AyaQ_FirstTake.png"));
-	//
-	//SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-
-	//CGameObject* testParticle = new CGameObject;
-	//AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	//CParticleSystem* Particle = testParticle->ParticleSystem();
-	//
-	//tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
-	//
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
-	//
-	//particle_data.StartScale = 0.8f;
-	//particle_data.EndScale = 0.001f;
-	//
-	//particle_data.vSpawnScaleMin = Vec3(1.f, 1.f, 1.f);
-	//particle_data.vSpawnScaleMax = Vec3(1.f, 1.f, 1.f);
-	//particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
-	//
-	//particle_data.MinLifeTime = 3.f;
-	//particle_data.MaxLifeTime = 3.f;
-	//
-	//particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
-	//particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-	//
-	//
-	//particle_data.AddVelocityType = 0;
-	//particle_data.vVelocityDir = Vec3(0.f, 1.f, 0.f);
-	//particle_data.Speed = 2.5f;
-	//
-	//particle_data.SpawnRate = 25;
-	//
-	//particle_data.EndDrag = -1.f;
-	//
-	//Particle->SetMaxParticleCount(25);
-	//Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Smoke.png"));
-	//Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
-	//
-	//SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-	//
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"AyaQ_FirstTake.png");
-	//tdExample->Animator2D()->CreateAnimation(L"AyaQ_FirstTake", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"AyaQ_FirstTake", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Spark4.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Spark4", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Spark4", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Spark4.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Spark4", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Spark4", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Ring", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Ring", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring2.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Ring2", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Ring2", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring3.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Ring3", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Ring3", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring4.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Ring4", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Ring4", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring5.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Ring5", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Ring5", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring6.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Ring6", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Ring6", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Ring7.png");
-	//tdExample->Animator2D()->CreateAnimation(L"Ring7", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
-	//tdExample->Animator2D()->Play(L"Ring7", true);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-#pragma endregion
-
 	CGameObject* testParticle = new CGameObject;
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
 	CParticleSystem* Particle = testParticle->ParticleSystem();
@@ -317,34 +112,49 @@ void TestObject()
 	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
 	
 	
-	particle_data.AddVelocityType = 0;
+	particle_data.AddVelocityType = 1;
 	particle_data.vVelocityDir = Vec3(0.f, 0.f, 0.f);
-	particle_data.Speed = 2.5f;
+	particle_data.Speed = 0.3f;
 	
 	particle_data.SpawnRate = 20;
 	
-	particle_data.StartDrag = 0.5f;
-	particle_data.EndDrag = 0.f;
+	particle_data.StartDrag = 2.f;
+	particle_data.EndDrag = 10.f;
 	
 	particle_data.fNoiseTerm = 2.f;
 	particle_data.fNoiseForce = 2.f;
 		
 	//Particle->SetMaxParticleCount(10);
-	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Smoke2_Transparent.png"));
+	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Fx_UI_Tierlight_OW.png"));
 	Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
 	Particle->SetParticleSpawnNum(100);
 	
 	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 
+	//CGameObject* dummy = new CGameObject();
+	//AddComponents(dummy, _TRANSFORM);
+	//
+	//SpawnGameObject(dummy, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+	//
 	//CGameObject* tdExample = new CGameObject();
 	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
 	//	
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Shoot_012_Work.png");
-	//tdExample->Animator2D()->CreateAnimation(L"FX_BI_Shoot_012_Work", animAtlas, Vec2(0.f, 0.f), Vec2(128.f, 128.f), Vec2(128.f, 128.f), 4, 12);
-	//tdExample->Animator2D()->Play(L"FX_BI_Shoot_012_Work", true);
-	//	
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Sword_05.png");
+	//tdExample->Animator2D()->CreateAnimation(L"FX_BI_Sword_05", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 1, 4);
+	//tdExample->Animator2D()->Play(L"FX_BI_Sword_05", true);
+	//
+	//tdExample->Transform()->SetRelativeScale(Vec3(4.0f, 4.0f, 4.0f));
+	//
+	////dummy->AddChild(tdExample);
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
+	//
 	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 }
 
