@@ -50,11 +50,23 @@ void ER_ItemMgr::GetIngredient(UINT _ItemID, std::queue<UINT>* _IngredientQueue)
 	GetIngredient(recipe.ingredient_2, _IngredientQueue);
 }
 
-void ER_ItemMgr::GetIngredient(UINT _ItemID, unordered_map<UINT, int>* _Ingrediendmap)
+void ER_ItemMgr::GetIngredient(UINT _ItemID, unordered_map<UINT, int>* _Ingrediendmap, unordered_map<UINT, int>* _NeedFarmingMap)
 {
-	// 말단 재료는 제작재료 목록에 넣지 않는다.
+	// 말단 재료는 파밍필요목록에 넣는다.
 	if (m_umapIngredient.end() == m_umapIngredient.find(_ItemID))
+	{
+		if (_NeedFarmingMap->end() != _NeedFarmingMap->find(_ItemID))
+		{
+			// 있는 아이템인경우 갯수를 늘려준다.
+			_NeedFarmingMap->find(_ItemID)->second++;
+		}
+		else
+		{
+			// 신규로 넣어준다
+			_NeedFarmingMap->insert(make_pair(_ItemID, 1));
+		}
 		return;
+	}
 
 	// 필요 아이템 목록에 있는아이템인지 검사
 	if (_Ingrediendmap->end() != _Ingrediendmap->find(_ItemID))
@@ -67,12 +79,9 @@ void ER_ItemMgr::GetIngredient(UINT _ItemID, unordered_map<UINT, int>* _Ingredie
 		// 신규로 넣어준다
 		_Ingrediendmap->insert(make_pair(_ItemID, 1));
 	}
-	
-
 	ER_RECIPE recipe = {};
 	recipe.recipe = m_umapIngredient.find(_ItemID)->second;
 
-	// 재료아이템으로 검사 진행
-	GetIngredient(recipe.ingredient_1, _Ingrediendmap);
-	GetIngredient(recipe.ingredient_2, _Ingrediendmap);
+	GetIngredient(recipe.ingredient_1, _Ingrediendmap, _NeedFarmingMap);
+	GetIngredient(recipe.ingredient_2, _Ingrediendmap, _NeedFarmingMap);
 }

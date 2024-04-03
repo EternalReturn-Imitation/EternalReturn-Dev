@@ -141,11 +141,13 @@ void ER_ActionScript_Yuki::FarmingEnter(tFSMData& param)
     CGameObject* ItemObj = ((CGameObject*)param.lParam);
 
     ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
-    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
+    if(IsPlayer())
+        ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
 }
 void ER_ActionScript_Yuki::FarmingExit(tFSMData& param)
 {
-    ER_UIMgr::GetInst()->CloseItemBoxUI();
+    if(IsPlayer())
+        ER_UIMgr::GetInst()->CloseItemBoxUI();
 }
 
 void ER_ActionScript_Yuki::RestEnter(tFSMData& param)
@@ -346,9 +348,6 @@ void ER_ActionScript_Yuki::AttackUpdate(tFSMData& param)
         switch (param.iData[1])
         {
         case 0:
-        {
-
-        }
         case 1:
         {
             // 기본 공격
@@ -646,7 +645,6 @@ void ER_ActionScript_Yuki::Skill_EUpdate(tFSMData& param)
             BATTLE_SKILL(GetOwner(), (CGameObject*)param.lParam, ER_ActionScript_Yuki, SkillE, skill, 0);
 
             param.bData[1] = true;
-
             GetOwner()->GetScript<ER_YukiEEffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
         }
 
@@ -762,7 +760,7 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                 if (!IsInRangeWithAngle(GetOwner(), Target, 5.f, 90.f))
                     continue;
 
-                float DebufTime = 1.f;
+                float DebufTime = 1.4f;
                 float SpeedValue = 0.9f;
 
                 // float 1 공퍼
@@ -775,7 +773,6 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                 // 데미지 판정
                 IsHit = true;
                 BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Yuki, SkillR1, skill, 0);
-
                 GetOwner()->GetScript<ER_YukiREffect>()->DistortionSpawn(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
             }
 

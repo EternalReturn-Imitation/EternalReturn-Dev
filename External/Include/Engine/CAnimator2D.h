@@ -29,9 +29,6 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
-public:
-    CAnim2D* GetAnim() { return m_pCurAnim; }
-
     CLONE(CAnimator2D);
 public:
     CAnimator2D();

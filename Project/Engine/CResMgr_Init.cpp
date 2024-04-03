@@ -714,7 +714,8 @@ void CResMgr::CreateDefaultGraphicsShader()
 	AddRes(pShader->GetKey(), pShader);
 
 	// ============================
-	// Std2DShader
+	// Std2DShader 
+	// 2DUI_STD
 	// RasterizerState      : None
 	// BlendState           : Mask
 	// DepthStencilState    : Less

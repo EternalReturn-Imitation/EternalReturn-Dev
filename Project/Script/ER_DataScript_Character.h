@@ -15,6 +15,7 @@ private:
     Ptr<CTexture>               m_PortraitTex;          // 초상화 텍스쳐
     Ptr<CTexture>               m_FullTax;              // 전신 일러
     Ptr<CTexture>               m_MapTex;               // 미니맵 텍스쳐
+    Ptr<CSound>                 m_LevelUpSound;         // 레벨업 사운드
     vector<ER_SKILL*>           m_SkillList;            // 보유 스킬             
 
     // [ Stats ]
@@ -38,6 +39,11 @@ private:
 
     // [ Debug / CoolDown Delete ]
     bool                        DebugMode;
+    unordered_map<UINT, int>    m_IngredientList;                       // 재료 아이템 목록
+    unordered_map<UINT, int>    m_NeedFarmingItems;                     // 필요 파밍 아이템 목록
+
+    // [ Debug / CoolDown Delete ]
+    bool                        bCoolDownCheat;
 
 public:
     // [상태 갱신]
@@ -80,6 +86,9 @@ public:
     CGameObject**       GetAllInvenItem() { return m_Inventory; }
     CGameObject*        GetInvenItem(UINT _SlotX, UINT _SlotY) { return m_Equipment[_SlotX * 5 + _SlotY]; }
     CGameObject*        GetInvenItem(UINT _SlotType) { return m_Equipment[_SlotType]; }
+
+    unordered_map<UINT, int> GetIngredientList() { return m_IngredientList; }
+    unordered_map<UINT, int> GetNeedFarmingList() { return m_NeedFarmingItems; }
 
     void                SetRootItem(UINT* _RootItem, int _cnt)
     {

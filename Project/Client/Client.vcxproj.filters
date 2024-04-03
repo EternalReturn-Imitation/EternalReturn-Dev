@@ -137,15 +137,6 @@
     <Filter Include="UI\UITemplate\AnimationEditUI">
       <UniqueIdentifier>{45cd07e6-1e11-4332-ab80-536d4c5b963e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\UITemplate\BehaviorTreeUI">
-      <UniqueIdentifier>{24e2bcc7-4061-4a37-a48c-f4aded1b1455}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\UITemplate\BehaviorTreeUI\NodeInfoUI">
-      <UniqueIdentifier>{0717bc42-0298-4386-9236-c0b130e24664}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\UITemplate\BehaviorTreeUI\BlackBoardList">
-      <UniqueIdentifier>{3aea27f2-766c-4319-ad9c-f949919a3e38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\UITemplate\ItemDataUI">
       <UniqueIdentifier>{b9dfbe2b-23af-42c4-97a3-bf42e4e02529}</UniqueIdentifier>
     </Filter>
@@ -291,15 +282,6 @@
     </ClInclude>
     <ClInclude Include="CLevelSaveLoad.h">
       <Filter>Manager\LevelSaveLoad</Filter>
-    </ClInclude>
-    <ClInclude Include="BehaviorTreeListUI.h">
-      <Filter>UI\UITemplate\BehaviorTreeUI</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeInfoUI.h">
-      <Filter>UI\UITemplate\BehaviorTreeUI\NodeInfoUI</Filter>
-    </ClInclude>
-    <ClInclude Include="BlackBoardListUI.h">
-      <Filter>UI\UITemplate\BehaviorTreeUI\BlackBoardList</Filter>
     </ClInclude>
     <ClInclude Include="Light3DUI.h">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>
@@ -490,6 +472,9 @@
     </ClCompile>
     <ClCompile Include="BlackBoardListUI.cpp">
       <Filter>UI\UITemplate\BehaviorTreeUI\BlackBoardList</Filter>
+    </ClCompile>
+    <ClCompile Include="CLevelSaveLoad.cpp">
+      <Filter>Manager\LevelSaveLoad</Filter>
     </ClCompile>
     <ClCompile Include="Light3DUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>

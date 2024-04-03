@@ -148,11 +148,13 @@ void ER_ActionScript_Aya::FarmingEnter(tFSMData& param)
     CGameObject* ItemObj = ((CGameObject*)param.lParam);
 
     ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
-    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
+    if (IsPlayer())
+        ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
 }
 void ER_ActionScript_Aya::FarmingExit(tFSMData& param)
 {
-    ER_UIMgr::GetInst()->CloseItemBoxUI();
+    if (IsPlayer())
+        ER_UIMgr::GetInst()->CloseItemBoxUI();
 }
 
 void ER_ActionScript_Aya::RestEnter(tFSMData& param)
@@ -360,7 +362,6 @@ void ER_ActionScript_Aya::AttackUpdate(tFSMData& param)
         Vec3 resultPos = GetProjSpawnPos(param.lParam) + _dir*0.6f;
         resultPos.y += 0.2f;
         GetOwner()->GetScript<ER_AyaBAEffect>()->SpawnEffect(resultPos, GetOwner()->Transform()->GetRelativeRot());
-
         param.bData[1] = true;                          // Battle Event 완료
         SetStateGrade(eAccessGrade::BASIC);
     }
@@ -600,8 +601,6 @@ void ER_ActionScript_Aya::Skill_WUpdate(tFSMData& param)
         CGameObject* Bullet = onew(CGameObject);
         ER_DataScript_Bullet* BulletScript = onew(ER_DataScript_Bullet);
         Bullet->AddComponent(BulletScript);
-
-        
 
         // 초기 스킬사용시 방향으로 발사
         Vec3 vPos = Transform()->GetRelativePos();

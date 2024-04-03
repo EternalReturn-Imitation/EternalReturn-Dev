@@ -100,6 +100,9 @@ public:
     virtual void begin() override;
     virtual void tick() override;
 
+    ER_CHAR_ACT GetCurState() { return (ER_CHAR_ACT)m_iCurState; }
+    bool IsThisState(ER_CHAR_ACT _State) { return _State == (ER_CHAR_ACT)m_iCurState; }
+
     // 공통 함수
     virtual void Attack(tFSMData& _Data);       // 기본공격
     virtual void Wait(tFSMData& _Data);         // 대기

@@ -189,12 +189,6 @@ void ImGuiMgr::CreateUI()
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
     // [Custom]
-
-    // BehaviorTree
-    pUI = new BehaviorTreeListUI;
-    pUI->SetActive(false);
-    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
-
     // AnimEditUI
     pUI = new AnimEditUI;
     pUI->SetActive(false);

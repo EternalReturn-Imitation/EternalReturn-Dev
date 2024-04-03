@@ -18,11 +18,6 @@
 
 // [Component]
 #include <Engine\components.h>
-#include <Engine\CCollider2D.h>
-#include <Engine\CCollider3D.h>
-#include <Engine\CFindPath.h>
-#include <Engine\CText.h>
-#include <Engine\CUIComponent.h>
 
 // [Graphic]
 #include <Engine\CSetColorShader.h>
@@ -40,6 +35,8 @@
 #include <Script\ER_ItemMgr.h>
 #include <Script\ER_UIMgr.h>
 #include <Script\ER_define.h>
+
+#include <Script\ER_AIScript_Hyunwoo.h>
 
 // [Editor]
 #include "CEditorObjMgr.h"
@@ -77,8 +74,8 @@ void CreateTestPlayer()
 void CreateTestEnemy()
 {
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-80.4f, 1.00345f, 44.8f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-76.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
 }
 
@@ -174,7 +171,6 @@ void SetLayer(CLevel* _Level)
 	
 	_Level->GetLayer(14)->SetName(L"Projectile");
 	_Level->GetLayer(15)->SetName(L"Effect");
-
 	_Level->GetLayer(28)->SetName(L"InGameUI");
 	_Level->GetLayer(29)->SetName(L"MapCollider");
 	_Level->GetLayer(30)->SetName(L"Camera");

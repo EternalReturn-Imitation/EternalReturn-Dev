@@ -12,6 +12,9 @@ private:
 	vector<CGameObject*> m_pCharacters;
 	CGameObject* m_pCursor;
 
+	float	m_fGameTime;
+	bool	m_bGaming;
+
 private:
 	vector<wstring>			m_vecResPath;
 	map<wstring, wstring>	m_mapFolderPath;
@@ -28,6 +31,9 @@ public:
 	RES_TYPE GetResTypeByExt(const wstring& _relativepath, wstring& _FileKey, wstring& _Dir);
 
 	ER_Cursor* GetCursor();
+
+	// Time
+	float* GetGameTime() { return &m_fGameTime; }
 
 	void GameStart();
 

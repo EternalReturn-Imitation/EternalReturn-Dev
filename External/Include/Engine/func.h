@@ -2,9 +2,6 @@
 #include "MemoryPool.h"
 #include "MemoryMgr.h"
 #include "CEntity.h"
-#include <mutex>
-
-extern mutex m_aFuncMutex;
 
 template <typename T, UINT _Size>
 void DeleteArray(T* (&Arr)[_Size])
@@ -21,7 +18,6 @@ class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, const wstring& _LayerName);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName);
-void SpawnGameObjectToParent(CGameObject* _NewObject, CGameObject* _ParentObject);
 void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName);
 
 // 오브젝트 삭제

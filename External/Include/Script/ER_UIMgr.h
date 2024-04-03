@@ -38,6 +38,12 @@ private:
     CGameObject* StatusBar_Inventory_Slot[10];
 
     // =============
+    // [ Time UI ]
+    // =============
+
+    CGameObject* GameTimeUI;
+
+    // =============
     // [ CraftList ]
     // =============
 
@@ -64,6 +70,7 @@ private:
     void CreateCharacterInfo();
     void CreateInventory();
     void CreateItemBoxUI();
+    void CreateTimeUI();
 
 public:
     void init();

@@ -181,6 +181,27 @@
     <Filter Include="Script\ER\EffectScript\Yuki\REffect">
       <UniqueIdentifier>{656be287-a5a4-4f4c-8926-f3809b30e845}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\UI\Timebar">
+      <UniqueIdentifier>{06c7525f-f2fc-4eda-9149-f45deb761dff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\AIScript">
+      <UniqueIdentifier>{894f6bdc-2191-44b4-acee-985ef1e593b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\AIScript\NodeScript">
+      <UniqueIdentifier>{bdcec66d-8c39-42e3-a0fe-4c0e6abcb178}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\AIScript\Rio">
+      <UniqueIdentifier>{8c11e18e-78d8-410c-b6f0-5769952c15af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\AIScript\Hyunwoo">
+      <UniqueIdentifier>{de525295-241a-40b9-b1a3-e2f2ec012ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\AIScript\Yuki">
+      <UniqueIdentifier>{8953cb7c-17f7-4697-ae34-a9249ed208e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\AIScript\Aya">
+      <UniqueIdentifier>{b4362a62-92bf-45e2-927e-6e60945d6d77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -345,6 +366,24 @@
     </ClInclude>
     <ClInclude Include="ER_YukiREffect.h">
       <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_TimeUIBar.h">
+      <Filter>Script\UI\Timebar</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AIScript.h">
+      <Filter>Script\ER\AIScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AIScript_Rio.h">
+      <Filter>Script\ER\AIScript\Rio</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AIScript_Hyunwoo.h">
+      <Filter>Script\ER\AIScript\Hyunwoo</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AIScript_Yuki.h">
+      <Filter>Script\ER\AIScript\Yuki</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AIScript_Aya.h">
+      <Filter>Script\ER\AIScript\Aya</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -518,6 +557,30 @@
     </ClCompile>
     <ClCompile Include="ER_YukiREffect.cpp">
       <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_GameSystem_ResourceLoad.cpp">
+      <Filter>GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_TimeUIBar.cpp">
+      <Filter>Script\UI\Timebar</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript.cpp">
+      <Filter>Script\ER\AIScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript_Nodes.cpp">
+      <Filter>Script\ER\AIScript\NodeScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript_Rio.cpp">
+      <Filter>Script\ER\AIScript\Rio</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript_Hyunwoo.cpp">
+      <Filter>Script\ER\AIScript\Hyunwoo</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript_Yuki.cpp">
+      <Filter>Script\ER\AIScript\Yuki</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript_Aya.cpp">
+      <Filter>Script\ER\AIScript\Aya</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

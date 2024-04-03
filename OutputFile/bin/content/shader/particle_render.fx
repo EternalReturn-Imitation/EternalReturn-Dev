@@ -149,7 +149,7 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
             NewPos[i] = rotatedPos;
         }
     
-    }    
+    }
     GS_OUT output[4] = { (GS_OUT) 0.f, (GS_OUT) 0.f, (GS_OUT) 0.f, (GS_OUT) 0.f };
     
     output[0].vPosition = mul(float4(NewPos[0] + vParticleViewPos, 1.f), g_matProj);

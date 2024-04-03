@@ -3,7 +3,6 @@
 
 #include "ImGuiMgr.h"
 #include "InspectorUI.h"
-#include "BehaviorTreeListUI.h"
 
 #include <Engine\CEventMgr.h>
 #include <Engine\CLevelMgr.h>
@@ -117,9 +116,6 @@ void OutlinerUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 	// Inspector 에 선택된 GameObject 를 알려준다.	
 	InspectorUI* pInspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
 	pInspector->SetTargetObject(pSelectObject);
-
-	BehaviorTreeListUI* pBehaviorTreeList = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
-	pBehaviorTreeList->SetTargetObject(pSelectObject);
 	
 	CRenderMgr::GetInst()->SetGizmoTarget(pSelectObject);
 }

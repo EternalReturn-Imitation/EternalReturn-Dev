@@ -5,6 +5,7 @@
 #include <FontEngine\FW1FontWrapper.h>
 #include "ER_DataScript_Item.h"
 #include "ER_ItemMgr.h"
+#include "ER_GameSystem.h"
 
 ER_DataScript_Character::ER_DataScript_Character()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
@@ -18,7 +19,7 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_SkillPoint(0)
 	, m_STDStats{}
 	, m_RootItem{}
-	, DebugMode(false)
+	, bCoolDownCheat(false)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -41,10 +42,11 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_fSPRegenTime(0.f)
 	, m_SkillPoint(0)
 	, m_RootItem{}
-	, DebugMode(false)
+	, bCoolDownCheat(false)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
+	m_LevelUpSound = CResMgr::GetInst()->FindRes<CSound>(L"effect_levelup.wav").Get();
 
 	for (int i = 0; i < _origin.m_SkillList.size(); ++i)
 	{
@@ -60,6 +62,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	}
 
 	m_IngredientList = _origin.m_IngredientList;
+	m_NeedFarmingItems = _origin.m_NeedFarmingItems;
 }
 
 ER_DataScript_Character::~ER_DataScript_Character()
@@ -81,7 +84,6 @@ void ER_DataScript_Character::StatusUpdate()
 {
 	ER_Ingame_Stats Updatetmp = *m_Stats;
 	UINT Level = Updatetmp.iLevel - 1;
-
 
 	// 레벨,경험치,HP,SP 는 갱신하지 않는다.
 	// 1. 기본 스테이터스
@@ -136,9 +138,9 @@ void ER_DataScript_Character::HPRegen(float _magnification)
 {
 	// 회복량 회복 후 HP값
 	float HPRegen = m_Stats->iHP + (m_Stats->fHPRegen * _magnification);
-	
+
 	// HP 자연 회복, 최대 HP면 최대HP로 고정
-	m_Stats->iHP = m_Stats->iMaxHP < (int)HPRegen ?	m_Stats->iMaxHP : (int)HPRegen;
+	m_Stats->iHP = m_Stats->iMaxHP < (int)HPRegen ? m_Stats->iMaxHP : (int)HPRegen;
 }
 
 void ER_DataScript_Character::SPRegen(float _magnification)
@@ -152,16 +154,41 @@ void ER_DataScript_Character::SPRegen(float _magnification)
 
 void ER_DataScript_Character::LevelUP()
 {
-	// IngameState level 변수 1 증가
-	// Exp 0으로 초기화
-	// Skill투자 가능포인트 1 증가
+	// 최대레벨 18 이하인 경우
+	if (m_Stats->iLevel < 18)
+	{
+		m_Stats->iLevel++;	// Level 1 증가
+		m_SkillPoint++;		// 스킬 포인트 1 증가
+	}
 
 	// [ 이펙트 ]
 	// 레벨업 이펙트 및 애니메이션 재생
+
 	// 레벨업 효과음 재생
+	// 플레이어 캐리터 화면 안에 들어와있을때만 재생
+	{
+		Vec3 PlayerPos = ER_GameSystem::GetInst()->GetPlayerCharacter()->Transform()->GetRelativePos();
+		Vec3 CharacterPos = Transform()->GetRelativePos();
+		float ListenDist = Vec3::Distance(PlayerPos, CharacterPos);
+
+		if (ListenDist < 18.f)
+			m_LevelUpSound->Play(1, 0.5, true);
+	}
+
+	// 레벨업 갱신 전 데이터
+	int LevelUpDefHP = m_Stats->iMaxHP;
+	int LevelUpDefSP = m_Stats->iMaxSP;
 
 	// [ 스테이터스 최종 반영 ]
-	// StatusUpdate
+	StatusUpdate();
+
+	// 갱신 후 최대 HP/SP 증가한 차이값만큼 현재 HP / SP에 반영해 회복해준다.
+
+	LevelUpDefHP = m_Stats->iMaxHP - LevelUpDefHP;
+	LevelUpDefSP = m_Stats->iMaxSP - LevelUpDefSP;
+
+	m_Stats->iHP += LevelUpDefHP;
+	m_Stats->iSP += LevelUpDefSP;
 }
 
 void ER_DataScript_Character::init()
@@ -181,10 +208,10 @@ void ER_DataScript_Character::init()
 		m_FullTax = CResMgr::GetInst()->FindRes<CTexture>(FullTexKey);
 		m_MapTex = CResMgr::GetInst()->FindRes<CTexture>(MapTexKey);
 	}
-	
+
 	for (int i = 0; i < 5; ++i)
 	{
-		ER_ItemMgr::GetInst()->GetIngredient(m_RootItem[i], &m_IngredientList);
+		ER_ItemMgr::GetInst()->GetIngredient(m_RootItem[i], &m_IngredientList, &m_NeedFarmingItems);
 	}
 }
 
@@ -198,24 +225,36 @@ void ER_DataScript_Character::begin()
 	{
 		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
 	}
-	
+
 	StatusUpdate();
 
 	UINT StartWeapon = 0;
 	if (m_strKey == L"Aya")
+	{
 		StartWeapon = 20;
+		m_SkillPoint = 1;
+	}
 	else if (m_strKey == L"Hyunwoo")
+	{
 		StartWeapon = 18;
+		m_SkillPoint = 1;
+	}
 	else if (m_strKey == L"Jackie")
+	{
 		StartWeapon = 108;
+		m_SkillPoint = 1;
+	}
+	else if (m_strKey == L"Yuki")
+	{
+		StartWeapon = 9;
+		m_SkillPoint = 1;
+	}
 	else if (m_strKey == L"Rio")
 	{
 		m_SkillList[(UINT)SKILLIDX::Q_1]->iSkillLevel = 1;
 		m_SkillList[(UINT)SKILLIDX::Q_2]->iSkillLevel = 1;
 		StartWeapon = 28;
 	}
-	else if (m_strKey == L"Yuki")
-		StartWeapon = 9;
 
 	m_Equipment[0] = ER_ItemMgr::GetInst()->GetItemObj(StartWeapon)->Clone();
 	m_Equipment[0]->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
@@ -223,29 +262,18 @@ void ER_DataScript_Character::begin()
 
 void ER_DataScript_Character::tick()
 {
-	// 스킬 쿨타임 갱신
-	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
-
-
-	// [CoolTime Delete Mode]
-	if (KEY_TAP(KEY::F3))
+	// [ 스테이터스 갱신 ]
+	// 경험치 확인 및 레벨업, 현재 경험치가 레벨업 필요 경험치를 넘은경우 반복한다.
+	while (m_Stats->iNeedExpForNextLevel <= m_Stats->iExp)
 	{
-		DebugMode = !DebugMode;
+		// 레벨업후, 초과한 잔여 경험치를 현재 Exp에 갱신해준다.
+		m_Stats->iExp = m_Stats->iExp - m_Stats->iNeedExpForNextLevel;
+
+		// 레벨업 함수 호출
+		LevelUP();
 	}
 
-	if (DebugMode)
-	{
-		m_Stats->iSP = m_Stats->iMaxSP;
-		CoolDownRatio = 500.f;
-	}
-
-	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
-		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
-	
-	// 버프디버프 쿨타임 갱신
-	m_StatusEffect->ActionTiemUpdate(DT);
-
-	// SPRegen
+	// SP 자연 회복
 	m_fSPRegenTime += DT;
 	if (0.5f <= m_fSPRegenTime)
 	{
@@ -253,12 +281,36 @@ void ER_DataScript_Character::tick()
 		m_fSPRegenTime -= 0.5f;
 	}
 
-	if (KEY_TAP(KEY::_5))
+
+	//  [ 버프디버프 쿨타임 갱신 ]
+	m_StatusEffect->ActionTiemUpdate(DT);
+
+
+	// [ 스킬 쿨타임 갱신 ]
+	float CoolDownRatio = DT + (DT * m_Stats->fCooldownReduction);
+
+	// Developer Func
+	// [CoolTime Delete Mode]
+	if (KEY_TAP(KEY::F3))
 	{
-		m_SkillPoint++;
+		bCoolDownCheat = !bCoolDownCheat;
 	}
 
-}
+	if (bCoolDownCheat)
+	{
+		m_Stats->iSP = m_Stats->iMaxSP;
+		CoolDownRatio = 500.f;
+	}
+
+	// [EXP Increase Key]
+	if (KEY_TAP(KEY::F2))
+	{
+		m_Stats->iExp += 100; // 레벨업 필요 경험치 100
+	}
+
+	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
+		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
+};
 
 bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _DropItem)
 {
@@ -360,7 +412,7 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 						(*_DragItem) = tmp;
 
 						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
-						
+
 						ItemInfoUpdate();
 						StatusUpdate();
 						return true;
@@ -434,6 +486,13 @@ void ER_DataScript_Character::AcquireItem(CGameObject** _BoxSlot)
 		m_Inventory[emptyslot]->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
 		*_BoxSlot = nullptr;
 
+		// 습득한 아이템이 필요 파밍아이템이었다면 리스트를 갱신해준다
+		unordered_map<UINT, int>::iterator iter = m_NeedFarmingItems.find(Item->GetCode());
+		if (iter->second == 1)
+			m_NeedFarmingItems.erase(iter);
+		else
+			iter->second--;
+
 		StatusUpdate();
 		ItemInfoUpdate();
 	}
@@ -465,7 +524,7 @@ void ER_DataScript_Character::ItemInfoUpdate()
 			if (S_OK == ER_ItemMgr::GetInst()->SearchRecipe(itemlist[Litem], itemlist[Ritem], tmp))
 			{
 				// 해당아이템이 제작필요 목록에 있는지 여부
-				if(m_IngredientList.end() != m_IngredientList.find(tmp))
+				if (m_IngredientList.end() != m_IngredientList.find(tmp))
 					m_CraftList.push_back(tmp);
 			}
 		}
@@ -491,7 +550,7 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 		if (i < 5 && m_Equipment[i])
 		{
 			UINT Itemid = m_Equipment[i]->GetScript<ER_DataScript_Item>()->GetCode();
-			
+
 			if (!ItemSlot1 && Itemid == recipe.ingredient_1)
 				ItemSlot1 = &m_Equipment[i];
 			else if (!ItemSlot2 && Itemid == recipe.ingredient_2)
@@ -516,11 +575,11 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 	// odelete (*ItemSlot2);
 	// (*ItemSlot2) = nullptr;
 
-	delete *ItemSlot1;
+	delete* ItemSlot1;
 	(*ItemSlot1) = nullptr;
-	delete *ItemSlot2;
+	delete* ItemSlot2;
 	(*ItemSlot2) = nullptr;
-	
+
 	// 제작한 아이템 매니저에서 클론으로 가져온다.
 	CGameObject* NewItem = ER_ItemMgr::GetInst()->GetItemObj(_Item)->Clone();
 
@@ -553,12 +612,26 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 
 	ItemInfoUpdate();
 
+	// 아이템을 제작했다면 제작한 아이템의 등급에 따라 경험치 증가
+	switch (NewItemInfo->GetGrade())
+	{
+	case (UINT)ER_ITEM_GRADE::UNCOMMON:
+		m_Stats->iExp += 40;
+		break;
+	case (UINT)ER_ITEM_GRADE::RARE:
+		m_Stats->iExp += 60;
+		break;
+	case (UINT)ER_ITEM_GRADE::EPIC:
+		m_Stats->iExp += 80;
+		break;
+	}
+
 	return true;
 }
 
 void ER_DataScript_Character::BeginOverlap(CCollider3D* _Other)
 {
-	
+
 }
 
 void ER_DataScript_Character::OnOverlap(CCollider3D* _Other)
@@ -595,7 +668,7 @@ void ER_DataScript_Character::SaveToLevelFile(FILE* _File)
 {
 	SaveWString(m_strKey, _File);
 	SaveWString(m_strName, _File);
-	fwrite(&m_STDStats,sizeof(ER_Initial_Stats),1,_File);
+	fwrite(&m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 	SaveResRef(m_PortraitTex.Get(), _File);
 	SaveResRef(m_FullTax.Get(), _File);
 	SaveResRef(m_MapTex.Get(), _File);

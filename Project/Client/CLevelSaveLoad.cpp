@@ -255,7 +255,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		pObject->AddComponent(Component);
 	}
 
-	// 스크립트	
+	// 스크립트
 	size_t ScriptCount = 0;
 	fread(&ScriptCount, sizeof(size_t), 1, _File);
 
@@ -268,7 +268,7 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		pScript->LoadFromLevelFile(_File);
 	}
 
-	// 자식 오브젝트		
+	// 자식 오브젝트
 	size_t ChildCount = 0;
 	fread(&ChildCount, sizeof(size_t), 1, _File);
 

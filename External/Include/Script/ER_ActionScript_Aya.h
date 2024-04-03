@@ -21,9 +21,6 @@ class ER_ActionScript_Aya :
 private:
     Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
-public:
-    virtual void begin() override;
-
 protected:
     virtual FSMState* CreateWait();
     virtual FSMState* CreateMove();

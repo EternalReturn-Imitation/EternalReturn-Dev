@@ -236,6 +236,9 @@
     <ClInclude Include="CPathFindMgr.h">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
     </ClInclude>
+    <ClInclude Include="CFindPath.h">
+      <Filter>Source\06. Component\10. FindPath</Filter>
+    </ClInclude>
     <ClInclude Include="debug.h">
       <Filter>Source\03. Manager\14. Debug</Filter>
     </ClInclude>
@@ -504,6 +507,9 @@
     </ClCompile>
     <ClCompile Include="CPathFindMgr.cpp">
       <Filter>Source\03. Manager\13. PathFindMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="CFindPath.cpp">
+      <Filter>Source\06. Component\10. FindPath</Filter>
     </ClCompile>
     <ClCompile Include="CCollider3D.cpp">
       <Filter>Source\06. Component\3. Collider3D</Filter>
