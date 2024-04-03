@@ -164,7 +164,7 @@ void ER_EffectSystem::SpawnSkillHitEffect(CGameObject* _attacker, CGameObject* _
 		thread t2(&ER_EffectSystem::SpawnYukiHitEffect, this, hitPosByYuki);
 		t2.detach();
 	}
-	else if (_skillInfo->strName == L"Yuki_R" && m_iYukiCount == 0) {
+	else if (_skillInfo->strName == L"Yuki_R1") {
 		++m_iYukiCount;
 		Vec3 hitPosByYuki = _hitter->Transform()->GetWorldPos();
 		hitPosByYuki.y += 2.5f;
@@ -178,7 +178,7 @@ void ER_EffectSystem::SpawnSkillHitEffect(CGameObject* _attacker, CGameObject* _
 		thread t1(&ER_EffectSystem::SpawnYukiHitEffect, this, hitPosByYuki);
 		t1.detach();
 	}
-	else if (_skillInfo->strName == L"Yuki_R" && m_iYukiCount == 1) {
+	else if (_skillInfo->strName == L"Yuki_R2") {
 		m_iYukiCount = 0;
 		Vec3 hitPosByYuki = _hitter->Transform()->GetWorldPos();
 		hitPosByYuki.y += 1.8f;
