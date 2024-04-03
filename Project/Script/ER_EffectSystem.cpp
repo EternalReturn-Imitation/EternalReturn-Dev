@@ -278,6 +278,7 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 	if (endTime < 0.2f)
 		alphaTime = 0.05f;
 
+	bool alphaTrigger = true;
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -305,11 +306,13 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 		Vec3 resultPos = pos + (_effectMoveDir * moveIncreasing);
 		dummyParent01->Transform()->SetRelativePos(resultPos);
 
-		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f) {
+		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
 			if(windHitEffect->Animator2D())
 				windHitEffect->Animator2D()->SetAlphaEraseTime(alphaTime);
 			if (attackHitEffect->Animator2D())
 				attackHitEffect->Animator2D()->SetAlphaEraseTime(alphaTime);
+
+			alphaTrigger = false;
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
@@ -919,6 +922,7 @@ void ER_EffectSystem::SpawnLevelUpEffect(CGameObject* _Owner)
 	if (endTime < 0.2f)
 		alphaTime = 0.05f;
 
+	bool alphaTrigger = true;
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -927,8 +931,9 @@ void ER_EffectSystem::SpawnLevelUpEffect(CGameObject* _Owner)
 		if (elapsedTime.count() >= endTime * 1000.f)
 			break;
 
-		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f) {
+		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
 			gunHitEffect->Animator2D()->SetAlphaEraseTime(alphaTime);
+			alphaTrigger = false;
 		}
 
 		dummyParent01->Transform()->SetRelativePos(_Owner->Transform()->GetRelativePos());

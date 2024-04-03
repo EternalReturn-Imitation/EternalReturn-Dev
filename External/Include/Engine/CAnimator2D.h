@@ -33,7 +33,7 @@ public:
 
 public:
     CAnim2D* GetAnim() { return m_pCurAnim; }
-    void SetAlphaEraseTime(float _f) { m_fAlphaEraseTime = _f; }
+    void SetAlphaEraseTime(float _f) { lock_guard<mutex> lockGuard(m_aFuncMutex); m_fAlphaEraseTime = _f; }
 
     CLONE(CAnimator2D);
 public:

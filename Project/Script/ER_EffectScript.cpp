@@ -61,6 +61,7 @@ void ER_EffectScript::EffectRotation(CGameObject* _targetObj, Vec3 _startScale, 
 
 		if ((_endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
 			_targetObj->Animator2D()->SetAlphaEraseTime(alphaTime);
+			alphaTrigger = false;
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
@@ -101,7 +102,9 @@ void ER_EffectScript::SpawnAnimationEffect(CGameObject* _targetObj, float _endTi
 			break;
 
 		if ((_endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
-			_targetObj->Animator2D()->SetAlphaEraseTime(alphaTime);
+			if(_targetObj->Animator2D())
+				_targetObj->Animator2D()->SetAlphaEraseTime(alphaTime);
+			alphaTrigger = false;
 		}
 
 

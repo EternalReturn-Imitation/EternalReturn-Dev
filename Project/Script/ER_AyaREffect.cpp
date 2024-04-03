@@ -64,6 +64,7 @@ void ER_AyaREffect::RangeSpawnToMultiThread(CGameObject* _obj01)
 
 		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
 			_obj01->Animator2D()->SetAlphaEraseTime(alphaTime);
+			alphaTrigger = false;
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
@@ -135,7 +136,7 @@ void ER_AyaREffect::AttackSpawnToMultiThread(CGameObject* _obj, CGameObject* _no
 	if (endTime < 0.2f)
 		alphaTime = 0.05f;
 
-	
+	bool alphaTrigger = true;
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -157,11 +158,12 @@ void ER_AyaREffect::AttackSpawnToMultiThread(CGameObject* _obj, CGameObject* _no
 		rot.y += exeCount / 1000.f;
 		_obj->Transform()->SetRelativeRot(rot);
 
-		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f) {
+		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
 			//타겟 오브젝트가 애니메이터 2D를 가지고 있을 때만 계산
 			for (int i = 0; i < _obj->GetChild().size(); ++i) {
 				_obj->GetChild()[i]->Animator2D()->SetAlphaEraseTime(alphaTime);
 			}
+			alphaTrigger = false;
 		}
 		
 
