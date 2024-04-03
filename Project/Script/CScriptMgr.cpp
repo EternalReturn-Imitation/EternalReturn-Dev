@@ -16,8 +16,6 @@
 #include "ER_AyaREffect.h"
 #include "ER_AyaWBulletEffect.h"
 #include "ER_BulletEffectScript.h"
-#include "ER_AIScript_Hyunwoo.h"
-#include "ER_AIScript_Rio.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
 #include "ER_DataScript_Arrow.h"
@@ -38,7 +36,6 @@
 #include "ER_UIScript_SkillSlot.h"
 #include "ER_UIScript_SkillUpBtn.h"
 #include "ER_UIScript_StatusBarGauge.h"
-#include "ER_UIScript_TimeUIBar.h"
 #include "ER_UIScript_TrackingStatusBar.h"
 #include "ER_YukiBAEffect.h"
 #include "ER_YukiEEffect.h"
@@ -63,8 +60,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_AyaREffect");
 	_vec.push_back(L"ER_AyaWBulletEffect");
 	_vec.push_back(L"ER_BulletEffectScript");
-	_vec.push_back(L"ER_AIScript_Hyunwoo");
-	_vec.push_back(L"ER_AIScript_Rio");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Arrow");
@@ -85,7 +80,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_UIScript_SkillSlot");
 	_vec.push_back(L"ER_UIScript_SkillUpBtn");
 	_vec.push_back(L"ER_UIScript_StatusBarGauge");
-	_vec.push_back(L"ER_UIScript_TimeUIBar");
 	_vec.push_back(L"ER_UIScript_TrackingStatusBar");
 	_vec.push_back(L"ER_YukiBAEffect");
 	_vec.push_back(L"ER_YukiEEffect");
@@ -126,10 +120,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_AyaWBulletEffect;
 	if (L"ER_BulletEffectScript" == _strScriptName)
 		return new ER_BulletEffectScript;
-	if (L"ER_AIScript_Hyunwoo" == _strScriptName)
-		return new ER_AIScript_Hyunwoo;
-	if (L"ER_AIScript_Rio" == _strScriptName)
-		return new ER_AIScript_Rio;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
@@ -170,8 +160,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_UIScript_SkillUpBtn;
 	if (L"ER_UIScript_StatusBarGauge" == _strScriptName)
 		return new ER_UIScript_StatusBarGauge;
-	if (L"ER_UIScript_TimeUIBar" == _strScriptName)
-		return new ER_UIScript_TimeUIBar;
 	if (L"ER_UIScript_TrackingStatusBar" == _strScriptName)
 		return new ER_UIScript_TrackingStatusBar;
 	if (L"ER_YukiBAEffect" == _strScriptName)
@@ -235,11 +223,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_BULLETEFFECTSCRIPT:
 		return new ER_BulletEffectScript;
-	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_HYUNWOO:
-		return new ER_AIScript_Hyunwoo;
-		break;
-	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_RIO:
-		return new ER_AIScript_Rio;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
@@ -300,9 +283,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
 		return new ER_UIScript_StatusBarGauge;
-		break;
-	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TIMEUIBAR:
-		return new ER_UIScript_TimeUIBar;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
 		return new ER_UIScript_TrackingStatusBar;
@@ -390,14 +370,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_BulletEffectScript";
 		break;
 
-	case SCRIPT_TYPE::ER_AISCRIPT_HYUNWOO:
-		return L"ER_AIScript_Hyunwoo";
-		break;
-
-	case SCRIPT_TYPE::ER_AISCRIPT_RIO:
-		return L"ER_AIScript_Rio";
-		break;
-
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return L"ER_CamControllerScript";
 		break;
@@ -476,10 +448,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_UISCRIPT_STATUSBARGAUGE:
 		return L"ER_UIScript_StatusBarGauge";
-		break;
-
-	case SCRIPT_TYPE::ER_UISCRIPT_TIMEUIBAR:
-		return L"ER_UIScript_TimeUIBar";
 		break;
 
 	case SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:

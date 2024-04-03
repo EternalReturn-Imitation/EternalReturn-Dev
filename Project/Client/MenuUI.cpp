@@ -17,6 +17,7 @@
 #include "ImGuiMgr.h"
 #include "OutlinerUI.h"
 #include "InspectorUI.h"
+#include "BehaviorTreeListUI.h"
 #include "CLevelSaveLoad.h"
 
 #include "AnimEditUI.h"
@@ -133,6 +134,21 @@ int MenuUI::render_update()
                 }
 
                 ImGui::EndMenu();
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("AiTree Window"))
+            {
+                BehaviorTreeListUI* pNodeUI = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
+                pNodeUI->SetActive(true);
+                pNodeUI->ResetNodeLinker();
+            }
+
+            if (ImGui::MenuItem("BlackBoardList Window"))
+            {
+                BehaviorTreeListUI* pNodeUI = (BehaviorTreeListUI*)ImGuiMgr::GetInst()->FindUI("##BehaviorTreeList");
+                pNodeUI->OpenBlackBoardListUI();
             }
 
             ImGui::EndMenu();

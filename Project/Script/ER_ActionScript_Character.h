@@ -87,7 +87,6 @@ protected:
     void SetStateGrade(eAccessGrade _Grade) { m_AccessGrade = _Grade; }              // 상태 접근 가능 등급
     bool IsAbleChange(eAccessGrade _Grade);                                          // 접근 등급 비교
 
-
     // [ Sound ]
     virtual void PlaySound(UINT _SoundKey) {}
 
@@ -100,8 +99,6 @@ protected:
 public:
     virtual void begin() override;
     virtual void tick() override;
-
-    ER_CHAR_ACT GetCurState() { return (ER_CHAR_ACT)m_iCurState; }
 
     // 공통 함수
     virtual void Attack(tFSMData& _Data);       // 기본공격

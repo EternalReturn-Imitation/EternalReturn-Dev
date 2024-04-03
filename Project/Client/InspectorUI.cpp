@@ -29,6 +29,8 @@
 #include "ParticleSystemUI.h"
 #include "ScriptUI.h"
 
+#include "BehaviorTreeListUI.h"
+
 
 
 InspectorUI::InspectorUI()

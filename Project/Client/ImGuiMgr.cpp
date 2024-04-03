@@ -152,6 +152,7 @@ void ImGuiMgr::render()
 #include "ListUI.h"
 #include "MenuUI.h"
 
+#include "BehaviorTreeListUI.h"
 #include "AnimEditUI.h"
 #include "ItemDataUI.h"
 #include "CharacterDataUI.h"
@@ -188,6 +189,11 @@ void ImGuiMgr::CreateUI()
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
     // [Custom]
+
+    // BehaviorTree
+    pUI = new BehaviorTreeListUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
     // AnimEditUI
     pUI = new AnimEditUI;

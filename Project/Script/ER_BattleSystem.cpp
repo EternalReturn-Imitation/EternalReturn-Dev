@@ -48,10 +48,6 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj, CG
 		// 타겟의 HP를 0으로 만든다.
 		HitInfo->iHP = 0;
 
-		// 공격자의 경험치 증가
-		// 캐릭터를 죽이면 150경험치 
-		AtkInfo->iExp += 150;
-
 		tFSMData deaddata = {};
 		HitObj->GetScript<ER_ActionScript_Character>()->Dead(deaddata);
 		return;
