@@ -13,6 +13,8 @@ ER_AyaQEffect
 ER_AyaREffect
 ER_AyaWBulletEffect
 ER_BulletEffectScript
+ER_AIScript_Hyunwoo
+ER_AIScript_Rio
 ER_CamControllerScript
 ER_Cursor
 ER_DataScript_Arrow
@@ -33,6 +35,7 @@ ER_UIScript_ItemSlot
 ER_UIScript_SkillSlot
 ER_UIScript_SkillUpBtn
 ER_UIScript_StatusBarGauge
+ER_UIScript_TimeUIBar
 ER_UIScript_TrackingStatusBar
 ER_YukiBAEffect
 ER_YukiEEffect
