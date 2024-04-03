@@ -24,6 +24,12 @@ private:
     bool m_BowType; // false : shot, true : long
     Ptr<CSound> m_pSounds[(UINT)CharacterSound::END];
 
+public:
+    bool GetBowType() { return m_BowType; }
+
+public:
+    virtual void begin() override;
+
 protected:
     virtual FSMState* CreateWait();
     virtual FSMState* CreateMove();

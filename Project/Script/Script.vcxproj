@@ -197,7 +197,6 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_AIScript_Hyunwoo.h" />
     <ClInclude Include="ER_AIScript_Rio.h" />
     <ClInclude Include="ER_AIScript_Yuki.h" />
-    <ClInclude Include="ER_BattleSystem.h" />
     <ClInclude Include="ER_CamControllerScript.h" />
     <ClInclude Include="ER_CharacterMgr.h" />
     <ClInclude Include="ER_Cursor.h" />
@@ -218,9 +217,6 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_ProjectileScript.h" />
     <ClInclude Include="ER_RioBAEffect.h" />
     <ClInclude Include="ER_RioQEffect.h" />
-    <ClInclude Include="ER_GameSystem.h" />
-    <ClInclude Include="ER_ItemMgr.h" />
-    <ClInclude Include="ER_PlayerScript.h" />
     <ClInclude Include="ER_struct.h" />
     <ClInclude Include="ER_UIMgr.h" />
     <ClInclude Include="ER_UIScript_CraftSlot.h" />
@@ -229,7 +225,6 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_UIScript_SkillSlot.h" />
     <ClInclude Include="ER_UIScript_SkillUpBtn.h" />
     <ClInclude Include="ER_UIScript_StatusBarGauge.h" />
-    <ClInclude Include="ER_UIScript_TrackingStatusBar.h" />
     <ClInclude Include="ER_YukiBAEffect.h" />
     <ClInclude Include="ER_YukiEEffect.h" />
     <ClInclude Include="ER_YukiQEffect.h" />
@@ -260,7 +255,6 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_AyaQEffect.cpp" />
     <ClCompile Include="ER_AyaREffect.cpp" />
     <ClCompile Include="ER_AyaWBulletEffect.cpp" />
-    <ClCompile Include="ER_BattleSystem.cpp" />
     <ClCompile Include="ER_BulletEffectScript.cpp" />
     <ClCompile Include="ER_AIScript.cpp" />
     <ClCompile Include="ER_AIScript_Aya.cpp" />
@@ -281,7 +275,6 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_EffectScript.cpp" />
     <ClCompile Include="ER_DataScript_Projectile.cpp" />
     <ClCompile Include="ER_EffectSystem.cpp" />
-    <ClCompile Include="ER_DataScript_Projectile.cpp" />
     <ClCompile Include="ER_GameSystem.cpp" />
     <ClCompile Include="ER_ItemMgr.cpp" />
     <ClCompile Include="ER_ItemMgr_Init.cpp" />
@@ -290,7 +283,6 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_RioQEffect.cpp" />
     <ClCompile Include="ER_UIMgr.cpp" />
     <ClCompile Include="ER_PlayerScript_Range.cpp" />
-    <ClCompile Include="ER_UIMgr.cpp" />
     <ClCompile Include="ER_UIScript_CraftSlot.cpp" />
     <ClCompile Include="ER_UIScript_Gauge.cpp" />
     <ClCompile Include="ER_UIScript_ItemBox.cpp" />
@@ -298,7 +290,6 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_UIScript_SkillSlot.cpp" />
     <ClCompile Include="ER_UIScript_SkillUpBtn.cpp" />
     <ClCompile Include="ER_UIScript_StatusBarGauge.cpp" />
-    <ClCompile Include="ER_UIScript_TrackingStatusBar.cpp" />
     <ClCompile Include="ER_YukiBAEffect.cpp" />
     <ClCompile Include="ER_YukiEEffect.cpp" />
     <ClCompile Include="ER_YukiQEffect.cpp" />

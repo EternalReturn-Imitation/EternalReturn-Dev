@@ -70,7 +70,7 @@ private:
     void CreateCharacterInfo();
     void CreateInventory();
     void CreateItemBoxUI();
-    void CreateTimeUI()
+    void CreateTimeUI();
 
 public:
     void init();

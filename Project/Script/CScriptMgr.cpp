@@ -14,6 +14,12 @@
 #include "ER_AIScript_Hyunwoo.h"
 #include "ER_AIScript_Rio.h"
 #include "ER_AIScript_Yuki.h"
+#include "ER_ArrowEffectScript.h"
+#include "ER_AyaBAEffect.h"
+#include "ER_AyaQEffect.h"
+#include "ER_AyaREffect.h"
+#include "ER_AyaWBulletEffect.h"
+#include "ER_BulletEffectScript.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
 #include "ER_DataScript_Arrow.h"
@@ -22,7 +28,11 @@
 #include "ER_DataScript_Item.h"
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_LandMeshBase.h"
+#include "ER_EffectScript.h"
 #include "ER_PlayerScript.h"
+#include "ER_PlayerScript_Range.h"
+#include "ER_RioBAEffect.h"
+#include "ER_RioQEffect.h"
 #include "ER_UIScript_CraftSlot.h"
 #include "ER_UIScript_Gauge.h"
 #include "ER_UIScript_ItemBox.h"
@@ -32,6 +42,11 @@
 #include "ER_UIScript_StatusBarGauge.h"
 #include "ER_UIScript_TimeUIBar.h"
 #include "ER_UIScript_TrackingStatusBar.h"
+#include "ER_YukiBAEffect.h"
+#include "ER_YukiEEffect.h"
+#include "ER_YukiQEffect.h"
+#include "ER_YukiREffect.h"
+#include "ER_YukiWEffect.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -48,6 +63,12 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_AIScript_Hyunwoo");
 	_vec.push_back(L"ER_AIScript_Rio");
 	_vec.push_back(L"ER_AIScript_Yuki");
+	_vec.push_back(L"ER_ArrowEffectScript");
+	_vec.push_back(L"ER_AyaBAEffect");
+	_vec.push_back(L"ER_AyaQEffect");
+	_vec.push_back(L"ER_AyaREffect");
+	_vec.push_back(L"ER_AyaWBulletEffect");
+	_vec.push_back(L"ER_BulletEffectScript");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Arrow");
@@ -56,7 +77,11 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_DataScript_Item");
 	_vec.push_back(L"ER_DataScript_ItemBox");
 	_vec.push_back(L"ER_DataScript_LandMeshBase");
+	_vec.push_back(L"ER_EffectScript");
 	_vec.push_back(L"ER_PlayerScript");
+	_vec.push_back(L"ER_PlayerScript_Range");
+	_vec.push_back(L"ER_RioBAEffect");
+	_vec.push_back(L"ER_RioQEffect");
 	_vec.push_back(L"ER_UIScript_CraftSlot");
 	_vec.push_back(L"ER_UIScript_Gauge");
 	_vec.push_back(L"ER_UIScript_ItemBox");
@@ -66,6 +91,11 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_UIScript_StatusBarGauge");
 	_vec.push_back(L"ER_UIScript_TimeUIBar");
 	_vec.push_back(L"ER_UIScript_TrackingStatusBar");
+	_vec.push_back(L"ER_YukiBAEffect");
+	_vec.push_back(L"ER_YukiEEffect");
+	_vec.push_back(L"ER_YukiQEffect");
+	_vec.push_back(L"ER_YukiREffect");
+	_vec.push_back(L"ER_YukiWEffect");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -96,6 +126,18 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_AIScript_Rio;
 	if (L"ER_AIScript_Yuki" == _strScriptName)
 		return new ER_AIScript_Yuki;
+	if (L"ER_ArrowEffectScript" == _strScriptName)
+		return new ER_ArrowEffectScript;
+	if (L"ER_AyaBAEffect" == _strScriptName)
+		return new ER_AyaBAEffect;
+	if (L"ER_AyaQEffect" == _strScriptName)
+		return new ER_AyaQEffect;
+	if (L"ER_AyaREffect" == _strScriptName)
+		return new ER_AyaREffect;
+	if (L"ER_AyaWBulletEffect" == _strScriptName)
+		return new ER_AyaWBulletEffect;
+	if (L"ER_BulletEffectScript" == _strScriptName)
+		return new ER_BulletEffectScript;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
@@ -112,8 +154,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_DataScript_ItemBox;
 	if (L"ER_DataScript_LandMeshBase" == _strScriptName)
 		return new ER_DataScript_LandMeshBase;
+	if (L"ER_EffectScript" == _strScriptName)
+		return new ER_EffectScript;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
+	if (L"ER_PlayerScript_Range" == _strScriptName)
+		return new ER_PlayerScript_Range;
+	if (L"ER_RioBAEffect" == _strScriptName)
+		return new ER_RioBAEffect;
+	if (L"ER_RioQEffect" == _strScriptName)
+		return new ER_RioQEffect;
 	if (L"ER_UIScript_CraftSlot" == _strScriptName)
 		return new ER_UIScript_CraftSlot;
 	if (L"ER_UIScript_Gauge" == _strScriptName)
@@ -132,6 +182,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_UIScript_TimeUIBar;
 	if (L"ER_UIScript_TrackingStatusBar" == _strScriptName)
 		return new ER_UIScript_TrackingStatusBar;
+	if (L"ER_YukiBAEffect" == _strScriptName)
+		return new ER_YukiBAEffect;
+	if (L"ER_YukiEEffect" == _strScriptName)
+		return new ER_YukiEEffect;
+	if (L"ER_YukiQEffect" == _strScriptName)
+		return new ER_YukiQEffect;
+	if (L"ER_YukiREffect" == _strScriptName)
+		return new ER_YukiREffect;
+	if (L"ER_YukiWEffect" == _strScriptName)
+		return new ER_YukiWEffect;
 	return nullptr;
 }
 
@@ -178,6 +238,24 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_YUKI:
 		return new ER_AIScript_Yuki;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_ARROWEFFECTSCRIPT:
+		return new ER_ArrowEffectScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYABAEFFECT:
+		return new ER_AyaBAEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYAQEFFECT:
+		return new ER_AyaQEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYAREFFECT:
+		return new ER_AyaREffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AYAWBULLETEFFECT:
+		return new ER_AyaWBulletEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_BULLETEFFECTSCRIPT:
+		return new ER_BulletEffectScript;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
 		break;
@@ -202,8 +280,20 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_DATASCRIPT_LANDMESHBASE:
 		return new ER_DataScript_LandMeshBase;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_EFFECTSCRIPT:
+		return new ER_EffectScript;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
+		return new ER_PlayerScript_Range;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_RIOBAEFFECT:
+		return new ER_RioBAEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_RIOQEFFECT:
+		return new ER_RioQEffect;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
 		return new ER_UIScript_CraftSlot;
@@ -231,6 +321,21 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
 		return new ER_UIScript_TrackingStatusBar;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIBAEFFECT:
+		return new ER_YukiBAEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIEEFFECT:
+		return new ER_YukiEEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIQEFFECT:
+		return new ER_YukiQEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIREFFECT:
+		return new ER_YukiREffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIWEFFECT:
+		return new ER_YukiWEffect;
 		break;
 	}
 	return nullptr;
@@ -292,6 +397,30 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_AIScript_Yuki";
 		break;
 
+	case SCRIPT_TYPE::ER_ARROWEFFECTSCRIPT:
+		return L"ER_ArrowEffectScript";
+		break;
+
+	case SCRIPT_TYPE::ER_AYABAEFFECT:
+		return L"ER_AyaBAEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_AYAQEFFECT:
+		return L"ER_AyaQEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_AYAREFFECT:
+		return L"ER_AyaREffect";
+		break;
+
+	case SCRIPT_TYPE::ER_AYAWBULLETEFFECT:
+		return L"ER_AyaWBulletEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_BULLETEFFECTSCRIPT:
+		return L"ER_BulletEffectScript";
+		break;
+
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return L"ER_CamControllerScript";
 		break;
@@ -324,8 +453,24 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_DataScript_LandMeshBase";
 		break;
 
+	case SCRIPT_TYPE::ER_EFFECTSCRIPT:
+		return L"ER_EffectScript";
+		break;
+
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return L"ER_PlayerScript";
+		break;
+
+	case SCRIPT_TYPE::ER_PLAYERSCRIPT_RANGE:
+		return L"ER_PlayerScript_Range";
+		break;
+
+	case SCRIPT_TYPE::ER_RIOBAEFFECT:
+		return L"ER_RioBAEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_RIOQEFFECT:
+		return L"ER_RioQEffect";
 		break;
 
 	case SCRIPT_TYPE::ER_UISCRIPT_CRAFTSLOT:
@@ -362,6 +507,26 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_UISCRIPT_TRACKINGSTATUSBAR:
 		return L"ER_UIScript_TrackingStatusBar";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIBAEFFECT:
+		return L"ER_YukiBAEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIEEFFECT:
+		return L"ER_YukiEEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIQEFFECT:
+		return L"ER_YukiQEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIREFFECT:
+		return L"ER_YukiREffect";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIWEFFECT:
+		return L"ER_YukiWEffect";
 		break;
 
 	}

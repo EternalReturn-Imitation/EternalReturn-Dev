@@ -35,7 +35,6 @@ private:
     CGameObject*                m_Inventory[10];                        // 인벤토리
     UINT                        m_RootItem[5];                          // 최종 목표 아이템
     vector<UINT>                m_CraftList;                            // 제작가능 아이템 목록
-    unordered_map<UINT, int>    m_IngredientList;                       // 재료 아이템 목록;
 
     // [ Debug / CoolDown Delete ]
     bool                        DebugMode;
