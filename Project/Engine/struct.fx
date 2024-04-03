@@ -92,6 +92,7 @@ struct tParticleModule
     int     VelocityScale;      // 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
     float   vMaxSpeed;          // 최대 크기에 도달하는 속력
     float4  vMaxVelocityScale;  // 속력에 따른 크기 변화량 최대치
+    float4  vRot;               // 회전량
     int     renderpad;
 
     

@@ -79,11 +79,9 @@ void ER_ItemMgr::GetIngredient(UINT _ItemID, unordered_map<UINT, int>* _Ingredie
 		// 신규로 넣어준다
 		_Ingrediendmap->insert(make_pair(_ItemID, 1));
 	}
-
 	ER_RECIPE recipe = {};
 	recipe.recipe = m_umapIngredient.find(_ItemID)->second;
 
-	// 재료아이템으로 검사 진행
 	GetIngredient(recipe.ingredient_1, _Ingrediendmap, _NeedFarmingMap);
 	GetIngredient(recipe.ingredient_2, _Ingrediendmap, _NeedFarmingMap);
 }

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Script">
@@ -112,6 +112,18 @@
     <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
       <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript">
+      <UniqueIdentifier>{49905061-cebc-4a66-8a41-a3e586a073e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio">
+      <UniqueIdentifier>{f0ef82ab-009a-4d8a-a375-ca9331eba4c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\BasicAttackEffect">
+      <UniqueIdentifier>{4d5476b6-af07-4e16-8a83-b1297451af93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\QEffect">
+      <UniqueIdentifier>{9aeabc82-c8d2-40e4-98f5-2b93b1028e87}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Script\UI\Item\Slot\CraftSlot">
       <UniqueIdentifier>{9c6a4bc4-a8a4-4271-ab0e-9dd45dad9d73}</UniqueIdentifier>
     </Filter>
@@ -126,6 +138,48 @@
     </Filter>
     <Filter Include="Script\ER\DataScript\Projectile\Bullet">
       <UniqueIdentifier>{5adec4b1-440f-415d-9b7e-5a06c838d816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\ArrowEffect">
+      <UniqueIdentifier>{ee14ab7a-05cd-4a90-a024-83143b16434d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Effect">
+      <UniqueIdentifier>{f6e05562-d1ba-46af-b123-b120d224acef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya">
+      <UniqueIdentifier>{fb3bab7d-17b3-4268-8e40-f4fc9a1f097c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\BulletEffect">
+      <UniqueIdentifier>{75d83bab-4fd5-478d-b9af-5691fc4a8e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\BasicAttackEffect">
+      <UniqueIdentifier>{65868b39-e8ff-4a81-9b72-92aca3c9be76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\QEffect">
+      <UniqueIdentifier>{a8a6b10e-7e17-449e-8fe0-edd26278b223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\WBulletEffect">
+      <UniqueIdentifier>{361ffa0a-7f03-4deb-80c8-fdb7fd89bbfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\REffect">
+      <UniqueIdentifier>{a3b668c7-fbe9-4176-844f-d1f00ca6d941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki">
+      <UniqueIdentifier>{23d84920-f92f-446c-835b-740679761f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\BasicAttackEffect">
+      <UniqueIdentifier>{70baa0c2-c0af-4f04-961e-ef2d0738c362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\QEffect">
+      <UniqueIdentifier>{8224c224-8dab-4a3b-a38a-2e861584b588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\WEffect">
+      <UniqueIdentifier>{0b6c631a-5285-4656-9c34-24dea823f890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\EEffect">
+      <UniqueIdentifier>{9006fd66-eb56-4a54-8797-fbf953675083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\REffect">
+      <UniqueIdentifier>{656be287-a5a4-4f4c-8926-f3809b30e845}</UniqueIdentifier>
     </Filter>
     <Filter Include="Script\UI\Timebar">
       <UniqueIdentifier>{06c7525f-f2fc-4eda-9149-f45deb761dff}</UniqueIdentifier>
@@ -222,6 +276,9 @@
     <ClInclude Include="ER_BattleSystem.h">
       <Filter>GameSystem\Battle</Filter>
     </ClInclude>
+    <ClInclude Include="ER_PlayerScript_Range.h">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClInclude>
     <ClInclude Include="ER_UIScript_ItemBox.h">
       <Filter>Script\UI\Item\Box</Filter>
     </ClInclude>
@@ -252,6 +309,15 @@
     <ClInclude Include="ER_UIScript_ItemSlot.h">
       <Filter>Script\UI\Item\Slot</Filter>
     </ClInclude>
+    <ClInclude Include="ER_EffectScript.h">
+      <Filter>Script\ER\EffectScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_RioBAEffect.h">
+      <Filter>Script\ER\EffectScript\Rio\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_RioQEffect.h">
+      <Filter>Script\ER\EffectScript\Rio\QEffect</Filter>
+    </ClInclude>
     <ClInclude Include="ER_UIScript_CraftSlot.h">
       <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
     </ClInclude>
@@ -263,6 +329,43 @@
     </ClInclude>
     <ClInclude Include="ER_DataScript_Bullet.h">
       <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ProjectileScript.h" />
+    <ClInclude Include="ER_ArrowEffectScript.h">
+      <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_EffectSystem.h">
+      <Filter>GameSystem\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaBAEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_BulletEffectScript.h">
+      <Filter>Script\ER\EffectScript\Aya\BulletEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaQEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaWBulletEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaREffect.h">
+      <Filter>Script\ER\EffectScript\Aya\REffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiBAEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiQEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiWEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\WEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiEEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\EEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiREffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
     </ClInclude>
     <ClInclude Include="ER_UIScript_TimeUIBar.h">
       <Filter>Script\UI\Timebar</Filter>
@@ -359,6 +462,9 @@
     <ClCompile Include="ER_BattleSystem.cpp">
       <Filter>GameSystem\Battle</Filter>
     </ClCompile>
+    <ClCompile Include="ER_PlayerScript_Range.cpp">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClCompile>
     <ClCompile Include="ER_ActionScript_Init.cpp">
       <Filter>Script\ER\ActionScript\Character</Filter>
     </ClCompile>
@@ -392,6 +498,15 @@
     <ClCompile Include="ER_UIScript_ItemSlot.cpp">
       <Filter>Script\UI\Item\Slot</Filter>
     </ClCompile>
+    <ClCompile Include="ER_EffectScript.cpp">
+      <Filter>Script\ER\EffectScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_RioBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Rio\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_RioQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Rio\QEffect</Filter>
+    </ClCompile>
     <ClCompile Include="ER_UIScript_CraftSlot.cpp">
       <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
     </ClCompile>
@@ -403,6 +518,45 @@
     </ClCompile>
     <ClCompile Include="ER_DataScript_Bullet.cpp">
       <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ArrowEffectScript.cpp">
+      <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_EffectSystem.cpp">
+      <Filter>GameSystem\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_GameSystem_ResourceLoad.cpp">
+      <Filter>GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_BulletEffectScript.cpp">
+      <Filter>Script\ER\EffectScript\Aya\BulletEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaWBulletEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaREffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\REffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiWEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\WEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiEEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\EEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiREffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
     </ClCompile>
     <ClCompile Include="ER_GameSystem_ResourceLoad.cpp">
       <Filter>GameSystem</Filter>

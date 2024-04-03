@@ -21,6 +21,11 @@ CParticleSystem::CParticleSystem()
 	, m_ModuleData{}
 	, m_AccTime(0.f)
 	, m_PointPos{}
+	, m_pParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_TX_RioShootFire.png"))
+	, m_aSpawnNum{0.f,100.f}
+	, m_bTickToggle(false)
+	, m_bDestoryTrigger(false)
+	, m_fTime(0.f)
 {
 	m_ModuleData.iMaxParticleCount = 3000;
 
@@ -65,8 +70,7 @@ CParticleSystem::CParticleSystem()
 	m_ModuleData.vMaxVelocityScale = Vec3(1.f, 1.f, 1.f);
 	m_ModuleData.vMaxSpeed = 1.f;
 
-
-
+	m_ModuleData.vRot = Vec4(0.f, 0.f, 0.f, 0.f);
 
 	// 입자 메쉬
 	SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh"));
@@ -88,18 +92,22 @@ CParticleSystem::CParticleSystem()
 	// 모듈 활성화 및 모듈 설정 정보 버퍼
 	m_ModuleDataBuffer = new CStructuredBuffer;
 	m_ModuleDataBuffer->Create(sizeof(tParticleModule), 1, SB_TYPE::READ_ONLY, true);
+
+	m_aSpawnNum[1] *= m_ModuleData.SpawnRate;
 }
 
 CParticleSystem::~CParticleSystem()
 {
-	if (nullptr != m_ParticleBuffer)
+	if (nullptr != m_ParticleBuffer) {
 		delete m_ParticleBuffer;
+	}
 
 	if (nullptr != m_RWBuffer)
 		delete m_RWBuffer;
 
-	if (nullptr != m_ModuleDataBuffer)
+	if (nullptr != m_ModuleDataBuffer) {
 		delete m_ModuleDataBuffer;
+	}
 }
 
 
@@ -135,9 +143,20 @@ Vec3 CParticleSystem::GetWorldPos(Vec3 _relativePos, Vec3 _relativeRot)
 	return matWorld.Translation();
 }
 
+void CParticleSystem::tick()
+{
+	m_bTickToggle = true;
+
+	m_fTime += DT;
+}
+
 void CParticleSystem::finaltick()
 {
-	
+	if (m_aSpawnNum[0] > m_aSpawnNum[1]) {
+		if(m_bDestoryTrigger)
+			DestroyObject(GetOwner());
+		return;
+	}
 
 	// 스폰 레이트 계산
 	// 1개 스폰 시간
@@ -156,6 +175,9 @@ void CParticleSystem::finaltick()
 		// 버퍼에 스폰 카운트 전달
 		tRWParticleBuffer rwbuffer = { (int)fData, };
 		m_RWBuffer->SetData(&rwbuffer);
+
+		if (m_bTickToggle)
+			++m_aSpawnNum[0];
 	}
 
 
@@ -183,12 +205,14 @@ void CParticleSystem::finaltick()
 	//worldpos.y += 1.f;
 	//m_UpdateCS->SetParticleObjectPos(worldpos);
 	
-
 	m_UpdateCS->Execute();
 }
 
 void CParticleSystem::render()
 {
+	if (m_aSpawnNum[0] > m_aSpawnNum[1])
+		return;
+
 	Transform()->UpdateData();
 
 	// 파티클버퍼 t20 에 바인딩
@@ -197,9 +221,8 @@ void CParticleSystem::render()
 	// 모듈 데이터 t21 에 바인딩
 	m_ModuleDataBuffer->UpdateData(21, PIPELINE_STAGE::PS_GEOMETRY);
 
-	// Particle Render	
-	Ptr<CTexture> pParticleTex = CResMgr::GetInst()->FindRes<CTexture>(L"wWind.png");
-	GetMaterial(0)->SetTexParam(TEX_0, pParticleTex);
+	// Particle Render
+	GetMaterial(0)->SetTexParam(TEX_0, m_pParticleTexture);
 
 	GetMaterial(0)->UpdateData();
 	GetMesh()->render_particle(m_ModuleData.iMaxParticleCount);
@@ -211,6 +234,9 @@ void CParticleSystem::render()
 
 void CParticleSystem::render(UINT _iSubset)
 {
+	if (m_aSpawnNum[0] > m_aSpawnNum[1])
+		return;
+
 	render();
 }
 

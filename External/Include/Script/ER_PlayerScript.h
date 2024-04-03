@@ -10,6 +10,7 @@ class ER_PlayerScript :
 private:
     ER_DataScript_Character* m_Character;
     ER_ActionScript_Character* m_pActionScript;
+    CGameObject* m_pRangeObject;
 
     bool        m_AttackCsr;
 
@@ -23,6 +24,11 @@ public:
     virtual void begin() override;
     virtual void tick() override;
 
+public:
+    void SetRangeObject(CGameObject* _obj)
+    {
+        m_pRangeObject = _obj;
+    }
 
 public:
     ER_PlayerScript();

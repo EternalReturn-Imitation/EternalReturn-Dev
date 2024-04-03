@@ -65,7 +65,6 @@ void ER_GameSystem::progress()
 void ER_GameSystem::tick()
 {
 	ER_UIMgr::GetInst()->tick();
-
 	if (m_bGaming)
 		m_fGameTime += DT;
 }

@@ -11,6 +11,12 @@ ER_AIScript_Aya
 ER_AIScript_Hyunwoo
 ER_AIScript_Rio
 ER_AIScript_Yuki
+ER_ArrowEffectScript
+ER_AyaBAEffect
+ER_AyaQEffect
+ER_AyaREffect
+ER_AyaWBulletEffect
+ER_BulletEffectScript
 ER_CamControllerScript
 ER_Cursor
 ER_DataScript_Arrow
@@ -19,7 +25,11 @@ ER_DataScript_Character
 ER_DataScript_Item
 ER_DataScript_ItemBox
 ER_DataScript_LandMeshBase
+ER_EffectScript
 ER_PlayerScript
+ER_PlayerScript_Range
+ER_RioBAEffect
+ER_RioQEffect
 ER_UIScript_CraftSlot
 ER_UIScript_Gauge
 ER_UIScript_ItemBox
@@ -29,3 +39,8 @@ ER_UIScript_SkillUpBtn
 ER_UIScript_StatusBarGauge
 ER_UIScript_TimeUIBar
 ER_UIScript_TrackingStatusBar
+ER_YukiBAEffect
+ER_YukiEEffect
+ER_YukiQEffect
+ER_YukiREffect
+ER_YukiWEffect

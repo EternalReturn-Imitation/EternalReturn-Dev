@@ -12,6 +12,11 @@
 
 #include "ER_DataScript_Arrow.h"
 
+//이펙트 관련
+#include "ER_RioBAEffect.h"
+#include "ER_RioQEffect.h"
+#include "ER_ArrowEffectScript.h"
+
 ER_ActionScript_Rio::ER_ActionScript_Rio()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_RIO)
     , m_pSounds{}
@@ -21,6 +26,15 @@ ER_ActionScript_Rio::ER_ActionScript_Rio()
 
 ER_ActionScript_Rio::~ER_ActionScript_Rio()
 {
+}
+
+void ER_ActionScript_Rio::begin()
+{
+    ER_ActionScript_Character::begin();
+    ER_RioBAEffect* BAEffect = onew(ER_RioBAEffect);
+    ER_RioQEffect* QEffect = onew(ER_RioQEffect);
+    GetOwner()->AddComponent(BAEffect);
+    GetOwner()->AddComponent(QEffect);
 }
 
 void ER_ActionScript_Rio::WaitEnter(tFSMData& param)
@@ -357,13 +371,20 @@ void ER_ActionScript_Rio::AttackUpdate(tFSMData& param)
         
         ArrowScript->init();
         ArrowScript->SetForTarget(
-            GetOwner(), 
+            GetOwner(),
             (CGameObject*)param.lParam, 
             GetProjSpawnPos(param.lParam), 
             15.f);
+
+        ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+        Arrow->AddComponent(arrowEffect);
         ArrowScript->Spawn();
 
         param.bData[1] = true;                          // Battle Event 완료
+
+        Vec3 dir = GetProjSpawnPos(param.lParam) - GetOwner()->Transform()->GetRelativePos();
+
+        GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect(GetProjSpawnPos(param.lParam), GetOwner()->Transform()->GetRelativeRot());
 
 
         // 리오 고유 2타 공격
@@ -459,6 +480,8 @@ void ER_ActionScript_Rio::Skill_W(tFSMData& _Data)
         _Data.bData[0] = PrevData.bData[0];	// 공격 상태 유지
         _Data.bData[1] = PrevData.bData[1];	// Hit 판정 유지
         _Data.v4Data = PrevData.v4Data;
+        _Data.lParam = PrevData.lParam;
+        STATEDATA_SET(SKILL_W, _Data);
         return;								// 상태를 변경하지 않고 종료
     }
     else
@@ -466,8 +489,6 @@ void ER_ActionScript_Rio::Skill_W(tFSMData& _Data)
         STATEDATA_SET(SKILL_W, _Data);
         ChangeState(ER_CHAR_ACT::SKILL_W);
     }
-
-
 }
 
 void ER_ActionScript_Rio::Skill_E(tFSMData& _Data)
@@ -534,6 +555,7 @@ void ER_ActionScript_Rio::Skill_QEnter(tFSMData& param)
         }
     }
 
+    GetOwner()->GetScript<ER_RioQEffect>()->SpawnEffect();
 }
 void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
 {
@@ -548,7 +570,6 @@ void ER_ActionScript_Rio::Skill_QUpdate(tFSMData& param)
     else if (GetOwner()->Animator3D()->IsFinish())
     {
         SetStateGrade(eAccessGrade::BASIC);
-
         ChangeState(ER_CHAR_ACT::WAIT);
     }
 }
@@ -629,8 +650,12 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
             SpawnPos.y = SpawnPos.y + 1.1f;
 
             ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.7f);
+            GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect(Arrow->Transform()->GetRelativePos(), GetOwner()->Transform()->GetRelativeRot());
+
             tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_2);
             ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW2, skill, 0);
+            ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+            Arrow->AddComponent(arrowEffect);
             ArrowScript->Spawn();
 
             param.bData[1] = true;                          // Battle Event 완료
@@ -670,9 +695,16 @@ void ER_ActionScript_Rio::Skill_WUpdate(tFSMData& param)
                 SpawnPos.y = SpawnPos.y + 1.1f;
 
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
+
                 tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::W_1);
                 ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillW1, skill, 0);
+
+                ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+                Arrow->AddComponent(arrowEffect);
+
                 ArrowScript->Spawn();
+
+                GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect(Arrow->Transform()->GetRelativePos(), GetOwner()->Transform()->GetRelativeRot());
             }
 
             param.bData[1] = true;                          // Battle Event 완료
@@ -789,6 +821,8 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
                     ArrowScript->SetForTarget(GetOwner(), Target, vPos, 15.f);
                     tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_2);
                     ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE2, skill, 0);
+                    ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+                    Arrow->AddComponent(arrowEffect);
                     ArrowScript->Spawn();
 
                 }
@@ -803,6 +837,8 @@ void ER_ActionScript_Rio::Skill_EUpdate(tFSMData& param)
                     ArrowScript->SetForTarget(GetOwner(), Target, vPos, 15.f);
                     tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::E_1);
                     ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillE1, skill, 0);
+                    ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+                    Arrow->AddComponent(arrowEffect);
                     ArrowScript->Spawn();
                 }
             }
@@ -953,8 +989,13 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
             ArrowScript->SetForDir(GetOwner(), SpawnPos, 12.f, 5.f);
             tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_2);
             ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR2, skill, 0);
+
+            ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+            Arrow->AddComponent(arrowEffect);
+
             ArrowScript->Spawn();
 
+            GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect(Arrow->Transform()->GetRelativePos(), GetOwner()->Transform()->GetRelativeRot());
             param.bData[1] = true;
         }
 
@@ -991,8 +1032,13 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
                 tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
                 ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_1, skill, 0);
+
+                ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+                Arrow->AddComponent(arrowEffect);
+
                 ArrowScript->Spawn();
 
+                GetOwner()->GetScript<ER_RioBAEffect>()->SpawnEffect(Arrow->Transform()->GetRelativePos(), GetOwner()->Transform()->GetRelativeRot());
                 param.bData[1] = true;
 
                 if (9 == param.iData[1])
@@ -1038,6 +1084,9 @@ void ER_ActionScript_Rio::Skill_RUpdate(tFSMData& param)
                 ArrowScript->SetForDir(GetOwner(), SpawnPos, 15.f, 0.4f);
                 tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
                 ArrowScript->SetSkill(this, (SKILL_DMG_CALC)&ER_ActionScript_Rio::SkillR1_2, skill, 1);
+
+                ER_ArrowEffectScript* arrowEffect = onew(ER_ArrowEffectScript);
+                Arrow->AddComponent(arrowEffect);
                 ArrowScript->Spawn();
 
                 param.bData[1] = true;
