@@ -7,12 +7,6 @@
 #include <Engine\CDevice.h>
 #include <Script\ER_GameSystem.h>
 #include <Script\ER_EffectSystem.h>
-#include "CEditorObjMgr.h"
-
-
-
-// ImGui
-#include "ImGuiMgr.h"
 
 #include "LevelMgr.h"
 
@@ -53,19 +47,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     // DirectInput 초기화
     CKeyMgr::GetInst()->DinputInit(hInstance, g_hWnd);
 
-    // Editor 초기화
-    CEditorObjMgr::GetInst()->init();
-
-    // ImGui 초기화
-    ImGuiMgr::GetInst()->init(g_hWnd);
-    
     // GameSystem 초기화
     ER_GameSystem::GetInst()->init();
     
-    // 에디터용, 에디터미사용시 지워도 되는코드
-    ImGuiMgr::GetInst()->InitGameSystem();
-    
-    // 테스트 용 레벨 생성
     CreateLumiaIsland();
 
     // 메세지 루프
@@ -94,14 +78,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             ER_GameSystem::GetInst()->progress();
             ER_EffectSystem::GetInst()->progress();
             CEngine::GetInst()->progress();
-            CEditorObjMgr::GetInst()->progress();           
-
-            ImGuiMgr::GetInst()->progress();            
+            
             CDevice::GetInst()->Present(); // 렌더 종료
         }       
     }
-    
-    CDevice::GetInst()->ReportLiveObjects();
 
     return (int) msg.wParam;
 }
@@ -151,52 +131,37 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
-        return true;
-
     switch (message)
     {
-    case WM_DPICHANGED:
-        if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DpiEnableScaleViewports)
-        {
-            //const int dpi = HIWORD(wParam);
-            //printf("WM_DPICHANGED to %d (%.0f%%)\n", dpi, (float)dpi / 96.0f * 100.0f);
-            const RECT* suggested_rect = (RECT*)lParam;
-            ::SetWindowPos(hWnd, NULL, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
-        }
-        break;
-
     case WM_COMMAND:
+    {
+        int wmId = LOWORD(wParam);
+        // 메뉴 선택을 구문 분석합니다:
+        switch (wmId)
         {
-            int wmId = LOWORD(wParam);
-            // 메뉴 선택을 구문 분석합니다:
-            switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
+        case IDM_ABOUT:
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+            break;
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
+            break;
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
         }
-        break;
+    }
+    break;
 
 
     case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-            EndPaint(hWnd, &ps);
-        }
-        break;
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);
+        // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
+        EndPaint(hWnd, &ps);
+    }
+    break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;

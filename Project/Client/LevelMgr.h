@@ -3,6 +3,7 @@
 // Level List
 void CreateLumiaIsland();
 
+// Loding
 
 // Lumia
 class CLevel;

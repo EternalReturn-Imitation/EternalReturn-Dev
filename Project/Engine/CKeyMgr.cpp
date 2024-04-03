@@ -84,7 +84,7 @@ int g_arrVK[(UINT)KEY::END]
 
 
 CKeyMgr::CKeyMgr()
-	: bCsrHide(false)
+	: bCsrHide(true)
 {
 
 }
@@ -107,8 +107,7 @@ void CKeyMgr::tick()
 {
 	if (GetFocus())
 	{
-		if(bCsrHide)
-			ShowCursor(false);
+	
 
 		for (size_t i = 0; i < m_vecKey.size(); ++i)
 		{
@@ -172,6 +171,16 @@ void CKeyMgr::tick()
 		else if (m_mouseState.lZ < 0)
 			mouseWheelDown = true; // 휠을 아래로 스크롤할 때의 동작
 
+		if (bCsrHide)
+		{
+			Vec2 vResolution = CEngine::GetInst()->GetWindowResolution();
+			RECT rt = { 0, 0, (int)vResolution.x, (int)vResolution.y };
+
+			if (m_vMousePos.x > rt.left || m_vMousePos.x < rt.right
+				|| m_vMousePos.y < rt.bottom || m_vMousePos.y > rt.top)
+				ShowCursor(false);
+		}
+
 	}
 
 	// Window 가 focus 상태가 아니다
@@ -228,6 +237,8 @@ void CKeyMgr::DinputInit(HINSTANCE _hinstance, HWND _hwnd)
 		HRESULT hr = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), &m_mouseState);
 		if (FAILED(hr))
 		{
+			
+
 			// 장치 상태 손실 시 장치 재활성화
 			if ((hr == DIERR_INPUTLOST) || (hr == DIERR_NOTACQUIRED))
 				m_mouse->Acquire();

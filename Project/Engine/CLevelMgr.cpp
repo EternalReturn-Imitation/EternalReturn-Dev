@@ -23,7 +23,7 @@ CLevelMgr::~CLevelMgr()
 void CLevelMgr::init()
 {
 	m_pCurLevel = new CLevel;
-	m_pCurLevel->ChangeState(LEVEL_STATE::STOP);
+	m_pCurLevel->ChangeState(LEVEL_STATE::PLAY);
 }
 
 void CLevelMgr::tick()

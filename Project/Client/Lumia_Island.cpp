@@ -47,11 +47,10 @@
 
 void CreateLumiaIsland()
 {
-	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
-	pCurLevel->ChangeState(LEVEL_STATE::STOP);
-
+	CLevel* Lumiaisland = CLevelMgr::GetInst()->GetCurLevel();
+	
 	// Level Setting
-	SetLayer(pCurLevel);
+	SetLayer(Lumiaisland);
 	SetCamera();
 	SetLight();
 	SetMapCollider();
@@ -59,8 +58,6 @@ void CreateLumiaIsland()
 	LumiaIsland();
 	
 	ER_GameSystem::GetInst()->GameStart();
-	
-	pCurLevel->ChangeState(LEVEL_STATE::PLAY);
 	
 	CreateTestPlayer();
 	CreateTestEnemy();
