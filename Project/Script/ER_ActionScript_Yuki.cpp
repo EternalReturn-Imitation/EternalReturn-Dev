@@ -686,6 +686,11 @@ void ER_ActionScript_Yuki::Skill_REnter(tFSMData& param)
         param.bData[1] = false;
         param.iData[0] = 0;     // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
         param.iData[1] = 31;    // End Anim Hit Frame
+
+        if (IsPlayer())
+        {
+            SetStateGrade(eAccessGrade::UTMOST);
+        }
     }
     else if((UINT)ER_CHAR_ACT::MOVE == m_iPrevState)
         ChangeState(ER_CHAR_ACT::MOVE);
@@ -702,11 +707,43 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
     case 0:
     {
         // 스킬 조준
-        Vec3 vTargetPoint = GetFocusPoint();
-        SetRotationToTarget(vTargetPoint);
 
-        if (KEY_TAP(KEY::LBTN) || KEY_TAP(KEY::R))
+        if (IsPlayer())
         {
+            Vec3 vTargetPoint = GetFocusPoint();
+            SetRotationToTarget(vTargetPoint);
+            
+            if (KEY_TAP(KEY::LBTN) || KEY_TAP(KEY::R))
+            {
+                tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
+
+                if (Skill->Use(&GetStatus()->iSP))
+                {
+                    param.bData[0] = true;
+                    param.bData[1] = false;
+                    param.iData[0] = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
+                    param.iData[1] = 31;    // End Anim Hit Frame
+
+                    // 스킬 발동
+                    GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_Loop", false);
+                    SetStateGrade(eAccessGrade::UTMOST);
+                    ERCHARSOUND(SKILLR_ACTIVE);
+                }
+                else
+                {
+                    ChangeState(ER_CHAR_ACT::WAIT);
+                }
+            }
+            else if (KEY_TAP(KEY::ESC))
+            {
+                ChangeState(ER_CHAR_ACT::WAIT);
+            }
+        }
+        else
+        {
+            Vec3 vTargetPoint = param.v4Data;
+            SetRotationToTarget(vTargetPoint);
+
             tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
 
             if (Skill->Use(&GetStatus()->iSP))
@@ -727,10 +764,6 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
             {
                 ChangeState(ER_CHAR_ACT::WAIT);
             }
-        }
-        else if (KEY_TAP(KEY::ESC))
-        {
-            ChangeState(ER_CHAR_ACT::WAIT);
         }
         break;
     }

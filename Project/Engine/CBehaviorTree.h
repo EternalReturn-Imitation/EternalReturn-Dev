@@ -150,6 +150,7 @@ class Root_Node : public BTNode
 protected:
     BB*                 m_BlackBoard;
     BTNode*             m_RunningNode;
+    
 
 public:
     virtual BT_STATUS Run() override;

@@ -10,7 +10,7 @@ void ER_BulletEffectScript::begin()
 
 void ER_BulletEffectScript::tick()
 {
-	if (m_pParticle != nullptr);
+	if (m_pParticle != nullptr)
 		m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
 }
 

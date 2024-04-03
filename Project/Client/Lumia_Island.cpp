@@ -56,103 +56,26 @@ void CreateLumiaIsland()
 	SetLight();
 	SetMapCollider();
 	
-	CreateTestPlayer();
-	CreateTestEnemy();
-	
 	LumiaIsland();
 	
 	ER_GameSystem::GetInst()->GameStart();
 	
-	TestObject();
-	//pCurLevel->ChangeState(LEVEL_STATE::PLAY);
+	pCurLevel->ChangeState(LEVEL_STATE::PLAY);
+	
+	CreateTestPlayer();
+	CreateTestEnemy();
 }
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Yuki", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Aya", Vec3(-69.3f, 0.0f, 37.6f));
 }
 void CreateTestEnemy()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-76.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
-}
 
-void TestObject()
-{
-	//CGameObject* testParticle = new CGameObject;
-	//AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	//CParticleSystem* Particle = testParticle->ParticleSystem();
-	//
-	//tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
-	//
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
-	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
-	//
-	//particle_data.StartScale = 1.f;
-	//particle_data.EndScale = 1.f;
-	//
-	//particle_data.vSpawnScaleMin = Vec3(0.3f, 0.3f, 0.3f);
-	//particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
-	//particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
-	//
-	//particle_data.MinLifeTime = 1.f;
-	//particle_data.MaxLifeTime = 1.f;
-	//
-	//particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
-	//particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-	//
-	//
-	//particle_data.AddVelocityType = 1;
-	//particle_data.vVelocityDir = Vec3(0.f, 0.f, 0.f);
-	//particle_data.Speed = 0.3f;
-	//
-	//particle_data.SpawnRate = 20;
-	//
-	//particle_data.StartDrag = 2.f;
-	//particle_data.EndDrag = 10.f;
-	//
-	//particle_data.fNoiseTerm = 2.f;
-	//particle_data.fNoiseForce = 2.f;
-	//	
-	////Particle->SetMaxParticleCount(10);
-	//Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Fx_UI_Tierlight_OW.png"));
-	//Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
-	//Particle->SetParticleSpawnNum(100);
-	//
-	//SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-	//
-	//CGameObject* dummy = new CGameObject();
-	//AddComponents(dummy, _TRANSFORM);
-	//
-	//SpawnGameObject(dummy, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-	
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//	
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Yuki_01SE_01.png");
-	//tdExample->Animator2D()->CreateAnimation(L"FX_BI_Yuki_01SE_01", animAtlas, Vec2(0.f, 0.f), Vec2(85.3f, 85.f), Vec2(85.3f, 85.f), 36, 24);
-	//tdExample->Animator2D()->Play(L"FX_BI_Yuki_01SE_01", true);
-	//
-	//tdExample->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));
-	//
-	////dummy->AddChild(tdExample);
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
-	//
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 }
 
 void SetLayer(CLevel* _Level)

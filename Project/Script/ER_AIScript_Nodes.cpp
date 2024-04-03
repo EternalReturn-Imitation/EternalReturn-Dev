@@ -69,6 +69,26 @@ public:
 	}
 };
 
+class Con_IsAfter10Sec : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		float* GameTime = ER_GameSystem::GetInst()->GetGameTime();
+		float fPrevTime = 0.f;
+		GetBlackBoard()->FindBBData(L"CheckTime", fPrevTime);
+		float fCheck = *GameTime - fPrevTime;
+		
+		GetBlackBoard()->SetBBData(L"CheckTime", *GameTime);
+
+		// 이전 확인할때보다 5초 지났는지
+		if (10.f <= fCheck)
+			return BT_SUCCESS;
+		else
+			return BT_FAILURE;
+	}
+};
+
 // 스킬 포인트가 있는지
 class Con_IsHaveSkillPoint : public Task_Node
 {
@@ -123,6 +143,139 @@ public:
 };
 
 
+// ================== 전투 ==================
+
+// 스킬 사용 가능 여부
+class Con_IsActive_Skill_Q : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		// 스킬리스트를 불러온다
+		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
+		tSkill_Info* skill = CharacterData->GetSkill((UINT)SKILLIDX::Q_1);
+		
+		int iCurSP = CharacterData->GetStatus()->iSP;
+
+		if (skill->IsAbleUse(iCurSP))
+		{
+			GetBlackBoard()->SetBBData(L"CurActiveSkill", (int)ER_ActionScript_Character::ER_CHAR_ACT::SKILL_Q);
+			return BT_SUCCESS;
+		}
+		else
+			return BT_FAILURE;
+	}
+};
+
+class Con_IsActive_Skill_W : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		// 스킬리스트를 불러온다
+		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
+		tSkill_Info* skill = CharacterData->GetSkill((UINT)SKILLIDX::W_1);
+
+		int iCurSP = CharacterData->GetStatus()->iSP;
+
+		if (skill->IsAbleUse(iCurSP))
+		{
+			GetBlackBoard()->SetBBData(L"CurActiveSkill", (int)ER_ActionScript_Character::ER_CHAR_ACT::SKILL_W);
+			return BT_SUCCESS;
+		}
+		else
+			return BT_FAILURE;
+	}
+};
+
+class Con_IsActive_Skill_E : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		// 스킬리스트를 불러온다
+		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
+		tSkill_Info* skill = CharacterData->GetSkill((UINT)SKILLIDX::E_1);
+
+		int iCurSP = CharacterData->GetStatus()->iSP;
+
+		if (skill->IsAbleUse(iCurSP))
+		{
+			GetBlackBoard()->SetBBData(L"CurActiveSkill", (int)ER_ActionScript_Character::ER_CHAR_ACT::SKILL_E);
+			return BT_SUCCESS;
+		}
+		else
+			return BT_FAILURE;
+	}
+};
+
+class Con_IsActive_Skill_R : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		// 스킬리스트를 불러온다
+		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
+		tSkill_Info* skill = CharacterData->GetSkill((UINT)SKILLIDX::R_1);
+
+		int iCurSP = CharacterData->GetStatus()->iSP;
+
+		if (skill->IsAbleUse(iCurSP))
+		{
+			GetBlackBoard()->SetBBData(L"CurActiveSkill", (int)ER_ActionScript_Character::ER_CHAR_ACT::SKILL_R);
+			return BT_SUCCESS;
+		}
+		else
+			return BT_FAILURE;
+	}
+};
+
+class Con_IsInSkillRange : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
+		
+		int CurActiveSkill = -1;
+		GetBlackBoard()->FindBBData(L"CurActiveSkill", CurActiveSkill);
+		
+		CurActiveSkill -= 8;
+
+		tSkill_Info* skill = CharacterData->GetSkill(CurActiveSkill);
+
+		Vec3 vTargetPos = ER_GameSystem::GetInst()->GetPlayerCharacter()->Transform()->GetRelativePos();
+		Vec3 vPos = GetOwner()->Transform()->GetRelativePos();
+
+		vTargetPos.y = 0.f;
+		vPos.y = 0.f;
+
+		float fDist = Vec3::Distance(vTargetPos, vPos);
+		float fRange = skill->Range();
+
+		if (fDist <= fRange)
+		{
+			((Root_Node*)GetRootNode())->ClearRunningNode();
+			return BT_SUCCESS;
+		}
+		else
+		{
+			ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
+
+			float dist = 1.5f < (fRange - 0.5f) ? 1.5f : (fRange - 0.5f);
+			Vec3 vMovePos = vTargetPos + ((vPos - vTargetPos).Normalize() * dist);
+
+			tFSMData FSMData = {};
+			FSMData.v4Data = vMovePos;
+
+			Action->Move(FSMData);
+
+			((Root_Node*)GetRootNode())->SetRunningNode(this);
+			return BT_RUNNING;
+		}
+	}
+};
+
 // FSM 판단
 
 class Con_IsWAITState : public Task_Node
@@ -133,7 +286,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::WAIT))
+		if (Action->GetCurState() == ER_ActionScript_Character::ER_CHAR_ACT::WAIT)
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -148,7 +301,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::MOVE))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::MOVE))
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -163,7 +316,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::FARMING))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::FARMING))
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -178,7 +331,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::CRAFT))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::CRAFT))
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -193,7 +346,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::REST))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::REST))
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -208,7 +361,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::ATTACK))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::ATTACK))
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -223,7 +376,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::ARRIVE))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::ARRIVE))
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -238,7 +391,7 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::DEAD))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::DEAD))
 			return BT_SUCCESS;
 		else
 			return BT_FAILURE;
@@ -253,8 +406,10 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::SKILL_Q))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_Q))
+		{
 			return BT_SUCCESS;
+		}
 		else
 			return BT_FAILURE;
 	}
@@ -268,8 +423,10 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::SKILL_W))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_W))
+		{
 			return BT_SUCCESS;
+		}
 		else
 			return BT_FAILURE;
 	}
@@ -283,8 +440,10 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::SKILL_E))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_E))
+		{
 			return BT_SUCCESS;
+		}
 		else
 			return BT_FAILURE;
 	}
@@ -298,8 +457,10 @@ public:
 		ER_DataScript_Character* CharacterData = GetOwner()->GetScript<ER_DataScript_Character>();
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::SKILL_R))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_R))
+		{
 			return BT_SUCCESS;
+		}
 		else
 			return BT_FAILURE;
 	}
@@ -329,7 +490,7 @@ public:
 		
 		Action->Craft(StateData);
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::CRAFT))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::CRAFT))
 		{
 			((Root_Node*)GetRootNode())->ClearRunningNode();
 			return BT_SUCCESS;
@@ -448,7 +609,7 @@ public:
 		tFSMData FSMData = {};
 		Action->Wait(FSMData);
 
-		if (Action->IsThisState(ER_ActionScript_Character::ER_CHAR_ACT::WAIT))
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::WAIT))
 		{
 			// ExploreItemBox 갱신
 			CGameObject* ItemBox = GetOwner()->GetScript<ER_AIScript>()->GetNextItemBox();
@@ -502,54 +663,150 @@ public:
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-// 공격상태인지 판단
-class Con_IsAttack : public Task_Node
+class Act_Skill_Q : public Task_Node
 {
 public:
 	virtual BT_STATUS Run() override
 	{
-		CGameObject* Player = ER_GameSystem::GetInst()->GetPlayerCharacter();
-
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
+		CGameObject* Target = ER_GameSystem::GetInst()->GetPlayerCharacter();
 
-		if (ER_ActionScript_Character::ER_CHAR_ACT::ATTACK == Action->GetCurState())
+		tFSMData FSMData = {};
+		
+		FSMData.v4Data = Target->Transform()->GetRelativePos();
+		FSMData.lParam = (DWORD_PTR)Target;
+
+		Action->Skill_Q(FSMData);
+
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_Q))
 			return BT_SUCCESS;
 		else
-			return BT_FAILURE;
+			return BT_RUNNING;
 	}
 };
 
-// 공격중이 아닌지 판단
-class Con_IsNotAttack : public Task_Node
+class Act_Skill_W : public Task_Node
 {
 public:
 	virtual BT_STATUS Run() override
 	{
-		CGameObject* Player = ER_GameSystem::GetInst()->GetPlayerCharacter();
-
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
+		CGameObject* Target = ER_GameSystem::GetInst()->GetPlayerCharacter();
 
-		if (ER_ActionScript_Character::ER_CHAR_ACT::ATTACK != Action->GetCurState())
+		tFSMData FSMData = {};
+
+		FSMData.v4Data = Target->Transform()->GetRelativePos();
+		FSMData.lParam = (DWORD_PTR)Target;
+
+		Action->Skill_W(FSMData);
+
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_W))
 			return BT_SUCCESS;
 		else
-			return BT_FAILURE;
+			return BT_RUNNING;
+	}
+};
+
+class Act_Skill_E : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
+		CGameObject* Target = ER_GameSystem::GetInst()->GetPlayerCharacter();
+
+		tFSMData FSMData = {};
+
+		FSMData.v4Data = Target->Transform()->GetRelativePos();
+		FSMData.lParam = (DWORD_PTR)Target;
+
+		Action->Skill_E(FSMData);
+
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_E))
+			return BT_SUCCESS;
+		else
+			return BT_RUNNING;
+	}
+};
+
+class Act_Skill_E_BackDir : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
+		CGameObject* Target = ER_GameSystem::GetInst()->GetPlayerCharacter();
+
+		tFSMData FSMData = {};
+
+		Vec3 vTargetPos = Target->Transform()->GetRelativePos();
+		Vec3 vOwnerPos = GetOwner()->Transform()->GetRelativePos();
+
+		// 반대방향
+		Vec3 vBackDir = (vTargetPos - vOwnerPos).Normalize();
+		Vec3 vSkillPos = vOwnerPos + (vBackDir * 3.f);
+
+		FSMData.v4Data = vSkillPos;
+		FSMData.lParam = (DWORD_PTR)Target;
+
+		Action->Skill_E(FSMData);
+
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_E))
+			return BT_SUCCESS;
+		else
+			return BT_RUNNING;
+	}
+};
+
+class Act_Skill_R : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
+		CGameObject* Target = ER_GameSystem::GetInst()->GetPlayerCharacter();
+
+		tFSMData FSMData = {};
+
+		FSMData.v4Data = Target->Transform()->GetRelativePos();
+		FSMData.lParam = (DWORD_PTR)Target;
+
+		Action->Skill_R(FSMData);
+
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::SKILL_R))
+			return BT_SUCCESS;
+		else
+			return BT_RUNNING;
+	}
+};
+
+class Act_WaitForSkillActivation : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
+
+		int CurActiveSkill = -1;
+		GetBlackBoard()->FindBBData(L"CurActiveSkill", CurActiveSkill);
+		
+		if (Action->GetCurState() == ((ER_ActionScript_Character::ER_CHAR_ACT)CurActiveSkill))
+		{
+			BTNode* node = this;
+			((Root_Node*)GetRootNode())->SetRunningNode(node);
+			return BT_RUNNING;
+		}
+		else
+		{
+			((Root_Node*)GetRootNode())->ClearRunningNode();
+			return BT_SUCCESS;
+		}
 	}
 };
 
 
 
-class Act_AttackPlayer : public Task_Node
+class Act_Attack : public Task_Node
 {
 public:
 	virtual BT_STATUS Run() override
@@ -566,7 +823,7 @@ public:
 		Action->Attack(Data);
 
 		// 이동명령이 성공했는지 상태검사
-		if (ER_ActionScript_Character::ER_CHAR_ACT::ATTACK == Action->GetCurState())
+		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::ATTACK))
 		{
 			((Root_Node*)GetRootNode())->SetRunningNode(nullptr);
 			return BT_SUCCESS;

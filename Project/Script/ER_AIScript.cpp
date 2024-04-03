@@ -89,6 +89,8 @@ Selector_Node* ER_AIScript::SetERCharacterAIBase()
 	CGameObject* ItemBox = m_queueItemBox.front();
 	BlackBoard->AddBBData(L"CraftItemID", CraftItemID);
 	BlackBoard->AddBBData(L"ExploreItemBox", ItemBox);
+	BlackBoard->AddBBData(L"CurActiveSkill", -1);
+	BlackBoard->AddBBData(L"CheckTime", 0.f);
 
 	// =========================== [   1   ] ===========================
 	// 루트 할당

@@ -781,7 +781,7 @@ void ER_ActionScript_Aya::Skill_EEnter(tFSMData& param)
     // 캐릭터 이동
     Transform()->SetRelativePos(vPos);
 
-    SetStateGrade(eAccessGrade::ADVANCED);
+    SetStateGrade(eAccessGrade::UTMOST);
 
     ERCHARSOUND(SKILLE);
 }

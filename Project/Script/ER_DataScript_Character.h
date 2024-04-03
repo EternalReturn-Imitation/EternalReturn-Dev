@@ -41,8 +41,11 @@ private:
     unordered_map<UINT, int>    m_IngredientList;                       // 재료 아이템 목록
     unordered_map<UINT, int>    m_NeedFarmingItems;                     // 필요 파밍 아이템 목록
 
-    // [ Debug / CoolDown Delete ]
+    mutex                       m_mMutex;
+
+    // [ Developer cheat ]
     bool                        bCoolDownCheat;
+    bool                        bInvincibleCheat;
 
 public:
     // [상태 갱신]
