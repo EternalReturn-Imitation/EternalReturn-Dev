@@ -204,6 +204,14 @@ void ER_EffectSystem::SpawnSkillHitEffect(CGameObject* _attacker, CGameObject* _
 		thread t1(&ER_EffectSystem::SpawnHyunwooQHitEffect, this, hitPosByHyunwoo, _hitter);
 		t1.detach();
 	}
+	else if (_skillInfo->strName == L"Hyunwoo_E") {
+		Vec3 hitPosByHyunwoo = _hitter->Transform()->GetWorldPos();
+		hitPosByHyunwoo.y += 1.8f;
+		hitPosByHyunwoo.z -= 0.2f;
+		hitPosByHyunwoo.x += 0.2f;
+		thread t1(&ER_EffectSystem::SpawnHyunwooEHitEffect, this, hitPosByHyunwoo, _attacker->Transform()->GetRelativeRot(), _hitter);
+		t1.detach();
+	}
 }
 
 void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDir)
@@ -786,6 +794,59 @@ void ER_EffectSystem::SpawnHyunwooQHitEffect(Vec3 _pos, CGameObject* _hitter)
 	}
 
 	DestroyObject(dummyParent);
+}
+
+void ER_EffectSystem::SpawnHyunwooEHitEffect(Vec3 _pos, Vec3 _dir, CGameObject* _hitter)
+{
+	//더미 부모 이펙트01 스폰
+	CGameObject* dummyParent01 = onew(CGameObject);
+	AddComponents(dummyParent01, _TRANSFORM);
+
+	dummyParent01->Transform()->SetRelativeRot(_dir);
+	dummyParent01->Transform()->SetRelativeScale(Vec3(1.5f, 1.5f, 1.5f));
+
+	SpawnGameObject(dummyParent01, _pos, L"Effect");
+
+	//히트 이펙트1(총) 스폰
+	CGameObject* gunHitEffect = onew(CGameObject);
+	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+
+	gunHitEffect->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), Deg2Rad(90.f), 0.f));
+
+	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_William_Skill04_ExpLine01.png");
+	gunHitEffect->Animator2D()->CreateAnimation(L"FX_BI_William_Skill04_ExpLine01", animAtlas, Vec2(0.f, 0.f), Vec2(128.f, 85.f), Vec2(128.f, 85.f), 4, 12);
+	gunHitEffect->Animator2D()->Play(L"FX_BI_William_Skill04_ExpLine01", true);
+
+	dummyParent01->AddChild(gunHitEffect);
+
+	//쓰레드 설정 시작
+	auto startTime = std::chrono::high_resolution_clock::now();
+	int restTime = 10;
+
+	//0.4f는 실행된든 시간
+	float endTime = 0.2f;
+	float exeCount = endTime * 1000.f / restTime; //실행되는 횟수
+
+	while (true) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
+
+		//시간이 지나면 종료
+		if (elapsedTime.count() >= endTime * 1000.f)
+			break;
+
+		Vec3 pos = _hitter->Transform()->GetRelativePos();
+		pos.y += 1.8f;
+		pos.z -= 0.2f;
+		pos.x += 0.2f;
+		dummyParent01->Transform()->SetRelativePos(pos);
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
+	}
+
+	DestroyObject(dummyParent01);
 }
 
 void ER_EffectSystem::AddDeleteParticles(CGameObject* _obj, CGameObject* _parentObj)

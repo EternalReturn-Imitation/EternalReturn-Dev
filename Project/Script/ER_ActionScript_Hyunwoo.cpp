@@ -15,6 +15,7 @@
 #include "ER_HyunwooBAEffect.h"
 #include "ER_HyunwooQEffect.h"
 #include "ER_HyunwooWEffect.h"
+#include "HyunwooEEffect.h"
 
 ER_ActionScript_Hyunwoo::ER_ActionScript_Hyunwoo()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_HYUNWOO)
@@ -33,12 +34,12 @@ void ER_ActionScript_Hyunwoo::begin()
     ER_HyunwooBAEffect* BAEffect = onew(ER_HyunwooBAEffect);
     ER_HyunwooQEffect* QEffect = onew(ER_HyunwooQEffect);
     ER_HyunwooWEffect* WEffect = onew(ER_HyunwooWEffect);
-    //ER_HyunwooEEffect* EEffect = onew(ER_HyunwooEEffect);
+    HyunwooEEffect* EEffect = onew(HyunwooEEffect);
 
     GetOwner()->AddComponent(BAEffect);
     GetOwner()->AddComponent(QEffect);
     GetOwner()->AddComponent(WEffect);
-    //GetOwner()->AddComponent(EEffect);
+    GetOwner()->AddComponent(EEffect);
 }
 
 void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)
@@ -599,6 +600,7 @@ void ER_ActionScript_Hyunwoo::Skill_EEnter(tFSMData& param)
 
         SetStateGrade(eAccessGrade::UTMOST);
 
+        GetOwner()->GetScript<HyunwooEEffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
         ERCHARSOUND(SKILLE_SLIDE);
     }
     else
@@ -631,6 +633,7 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
 
         // 캐릭터 이동
         Transform()->SetRelativePos(vPos);
+
     }
 
 

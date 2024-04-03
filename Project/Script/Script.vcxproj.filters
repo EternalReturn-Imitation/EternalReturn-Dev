@@ -409,6 +409,9 @@
     <ClInclude Include="ER_HyunwooWEffect.h">
       <Filter>Script\ER\EffectScript\Hyunwoo\WEffect</Filter>
     </ClInclude>
+    <ClInclude Include="HyunwooEEffect.h">
+      <Filter>Script\ER\EffectScript\Hyunwoo\EEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -614,6 +617,9 @@
     </ClCompile>
     <ClCompile Include="ER_HyunwooWEffect.cpp">
       <Filter>Script\ER\EffectScript\Hyunwoo\WEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="HyunwooEEffect.cpp">
+      <Filter>Script\ER\EffectScript\Hyunwoo\EEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -44,6 +44,7 @@ public:
     void SpawnYukiR2HitEffect(Vec3 _pos);
     //현우 스킬 히트 이펙트
     void SpawnHyunwooQHitEffect(Vec3 _pos, CGameObject* _hitter);
+    void SpawnHyunwooEHitEffect(Vec3 _pos, Vec3 _dir, CGameObject* _hitter);
 
 public:
     void AddDeleteParticles(CGameObject* _obj, CGameObject* _parentObj = nullptr);
