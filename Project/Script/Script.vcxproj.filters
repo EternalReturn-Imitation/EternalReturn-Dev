@@ -217,6 +217,9 @@
     <Filter Include="Script\ER\EffectScript\Hyunwoo\EEffect">
       <UniqueIdentifier>{ef9fe5c8-835a-42eb-a3f9-8278e4f3643e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript\Hyunwoo\REffect">
+      <UniqueIdentifier>{46b444a3-27f1-4816-b1b4-a204073069e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -411,6 +414,9 @@
     </ClInclude>
     <ClInclude Include="HyunwooEEffect.h">
       <Filter>Script\ER\EffectScript\Hyunwoo\EEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="HyunwooREffect.h">
+      <Filter>Script\ER\EffectScript\Hyunwoo\REffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -620,6 +626,9 @@
     </ClCompile>
     <ClCompile Include="HyunwooEEffect.cpp">
       <Filter>Script\ER\EffectScript\Hyunwoo\EEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="HyunwooREffect.cpp">
+      <Filter>Script\ER\EffectScript\Hyunwoo\REffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

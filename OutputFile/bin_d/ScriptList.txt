@@ -48,3 +48,4 @@ ER_YukiQEffect
 ER_YukiREffect
 ER_YukiWEffect
 HyunwooEEffect
+HyunwooREffect

@@ -51,6 +51,7 @@
 #include "ER_YukiREffect.h"
 #include "ER_YukiWEffect.h"
 #include "HyunwooEEffect.h"
+#include "HyunwooREffect.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -104,6 +105,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_YukiREffect");
 	_vec.push_back(L"ER_YukiWEffect");
 	_vec.push_back(L"HyunwooEEffect");
+	_vec.push_back(L"HyunwooREffect");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -208,6 +210,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_YukiWEffect;
 	if (L"HyunwooEEffect" == _strScriptName)
 		return new HyunwooEEffect;
+	if (L"HyunwooREffect" == _strScriptName)
+		return new HyunwooREffect;
 	return nullptr;
 }
 
@@ -364,6 +368,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::HYUNWOOEEFFECT:
 		return new HyunwooEEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::HYUNWOOREFFECT:
+		return new HyunwooREffect;
 		break;
 	}
 	return nullptr;
@@ -571,6 +578,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::HYUNWOOEEFFECT:
 		return L"HyunwooEEffect";
+		break;
+
+	case SCRIPT_TYPE::HYUNWOOREFFECT:
+		return L"HyunwooREffect";
 		break;
 
 	}

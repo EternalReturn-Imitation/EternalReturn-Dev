@@ -16,6 +16,7 @@
 #include "ER_HyunwooQEffect.h"
 #include "ER_HyunwooWEffect.h"
 #include "HyunwooEEffect.h"
+#include "HyunwooREffect.h"
 
 ER_ActionScript_Hyunwoo::ER_ActionScript_Hyunwoo()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_HYUNWOO)
@@ -35,11 +36,13 @@ void ER_ActionScript_Hyunwoo::begin()
     ER_HyunwooQEffect* QEffect = onew(ER_HyunwooQEffect);
     ER_HyunwooWEffect* WEffect = onew(ER_HyunwooWEffect);
     HyunwooEEffect* EEffect = onew(HyunwooEEffect);
+    HyunwooREffect* REffect = onew(HyunwooREffect);
 
     GetOwner()->AddComponent(BAEffect);
     GetOwner()->AddComponent(QEffect);
     GetOwner()->AddComponent(WEffect);
     GetOwner()->AddComponent(EEffect);
+    GetOwner()->AddComponent(REffect);
 }
 
 void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)
@@ -703,6 +706,7 @@ void ER_ActionScript_Hyunwoo::Skill_REnter(tFSMData& param)
 
         Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_Start", false);
         // 이펙트 효과 재생
+        GetOwner()->GetScript<HyunwooREffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
 
         SetRotationToTarget(param.v4Data);
         param.v4Data = GetFocusDir();
@@ -728,6 +732,8 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
             ERCHARSOUND(SKILLR_HIT);
             Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_End", false);
             param.iData[0] = 2;
+
+            GetOwner()->GetScript<HyunwooREffect>()->DeleteREffect();
         }
     }
 
@@ -793,6 +799,8 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
 
         if (Animator3D()->IsFinish())
         {
+            GetOwner()->GetScript<HyunwooREffect>()->DeleteREffect();
+
             SetStateGrade(eAccessGrade::BASIC);
             ChangeState(ER_CHAR_ACT::WAIT);
         }
