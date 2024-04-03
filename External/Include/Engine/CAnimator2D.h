@@ -14,6 +14,8 @@ private:
     CAnim2D*                m_pCurAnim; // 현재 재생중인 Animation
     bool                    m_bRepeat;  // 반복
 
+    float                   m_fAlphaValue;
+    float                   m_fAlphaEraseTime;
 
 public:
     virtual void finaltick() override;
@@ -31,6 +33,7 @@ public:
 
 public:
     CAnim2D* GetAnim() { return m_pCurAnim; }
+    void SetAlphaEraseTime(float _f) { m_fAlphaEraseTime = _f; }
 
     CLONE(CAnimator2D);
 public:

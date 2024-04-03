@@ -29,6 +29,7 @@ struct VS_OUT
 #define Slice           g_vec2_1
 #define Offset          g_vec2_2
 #define BackSize        g_vec2_3
+#define AlphaValue      g_float_0;
 // g_int_0              : AnimUse
 // g_vec2_0             : AnimAtlas LeftTop
 // g_vec2_1             : AnimAtlas Slice
@@ -62,6 +63,7 @@ float4 PS_Std2D(VS_OUT _in) : SV_Target
                 && LeftTop.y < vUV.y && vUV.y < LeftTop.y + Slice.y)
             {
                 vOutColor = g_tex_0.Sample(g_sam_0, vUV);
+                vOutColor.w *= AlphaValue;
             }
             else
             {

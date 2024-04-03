@@ -273,6 +273,11 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 	float endMovePos = 0.5f;
 	float moveIncreasing = (endMovePos - startMovePos) / exeCount;
 
+	//애니메이션의 알파값이 사라지는 시간
+	float alphaTime = 0.1f;
+	if (endTime < 0.2f)
+		alphaTime = 0.05f;
+
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -299,6 +304,13 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 		_effectMoveDir.Normalize();
 		Vec3 resultPos = pos + (_effectMoveDir * moveIncreasing);
 		dummyParent01->Transform()->SetRelativePos(resultPos);
+
+		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f) {
+			if(windHitEffect->Animator2D())
+				windHitEffect->Animator2D()->SetAlphaEraseTime(alphaTime);
+			if (attackHitEffect->Animator2D())
+				attackHitEffect->Animator2D()->SetAlphaEraseTime(alphaTime);
+		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
 	}
@@ -868,4 +880,62 @@ void ER_EffectSystem::AddDeleteParticles(CGameObject* _obj, CGameObject* _parent
 		m_vDeleteParticles.push_back(_parentObj);
 	else 
 		m_vDeleteParticles.push_back(_obj);
+}
+
+void ER_EffectSystem::SpawnLevelUpEffect(CGameObject* _Owner)
+{
+	//더미 부모 이펙트01 스폰
+	CGameObject* dummyParent01 = onew(CGameObject);
+	AddComponents(dummyParent01, _TRANSFORM);
+
+	dummyParent01->Transform()->SetRelativeScale(Vec3(1.5f, 1.5f, 1.5f));
+
+	SpawnGameObject(dummyParent01, L"Effect");
+
+	//레벨업 이펙트 스폰
+	CGameObject* gunHitEffect = onew(CGameObject);
+	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+
+	gunHitEffect->Transform()->SetRelativeRot(Vec3(Deg2Rad(30.f), -Deg2Rad(45.f), 0.f));
+	gunHitEffect->Transform()->SetRelativePos(Vec3(0.f, 3.0f, 0.f));
+
+	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Levelup_01.png");
+	gunHitEffect->Animator2D()->CreateAnimation(L"FX_BI_Levelup_01", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 1, 12);
+	gunHitEffect->Animator2D()->Play(L"FX_BI_Levelup_01", true);
+
+	dummyParent01->AddChild(gunHitEffect);
+
+
+	auto startTime = std::chrono::high_resolution_clock::now();
+	int restTime = 10;
+
+	float endTime = 0.5f;
+	float exeCount = endTime * 1000.f / restTime; //실행되는 횟수
+
+	//애니메이션의 알파값이 사라지는 시간
+	float alphaTime = 0.1f;
+	if (endTime < 0.2f)
+		alphaTime = 0.05f;
+
+	while (true) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
+
+		//시간이 지나면 종료
+		if (elapsedTime.count() >= endTime * 1000.f)
+			break;
+
+		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f) {
+			gunHitEffect->Animator2D()->SetAlphaEraseTime(alphaTime);
+		}
+
+		dummyParent01->Transform()->SetRelativePos(_Owner->Transform()->GetRelativePos());
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
+	}
+
+	if (dummyParent01 != nullptr)
+		DestroyObject(dummyParent01);
 }

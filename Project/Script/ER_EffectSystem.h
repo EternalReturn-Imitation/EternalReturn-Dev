@@ -47,6 +47,11 @@ public:
     void SpawnHyunwooEHitEffect(Vec3 _pos, Vec3 _dir, CGameObject* _hitter);
 
 public:
+    //파티클은 삭제할 때, Destory대신 이 함수에 넣어주기.
     void AddDeleteParticles(CGameObject* _obj, CGameObject* _parentObj = nullptr);
+
+public:
+    //스폰시 이펙트 생성(멀티 쓰레드로 호출)
+    void SpawnLevelUpEffect(CGameObject* _Owner);
 };
 

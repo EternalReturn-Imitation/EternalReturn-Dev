@@ -204,7 +204,9 @@ void CGameObject::AddComponent(CComponent* _Component)
 	else
 	{
 		// 이미 보유하고 있는 컴포넌트인 경우
-		assert(!m_arrCom[(UINT)_Component->GetType()]);
+		//assert(!m_arrCom[(UINT)_Component->GetType()]);
+		if (m_arrCom[(UINT)_Component->GetType()])
+			return;
 
 		m_arrCom[(UINT)_Component->GetType()] = _Component;
 
