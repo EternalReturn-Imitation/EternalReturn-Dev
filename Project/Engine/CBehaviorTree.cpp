@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "CBehaviorTree.h"
+#include "CBehaviorTreeMgr.h"
 
 #pragma region BB
-HRESULT BB::AddBBData(const wstring& _BBkey, int _Item)
+HRESULT BB::AddBBData(const string& _BBkey, int _Item)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBkey);
 
 	if (iter != m_BBDataList.end())
@@ -13,14 +14,14 @@ HRESULT BB::AddBBData(const wstring& _BBkey, int _Item)
 	int* NewData = new int;
 	*NewData = _Item;
 	
-	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, L"int", (DWORD_PTR)NewData)));
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "int", (DWORD_PTR)NewData)));
 
 	return S_OK;
 }
 
-HRESULT BB::AddBBData(const wstring& _BBkey, float _Item)
+HRESULT BB::AddBBData(const string& _BBkey, float _Item)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBkey);
 
 	if (iter != m_BBDataList.end())
@@ -29,49 +30,65 @@ HRESULT BB::AddBBData(const wstring& _BBkey, float _Item)
 	float* NewData = new float;
 	*NewData = _Item;
 
-	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, L"float", (DWORD_PTR)NewData)));
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "float", (DWORD_PTR)NewData)));
 
 	return S_OK;
 }
 
-HRESULT BB::AddBBData(const wstring& _BBkey, CGameObject* _ItemPtr)
+HRESULT BB::AddBBData(const string& _BBkey, CGameObject* _ItemPtr)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBkey);
 
 	if (iter != m_BBDataList.end())
 		return S_FALSE;
 
-	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, L"GameObject", (DWORD_PTR)_ItemPtr)));
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "GameObject", (DWORD_PTR)_ItemPtr)));
 
 	return S_OK;
 }
 
-HRESULT BB::AddBBData(const wstring& _BBkey, wstring _wstring)
+HRESULT BB::AddBBData(const string& _BBkey, string _string)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBkey);
 
 	if (iter != m_BBDataList.end())
 		return S_FALSE;
 
-	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, L"wstring", _wstring)));
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "string", _string)));
 
 	return S_OK;
 }
 
-HRESULT BB::FindBBData(const wstring& _BBKey, int& _Dest)
+HRESULT BB::AddBBData(const string& _BBkey, wstring _wstring)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBkey);
+
+	if (iter != m_BBDataList.end())
+		return S_FALSE;
+
+	string string;
+	string.assign(_wstring.begin(), _wstring.end());
+
+	m_BBDataList.insert(make_pair(_BBkey, new tBBData(_BBkey, "wstring", string)));
+
+	return S_OK;
+}
+
+HRESULT BB::FindBBData(const string& _BBKey, int& _Dest)
+{
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBKey);
 
 	if (iter == m_BBDataList.end())
 		return S_FALSE;
 
 	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
+	const char* type = Data->strDataType;
 
-	if (type == L"int")
+	if (type == "int")
 	{
 		_Dest = *(int*)Data->pDataPtr;
 		return S_OK;
@@ -80,18 +97,18 @@ HRESULT BB::FindBBData(const wstring& _BBKey, int& _Dest)
 	return  S_FALSE;
 }
 
-HRESULT BB::FindBBData(const wstring& _BBKey, float& _Dest)
+HRESULT BB::FindBBData(const string& _BBKey, float& _Dest)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBKey);
 
 	if (iter == m_BBDataList.end())
 		return S_FALSE;
 
 	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
+	const char* type = Data->strDataType;
 
-	if (type == L"float")
+	if (type == "float")
 	{
 		_Dest = *(float*)Data->pDataPtr;
 		return S_OK;
@@ -100,18 +117,18 @@ HRESULT BB::FindBBData(const wstring& _BBKey, float& _Dest)
 	return  S_FALSE;
 }
 
-HRESULT BB::FindBBData(const wstring& _BBKey, CGameObject* _Dest)
+HRESULT BB::FindBBData(const string& _BBKey, CGameObject* _Dest)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBKey);
 
 	if (iter == m_BBDataList.end())
 		return S_FALSE;
 
 	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
+	const char* type = Data->strDataType;
 
-	if (type == L"GameObject")
+	if (type == "GameObject")
 	{
 		_Dest = (CGameObject*)(Data->pDataPtr);
 		return S_OK;
@@ -120,18 +137,38 @@ HRESULT BB::FindBBData(const wstring& _BBKey, CGameObject* _Dest)
 	return  S_FALSE;
 }
 
-HRESULT BB::FindBBData(const wstring& _BBKey, wstring& _Dest)
+HRESULT BB::FindBBData(const string& _BBKey, string& _Dest)
 {
-	unordered_map<wstring, tBBData*>::iterator iter
+	unordered_map<string, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBKey);
 
 	if (iter == m_BBDataList.end())
 		return S_FALSE;
 
 	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
+	const char* type = Data->strDataType;
 
-	if (type == L"wstring")
+	if (type == "string")
+	{
+		_Dest = Data->strData;
+		return S_OK;
+	}
+
+	return  S_FALSE;
+}
+
+HRESULT BB::FindBBData(const string& _BBKey, wstring& _Dest)
+{
+	unordered_map<string, tBBData*>::iterator iter
+		= m_BBDataList.find(_BBKey);
+
+	if (iter == m_BBDataList.end())
+		return S_FALSE;
+
+	tBBData* Data = iter->second;
+	const char* type = Data->strDataType;
+
+	if (type == "wstring")
 	{
 		_Dest.assign(Data->strData.begin(), Data->strData.end());
 
@@ -141,16 +178,16 @@ HRESULT BB::FindBBData(const wstring& _BBKey, wstring& _Dest)
 	return  S_FALSE;
 }
 
-void BB::DeleteBBData(const wstring& _BBKey)
+void BB::DeleteBBData(const string& _BBKey)
 {
-	unordered_map<wstring, tBBData*>::iterator iter = m_BBDataList.find(_BBKey);
+	unordered_map<string, tBBData*>::iterator iter = m_BBDataList.find(_BBKey);
 
-	if (iter->second->strDataType == L"int")
+	if (iter->second->strDataType == "int")
 	{
 		delete (int*)iter->second->pDataPtr;
 	}
 
-	if (iter->second->strDataType == L"float")
+	if (iter->second->strDataType == "float")
 	{
 		delete (float*)iter->second->pDataPtr;
 	}
@@ -162,14 +199,13 @@ void BB::DeleteBBData(const wstring& _BBKey)
 #pragma endregion
 
 #pragma region BT_NODE
-BB* BTNode::GetBlackBoard()
-{
-	return ((Root_Node*)m_RootNode)->GetBlackBoard();
-}
-BTNode::BTNode()
-	: m_RootNode(nullptr)
+BTNode::BTNode(NODETYPE eType)
+	: m_NodeType(eType)
+	, m_RootNode(nullptr)
+	, m_NodeFlag(0)
 	, m_Parent(nullptr)
 	, m_ChildCnt(0)
+	, m_SrcItem{}
 {
 }
 
@@ -181,10 +217,61 @@ BTNode::~BTNode()
 	}
 }
 
+void BTNode::SwapFront()
+{
+	if (!m_Parent 
+		|| m_Parent->m_ChildCnt <= 1
+		|| m_Parent->m_Child.front() == this)
+		return;
+
+	list<BTNode*>::iterator iter = m_Parent->m_Child.begin();
+
+	while (iter != m_Parent->m_Child.end())
+	{
+		if (*iter == this)
+		{
+			iter = m_Parent->m_Child.erase(iter);
+			iter--;
+
+			m_Parent->m_Child.insert(iter, this);
+			return;
+		}
+		iter++;
+	}
+
+	// 순회가 끝날동안 부모의 자식리스트중 자신을 찾지못했다.
+	assert(nullptr);
+}
+void BTNode::SwapBack()
+{
+	if (!m_Parent
+		|| m_Parent->m_ChildCnt <= 1
+		|| m_Parent->m_Child.back() == this)
+		return;
+
+	list<BTNode*>::iterator iter = m_Parent->m_Child.begin();
+
+	while (iter != m_Parent->m_Child.end())
+	{
+		if (*iter == this)
+		{
+			iter = m_Parent->m_Child.erase(iter);
+			iter++;
+
+			m_Parent->m_Child.insert(iter, this);
+			return;
+		}
+		iter++;
+	}
+
+	// 순회가 끝날동안 부모의 자식리스트중 자신을 찾지못했다.
+	assert(nullptr);
+}
+
 #pragma endregion
 
 #pragma region Nodes
-BT_STATUS Root_Node::Run()
+BTNode::BT_STATUS Root_Node::Run()
 {
 	if (m_RunningNode != nullptr)
 	{
@@ -198,75 +285,106 @@ BT_STATUS Root_Node::Run()
 	else if (GetChildCnt() != 0)
 		return m_Child.front()->Run();
 
-	return BT_STATUS::FAILURE;
+	return BT_STATUS::NONE;
 }
-
-BT_STATUS Sequence_Node::Run()
+BTNode::BT_STATUS Composite_Node::Run()
 {
-	for (BTNode* child : m_Child)
+	switch (m_NodeFlag)
 	{
-		BT_STATUS res = child->Run();
-
-		if (res == BT_FAILURE)
+	case CompositeNodeFlag_SEQUENCE: 
+	{
+		if (Composite_Node::Run() == BT_FAILURE)
 			return BT_FAILURE;
 
-		if (res == BT_RUNNING)
+		for (BTNode* child : m_Child)
 		{
-			((Root_Node*)m_RootNode)->SetRunningNode(child);
-			return BT_SUCCESS;
+			BT_STATUS res = child->Run();
+
+			if (res == BT_FAILURE)
+				return BT_FAILURE;
+
+			if (res == BT_RUNNING)
+			{
+				((Root_Node*)m_RootNode)->SetRunningNode(child);
+				return BT_SUCCESS;
+			}
 		}
+
+		return BT_SUCCESS;
+		break; 
 	}
-
-	return BT_SUCCESS;
-}
-
-BT_STATUS Selector_Node::Run()
-{
-	for (BTNode* child : m_Child)
+	case CompositeNodeFlag_SELECTOR:
 	{
-		BT_STATUS res = child->Run();
+		if (Composite_Node::Run() == BT_FAILURE)
+			return BT_FAILURE;
 
-		if (res == BT_SUCCESS)
-			return BT_SUCCESS;
-
-		if (res == BT_RUNNING)
+		for (BTNode* child : m_Child)
 		{
-			((Root_Node*)m_RootNode)->SetRunningNode(child);
-			return BT_SUCCESS;
+			BT_STATUS res = child->Run();
+
+			if (res == BT_SUCCESS)
+				return BT_SUCCESS;
+
+			if (res == BT_RUNNING)
+			{
+				((Root_Node*)m_RootNode)->SetRunningNode(child);
+				return BT_SUCCESS;
+			}
 		}
+
+		return BT_FAILURE;
+		break;
 	}
-
-	return BT_FAILURE;
-}
-
-BT_STATUS RandSelector_Node::Run()
-{
-	std::random_device rd;
-	std::mt19937 gen(rd());
-
-	vector<BTNode*> ShuffleVector;
-
-	for (BTNode* child : m_Child)
-		ShuffleVector.emplace_back(child);
-
-	std::shuffle(ShuffleVector.begin(), ShuffleVector.end(), gen);
-
-	for (BTNode* child : ShuffleVector)
+	case CompositeNodeFlag_RANDOM_SELECTOR: 
 	{
-		BT_STATUS res = child->Run();
+		if (Composite_Node::Run() == BT_FAILURE)
+			return BT_FAILURE;
 
-		if (res == BT_SUCCESS)
-			return BT_SUCCESS;
+		std::random_device rd;
+		std::mt19937 gen(rd());
 
-		if (res == BT_RUNNING)
+		vector<BTNode*> ShuffleVector;
+
+		for (BTNode* child : m_Child)
+			ShuffleVector.emplace_back(child);
+
+		std::shuffle(ShuffleVector.begin(), ShuffleVector.end(), gen);
+
+		for (BTNode* child : ShuffleVector)
 		{
-			((Root_Node*)m_RootNode)->SetRunningNode(child);
-			return BT_SUCCESS;
+			BT_STATUS res = child->Run();
+
+			if (res == BT_SUCCESS)
+				return BT_SUCCESS;
+
+			if (res == BT_RUNNING)
+			{
+				((Root_Node*)m_RootNode)->SetRunningNode(child);
+				return BT_SUCCESS;
+			}
 		}
+
+		return BT_FAILURE;
+		break; 
+	}
+	default:
+		assert(nullptr);
+		break;
 	}
 
-	return BT_FAILURE;
+	return BT_STATUS::NONE;
 }
+BTNode::BT_STATUS Decorator_Node::Run()
+{
+	return BTNode::BT_STATUS::NONE;
+}
+
+BTNode::BT_STATUS Task_Node::Run()
+{
+	return BT_STATUS::NONE;
+}
+
+
 #pragma endregion
 
 #pragma region BehaviorTree
@@ -275,6 +393,7 @@ CBehaviorTree::CBehaviorTree()
 	, m_RootNode(nullptr)
 {
 	m_RootNode = new Root_Node;
+	m_RootNode->m_OwnerObj = GetOwner();
 }
 
 CBehaviorTree::~CBehaviorTree()

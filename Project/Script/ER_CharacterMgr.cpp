@@ -3,6 +3,7 @@
 
 #include "ER_PlayerScript.h"
 #include "ER_GameSystem.h"
+#include "ER_PlayerScript_Range.h"
 
 #include "ER_UIMgr.h"
 #include "ER_UIScript_TrackingStatusBar.h"
@@ -65,12 +66,6 @@ CGameObject* ER_CharacterMgr::SpawnCharacter_Enemy(const wstring& _key, Vec3 _Po
 {
     CGameObject* Enemy = SpawnCharacter(_key);
     
-    // // AI Script ÀåÂø
-    // wstring ActionScript = L"ER_AIScript_";
-    // ActionScript += CharacterContext->m_strKey;
-    // 
-    // pCharacter->AddComponent(CScriptMgr::GetScript(ActionScript));
-
     // CurLevel Spawn
     SpawnGameObject(Enemy, _Pos, L"Character");
 

@@ -148,6 +148,9 @@
     <ClInclude Include="CBehaviorTree.h">
       <Filter>Source\06. Component\9. BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="CBehaviorTreeMgr.h">
+      <Filter>Source\06. Component\9. BehaviorTree\BehaviorTreeMgr</Filter>
+    </ClInclude>
     <ClInclude Include="CLight3D.h">
       <Filter>Source\06. Component\6. Light3D</Filter>
     </ClInclude>
@@ -411,6 +414,9 @@
     </ClCompile>
     <ClCompile Include="CBehaviorTree.cpp">
       <Filter>Source\06. Component\9. BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="CBehaviorTreeMgr.cpp">
+      <Filter>Source\06. Component\9. BehaviorTree\BehaviorTreeMgr</Filter>
     </ClCompile>
     <ClCompile Include="CLight3D.cpp">
       <Filter>Source\06. Component\6. Light3D</Filter>
@@ -749,6 +755,9 @@
     </Filter>
     <Filter Include="Source\06. Component\9. BehaviorTree">
       <UniqueIdentifier>{cfbc5080-d40e-4c6f-bbe4-ce108bb031b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\9. BehaviorTree\BehaviorTreeMgr">
+      <UniqueIdentifier>{0c382bc1-e8e5-4d0d-860a-16f4f827ef87}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\06. Component\10. FindPath">
       <UniqueIdentifier>{09225021-bcc6-49c2-ab03-7eb99d32f80c}</UniqueIdentifier>
