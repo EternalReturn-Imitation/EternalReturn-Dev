@@ -51,11 +51,13 @@ struct tIngame_Stats
 	float	fOmnisyphon;					// 모든 피해 흡혈
 	int		iSkillAmplification;	// 스킬 증폭
 
+	void ExpIncrease(int EXP) { iExp += EXP; }
+
 	void Init_To_LevelOne(const ER_Initial_Stats& _StdStats)
 	{
 		iLevel = 1;
 		iExp = 1;
-		iNeedExpForNextLevel = 50;	// 임의 설정
+		iNeedExpForNextLevel = 100;	// 임의 설정
 
 		iAttackPower = _StdStats.iAttackPower;
 		iDefense = _StdStats.iDefense;

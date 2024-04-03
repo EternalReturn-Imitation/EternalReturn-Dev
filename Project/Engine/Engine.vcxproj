@@ -178,7 +178,6 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CAnimator2D.h" />
     <ClInclude Include="CAnimator3D.h" />
     <ClInclude Include="CBehaviorTree.h" />
-    <ClInclude Include="CBehaviorTreeMgr.h" />
     <ClInclude Include="CBone.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider2D.h" />
@@ -273,7 +272,6 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CAnimator2D.cpp" />
     <ClCompile Include="CAnimator3D.cpp" />
     <ClCompile Include="CBehaviorTree.cpp" />
-    <ClCompile Include="CBehaviorTreeMgr.cpp" />
     <ClCompile Include="CBone.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider2D.cpp" />

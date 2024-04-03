@@ -14,3 +14,4 @@ ER_ProjectilePool.h
 ER_UIMgr.h
 ER_DataScript_Projectile.h
 ER_EffectSystem.h
+ER_AIScript.h

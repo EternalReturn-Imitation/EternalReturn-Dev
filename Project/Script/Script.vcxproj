@@ -190,6 +190,9 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_AyaQEffect.h" />
     <ClInclude Include="ER_AyaREffect.h" />
     <ClInclude Include="ER_AyaWBulletEffect.h" />
+    <ClInclude Include="ER_AIScript.h" />
+    <ClInclude Include="ER_AIScript_Hyunwoo.h" />
+    <ClInclude Include="ER_AIScript_Rio.h" />
     <ClInclude Include="ER_BattleSystem.h" />
     <ClInclude Include="ER_BulletEffectScript.h" />
     <ClInclude Include="ER_CamControllerScript.h" />
@@ -220,6 +223,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_UIScript_SkillSlot.h" />
     <ClInclude Include="ER_UIScript_SkillUpBtn.h" />
     <ClInclude Include="ER_UIScript_StatusBarGauge.h" />
+    <ClInclude Include="ER_UIScript_TimeUIBar.h" />
     <ClInclude Include="ER_UIScript_TrackingStatusBar.h" />
     <ClInclude Include="ER_YukiBAEffect.h" />
     <ClInclude Include="ER_YukiEEffect.h" />
@@ -249,6 +253,9 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_AyaQEffect.cpp" />
     <ClCompile Include="ER_AyaREffect.cpp" />
     <ClCompile Include="ER_AyaWBulletEffect.cpp" />
+    <ClCompile Include="ER_AIScript.cpp" />
+    <ClCompile Include="ER_AIScript_Hyunwoo.cpp" />
+    <ClCompile Include="ER_AIScript_Rio.cpp" />
     <ClCompile Include="ER_BattleSystem.cpp" />
     <ClCompile Include="ER_BulletEffectScript.cpp" />
     <ClCompile Include="ER_CamControllerScript.cpp" />
@@ -271,7 +278,6 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_RioBAEffect.cpp" />
     <ClCompile Include="ER_RioQEffect.cpp" />
     <ClCompile Include="ER_UIMgr.cpp" />
-    <ClCompile Include="ER_PlayerScript_Range.cpp" />
     <ClCompile Include="ER_UIScript_CraftSlot.cpp" />
     <ClCompile Include="ER_UIScript_Gauge.cpp" />
     <ClCompile Include="ER_UIScript_ItemBox.cpp" />
@@ -279,6 +285,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_UIScript_SkillSlot.cpp" />
     <ClCompile Include="ER_UIScript_SkillUpBtn.cpp" />
     <ClCompile Include="ER_UIScript_StatusBarGauge.cpp" />
+    <ClCompile Include="ER_UIScript_TimeUIBar.cpp" />
     <ClCompile Include="ER_UIScript_TrackingStatusBar.cpp" />
     <ClCompile Include="ER_YukiBAEffect.cpp" />
     <ClCompile Include="ER_YukiEEffect.cpp" />
@@ -293,6 +300,7 @@ call CodeGen.exe</Command>
     </ClCompile>
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="ER_GameSystem_ResourceLoad.cpp" />
+    <ClCompile Include="ER_AIScript_Nodes.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

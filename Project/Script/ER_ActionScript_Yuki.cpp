@@ -762,7 +762,7 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                 if (!IsInRangeWithAngle(GetOwner(), Target, 5.f, 90.f))
                     continue;
 
-                float DebufTime = 1.f;
+                float DebufTime = 1.4f;
                 float SpeedValue = 0.9f;
 
                 // float 1 °øÆÛ
