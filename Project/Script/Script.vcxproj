@@ -211,6 +211,9 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_EffectScript.h" />
     <ClInclude Include="ER_EffectSystem.h" />
     <ClInclude Include="ER_GameSystem.h" />
+    <ClInclude Include="ER_HyunwooBAEffect.h" />
+    <ClInclude Include="ER_HyunwooQEffect.h" />
+    <ClInclude Include="ER_HyunwooWEffect.h" />
     <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="ER_PlayerScript.h" />
     <ClInclude Include="ER_PlayerScript_Range.h" />
@@ -276,6 +279,9 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_DataScript_Projectile.cpp" />
     <ClCompile Include="ER_EffectSystem.cpp" />
     <ClCompile Include="ER_GameSystem.cpp" />
+    <ClCompile Include="ER_HyunwooBAEffect.cpp" />
+    <ClCompile Include="ER_HyunwooQEffect.cpp" />
+    <ClCompile Include="ER_HyunwooWEffect.cpp" />
     <ClCompile Include="ER_ItemMgr.cpp" />
     <ClCompile Include="ER_ItemMgr_Init.cpp" />
     <ClCompile Include="ER_PlayerScript.cpp" />

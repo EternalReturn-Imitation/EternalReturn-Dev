@@ -69,14 +69,14 @@ void CreateLumiaIsland()
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Yuki", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Hyunwoo", Vec3(-69.3f, 0.0f, 37.6f));
 }
 void CreateTestEnemy()
 {
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Jackie", Vec3(-78.5f, 0.0f, 34.3f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Aya", Vec3(-76.9f, 0.0f, 37.6f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-71.9f, 0.0f, 37.6f));
 }
 
 void TestObject()
@@ -133,19 +133,20 @@ void TestObject()
 	//
 	//SpawnGameObject(dummy, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 	
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//	
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Yuki_01SE_01.png");
-	//tdExample->Animator2D()->CreateAnimation(L"FX_BI_Yuki_01SE_01", animAtlas, Vec2(0.f, 0.f), Vec2(85.3f, 85.f), Vec2(85.3f, 85.f), 36, 24);
-	//tdExample->Animator2D()->Play(L"FX_BI_Yuki_01SE_01", true);
-	//
-	//tdExample->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));
-	//
-	////dummy->AddChild(tdExample);
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+	CGameObject* tdExample = new CGameObject();
+	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+		
+	tdExample->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	tdExample->Transform()->SetRelativeScale(Vec3(0.5f, 3.0f, 0.5f));
+
+	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_Wind02.png");
+	tdExample->Animator2D()->CreateAnimation(L"FX_Wind02", animAtlas, Vec2(51.f, 0.f), Vec2(51.f, 256.f), Vec2(51.f, 256.f), 1, 24);
+	tdExample->Animator2D()->Play(L"FX_Wind02", true);
+	
+	//dummy->AddChild(tdExample);
+	SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 
 	//CGameObject* tdExample = new CGameObject();
 	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER);

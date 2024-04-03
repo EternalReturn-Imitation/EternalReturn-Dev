@@ -7,6 +7,7 @@
 #include "ER_ActionScript_Rio.h"
 #include "ER_ActionScript_Aya.h"
 #include "ER_ActionScript_Yuki.h"
+#include "ER_ActionScript_Hyunwoo.h"
 
 ER_EffectSystem::ER_EffectSystem()
 	:m_iYukiCount(0)
@@ -85,6 +86,14 @@ void ER_EffectSystem::SpawnHitEffect(CGameObject* _attacker, CGameObject* _hitte
 		hitPosByYuki.z -= 0.2f;
 		hitPosByYuki.x += 0.2f;
 		thread t(&ER_EffectSystem::SpawnYukiHitEffect, this, hitPosByYuki);
+		t.detach();
+	}
+	else if (_attacker->GetScript<ER_ActionScript_Hyunwoo>() != nullptr) {
+		Vec3 hitPosByYuki = _hitter->Transform()->GetWorldPos();
+		hitPosByYuki.y += 1.8f;
+		hitPosByYuki.z -= 0.2f;
+		hitPosByYuki.x += 0.2f;
+		thread t(&ER_EffectSystem::SpawnHyunwooHitEffect, this, hitPosByYuki);
 		t.detach();
 	}
 }
@@ -189,6 +198,11 @@ void ER_EffectSystem::SpawnSkillHitEffect(CGameObject* _attacker, CGameObject* _
 
 		thread t2(&ER_EffectSystem::SpawnYukiR2HitEffect, this, hitPosByYuki);
 		t2.detach();
+	}
+	else if (_skillInfo->strName == L"Hyunwoo_Q") {
+		Vec3 hitPosByHyunwoo = _hitter->Transform()->GetWorldPos();
+		thread t1(&ER_EffectSystem::SpawnHyunwooQHitEffect, this, hitPosByHyunwoo, _hitter);
+		t1.detach();
 	}
 }
 
@@ -348,6 +362,50 @@ void ER_EffectSystem::SpawnYukiHitEffect(Vec3 _pos)
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"qburst01.png");
 	gunHitEffect->Animator2D()->CreateAnimation(L"qburst01", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 4, 12);
 	gunHitEffect->Animator2D()->Play(L"qburst01", true);
+
+	dummyParent01->AddChild(gunHitEffect);
+
+	//쓰레드 설정 시작
+	auto startTime = std::chrono::high_resolution_clock::now();
+	int restTime = 10;
+
+	//0.4f는 실행된든 시간
+	float endTime = 0.20f;
+	float exeCount = endTime * 1000.f / restTime; //실행되는 횟수
+
+	while (true) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
+
+		//시간이 지나면 종료
+		if (elapsedTime.count() >= endTime * 1000.f)
+			break;
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
+	}
+
+	DestroyObject(dummyParent01);
+}
+
+void ER_EffectSystem::SpawnHyunwooHitEffect(Vec3 _pos)
+{
+	//더미 부모 이펙트01 스폰
+	CGameObject* dummyParent01 = onew(CGameObject);
+	AddComponents(dummyParent01, _TRANSFORM);
+
+	dummyParent01->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
+
+	SpawnGameObject(dummyParent01, _pos, L"Effect");
+
+	//히트 이펙트1(총) 스폰
+	CGameObject* gunHitEffect = onew(CGameObject);
+	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+
+	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Hit_01.png");
+	gunHitEffect->Animator2D()->CreateAnimation(L"FX_BI_Hit_01", animAtlas, Vec2(511.8f, 0.f), Vec2(170.6666f, 171.f), Vec2(170.6666f, 171.f), 6, 12);
+	gunHitEffect->Animator2D()->Play(L"FX_BI_Hit_01", false);
 
 	dummyParent01->AddChild(gunHitEffect);
 
@@ -654,6 +712,80 @@ void ER_EffectSystem::SpawnYukiR2HitEffect(Vec3 _pos)
 	}
 
 	DestroyObject(dummyParent01);
+}
+
+void ER_EffectSystem::SpawnHyunwooQHitEffect(Vec3 _pos, CGameObject* _hitter)
+{
+	CGameObject* dummyParent = onew(CGameObject);
+	AddComponents(dummyParent, _TRANSFORM);
+
+	dummyParent->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
+
+	SpawnGameObject(dummyParent, _pos, L"Effect");
+
+	//히트 이펙트1 스폰
+	CGameObject* qHitEffect01 = onew(CGameObject);
+	AddComponents(qHitEffect01, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	qHitEffect01->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	qHitEffect01->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+
+	qHitEffect01->Transform()->SetRelativeRot(Vec3(Deg2Rad(5.f), 0.f, 0.f));
+	qHitEffect01->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));
+
+	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"slow.png");
+	qHitEffect01->Animator2D()->CreateAnimation(L"slow", animAtlas, Vec2(0.f, 0.f), Vec2(225.f, 225.f), Vec2(225.f, 225.f), 1, 36);
+	qHitEffect01->Animator2D()->Play(L"slow", false);
+
+	dummyParent->AddChild(qHitEffect01);
+
+	//히트 이펙트1 스폰
+	CGameObject* qHitEffect02 = onew(CGameObject);
+	AddComponents(qHitEffect02, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	qHitEffect02->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	qHitEffect02->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+
+	qHitEffect02->Transform()->SetRelativeRot(Vec3(-Deg2Rad(5.f), 0.f, 0.f));
+	qHitEffect02->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));
+
+	animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"slow.png");
+	qHitEffect02->Animator2D()->CreateAnimation(L"slow", animAtlas, Vec2(0.f, 0.f), Vec2(225.f, 225.f), Vec2(225.f, 225.f), 1, 36);
+	qHitEffect02->Animator2D()->Play(L"slow", false);
+
+	dummyParent->AddChild(qHitEffect02);
+
+	//쓰레드 설정 시작
+	auto startTime = std::chrono::high_resolution_clock::now();
+	int restTime = 10;
+
+	//endTime는 실행된든 시간
+	float endTime = 2.0f;
+	float exeCount = endTime * 1000.f / restTime; //실행되는 횟수
+
+	while (true) {
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
+
+		//시간이 지나면 종료
+		if (elapsedTime.count() >= endTime * 1000.f)
+			break;
+
+		//위치 이동
+		Vec3 pos = _hitter->Transform()->GetRelativePos();
+		pos.y += 0.4f;
+		dummyParent->Transform()->SetRelativePos(pos);
+
+		//회전
+		Vec3 rot = qHitEffect01->Transform()->GetRelativeRot();
+		rot.z += Deg2Rad(180.f) / exeCount;
+		qHitEffect01->Transform()->SetRelativeRot(rot);
+		rot = qHitEffect02->Transform()->GetRelativeRot();
+		rot.z += Deg2Rad(360.f) / exeCount;
+		qHitEffect02->Transform()->SetRelativeRot(rot);
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
+	}
+
+	DestroyObject(dummyParent);
 }
 
 void ER_EffectSystem::AddDeleteParticles(CGameObject* _obj, CGameObject* _parentObj)

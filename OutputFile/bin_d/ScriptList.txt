@@ -26,6 +26,9 @@ ER_DataScript_Item
 ER_DataScript_ItemBox
 ER_DataScript_LandMeshBase
 ER_EffectScript
+ER_HyunwooBAEffect
+ER_HyunwooQEffect
+ER_HyunwooWEffect
 ER_PlayerScript
 ER_PlayerScript_Range
 ER_RioBAEffect

@@ -202,6 +202,21 @@
     <Filter Include="Script\ER\AIScript\Aya">
       <UniqueIdentifier>{b4362a62-92bf-45e2-927e-6e60945d6d77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript\Hyunwoo">
+      <UniqueIdentifier>{e922c23d-819b-4330-ae64-57ae2e73b884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Hyunwoo\QEffect">
+      <UniqueIdentifier>{4f13825d-6a45-46fe-ad79-089382965ab9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Hyunwoo\BasicAttackEffect">
+      <UniqueIdentifier>{7bc0d0ac-4a87-4693-998f-b65fa41b3613}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Hyunwoo\WEffect">
+      <UniqueIdentifier>{7533e2a7-6b15-4839-a088-e5e117764dce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Hyunwoo\EEffect">
+      <UniqueIdentifier>{ef9fe5c8-835a-42eb-a3f9-8278e4f3643e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -384,6 +399,15 @@
     </ClInclude>
     <ClInclude Include="ER_AIScript_Aya.h">
       <Filter>Script\ER\AIScript\Aya</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_HyunwooBAEffect.h">
+      <Filter>Script\ER\EffectScript\Hyunwoo\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_HyunwooQEffect.h">
+      <Filter>Script\ER\EffectScript\Hyunwoo\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_HyunwooWEffect.h">
+      <Filter>Script\ER\EffectScript\Hyunwoo\WEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -581,6 +605,15 @@
     </ClCompile>
     <ClCompile Include="ER_AIScript_Aya.cpp">
       <Filter>Script\ER\AIScript\Aya</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_HyunwooBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Hyunwoo\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_HyunwooQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Hyunwoo\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_HyunwooWEffect.cpp">
+      <Filter>Script\ER\EffectScript\Hyunwoo\WEffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
