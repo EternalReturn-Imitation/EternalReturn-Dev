@@ -61,6 +61,18 @@
     <Filter Include="Script\UI\Statusbar\Gauge\StatusBar">
       <UniqueIdentifier>{effa1817-967c-4936-9a7f-0d68665e9c8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
+      <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Slot\CraftSlot">
+      <UniqueIdentifier>{9c6a4bc4-a8a4-4271-ab0e-9dd45dad9d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Cursor">
+      <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Timebar">
+      <UniqueIdentifier>{06c7525f-f2fc-4eda-9149-f45deb761dff}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Script\ER">
       <UniqueIdentifier>{3f35b2cd-9c75-4326-bd26-dd2c73829ac2}</UniqueIdentifier>
     </Filter>
@@ -100,24 +112,6 @@
     <Filter Include="Script\ER\DataScript\LandMesh">
       <UniqueIdentifier>{f1617758-7daa-4bac-a50c-2e5e988e6019}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\ER\PlayerScript">
-      <UniqueIdentifier>{d1f4aa95-6b71-4309-b84d-f5bf1a2357cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\SystemScript">
-      <UniqueIdentifier>{fa13962b-4671-41fe-b9e1-93ae6b79ae42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\ER\SystemScript\Cam">
-      <UniqueIdentifier>{afcad44f-5ae1-4bcc-9276-fe611232c7ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
-      <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\UI\Item\Slot\CraftSlot">
-      <UniqueIdentifier>{9c6a4bc4-a8a4-4271-ab0e-9dd45dad9d73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\UI\Cursor">
-      <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\ER\DataScript\Projectile">
       <UniqueIdentifier>{248621bf-3453-403e-a8c6-21a9d22af562}</UniqueIdentifier>
     </Filter>
@@ -127,8 +121,14 @@
     <Filter Include="Script\ER\DataScript\Projectile\Bullet">
       <UniqueIdentifier>{5adec4b1-440f-415d-9b7e-5a06c838d816}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\UI\Timebar">
-      <UniqueIdentifier>{06c7525f-f2fc-4eda-9149-f45deb761dff}</UniqueIdentifier>
+    <Filter Include="Script\ER\PlayerScript">
+      <UniqueIdentifier>{d1f4aa95-6b71-4309-b84d-f5bf1a2357cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript">
+      <UniqueIdentifier>{fa13962b-4671-41fe-b9e1-93ae6b79ae42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript\Cam">
+      <UniqueIdentifier>{afcad44f-5ae1-4bcc-9276-fe611232c7ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="Script\ER\AIScript">
       <UniqueIdentifier>{894f6bdc-2191-44b4-acee-985ef1e593b4}</UniqueIdentifier>

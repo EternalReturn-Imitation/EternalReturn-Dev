@@ -8,6 +8,12 @@
 #include "ER_UIScript_TrackingStatusBar.h"
 #include "ER_DataScript_Character.h"
 
+#include "ER_AIScript.h"
+#include "ER_AIScript_Aya.h"
+#include "ER_AIScript_Hyunwoo.h"
+#include "ER_AIScript_Rio.h"
+#include "ER_AIScript_Yuki.h"
+
 ER_CharacterMgr::ER_CharacterMgr()
 {
 }
@@ -64,15 +70,18 @@ CGameObject* ER_CharacterMgr::SpawnCharacter_Player(const wstring& _key, Vec3 _P
 CGameObject* ER_CharacterMgr::SpawnCharacter_Enemy(const wstring& _key, Vec3 _Pos)
 {
     CGameObject* Enemy = SpawnCharacter(_key);
+
+    // AI Script ÀåÂø
+    wstring AIScript = L"ER_AIScript_";
+    AIScript += _key;
     
-    // // AI Script ÀåÂø
-    // wstring ActionScript = L"ER_AIScript_";
-    // ActionScript += CharacterContext->m_strKey;
-    // 
-    // pCharacter->AddComponent(CScriptMgr::GetScript(ActionScript));
+    ER_AIScript* Ai = (ER_AIScript*)CScriptMgr::GetScript(AIScript);
+    Enemy->AddComponent(Ai);
 
     // CurLevel Spawn
     SpawnGameObject(Enemy, _Pos, L"Character");
+
+    Ai->init();
 
     return Enemy;
 }

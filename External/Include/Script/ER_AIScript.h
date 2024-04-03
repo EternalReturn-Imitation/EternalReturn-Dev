@@ -45,19 +45,11 @@ protected:
                             Act_CraftItem               Seq_Explore
                                                        Con_hasNextBox
                                                      Act_FarmingCommand
-
-
-    // Skill, Craft, Farming
-
-    /*
-                    [Root]
-            [Seq_Dead]
-
-    
     
     */
 
 public:
+    virtual void init() {}
     virtual void begin() override {}
     virtual void tick() override {}
 

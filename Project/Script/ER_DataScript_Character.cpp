@@ -6,6 +6,7 @@
 #include "ER_DataScript_Item.h"
 #include "ER_ItemMgr.h"
 #include "ER_GameSystem.h"
+#include "ER_PlayerScript.h"
 
 ER_DataScript_Character::ER_DataScript_Character()
 	: CScript((UINT)SCRIPT_TYPE::ER_DATASCRIPT_CHARACTER)
@@ -20,6 +21,7 @@ ER_DataScript_Character::ER_DataScript_Character()
 	, m_STDStats{}
 	, m_RootItem{}
 	, bCoolDownCheat(false)
+	, bInvincibleCheat(false)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -43,6 +45,7 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	, m_SkillPoint(0)
 	, m_RootItem{}
 	, bCoolDownCheat(false)
+	, bInvincibleCheat(false)
 {
 	m_Stats = new tIngame_Stats;
 	m_StatusEffect = new tStatus_Effect;
@@ -308,6 +311,20 @@ void ER_DataScript_Character::tick()
 		m_Stats->iExp += 100; // 레벨업 필요 경험치 100
 	}
 
+	// [ Invincible Mode ]
+	if (KEY_TAP(KEY::F4))
+	{
+		ER_PlayerScript* IsPlayer = GetOwner()->GetScript<ER_PlayerScript>();
+		
+		if (nullptr != IsPlayer)
+		{
+			bInvincibleCheat = !bInvincibleCheat;
+		}
+	}
+
+	if (bInvincibleCheat)
+		m_Stats->iHP = m_Stats->iMaxHP;
+
 	for (int i = 0; i < (UINT)SKILLIDX::SKILLMAXSIZE; ++i)
 		m_SkillList[i]->SkillStatusUpdate(CoolDownRatio);
 };
@@ -486,12 +503,18 @@ void ER_DataScript_Character::AcquireItem(CGameObject** _BoxSlot)
 		m_Inventory[emptyslot]->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
 		*_BoxSlot = nullptr;
 
+		int ItemID = m_Inventory[emptyslot]->GetScript<ER_DataScript_Item>()->GetCode();
+
 		// 습득한 아이템이 필요 파밍아이템이었다면 리스트를 갱신해준다
-		unordered_map<UINT, int>::iterator iter = m_NeedFarmingItems.find(Item->GetCode());
-		if (iter->second == 1)
-			m_NeedFarmingItems.erase(iter);
-		else
-			iter->second--;
+		unordered_map<UINT, int>::iterator iter = m_NeedFarmingItems.find(ItemID);
+		
+		if (iter != m_NeedFarmingItems.end())
+		{
+			if (iter->second == 1)
+				m_NeedFarmingItems.erase(iter);
+			else
+				iter->second--;
+		}
 
 		StatusUpdate();
 		ItemInfoUpdate();
@@ -500,6 +523,12 @@ void ER_DataScript_Character::AcquireItem(CGameObject** _BoxSlot)
 
 void ER_DataScript_Character::ItemInfoUpdate()
 {
+	std::thread t1(&ER_DataScript_Character::ItemInfoUpdate, ItemInfoUpdate);
+	t1.detach();
+
+	lock_guard<mutex> lockGuard(m_mMutex);
+
+	
 	// 제작가능 아이템 업데이트
 	vector<UINT> itemlist;
 

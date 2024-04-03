@@ -5,7 +5,7 @@ class ER_AIScript_Yuki :
     public ER_AIScript
 {
 public:
-    void init();
+    virtual void init();
     virtual void begin() override;
     virtual void tick() override;
 
