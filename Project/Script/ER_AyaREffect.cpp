@@ -42,6 +42,18 @@ void ER_AyaREffect::RangeSpawnToMultiThread(CGameObject* _obj01)
 	float endTime = 2.0f;
 	float exeCount = endTime * 1000.f / restTime; //실행되는 횟수
 
+	//애니메이션의 알파값이 사라지는 시간
+	float alphaTime = 0.1f;
+	if (endTime < 0.2f)
+		alphaTime = 0.05f;
+
+	//타겟 오브젝트가 애니메이터 2D를 가지고 있을 때만 계산
+	bool alphaTrigger;
+	if (_obj01->Animator2D())
+		alphaTrigger = true;
+	else
+		alphaTrigger = false;
+
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -49,6 +61,13 @@ void ER_AyaREffect::RangeSpawnToMultiThread(CGameObject* _obj01)
 		//시간이 지나면 종료
 		if (elapsedTime.count() >= endTime * 1000.f)
 			break;
+
+		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
+			_obj01->Animator2D()->SetAlphaEraseTime(alphaTime);
+			alphaTrigger = false;
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
 	}
 
 	DestroyObject(_obj01);
@@ -112,6 +131,12 @@ void ER_AyaREffect::AttackSpawnToMultiThread(CGameObject* _obj, CGameObject* _no
 	Vec3 endScale = Vec3(2.0f, 2.0f, 2.0f);
 	float scaleIncreasing = (endScale.x - startScale.x) / exeCount;
 
+	//애니메이션의 알파값이 사라지는 시간
+	float alphaTime = 0.1f;
+	if (endTime < 0.2f)
+		alphaTime = 0.05f;
+
+	bool alphaTrigger = true;
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -132,6 +157,15 @@ void ER_AyaREffect::AttackSpawnToMultiThread(CGameObject* _obj, CGameObject* _no
 		Vec3 rot = _obj->Transform()->GetRelativeRot();
 		rot.y += exeCount / 1000.f;
 		_obj->Transform()->SetRelativeRot(rot);
+
+		if ((endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
+			//타겟 오브젝트가 애니메이터 2D를 가지고 있을 때만 계산
+			for (int i = 0; i < _obj->GetChild().size(); ++i) {
+				_obj->GetChild()[i]->Animator2D()->SetAlphaEraseTime(alphaTime);
+			}
+			alphaTrigger = false;
+		}
+		
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
 	}

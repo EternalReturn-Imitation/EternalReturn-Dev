@@ -75,7 +75,9 @@ void CreateTestEnemy()
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
-
+}
+void TestObject()
+{
 }
 
 void SetLayer(CLevel* _Level)

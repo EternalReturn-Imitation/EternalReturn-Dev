@@ -31,6 +31,7 @@ public:
     void SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDir);
     void SpawnAyaHitEffect(Vec3 _pos);
     void SpawnYukiHitEffect(Vec3 _pos);
+    void SpawnHyunwooHitEffect(Vec3 _pos);
 
 //스킬 히트 이펙트
 public:
@@ -41,8 +42,16 @@ public:
     void SpawnYukiQHitEffect(Vec3 _pos);
     void SpawnYukiR1HitEffect(Vec3 _pos, CGameObject* _hitter);
     void SpawnYukiR2HitEffect(Vec3 _pos);
+    //현우 스킬 히트 이펙트
+    void SpawnHyunwooQHitEffect(Vec3 _pos, CGameObject* _hitter);
+    void SpawnHyunwooEHitEffect(Vec3 _pos, Vec3 _dir, CGameObject* _hitter);
 
 public:
+    //파티클은 삭제할 때, Destory대신 이 함수에 넣어주기.
     void AddDeleteParticles(CGameObject* _obj, CGameObject* _parentObj = nullptr);
+
+public:
+    //스폰시 이펙트 생성(멀티 쓰레드로 호출)
+    void SpawnLevelUpEffect(CGameObject* _Owner);
 };
 

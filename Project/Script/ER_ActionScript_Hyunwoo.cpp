@@ -11,6 +11,13 @@
 
 #include <Engine/CAnim3D.h>
 
+//이펙트 관련
+#include "ER_HyunwooBAEffect.h"
+#include "ER_HyunwooQEffect.h"
+#include "ER_HyunwooWEffect.h"
+#include "HyunwooEEffect.h"
+#include "HyunwooREffect.h"
+
 ER_ActionScript_Hyunwoo::ER_ActionScript_Hyunwoo()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_HYUNWOO)
     , m_pSounds{}
@@ -21,6 +28,22 @@ ER_ActionScript_Hyunwoo::~ER_ActionScript_Hyunwoo()
 {
 }
 
+void ER_ActionScript_Hyunwoo::begin()
+{
+    ER_ActionScript_Character::begin();
+
+    ER_HyunwooBAEffect* BAEffect = onew(ER_HyunwooBAEffect);
+    ER_HyunwooQEffect* QEffect = onew(ER_HyunwooQEffect);
+    ER_HyunwooWEffect* WEffect = onew(ER_HyunwooWEffect);
+    HyunwooEEffect* EEffect = onew(HyunwooEEffect);
+    HyunwooREffect* REffect = onew(HyunwooREffect);
+
+    GetOwner()->AddComponent(BAEffect);
+    GetOwner()->AddComponent(QEffect);
+    GetOwner()->AddComponent(WEffect);
+    GetOwner()->AddComponent(EEffect);
+    GetOwner()->AddComponent(REffect);
+}
 
 void ER_ActionScript_Hyunwoo::WaitEnter(tFSMData& param)
 {
@@ -279,12 +302,14 @@ void ER_ActionScript_Hyunwoo::AttackEnter(tFSMData& param)
         Animator3D()->SelectAnimation(L"Hyunwoo_Attack0", false);
         ERCHARSOUND(ATTACK_NORMAL1);
         param.iData[0] = 6;
+        param.iData[1] = 0;
     }
     else
     {
         Animator3D()->SelectAnimation(L"Hyunwoo_Attack1", false);
         ERCHARSOUND(ATTACK_NORMAL2);
         param.iData[0] = 6;
+        param.iData[1] = 1;
     }
 
     // 타겟방향으로 회전
@@ -298,8 +323,9 @@ void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
      bData[0]	: 공격동작 진행중인지 여부
      bData[1]	: Battle Event 실행 여부
      bData[2]	: 다음 타겟 지정 여부
-     bData[3]    : 공격모션 변경
+     bData[3]   : 공격모션 변경
      iData[0]	: 타격지점 애니메이션 프레임 = Hit Frame
+     iData[1]   : 0: 1타, 1: 2타
      lParam		: 타겟 오브젝트
      RParam		: 타겟 예정 오브젝트
      */
@@ -323,6 +349,18 @@ void ER_ActionScript_Hyunwoo::AttackUpdate(tFSMData& param)
         param.bData[1] = true;
 
         SetStateGrade(eAccessGrade::BASIC);
+
+        switch (param.iData[1])
+        {
+        case 0:
+            GetOwner()->GetScript<ER_HyunwooBAEffect>()->SpawnFirstEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
+            break;
+        case 1:
+            GetOwner()->GetScript<ER_HyunwooBAEffect>()->SpawnSecondEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
+            break;
+        default:
+            break;
+        }
     }
 
 
@@ -435,6 +473,8 @@ void ER_ActionScript_Hyunwoo::Skill_QUpdate(tFSMData& param)
 {
     if (!param.bData[1] && param.iData[0] < Animator3D()->GetCurFrame())
     {
+        GetOwner()->GetScript<ER_HyunwooQEffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
+
         ERCHARSOUND(SKILLQ_HIT);
         param.bData[1] = true;
 
@@ -496,8 +536,9 @@ void ER_ActionScript_Hyunwoo::Skill_WEnter(tFSMData& param)
         m_Data->GetStatusEffect()->ActiveEffect((UINT)eStatus_Effect::INCREASE_DEF, ActionTime, (float)DefValue);
 
         // 이펙트 효과 재생
-
         ERCHARSOUND(SKILLW);
+
+        GetOwner()->GetScript<ER_HyunwooWEffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
     }
     else
         ChangeState(ER_CHAR_ACT::WAIT);
@@ -562,6 +603,7 @@ void ER_ActionScript_Hyunwoo::Skill_EEnter(tFSMData& param)
 
         SetStateGrade(eAccessGrade::UTMOST);
 
+        GetOwner()->GetScript<HyunwooEEffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
         ERCHARSOUND(SKILLE_SLIDE);
     }
     else
@@ -594,6 +636,7 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
 
         // 캐릭터 이동
         Transform()->SetRelativePos(vPos);
+
     }
 
 
@@ -673,6 +716,7 @@ void ER_ActionScript_Hyunwoo::Skill_REnter(tFSMData& param)
 
         Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_Start", false);
         // 이펙트 효과 재생
+        GetOwner()->GetScript<HyunwooREffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
 
         SetRotationToTarget(param.v4Data);
         param.v4Data = GetFocusDir();
@@ -704,6 +748,12 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
         }
         else
         {
+            STOPSOUND(SKILLR_CHARGING);
+            ERCHARSOUND(SKILLR_HIT);
+            Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_End", false);
+            param.iData[0] = 2;
+
+            GetOwner()->GetScript<HyunwooREffect>()->DeleteREffect();
             if(param.iData[0] != 2)
                 param.fData[0] += DT;
         }
@@ -771,6 +821,8 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
 
         if (Animator3D()->IsFinish())
         {
+            GetOwner()->GetScript<HyunwooREffect>()->DeleteREffect();
+
             SetStateGrade(eAccessGrade::BASIC);
             ChangeState(ER_CHAR_ACT::WAIT);
         }
@@ -786,7 +838,6 @@ void ER_ActionScript_Hyunwoo::Skill_RExit(tFSMData& param)
     param.iData[0] = 0;
     param.fData[0] = 0.f;
 }
-
 
 FSMState* ER_ActionScript_Hyunwoo::CreateWait()
 {
