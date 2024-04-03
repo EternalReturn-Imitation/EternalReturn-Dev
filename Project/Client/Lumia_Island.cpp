@@ -136,23 +136,23 @@ void TestObject()
 	//
 	//SpawnGameObject(dummy, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 	
-	CGameObject* tdExample = new CGameObject();
-	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-		
-	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_SwordLine_01SE.png");
-	tdExample->Animator2D()->CreateAnimation(L"FX_BI_SwordLine_01SE", animAtlas, Vec2(0.f, 0.f), Vec2(42.6f, 681.6f), Vec2(42.6f, 681.6f), 12, 12);
-	tdExample->Animator2D()->Play(L"FX_BI_SwordLine_01SE", true);
-	
-	tdExample->Transform()->SetRelativeScale(Vec3(1.0f, 12.0f, 1.0f));
-	
-	//dummy->AddChild(tdExample);
-	SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+	//CGameObject* tdExample = new CGameObject();
+	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	//	
+	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Yuki_01SE_01.png");
+	//tdExample->Animator2D()->CreateAnimation(L"FX_BI_Yuki_01SE_01", animAtlas, Vec2(0.f, 0.f), Vec2(85.3f, 85.f), Vec2(85.3f, 85.f), 36, 24);
+	//tdExample->Animator2D()->Play(L"FX_BI_Yuki_01SE_01", true);
+	//
+	//tdExample->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));
+	//
+	////dummy->AddChild(tdExample);
+	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 
 	//CGameObject* tdExample = new CGameObject();
 	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CircleMesh"));
+	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
 	//
 	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);

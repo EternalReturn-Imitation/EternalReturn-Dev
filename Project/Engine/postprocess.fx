@@ -77,7 +77,7 @@ float4 PS_Distortion(VS_OUT _in) : SV_Target
     float fChange = cos(((vUV.x - g_AccTime * 0.05f) / 0.15f) * 2 * 3.1415926535f) * 0.05f * 0.5f;
 	
     //vUV.y += fChange * 0.1f;
-    vUV.y += fChange * 0.8f;
+    vUV.y += fChange * 0.5f;
 
     float4 vColor = g_tex_0.Sample(g_sam_0, vUV);
 	//vColor.r *= 2.f;

@@ -44,6 +44,31 @@ void ER_YukiREffect::AreaSpawn(Vec3 _pos, Vec3 _dir, float _scale)
 	t1.detach();
 }
 
+void ER_YukiREffect::DistortionSpawn(Vec3 _pos, Vec3 _dir, float _scale)
+{
+	CGameObject* dummyParent01 = new CGameObject();
+	AddComponents(dummyParent01, _TRANSFORM);
+
+	dummyParent01->Transform()->SetRelativeRot(_dir);
+
+	SpawnGameObject(dummyParent01, _pos, L"Effect");
+
+	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"Distortion");
+	AddComponents(tdExample, _TRANSFORM | _MESHRENDER);
+	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DistortionMtrl"), 0);
+
+	tdExample->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
+	tdExample->Transform()->SetRelativeScale(12.0f, 6.f, 1.f);
+	tdExample->Transform()->SetRelativePos(Vec3(0.f, 0.f, -3.f));
+
+	dummyParent01->AddChild(tdExample);
+
+	std::thread t1(&ER_EffectScript::SpawnAnimationEffect, this, tdExample, 1.0f, dummyParent01);
+	t1.detach();
+}
+
 void ER_YukiREffect::SaveToLevelFile(FILE* _File)
 {
 }

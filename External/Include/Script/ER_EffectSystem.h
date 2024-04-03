@@ -12,6 +12,8 @@ private:
     vector<CGameObject*>    m_vDeleteParticles;
     vector<float>           m_vParticleLifeTime;
 
+    int                     m_iYukiCount;
+
     mutex                   m_aFuncMutex;
 
 public:
@@ -37,6 +39,8 @@ public:
     void SpawnRioRHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDir);
     //유키 스킬 히트 이펙트
     void SpawnYukiQHitEffect(Vec3 _pos);
+    void SpawnYukiR1HitEffect(Vec3 _pos, CGameObject* _hitter);
+    void SpawnYukiR2HitEffect(Vec3 _pos);
 
 public:
     void AddDeleteParticles(CGameObject* _obj, CGameObject* _parentObj = nullptr);

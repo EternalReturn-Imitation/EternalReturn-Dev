@@ -775,6 +775,8 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                 // 데미지 판정
                 IsHit = true;
                 BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Yuki, SkillR1, skill, 0);
+
+                GetOwner()->GetScript<ER_YukiREffect>()->DistortionSpawn(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
             }
 
             if(IsHit)
