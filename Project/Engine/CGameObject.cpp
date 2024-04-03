@@ -255,6 +255,7 @@ void CGameObject::AddChild(CGameObject* _Object)
 	// 부모 자식 연결
 	_Object->m_Parent = this;
 	m_vecChild.push_back(_Object);
+	_Object->m_iLayerIdx = _Object->m_Parent->m_iLayerIdx;
 }
 
 

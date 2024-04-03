@@ -127,6 +127,29 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
         }      
     }
     
+    if (ModuleData.vRot.z != 0.f)
+    {
+        // Y축 회전 각도를 라디안으로 변환
+        float angleRad = ModuleData.vRot.z * (3.141592 / 180.0f);
+
+        // Y축 회전 행렬
+        float3x3 matRotZ =
+        {
+            { cos(angleRad), -sin(angleRad), 0 },
+            { sin(angleRad), cos(angleRad), 0 },
+            { 0, 0, 1 }
+        };
+
+        // 기존 GS_ParticleRender 함수 내부에서 NewPos 정점에 회전 적용 부분 직전에 추가
+        for (int i = 0; i < 4; ++i)
+        {
+        // View 공간으로 변환된 정점 위치에 Y축 회전 적용
+            float3 rotatedPos = mul(NewPos[i], matRotZ);
+        // 회전 적용된 위치를 NewPos에 다시 저장
+            NewPos[i] = rotatedPos;
+        }
+    
+    }
     GS_OUT output[4] = { (GS_OUT) 0.f, (GS_OUT) 0.f, (GS_OUT) 0.f, (GS_OUT) 0.f };
     
     output[0].vPosition = mul(float4(NewPos[0] + vParticleViewPos, 1.f), g_matProj);

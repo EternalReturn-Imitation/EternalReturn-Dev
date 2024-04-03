@@ -87,7 +87,6 @@ protected:
     void SetStateGrade(eAccessGrade _Grade) { m_AccessGrade = _Grade; }              // 상태 접근 가능 등급
     bool IsAbleChange(eAccessGrade _Grade);                                          // 접근 등급 비교
 
-
     // [ Sound ]
     virtual void PlaySound(UINT _SoundKey) {}
 

@@ -464,6 +464,15 @@
     <ClCompile Include="ScriptUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\12. ScriptUI</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviorTreeListUI.cpp">
+      <Filter>UI\UITemplate\BehaviorTreeUI</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeInfoUI.cpp">
+      <Filter>UI\UITemplate\BehaviorTreeUI\NodeInfoUI</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoardListUI.cpp">
+      <Filter>UI\UITemplate\BehaviorTreeUI\BlackBoardList</Filter>
+    </ClCompile>
     <ClCompile Include="CLevelSaveLoad.cpp">
       <Filter>Manager\LevelSaveLoad</Filter>
     </ClCompile>
@@ -520,6 +529,9 @@
     </ClCompile>
     <ClCompile Include="IntroduceLevel.cpp">
       <Filter>Level\Introduce</Filter>
+    </ClCompile>
+    <ClCompile Include="CLevelSaveLoad.cpp">
+      <Filter>Manager\LevelSaveLoad</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -45,6 +45,20 @@ void CEventMgr::tick()
 			m_LevelChanged = true;
 		}
 			break;
+		case EVENT_TYPE::CREATE_OBJECT_TO_PARENT:
+		{
+			CGameObject* ChildObject = (CGameObject*)m_vecEvent[i].wParam;
+			CGameObject* ParentObject = (CGameObject*)m_vecEvent[i].lParam;
+
+			ParentObject->AddChild(ChildObject);
+			if (CLevelMgr::GetInst()->GetCurLevel()->GetState() == LEVEL_STATE::PLAY)
+			{
+				ChildObject->begin();
+			}
+
+			m_LevelChanged = true;
+		}
+		break;
 		case EVENT_TYPE::DELETE_OBJECT:
 		{
 			CGameObject* DeleteObject = (CGameObject*)m_vecEvent[i].wParam;

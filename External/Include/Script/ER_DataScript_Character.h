@@ -15,7 +15,6 @@ private:
     Ptr<CTexture>               m_PortraitTex;          // 초상화 텍스쳐
     Ptr<CTexture>               m_FullTax;              // 전신 일러
     Ptr<CTexture>               m_MapTex;               // 미니맵 텍스쳐
-
     Ptr<CSound>                 m_LevelUpSound;         // 레벨업 사운드
     vector<ER_SKILL*>           m_SkillList;            // 보유 스킬             
 
@@ -36,6 +35,9 @@ private:
     CGameObject*                m_Inventory[10];                        // 인벤토리
     UINT                        m_RootItem[5];                          // 최종 목표 아이템
     vector<UINT>                m_CraftList;                            // 제작가능 아이템 목록
+
+    // [ Debug / CoolDown Delete ]
+    bool                        DebugMode;
     unordered_map<UINT, int>    m_IngredientList;                       // 재료 아이템 목록
     unordered_map<UINT, int>    m_NeedFarmingItems;                     // 필요 파밍 아이템 목록
 

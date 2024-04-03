@@ -78,9 +78,10 @@ void CEditorObjMgr::init()
 	pEditorCamObj->Camera()->SetMainCamera();
 
 	pEditorCamObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(54.f), Deg2Rad(-45.f), 0.f));
-	pEditorCamObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	//pEditorCamObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 35.f, 0.f));
-	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -1800.f));
+	pEditorCamObj->Transform()->SetRelativePos(Vec3(-52.84728f, 25.f, 27.10118f));
+	//pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -1800.f));
 	pEditorCamObj->Camera()->SetFar(10000.f);
 
 	m_vecEditorObj.push_back(pEditorCamObj);

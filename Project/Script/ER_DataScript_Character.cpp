@@ -141,9 +141,9 @@ void ER_DataScript_Character::HPRegen(float _magnification)
 {
 	// 회복량 회복 후 HP값
 	float HPRegen = m_Stats->iHP + (m_Stats->fHPRegen * _magnification);
-	
+
 	// HP 자연 회복, 최대 HP면 최대HP로 고정
-	m_Stats->iHP = m_Stats->iMaxHP < (int)HPRegen ?	m_Stats->iMaxHP : (int)HPRegen;
+	m_Stats->iHP = m_Stats->iMaxHP < (int)HPRegen ? m_Stats->iMaxHP : (int)HPRegen;
 }
 
 void ER_DataScript_Character::SPRegen(float _magnification)
@@ -166,7 +166,7 @@ void ER_DataScript_Character::LevelUP()
 
 	// [ 이펙트 ]
 	// 레벨업 이펙트 및 애니메이션 재생
-	
+
 	// 레벨업 효과음 재생
 	// 플레이어 캐리터 화면 안에 들어와있을때만 재생
 	{
@@ -211,7 +211,7 @@ void ER_DataScript_Character::init()
 		m_FullTax = CResMgr::GetInst()->FindRes<CTexture>(FullTexKey);
 		m_MapTex = CResMgr::GetInst()->FindRes<CTexture>(MapTexKey);
 	}
-	
+
 	for (int i = 0; i < 5; ++i)
 	{
 		ER_ItemMgr::GetInst()->GetIngredient(m_RootItem[i], &m_IngredientList, &m_NeedFarmingItems);
@@ -228,7 +228,7 @@ void ER_DataScript_Character::begin()
 	{
 		GetOwner()->GetRenderComponent()->GetMaterial(0)->SetScalarParam(INT_3, &a);
 	}
-	
+
 	StatusUpdate();
 
 	UINT StartWeapon = 0;
@@ -429,7 +429,7 @@ bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _D
 						(*_DragItem) = tmp;
 
 						(*_DropItem)->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
-						
+
 						ItemInfoUpdate();
 						StatusUpdate();
 						return true;
@@ -553,7 +553,7 @@ void ER_DataScript_Character::ItemInfoUpdate()
 			if (S_OK == ER_ItemMgr::GetInst()->SearchRecipe(itemlist[Litem], itemlist[Ritem], tmp))
 			{
 				// 해당아이템이 제작필요 목록에 있는지 여부
-				if(m_IngredientList.end() != m_IngredientList.find(tmp))
+				if (m_IngredientList.end() != m_IngredientList.find(tmp))
 					m_CraftList.push_back(tmp);
 			}
 		}
@@ -579,7 +579,7 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 		if (i < 5 && m_Equipment[i])
 		{
 			UINT Itemid = m_Equipment[i]->GetScript<ER_DataScript_Item>()->GetCode();
-			
+
 			if (!ItemSlot1 && Itemid == recipe.ingredient_1)
 				ItemSlot1 = &m_Equipment[i];
 			else if (!ItemSlot2 && Itemid == recipe.ingredient_2)
@@ -604,11 +604,11 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 	// odelete (*ItemSlot2);
 	// (*ItemSlot2) = nullptr;
 
-	delete *ItemSlot1;
+	delete* ItemSlot1;
 	(*ItemSlot1) = nullptr;
-	delete *ItemSlot2;
+	delete* ItemSlot2;
 	(*ItemSlot2) = nullptr;
-	
+
 	// 제작한 아이템 매니저에서 클론으로 가져온다.
 	CGameObject* NewItem = ER_ItemMgr::GetInst()->GetItemObj(_Item)->Clone();
 
@@ -660,7 +660,7 @@ bool ER_DataScript_Character::CraftItem(UINT _Item)
 
 void ER_DataScript_Character::BeginOverlap(CCollider3D* _Other)
 {
-	
+
 }
 
 void ER_DataScript_Character::OnOverlap(CCollider3D* _Other)
@@ -697,7 +697,7 @@ void ER_DataScript_Character::SaveToLevelFile(FILE* _File)
 {
 	SaveWString(m_strKey, _File);
 	SaveWString(m_strName, _File);
-	fwrite(&m_STDStats,sizeof(ER_Initial_Stats),1,_File);
+	fwrite(&m_STDStats, sizeof(ER_Initial_Stats), 1, _File);
 	SaveResRef(m_PortraitTex.Get(), _File);
 	SaveResRef(m_FullTax.Get(), _File);
 	SaveResRef(m_MapTex.Get(), _File);

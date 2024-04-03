@@ -3,6 +3,7 @@
 
 #include "ER_PlayerScript.h"
 #include "ER_GameSystem.h"
+#include "ER_PlayerScript_Range.h"
 
 #include "ER_UIMgr.h"
 #include "ER_UIScript_TrackingStatusBar.h"
@@ -25,7 +26,7 @@ ER_CharacterMgr::~ER_CharacterMgr()
 
 void ER_CharacterMgr::init()
 {
-    // Ä³¸¯ÅÍ µ¥ÀÌÅÍ ·Îµù
+    // Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
     Load();
 }
 
@@ -60,7 +61,7 @@ CGameObject* ER_CharacterMgr::SpawnCharacter_Player(const wstring& _key, Vec3 _P
     // CurLevel Spawn
     SpawnGameObject(Player, _Pos, L"Player");
 
-    //°ÔÀÓ½Ã½ºÅÛ¿¡ ÇÃ·¹ÀÌ¾îÀÇ Ä³¸¯ÅÍ¸¦ ÇÒ´ç.
+    //ï¿½ï¿½ï¿½Ó½Ã½ï¿½ï¿½Û¿ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½Ò´ï¿½.
     ER_GameSystem::GetInst()->GetInst()->SetPlayerCharacter(Player);
     ER_UIMgr::GetInst()->RegistPlayerCharacetr();
 
@@ -71,7 +72,7 @@ CGameObject* ER_CharacterMgr::SpawnCharacter_Enemy(const wstring& _key, Vec3 _Po
 {
     CGameObject* Enemy = SpawnCharacter(_key);
 
-    // AI Script ÀåÂø
+    // AI Script ï¿½ï¿½ï¿½ï¿½
     wstring AIScript = L"ER_AIScript_";
     AIScript += _key;
     

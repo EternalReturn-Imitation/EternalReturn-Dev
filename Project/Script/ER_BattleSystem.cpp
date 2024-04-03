@@ -7,6 +7,9 @@
 //Å×½ºÆ®¿ë
 #include "ER_GameSystem.h"
 
+//ÀÌÆåÆ®¿ë
+#include "ER_EffectSystem.h"
+
 ER_BattleSystem::ER_BattleSystem()
 {
 }
@@ -36,6 +39,8 @@ void ER_BattleSystem::Battle_Common(CGameObject* AtkObj, CGameObject* HitObj, CG
 	int CriticalDmg = IsCritical(AtkInfo);
 
 	int FinalDmg = (int)(((AtkPower * 100) / (100 + Def)) + (CriticalDmg * 0.65));
+
+	ER_EffectSystem::GetInst()->SpawnHitEffect(AtkObj, HitObj, _Projectile);
 
 	// »ç¸ÁÃ³¸®
 	if (HitInfo->iHP - FinalDmg <= 0)
@@ -79,6 +84,8 @@ void ER_BattleSystem::Battle_Skill(CGameObject* _Attacker
 	int CriticalDmg = IsCritical(AtkInfo);
 
 	int FinalDmg = (int)(((SkillDmg * 100) / (100 + Def)) + (CriticalDmg * 0.65));
+
+	ER_EffectSystem::GetInst()->SpawnSkillHitEffect(_Attacker, _HitObj, _SkillInfo, _Projectile);
 
 	// »ç¸ÁÃ³¸®
 	if (HitInfo->iHP - FinalDmg <= 0)

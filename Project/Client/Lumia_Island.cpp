@@ -56,7 +56,6 @@ void CreateLumiaIsland()
 	SetLight();
 	SetMapCollider();
 	
-	
 	LumiaIsland();
 	
 	ER_GameSystem::GetInst()->GameStart();
@@ -76,6 +75,7 @@ void CreateTestEnemy()
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-76.9f, 0.0f, 37.6f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
+
 }
 
 void SetLayer(CLevel* _Level)
@@ -93,7 +93,7 @@ void SetLayer(CLevel* _Level)
 	_Level->GetLayer(13)->SetName(L"Player");
 	
 	_Level->GetLayer(14)->SetName(L"Projectile");
-
+	_Level->GetLayer(15)->SetName(L"Effect");
 	_Level->GetLayer(28)->SetName(L"InGameUI");
 	_Level->GetLayer(29)->SetName(L"MapCollider");
 	_Level->GetLayer(30)->SetName(L"Camera");
@@ -180,6 +180,8 @@ void SetLight()
 
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMaskAll(true);
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(6, false);	// ItemBoxTag
+	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(14, false);	// Projectile
+	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(15, false);	// Effect
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(28, false);	// InGameUI
 	pLightObj->Light3D()->GetLightRenderCam()->SetLayerMask(31, false);	// UI
 

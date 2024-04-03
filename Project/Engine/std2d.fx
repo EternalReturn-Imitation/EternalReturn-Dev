@@ -24,6 +24,11 @@ struct VS_OUT
 // DepthStencilState    : Less
 //
 // Parameter
+#define bAnimUse        g_int_0
+#define LeftTop         g_vec2_0
+#define Slice           g_vec2_1
+#define Offset          g_vec2_2
+#define BackSize        g_vec2_3
 // g_int_0              : AnimUse
 // g_vec2_0             : AnimAtlas LeftTop
 // g_vec2_1             : AnimAtlas Slice
@@ -47,7 +52,27 @@ float4 PS_Std2D(VS_OUT _in) : SV_Target
         
     if (g_btex_0)
     {
-        vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+        if (bAnimUse)
+        {
+            float2 vUV = LeftTop + (BackSize * _in.vUV);
+            vUV -= ((BackSize - Slice) / 2.f);
+            vUV -= Offset;
+            
+            if (LeftTop.x < vUV.x && vUV.x < LeftTop.x + Slice.x
+                && LeftTop.y < vUV.y && vUV.y < LeftTop.y + Slice.y)
+            {
+                vOutColor = g_tex_0.Sample(g_sam_0, vUV);
+            }
+            else
+            {
+                vOutColor = float4(1.f, 1.f, 0.f, 1.f);
+                //discard;
+            }
+        }
+        else
+        {
+            vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+        }
     }
     else
     {

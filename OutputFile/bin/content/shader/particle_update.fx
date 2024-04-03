@@ -81,8 +81,9 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         float fAngle = vOut2.r * 2 * 3.1415926535f;
                         particle.vWorldPos.xyz = float3(fRadius * cos(fAngle), fRadius * sin(fAngle), 100.f);
                         
-                        // float4 vSpawnScale = float4(100.f, 100.f, 100.f, 1.f);
-                        // particle.vWorldScale.xyz = vSpawnScale.xyz;
+                        float4 vSpawnScale = float4(100.f, 100.f, 100.f, 1.f);
+                        vSpawnScale = ModuleData.vSpawnScaleMin + (ModuleData.vSpawnScaleMax - ModuleData.vSpawnScaleMin) * vOut3.x;
+                        particle.vWorldScale.xyz = vSpawnScale.xyz;
                     }
                     
                     // 파티클 질량 설정
@@ -132,8 +133,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
         particle.Age += g_DT;
         particle.NomalizedAge = saturate(particle.Age / particle.LifeTime);        
         particle.vForce.xyz = (float3) 0.f;
-        
-        
+                
         // 파티클의 수명이 끝나면, 다시 비활성화 상태로 되돌림
         if (particle.LifeTime <= particle.Age)
         {
@@ -234,8 +234,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
             particle.vColor = ModuleData.vStartColor + particle.NomalizedAge * (ModuleData.vEndColor - ModuleData.vStartColor);
         }               
         
-    }    
-    
+    }
     // 변경점 적용
     ParticleBuffer[_ID.x] = particle;
 }
