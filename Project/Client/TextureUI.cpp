@@ -39,7 +39,7 @@ int TextureUI::render_update()
         ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);   // No tint
         ImVec4 border_col = ImVec4(1.0f, 1.0f, 1.0f, 0.5f); // 50% opaque white
 
-        ImGui::Image((ImTextureID)pTex->GetSRV().Get(), ImVec2(150, 150), uv_min, uv_max, tint_col, border_col);
+        ImGui::Image((ImTextureID)pTex->GetSRV().Get(), ImVec2(500, 500), uv_min, uv_max, tint_col, border_col);
     }
 
     return 0;

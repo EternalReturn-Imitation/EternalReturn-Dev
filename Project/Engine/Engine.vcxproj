@@ -91,6 +91,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -170,29 +171,38 @@ call EngineCopy.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Allocator.h" />
     <ClInclude Include="CAnim2D.h" />
+    <ClInclude Include="CAnim3D.h" />
     <ClInclude Include="CAnimation3DShader.h" />
     <ClInclude Include="CAnimator2D.h" />
     <ClInclude Include="CAnimator3D.h" />
     <ClInclude Include="CBehaviorTree.h" />
     <ClInclude Include="CBehaviorTreeMgr.h" />
+    <ClInclude Include="CBone.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCollider2D.h" />
+    <ClInclude Include="CCollider3D.h" />
     <ClInclude Include="CCollisionMgr.h" />
     <ClInclude Include="CComponent.h" />
     <ClInclude Include="CComputeShader.h" />
     <ClInclude Include="CConstBuffer.h" />
+    <ClInclude Include="CCopyBoneShader.h" />
     <ClInclude Include="CDecal.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CEntity.h" />
     <ClInclude Include="CEventMgr.h" />
     <ClInclude Include="CFBXLoader.h" />
+    <ClInclude Include="CFindPath.h" />
+    <ClInclude Include="CSingleton.h" />
+    <ClInclude Include="CText.h" />
     <ClInclude Include="CFontMgr.h" />
     <ClInclude Include="CFrustum.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGraphicsShader.h" />
     <ClInclude Include="CHeightMapShader.h" />
+    <ClInclude Include="CInstancingBuffer.h" />
     <ClInclude Include="CKeyMgr.h" />
     <ClInclude Include="CLandScape.h" />
     <ClInclude Include="CLayer.h" />
@@ -208,8 +218,10 @@ call EngineCopy.bat</Command>
     <ClInclude Include="components.h" />
     <ClInclude Include="CParticleSystem.h" />
     <ClInclude Include="CParticleUpdateShader.h" />
+    <ClInclude Include="CPathFindMgr.h" />
     <ClInclude Include="CPathMgr.h" />
     <ClInclude Include="CPrefab.h" />
+    <ClInclude Include="CLandScapeRaycastShader.h" />
     <ClInclude Include="CRaycastShader.h" />
     <ClInclude Include="CRenderComponent.h" />
     <ClInclude Include="CRenderMgr.h" />
@@ -218,37 +230,60 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CScript.h" />
     <ClInclude Include="CSetColorShader.h" />
     <ClInclude Include="CShader.h" />
-    <ClInclude Include="CSingleton.h" />
     <ClInclude Include="CSkyBox.h" />
     <ClInclude Include="CSound.h" />
-    <ClInclude Include="CSQLMgr.h" />
     <ClInclude Include="CStructuredBuffer.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTileMap.h" />
     <ClInclude Include="CTimeMgr.h" />
     <ClInclude Include="CTransform.h" />
+    <ClInclude Include="CUIComponent.h" />
+    <ClInclude Include="CUIMgr.h" />
+    <ClInclude Include="CWeightMapShader.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="Detour\DetourAlloc.h" />
+    <ClInclude Include="Detour\DetourAssert.h" />
+    <ClInclude Include="Detour\DetourCommon.h" />
+    <ClInclude Include="Detour\DetourMath.h" />
+    <ClInclude Include="Detour\DetourNavMesh.h" />
+    <ClInclude Include="Detour\DetourNavMeshBuilder.h" />
+    <ClInclude Include="Detour\DetourNavMeshQuery.h" />
+    <ClInclude Include="Detour\DetourNode.h" />
+    <ClInclude Include="Detour\DetourStatus.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="FSM.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
+    <ClInclude Include="MemoryMgr.h" />
+    <ClInclude Include="MemoryPool.h" />
+    <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ptr.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="struct.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3DCCollisionMgr.cpp" />
+    <ClCompile Include="Allocator.cpp" />
     <ClCompile Include="CAnim2D.cpp" />
+    <ClCompile Include="CAnim3D.cpp" />
     <ClCompile Include="CAnimation3DShader.cpp" />
     <ClCompile Include="CAnimator2D.cpp" />
     <ClCompile Include="CAnimator3D.cpp" />
     <ClCompile Include="CBehaviorTree.cpp" />
     <ClCompile Include="CBehaviorTreeMgr.cpp" />
+    <ClCompile Include="CBone.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCollider2D.cpp" />
+    <ClCompile Include="CCollider3D.cpp" />
     <ClCompile Include="CCollisionMgr.cpp" />
+    <ClCompile Include="CCollisionRayMgr.cpp" />
     <ClCompile Include="CComponent.cpp" />
     <ClCompile Include="CComputeShader.cpp" />
     <ClCompile Include="CConstBuffer.cpp" />
+    <ClCompile Include="CCopyBoneShader.cpp" />
     <ClCompile Include="CDecal.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp">
@@ -258,11 +293,14 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CEntity.cpp" />
     <ClCompile Include="CEventMgr.cpp" />
     <ClCompile Include="CFBXLoader.cpp" />
+    <ClCompile Include="CFindPath.cpp" />
+    <ClCompile Include="CText.cpp" />
     <ClCompile Include="CFontMgr.cpp" />
     <ClCompile Include="CFrustum.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGraphicsShader.cpp" />
     <ClCompile Include="CHeightMapShader.cpp" />
+    <ClCompile Include="CInstancingBuffer.cpp" />
     <ClCompile Include="CKeyMgr.cpp" />
     <ClCompile Include="CLandScape.cpp" />
     <ClCompile Include="CLandScape_init.cpp" />
@@ -278,8 +316,10 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CMRT.cpp" />
     <ClCompile Include="CParticleSystem.cpp" />
     <ClCompile Include="CParticleUpdateShader.cpp" />
+    <ClCompile Include="CPathFindMgr.cpp" />
     <ClCompile Include="CPathMgr.cpp" />
     <ClCompile Include="CPrefab.cpp" />
+    <ClCompile Include="CLandScapeRaycastShader.cpp" />
     <ClCompile Include="CRaycastShader.cpp" />
     <ClCompile Include="CRenderComponent.cpp" />
     <ClCompile Include="CRenderMgr.cpp" />
@@ -292,15 +332,29 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CSkyBox.cpp" />
     <ClCompile Include="CSound.cpp" />
-    <ClCompile Include="CSQLMgr.cpp" />
     <ClCompile Include="CStructuredBuffer.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTileMap.cpp" />
     <ClCompile Include="CTimeMgr.cpp" />
     <ClCompile Include="CTransform.cpp" />
+    <ClCompile Include="CUIComponent.cpp" />
+    <ClCompile Include="CUIMgr.cpp" />
+    <ClCompile Include="CWeightMapShader.cpp" />
+    <ClCompile Include="debug.cpp" />
+    <ClCompile Include="Detour\DetourAlloc.cpp" />
+    <ClCompile Include="Detour\DetourAssert.cpp" />
+    <ClCompile Include="Detour\DetourCommon.cpp" />
+    <ClCompile Include="Detour\DetourNavMesh.cpp" />
+    <ClCompile Include="Detour\DetourNavMeshBuilder.cpp" />
+    <ClCompile Include="Detour\DetourNavMeshQuery.cpp" />
+    <ClCompile Include="Detour\DetourNode.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="extern.cpp" />
+    <ClCompile Include="FSM.cpp" />
     <ClCompile Include="func.cpp" />
+    <ClCompile Include="MemoryMgr.cpp" />
+    <ClCompile Include="MemoryPool.cpp" />
+    <ClCompile Include="ObjectPool.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -313,7 +367,23 @@ call EngineCopy.bat</Command>
     <None Include="SimpleMath.inl" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="2DUI.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+    </FxCompile>
     <FxCompile Include="animation3d.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="copybone.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="animedit3d.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
@@ -332,6 +402,8 @@ call EngineCopy.bat</Command>
     <FxCompile Include="decal.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="func.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
@@ -397,6 +469,10 @@ call EngineCopy.bat</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="RaycastBase.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="setcolor.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -410,6 +486,8 @@ call EngineCopy.bat</Command>
     <FxCompile Include="skybox.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="std2d.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
@@ -449,10 +527,6 @@ call EngineCopy.bat</Command>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="test.fx">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-    </FxCompile>
     <FxCompile Include="tilemap.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -473,6 +547,15 @@ call EngineCopy.bat</Command>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ObjectFileOutput>
     </FxCompile>
+    <FxCompile Include="weightmap.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

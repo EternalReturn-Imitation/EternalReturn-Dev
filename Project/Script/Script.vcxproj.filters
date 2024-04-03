@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Script">
@@ -10,20 +10,179 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Default">
+      <UniqueIdentifier>{d16ac6e3-a8e0-4754-91db-6e96261beb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Default\ER_header">
+      <UniqueIdentifier>{ab7cb09f-7a29-440c-94a5-7cc14bfb4d66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI">
+      <UniqueIdentifier>{3685c51a-070f-4ee1-a7b5-2deae237c121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem">
+      <UniqueIdentifier>{148f1ec1-74ec-49d7-abe3-e185dc4794a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Item">
+      <UniqueIdentifier>{a9474beb-0254-47f3-bb38-916c060681d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Character">
+      <UniqueIdentifier>{4fbeb1f6-b219-4820-8f25-26282d0ee874}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\UI">
+      <UniqueIdentifier>{b3d03eb7-c0f4-4df1-8494-08ae342305a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Battle">
+      <UniqueIdentifier>{9c8c5026-9c9a-4c8c-9ce5-d9043b036923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item">
+      <UniqueIdentifier>{25325e07-cbc0-498a-824b-b5bca5deb842}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Box">
+      <UniqueIdentifier>{5f2af9b9-e6ee-4cd1-a0b3-75ccfa5876c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Slot">
+      <UniqueIdentifier>{dc91efe5-dc89-4ad5-97d8-64f88abfb87e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar">
+      <UniqueIdentifier>{20778e8d-140b-45cd-baaa-0913e661af7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot">
+      <UniqueIdentifier>{a8a5eeac-904b-4e0f-a09e-f97a0b5176a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\Gauge">
+      <UniqueIdentifier>{2bcef9fb-6adc-4c59-829c-9ba2b37c7392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot\SkillUP">
+      <UniqueIdentifier>{414c1ede-421a-42b9-b26c-0d44f9657a6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\SkillSlot\Slot">
+      <UniqueIdentifier>{170ac4af-3bea-4601-bd03-5292d129959f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\Gauge\StatusBar">
+      <UniqueIdentifier>{effa1817-967c-4936-9a7f-0d68665e9c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER">
+      <UniqueIdentifier>{3f35b2cd-9c75-4326-bd26-dd2c73829ac2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript">
+      <UniqueIdentifier>{d278ac5e-11e4-4f19-980d-cf2c22789fef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character">
+      <UniqueIdentifier>{763f25b3-339f-44f0-b3ec-69654adf3bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Rio">
+      <UniqueIdentifier>{08d6a4eb-a4f9-4554-a421-96f8c0253ce7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Jackie">
+      <UniqueIdentifier>{570d651e-3b29-44dc-90ee-067541a651fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Hyunwoo">
+      <UniqueIdentifier>{87476fa6-013b-4e45-b889-ed7a0f3ad9ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Aya">
+      <UniqueIdentifier>{7d751086-2f6f-49ce-a474-d6aeba6ee9bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\ActionScript\Character\Yuki">
+      <UniqueIdentifier>{78e8d3fd-5132-4e6a-8ad5-f304e1f74d06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript">
+      <UniqueIdentifier>{1a97d08e-0c7e-42b5-8448-f40bbb060bbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Character">
+      <UniqueIdentifier>{fc5a4c72-94e7-46c8-9fcc-582bc8fc268f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Item">
+      <UniqueIdentifier>{da0d90e9-f334-4e62-9413-f648d0b19058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\ItemBox">
+      <UniqueIdentifier>{4917d2dd-28b0-48a2-94e5-08be8efd8b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\LandMesh">
+      <UniqueIdentifier>{f1617758-7daa-4bac-a50c-2e5e988e6019}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\PlayerScript">
+      <UniqueIdentifier>{d1f4aa95-6b71-4309-b84d-f5bf1a2357cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript">
+      <UniqueIdentifier>{fa13962b-4671-41fe-b9e1-93ae6b79ae42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\SystemScript\Cam">
+      <UniqueIdentifier>{afcad44f-5ae1-4bcc-9276-fe611232c7ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Statusbar\TrackingStatusBar">
+      <UniqueIdentifier>{6fd1303b-7790-476f-a35b-d0b02aa64016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript">
+      <UniqueIdentifier>{49905061-cebc-4a66-8a41-a3e586a073e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio">
+      <UniqueIdentifier>{f0ef82ab-009a-4d8a-a375-ca9331eba4c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\BasicAttackEffect">
+      <UniqueIdentifier>{4d5476b6-af07-4e16-8a83-b1297451af93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\QEffect">
+      <UniqueIdentifier>{9aeabc82-c8d2-40e4-98f5-2b93b1028e87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Item\Slot\CraftSlot">
+      <UniqueIdentifier>{9c6a4bc4-a8a4-4271-ab0e-9dd45dad9d73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\UI\Cursor">
+      <UniqueIdentifier>{017f7bc4-b766-408b-be23-a28a62caef9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Projectile">
+      <UniqueIdentifier>{248621bf-3453-403e-a8c6-21a9d22af562}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Projectile\Arrow">
+      <UniqueIdentifier>{6d21b1cb-d34e-498e-98e1-f39edddc7085}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\DataScript\Projectile\Bullet">
+      <UniqueIdentifier>{5adec4b1-440f-415d-9b7e-5a06c838d816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Rio\ArrowEffect">
+      <UniqueIdentifier>{ee14ab7a-05cd-4a90-a024-83143b16434d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameSystem\Effect">
+      <UniqueIdentifier>{f6e05562-d1ba-46af-b123-b120d224acef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya">
+      <UniqueIdentifier>{fb3bab7d-17b3-4268-8e40-f4fc9a1f097c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\BulletEffect">
+      <UniqueIdentifier>{75d83bab-4fd5-478d-b9af-5691fc4a8e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\BasicAttackEffect">
+      <UniqueIdentifier>{65868b39-e8ff-4a81-9b72-92aca3c9be76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\QEffect">
+      <UniqueIdentifier>{a8a6b10e-7e17-449e-8fe0-edd26278b223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\WBulletEffect">
+      <UniqueIdentifier>{361ffa0a-7f03-4deb-80c8-fdb7fd89bbfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Aya\REffect">
+      <UniqueIdentifier>{a3b668c7-fbe9-4176-844f-d1f00ca6d941}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki">
+      <UniqueIdentifier>{23d84920-f92f-446c-835b-740679761f29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\BasicAttackEffect">
+      <UniqueIdentifier>{70baa0c2-c0af-4f04-961e-ef2d0738c362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\QEffect">
+      <UniqueIdentifier>{8224c224-8dab-4a3b-a38a-2e861584b588}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\WEffect">
+      <UniqueIdentifier>{0b6c631a-5285-4656-9c34-24dea823f890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\EEffect">
+      <UniqueIdentifier>{9006fd66-eb56-4a54-8797-fbf953675083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\REffect">
+      <UniqueIdentifier>{656be287-a5a4-4f4c-8926-f3809b30e845}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCameraMoveScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CMissileScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CMonsterScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Default</Filter>
     </ClInclude>
@@ -33,32 +192,162 @@
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CGravityScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CTestScript.h">
-      <Filter>Script</Filter>
+    <ClInclude Include="CMonsterScript.h">
+      <Filter>Script\Default</Filter>
     </ClInclude>
     <ClInclude Include="CPlanetScript.h">
-      <Filter>Script</Filter>
+      <Filter>Script\Default</Filter>
     </ClInclude>
-    <ClInclude Include="CCloudScript.h">
-      <Filter>Script</Filter>
+    <ClInclude Include="ER_define.h">
+      <Filter>Default\ER_header</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_struct.h">
+      <Filter>Default\ER_header</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_ItemBox.h">
+      <Filter>Script\ER\DataScript\ItemBox</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Aya.h">
+      <Filter>Script\ER\ActionScript\Character\Aya</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Hyunwoo.h">
+      <Filter>Script\ER\ActionScript\Character\Hyunwoo</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Jackie.h">
+      <Filter>Script\ER\ActionScript\Character\Jackie</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Rio.h">
+      <Filter>Script\ER\ActionScript\Character\Rio</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Yuki.h">
+      <Filter>Script\ER\ActionScript\Character\Yuki</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ActionScript_Character.h">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Character.h">
+      <Filter>Script\ER\DataScript\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Item.h">
+      <Filter>Script\ER\DataScript\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="CEditCamControlScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="CFollowMainCamScript.h">
+      <Filter>Script\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_CamControllerScript.h">
+      <Filter>Script\ER\SystemScript\Cam</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_LandMeshBase.h">
+      <Filter>Script\ER\DataScript\LandMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_GameSystem.h">
+      <Filter>GameSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_CharacterMgr.h">
+      <Filter>GameSystem\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ItemMgr.h">
+      <Filter>GameSystem\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_BattleSystem.h">
+      <Filter>GameSystem\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_PlayerScript_Range.h">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_ItemBox.h">
+      <Filter>Script\UI\Item\Box</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIMgr.h">
+      <Filter>GameSystem\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_Gauge.h">
+      <Filter>Script\UI\Statusbar\Gauge</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_SkillUpBtn.h">
+      <Filter>Script\UI\Statusbar\SkillSlot\SkillUP</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_SkillSlot.h">
+      <Filter>Script\UI\Statusbar\SkillSlot\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_PlayerScript.h">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_StatusBarGauge.h">
+      <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_Cursor.h">
+      <Filter>Script\UI\Cursor</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_TrackingStatusBar.h">
+      <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_ItemSlot.h">
+      <Filter>Script\UI\Item\Slot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_EffectScript.h">
+      <Filter>Script\ER\EffectScript</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_RioBAEffect.h">
+      <Filter>Script\ER\EffectScript\Rio\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_RioQEffect.h">
+      <Filter>Script\ER\EffectScript\Rio\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_UIScript_CraftSlot.h">
+      <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Projectile.h">
+      <Filter>Script\ER\DataScript\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Arrow.h">
+      <Filter>Script\ER\DataScript\Projectile\Arrow</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_DataScript_Bullet.h">
+      <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_ProjectileScript.h" />
+    <ClInclude Include="ER_ArrowEffectScript.h">
+      <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_EffectSystem.h">
+      <Filter>GameSystem\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaBAEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_BulletEffectScript.h">
+      <Filter>Script\ER\EffectScript\Aya\BulletEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaQEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaWBulletEffect.h">
+      <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AyaREffect.h">
+      <Filter>Script\ER\EffectScript\Aya\REffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiBAEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\BasicAttackEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiQEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiWEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\WEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiEEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\EEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiREffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CCameraMoveScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CMissileScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CMonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Default</Filter>
     </ClCompile>
@@ -68,17 +357,167 @@
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CGravityScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CTestScript.cpp">
-      <Filter>Script</Filter>
+    <ClCompile Include="CMonsterScript.cpp">
+      <Filter>Script\Default</Filter>
     </ClCompile>
     <ClCompile Include="CPlanetScript.cpp">
-      <Filter>Script</Filter>
+      <Filter>Script\Default</Filter>
     </ClCompile>
-    <ClCompile Include="CCloudScript.cpp">
-      <Filter>Script</Filter>
+    <ClCompile Include="ER_DataScript_ItemBox.cpp">
+      <Filter>Script\ER\DataScript\ItemBox</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Aya.cpp">
+      <Filter>Script\ER\ActionScript\Character\Aya</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Hyunwoo.cpp">
+      <Filter>Script\ER\ActionScript\Character\Hyunwoo</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Jackie.cpp">
+      <Filter>Script\ER\ActionScript\Character\Jackie</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Rio.cpp">
+      <Filter>Script\ER\ActionScript\Character\Rio</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Yuki.cpp">
+      <Filter>Script\ER\ActionScript\Character\Yuki</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Character.cpp">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Character.cpp">
+      <Filter>Script\ER\DataScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Item.cpp">
+      <Filter>Script\ER\DataScript\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="CEditCamControlScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="CFollowMainCamScript.cpp">
+      <Filter>Script\Default</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_CamControllerScript.cpp">
+      <Filter>Script\ER\SystemScript\Cam</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_LandMeshBase.cpp">
+      <Filter>Script\ER\DataScript\LandMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_GameSystem.cpp">
+      <Filter>GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_CharacterMgr_Init.cpp">
+      <Filter>GameSystem\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_CharacterMgr.cpp">
+      <Filter>GameSystem\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ItemMgr_Init.cpp">
+      <Filter>GameSystem\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ItemMgr.cpp">
+      <Filter>GameSystem\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Character_func.cpp">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_BattleSystem.cpp">
+      <Filter>GameSystem\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_PlayerScript_Range.cpp">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ActionScript_Init.cpp">
+      <Filter>Script\ER\ActionScript\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_ItemBox.cpp">
+      <Filter>Script\UI\Item\Box</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIMgr.cpp">
+      <Filter>GameSystem\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_Gauge.cpp">
+      <Filter>Script\UI\Statusbar\Gauge</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_SkillUpBtn.cpp">
+      <Filter>Script\UI\Statusbar\SkillSlot\SkillUP</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_SkillSlot.cpp">
+      <Filter>Script\UI\Statusbar\SkillSlot\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_PlayerScript.cpp">
+      <Filter>Script\ER\PlayerScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_StatusBarGauge.cpp">
+      <Filter>Script\UI\Statusbar\Gauge\StatusBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_Cursor.cpp">
+      <Filter>Script\UI\Cursor</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_TrackingStatusBar.cpp">
+      <Filter>Script\UI\Statusbar\TrackingStatusBar</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_ItemSlot.cpp">
+      <Filter>Script\UI\Item\Slot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_EffectScript.cpp">
+      <Filter>Script\ER\EffectScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_RioBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Rio\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_RioQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Rio\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_UIScript_CraftSlot.cpp">
+      <Filter>Script\UI\Item\Slot\CraftSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Projectile.cpp">
+      <Filter>Script\ER\DataScript\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Arrow.cpp">
+      <Filter>Script\ER\DataScript\Projectile\Arrow</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_DataScript_Bullet.cpp">
+      <Filter>Script\ER\DataScript\Projectile\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_ArrowEffectScript.cpp">
+      <Filter>Script\ER\EffectScript\Rio\ArrowEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_EffectSystem.cpp">
+      <Filter>GameSystem\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_GameSystem_ResourceLoad.cpp">
+      <Filter>GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_BulletEffectScript.cpp">
+      <Filter>Script\ER\EffectScript\Aya\BulletEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaWBulletEffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\WBulletEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AyaREffect.cpp">
+      <Filter>Script\ER\EffectScript\Aya\REffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiBAEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\BasicAttackEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiQEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiWEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\WEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiEEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\EEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiREffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

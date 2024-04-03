@@ -5,6 +5,7 @@
 #include "CSetColorShader.h"
 #include "CParticleUpdateShader.h"
 #include "CAnimation3DShader.h"
+#include "CCopyBoneShader.h"
 
 void CResMgr::CreateDefaultMesh()
 {
@@ -659,6 +660,31 @@ void CResMgr::CreateDefaultMesh()
 
 void CResMgr::CreateDefaultGraphicsShader()
 {
+	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "POSITION", 0, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "COLOR", 0, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32_FLOAT, "TEXCOORD", 0, 0);
+
+	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "NORMAL", 0, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "TANGENT", 0, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "BINORMAL", 0, 0);
+
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "BLENDWEIGHT", 0, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "BLENDINDICES", 0, 0);
+
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 1);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 2);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 3);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 1);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 2);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 3);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 0);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 1);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 2);
+	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 3);
+	AddInputLayout(DXGI_FORMAT_R32_UINT, "ROWINDEX", 1, 0);
+
 	Ptr<CGraphicsShader> pShader = nullptr;
 
 	// ============================
@@ -678,6 +704,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetRSType(RS_TYPE::CULL_NONE);
 	pShader->SetDSType(DS_TYPE::LESS);
 	pShader->SetBSType(BS_TYPE::MASK);
+	//pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
 
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
 
@@ -686,7 +713,201 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 	AddRes(pShader->GetKey(), pShader);
 
+	// ============================
+	// Std2DShader
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0              : Output Texture
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"Std2DShaderAlphaBlend");
+	pShader->CreateVertexShader(L"shader\\std2d.fx", "VS_Std2D");
+	pShader->CreatePixelShader(L"shader\\std2d.fx", "PS_Std2D");
 
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	//pShader->SetBSType(BS_TYPE::MASK);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+
+	// Param
+	pShader->AddTexParam(TEX_0, "Output Texture");
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// 2DUI_STD
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0              : Output Texture
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUISTD_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddTexParam(TEX_0, "Output Texture");
+	
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// 2DUI_CoolDown
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: Texture1        
+	// g_tex_1				: Texture2        
+	// g_int_0				: TexIdx          
+	// g_float_0			: CoolDownRatio   
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUICoolDown_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_CoolDown");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(INT_0, "TextureIdx");
+	pShader->AddScalarParam(FLOAT_0, "CoolDown Ratio");
+
+	pShader->AddTexParam(TEX_0, "Texture1");
+	pShader->AddTexParam(TEX_1, "Texture2");
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// 2DUI_Guage
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: MainTex     
+	// g_tex_1				: ReturnTex   
+	// g_tex_2				: MainTexEfc  
+	// g_float_0			: MainRatio   
+	// g_float_1			: ReturnRatio 
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUIGuage_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_GUAGE");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(FLOAT_0, "MainRatio");
+	pShader->AddScalarParam(FLOAT_1, "ReturnRatio");
+
+	pShader->AddTexParam(TEX_0, "Main Texture");
+	pShader->AddTexParam(TEX_1, "Return Texture");
+	pShader->AddTexParam(TEX_2, "Effect Texture");
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// 2DUI_Indicator
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: Level0    
+	// g_tex_1				: Level1    
+	// g_tex_2				: Level2    
+	// g_tex_3				: Level3    
+	// g_tex_4				: Level4    
+	// g_tex_5				: Level5    
+	// g_int_0				: Level     
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUIIndicator_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_Indicator");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(INT_0, "Level");
+
+	pShader->AddTexParam(TEX_0, "Level0 Texture");
+	pShader->AddTexParam(TEX_1, "Level1 Texture");
+	pShader->AddTexParam(TEX_2, "Level2 Texture");
+	pShader->AddTexParam(TEX_3, "Level3 Texture");
+	pShader->AddTexParam(TEX_4, "Level4 Texture");
+	pShader->AddTexParam(TEX_5, "Level5 Texture");
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// PS_2DUI_ItemSlot
+	// RasterizerState      : None
+	// BlendState           : Mask
+	// DepthStencilState    : Less
+	//
+	// Parameter
+	// g_tex_0				: ItemTexture    
+	// g_tex_1				: NORMAL            
+	// g_tex_2				: UNCOMMON          
+	// g_tex_3				: RARE              
+	// g_tex_4				: EPIC              
+	// g_tex_5				: Empty             
+	// g_int_0				: IsNotEmpty        
+	// g_int_1				: ItemGrade         
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"2DUIItemSlot_Shader");
+	pShader->CreateVertexShader(L"shader\\2DUI.fx", "VS_2DUI");
+	pShader->CreatePixelShader(L"shader\\2DUI.fx", "PS_2DUI_ItemSlot");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::MASK);
+
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_UI);
+
+	// Param
+	pShader->AddScalarParam(INT_0, "IsNotEmpty");
+	pShader->AddScalarParam(INT_1, "ItemGrade");
+
+	pShader->AddTexParam(TEX_0, "ItemTexture Texture");
+	pShader->AddTexParam(TEX_1, "NORMAL Texture");
+	pShader->AddTexParam(TEX_2, "UNCOMMON Texture");
+	pShader->AddTexParam(TEX_3, "RARE Texture");
+	pShader->AddTexParam(TEX_4, "EPIC Texture");
+	pShader->AddTexParam(TEX_5, "Empty Texture");
+	pShader->AddTexParam(TEX_6, "EquiptType Texture");
+
+	AddRes(pShader->GetKey(), pShader);
 
 	// ======================================
 	// Std2DLightShader
@@ -1031,7 +1252,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreateVertexShader(L"shader\\std3d_deferred.fx", "VS_Std3D_Deferred");
 	pShader->CreatePixelShader(L"shader\\std3d_deferred.fx", "PS_Std3D_Deferred");
 
-	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
 	pShader->SetDSType(DS_TYPE::LESS_EQUAL);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);
 
@@ -1171,6 +1392,26 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);
 
 	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// _ANIMEDIT3D
+	// RS_TYPE : CULL_BACK
+	// DS_TYPE : LESS
+	// BS_TYPE : DEFAULT
+	// Domain : MASK
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"AnimEdit3DShader");
+
+	pShader->CreateVertexShader(L"shader\\animedit3d.fx", "VS_Std3D");
+	pShader->CreatePixelShader(L"shader\\animedit3d.fx", "PS_Std3D");
+
+	pShader->SetRSType(RS_TYPE::CULL_BACK);
+	pShader->SetDSType(DS_TYPE::LESS);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_TRANSPARENT);
+
+	AddRes(pShader->GetKey(), pShader);
 }
 
 void CResMgr::CreateDefaultComputeShader()
@@ -1194,6 +1435,12 @@ void CResMgr::CreateDefaultComputeShader()
 	pCS->SetKey(L"Animation3DUpdateCS");
 	pCS->CreateComputeShader(L"shader\\animation3d.fx", "CS_Animation3D");
 	AddRes(pCS->GetKey(), pCS);
+
+	// Animation Matrix Copy Ω¶¿Ã¥ı
+	pCS = new CCopyBoneShader(1024, 1, 1);
+	pCS->SetKey(L"CopyBoneCS");
+	pCS->CreateComputeShader(L"shader\\copybone.fx", "CS_CopyBoneMatrix");
+	AddRes(pCS->GetKey(), pCS);
 }
 
 void CResMgr::CreateDefaultMaterial()
@@ -1211,7 +1458,7 @@ void CResMgr::CreateDefaultMaterial()
 
 	// Std2DAnim Material
 	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShaderAlphaBlend"));
 	AddRes(L"Std2DAnimMtrl", pMtrl);
 
 	// Std2DLight Material
@@ -1223,6 +1470,35 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DLightShader"));
 	AddRes(L"Std2DAnimLightMtrl", pMtrl);
+
+	// =============
+	// ==  2D UI  ==
+	// =============
+
+	// 2D UI STD Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUISTD_Shader"));
+	AddRes(L"2DUISTD_Mtrl", pMtrl);
+
+	// 2D UI CoolDown Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUICoolDown_Shader"));
+	AddRes(L"2DUICoolDown_Mtrl", pMtrl);
+
+	// 2D UI Guage Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIGuage_Shader"));
+	AddRes(L"2DUIGuage_Mtrl", pMtrl);
+
+	// 2D UI Indicator Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIIndicator_Shader"));
+	AddRes(L"2DUIIndicator_Mtrl", pMtrl);
+
+	// 2D UI ItemSlot Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"2DUIItemSlot_Shader"));
+	AddRes(L"2DUIItemSlot_Mtrl", pMtrl);
 
 	// ===========
 	// ==  3 D  ==
@@ -1242,7 +1518,6 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std3D_DeferredShader"));
 	AddRes(L"Std3D_DeferredMtrl", pMtrl);
-
 
 	// ===========
 	// == Decal ==
@@ -1339,4 +1614,36 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TessShader"));
 	AddRes(L"TessMtrl", pMtrl);
+}
+
+void CResMgr::AddInputLayout(DXGI_FORMAT _eFormat, const char* _strSemanticName, UINT _iSlotNum, UINT _iSemanticIdx)
+{
+	D3D11_INPUT_ELEMENT_DESC LayoutDesc = {};
+
+	if (0 == _iSlotNum)
+	{
+		LayoutDesc.AlignedByteOffset = m_iLayoutOffset_0;
+		LayoutDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		LayoutDesc.InstanceDataStepRate = 0;
+	}
+	else if (1 == _iSlotNum)
+	{
+		LayoutDesc.AlignedByteOffset = m_iLayoutOffset_1;
+		LayoutDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+		LayoutDesc.InstanceDataStepRate = 1;
+	}
+
+	LayoutDesc.Format = _eFormat;
+	LayoutDesc.InputSlot = _iSlotNum;
+	LayoutDesc.SemanticName = _strSemanticName;
+	LayoutDesc.SemanticIndex = _iSemanticIdx;
+
+	m_vecLayoutInfo.push_back(LayoutDesc);
+
+
+	// Offset ¡ı∞°
+	if (0 == _iSlotNum)
+		m_iLayoutOffset_0 += GetSizeofFormat(_eFormat);
+	else if (1 == _iSlotNum)
+		m_iLayoutOffset_1 += GetSizeofFormat(_eFormat);
 }

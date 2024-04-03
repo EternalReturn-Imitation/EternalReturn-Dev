@@ -3,6 +3,7 @@
 
 #include "value.fx"
 #include "struct.fx"
+#include "func.fx"
 
 
 // ========================
@@ -60,7 +61,7 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
 
     float3 vParticleViewPos = mul(float4(ParticleBuffer[id].vWorldPos.xyz, 1.f), g_matView).xyz;
     float2 vParticleScale = ParticleBuffer[id].vWorldScale.xy * ParticleBuffer[id].ScaleFactor;
-   
+    
     // 0 -- 1
     // |    |
     // 3 -- 2
@@ -123,10 +124,32 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
             {
                 NewPos[i] = mul(NewPos[i], matRotZ);
             }
-        }        
+        }      
     }
     
+    if (ModuleData.vRot.z != 0.f)
+    {
+        // Y축 회전 각도를 라디안으로 변환
+        float angleRad = ModuleData.vRot.z * (3.141592 / 180.0f);
+
+        // Y축 회전 행렬
+        float3x3 matRotZ =
+        {
+            { cos(angleRad), -sin(angleRad), 0 },
+            { sin(angleRad), cos(angleRad), 0 },
+            { 0, 0, 1 }
+        };
+
+        // 기존 GS_ParticleRender 함수 내부에서 NewPos 정점에 회전 적용 부분 직전에 추가
+        for (int i = 0; i < 4; ++i)
+        {
+        // View 공간으로 변환된 정점 위치에 Y축 회전 적용
+            float3 rotatedPos = mul(NewPos[i], matRotZ);
+        // 회전 적용된 위치를 NewPos에 다시 저장
+            NewPos[i] = rotatedPos;
+        }
     
+    }    
     GS_OUT output[4] = { (GS_OUT) 0.f, (GS_OUT) 0.f, (GS_OUT) 0.f, (GS_OUT) 0.f };
     
     output[0].vPosition = mul(float4(NewPos[0] + vParticleViewPos, 1.f), g_matProj);
@@ -144,7 +167,6 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
     output[3].vPosition = mul(float4(NewPos[3] + vParticleViewPos, 1.f), g_matProj);
     output[3].vUV = float2(0.f, 1.f);
     output[3].iInstID = id;
-    
     
     // 정점 생성
     _outstream.Append(output[0]);
@@ -171,6 +193,8 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
     
     return vOutColor;
 }
+
+
 
 
 #endif

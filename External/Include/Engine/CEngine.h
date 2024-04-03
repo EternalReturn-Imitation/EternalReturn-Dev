@@ -9,7 +9,6 @@ private:
 	// 윈도우 해상도
 	Vec2	m_vResolution;
 	
-
 public:
 	Vec2 GetWindowResolution() { return m_vResolution; }
 	HWND GetMainWnd() { return m_hWnd ; }

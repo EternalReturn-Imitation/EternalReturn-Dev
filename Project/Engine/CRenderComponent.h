@@ -23,9 +23,9 @@ private:
     float                   m_fBounding;        // FrustumCheck 용도 경계범위
     bool                    m_bDynamicShadow;
 
-    Ptr<CMaterial>          m_pSharedMtrl;  // 원본 메테리얼
-    Ptr<CMaterial>          m_pDynamicMtrl; // SharedMaterial 복사본
-    Ptr<CMaterial>          m_pCurrentMtrl;  // 현재 사용 중인 재질
+    Ptr<CMaterial>          m_pSharedMtrl;      // 원본 메테리얼
+    Ptr<CMaterial>          m_pDynamicMtrl;     // SharedMaterial 복사본
+    Ptr<CMaterial>          m_pCurrentMtrl;     // 현재 사용 중인 재질
 
     bool                    m_bFrustumCheck; // 절두체 컬링 체크 유무
 
@@ -34,6 +34,7 @@ private:
 
 public:
     virtual void render() = 0;
+    virtual void render(UINT _iSubset) = 0;
     virtual void render_shadowmap();
 
 public:
@@ -50,6 +51,7 @@ public:
     Ptr<CMaterial> GetDynamicMaterial(UINT _idx);
 
     UINT GetMtrlCount() { return (UINT)m_vecMtrls.size(); }
+    ULONG64 GetInstID(UINT _iMtrlIdx);
 
     bool IsUseFrustumCheck() { return m_bFrustumCheck; }    
     void SetBounding(float _fBounding) { m_fBounding = _fBounding; }
@@ -60,9 +62,6 @@ public:
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
-
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
-    virtual void LoadFromDB(int _gameObjectID) override;
 
     bool IsFrustumCheck() { return m_bFrustumCheck; }
 

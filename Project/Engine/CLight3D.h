@@ -27,9 +27,6 @@ public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
-    virtual void LoadFromDB(int _gameObjectID) override;
-
 public:
     void SetLightColor(Vec3 _Color) { m_LightInfo.Color.vDiffuse = _Color; }
     void SetLightAmbient(Vec3 _Amb) { m_LightInfo.Color.vAmbient = _Amb; }

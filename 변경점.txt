@@ -1,0 +1,86 @@
+1. FBXLoad header 가 Include 에 추가됨
+2. FBXLoader Library 파일 추가
+
+3. Client, Engine, Script 프로젝트 Include 폴더 설정 추가(FBXLoader 폴더)
+
+4. global.h  FBXLoader 라이브러리 참조
+
+5. FBXLoader 라이브러리를 이용한 FBX 파일 로딩 지원 클래스 추가
+  - CFBXLoader
+
+6. 새로운 리소스 추가 
+  - CMeshData
+ - FBX 파일을 로딩하는 과정에서 만들어진 리소스들(ex CMesh, CTexture, CMaterial) 을 묶어서 참조하는 리소스
+  - CMeshData 를 Instantiate 하면 FBX 에서 추출한 모델을 하나의 GameObject 로서 레벨에 스폰시킬 수 있다.
+
+7. CMesh 구조 변경
+  - CMesh 구조 변경에 따른 CMaterial 구조 변경
+  - CMaterial 구조 변경에 따른 CRenderComponent 구조 변경
+
+8. CMesh 가 하나의 VertexBuffer 와 IndexBuffer 로 구성되었던 부분이
+    하나의 VertexBuffer 에 여러개의 IndexBuffer 가 될 수 있게 구조가 변경됨.
+    따라서 CMesh 를 참조하고 사용하는 RenderComponent 도 구조가 변경됨.
+
+
+// meshData 저장 및 Animator3D 컴포넌트 추가
+
+1. Vertex 의 구조 변경
+ - BlendWeights, BlendIndices 추가
+ - 이에 따른 LaytOut 생성 구조 변경 ( GraphicsShader CreateVertexShader)
+
+2. CMesh 에 3D Animation 관련 데이터 추가
+  - Bone 정보 벡터
+  - Key Frame 별 Bone 행렬 정보를 저장하는 구조화 버퍼
+
+3. MeshData Save / Load 추가
+  - 연관된 CMesh 도 Save / Load 추가
+
+4. CAnimator3D 컴포넌트 추가
+  - 3DAnimation 기능을 수행 할 수 있게 해주는 Component 임
+  - MeshData 를 Instantiate 할 때 로딩된 CMesh 의 정보안에 Animation 정보가 들어있다면 CAnimator3D 컴포넌트도 붙여서 생성시킴
+  - Material 상수 구조체에, 해당 물체를 렌더링 시에 이게 3DAniamtion 정보가 있는지 없는지 전달하기 위한 상수를 추가함
+  - value.fx 의 재질 b1 상수 레지스터 선언도 확인할 것
+
+5. CAnimator3D 컴포넌트에 의해서 전달된 행렬정보를 정점 쉐이더에서 Skinning 작업에 사용함
+  - Func.fx 의 Skinning 함수 확인 할 것
+  - value.fx 에 Bone FinalMatrix 전달받는 텍스쳐 레지스터(t30 으로 지정함) 확인 할 것
+  - CAnimator3D 컴포넌트는 Animation 행렬을 계산하고 FinalMatrix 로 복사하는 과정을 컴퓨트 쉐이더를 통해서 진행함
+    따라서 CResMgr::init 에서 해당 컴퓨트 쉐이더 "CAnimation3DShader.h" 를 생성했는지 확인할 것
+
+
+6. 로딩하는 과정에서 content 폴더에 다음 이름이 폴더가 생성되어있는지 확인할 것
+ -  mesh, meshdata, material, texture, fbx
+
+
+// 1. 구조 파악
+// 2. CAnimation3D
+// 3. ImGui -> Animator3D
+// 4. Animation 전환 시 Blending
+
+
+// LandScape - 지형
+// RayCasting ( Mouse Picking )
+// HeightMap 생성 및 수정
+// WeightMap
+
+Splatting 기능
+LandScape 에 WeightMap 구조화버퍼 추가
+
+
+
+
+
+
+
+
+
+// Instancing (렌더링 최적화, 묶어서 한번에 렌더링)
+// - Draw Call
+
+
+
+
+
+
+
+

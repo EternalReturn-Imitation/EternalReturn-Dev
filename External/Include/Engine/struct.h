@@ -19,7 +19,12 @@ struct tVertex
 
 typedef tVertex Vtx;
 
-
+struct tTransformInfo
+{
+	Vec3 translation = {};
+	Vec3 rotation = {};
+	Vec3 scaling = { 1.f,1.f,1.f };
+};
 
 
 // Event
@@ -160,10 +165,25 @@ struct tParticleModule
 	int		VelocityScale;		// 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
 	float   vMaxSpeed;			// 최대 크기에 도달하는 속력
 	Vec4	vMaxVelocityScale;	// 속력에 따른 크기 변화량 최대치
+	Vec4	vRot;
 	int		renderpad;
 
 	// Module Check
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
+};
+
+
+
+// FSM 가용 데이터
+struct tFSMData
+{
+	Vec2		v2Data;
+	float		fData[4];
+	int			iData[4];
+	Vec4		v4Data;
+	bool		bData[4];
+	DWORD_PTR	lParam;
+	DWORD_PTR	RParam;
 };
 
 
@@ -180,6 +200,30 @@ struct tRaycastOut
 	Vec2	vUV;
 	float	fDist;
 	int		bSuccess;
+	Vec4	vRGB;
+};
+
+// Raycast 결과를 받을 구조체
+struct tRaycastOutV3
+{
+	Vec2	vUV;
+	float	fDist;
+	int		bSuccess;
+};
+
+// Intersect 결과 받을 구조체 CPU용
+struct IntersectResult
+{
+	Vec3  vCrossPoint;
+	float fResult;
+	bool  bResult;
+};
+
+// Navi 결과를 받을 구조체
+struct tNaviResult
+{
+	Vector3 resultPos;
+	bool	bSuccess;
 };
 
 // ============
@@ -225,6 +269,34 @@ struct tMTAnimClip
 	float			fUpdateTime; // 이거 안씀
 
 	FbxTime::EMode	eMode;
+};
+
+// ===========
+// Instancing
+// ===========
+union uInstID
+{
+	struct {
+		UINT iMesh;
+		WORD iMtrl;
+		WORD iMtrlIdx;
+	};
+	ULONG64 llID;
+};
+
+class CGameObject;
+struct tInstObj
+{
+	CGameObject* pObj;
+	UINT		 iMtrlIdx;
+};
+
+struct tInstancingData
+{
+	Matrix matWorld;
+	Matrix matWV;
+	Matrix matWVP;
+	int    iRowIdx;
 };
 
 // ===================

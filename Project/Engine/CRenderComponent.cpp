@@ -3,6 +3,8 @@
 
 #include "CResMgr.h"
 #include "CTransform.h"
+#include "CAnimator3D.h"
+#include "CStructuredBuffer.h"
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 	: CComponent(_type)
@@ -12,21 +14,62 @@ CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 	, m_fBoundingBoxScale(0.f)
 	, m_fBoundingBoxOffsetScale(0.f)
 {
+	
 }
 
 CRenderComponent::~CRenderComponent()
 {
+	if (!m_vecMtrls.empty())
+	{
+		for (auto Mtrls : m_vecMtrls)
+		{
+			Mtrls.pCurMtrl = nullptr;
+			Mtrls.pDynamicMtrl = nullptr;
+			Mtrls.pSharedMtrl = nullptr;
+		}
+	}
 }
 
 void CRenderComponent::render_shadowmap()
 {
+	//Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+	//
+	//Transform()->UpdateData();
+	//
+	//pShadowMapMtrl->UpdateData();
+	//
+	//GetMesh()->render(0);
 	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 
 	Transform()->UpdateData();
 
+	// Animator3D 업데이트
+	if (Animator3D())
+	{
+		Animator3D()->GetFinalBoneMat()->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
+		pShadowMapMtrl->SetAnim3D(true);
+	}
+	else {
+		pShadowMapMtrl->SetAnim3D(false);
+	}
+
 	pShadowMapMtrl->UpdateData();
 
-	GetMesh()->render(0);
+	UINT iSubsetCount = GetMesh()->GetSubsetCount();
+
+	for (UINT i = 0; i < iSubsetCount; i++) {
+		if (nullptr != GetMaterial(i))
+		{
+			GetMesh()->render(i);
+		}
+	}
+
+	if (Animator3D()) {
+		Animator3D()->GetFinalBoneMat()->Clear();
+		Animator3D()->ClearData();
+	}
+
+	//GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
 }
 
 
@@ -93,13 +136,18 @@ Ptr<CMaterial> CRenderComponent::GetDynamicMaterial(UINT _idx)
 	return m_vecMtrls[_idx].pCurMtrl;
 }
 
+ULONG64 CRenderComponent::GetInstID(UINT _iMtrlIdx)
+{
+	if (m_pMesh == NULL || m_vecMtrls[_iMtrlIdx].pCurMtrl == NULL)
+		return 0;
+
+	uInstID id{ (UINT)m_pMesh->GetID(), (WORD)m_vecMtrls[_iMtrlIdx].pCurMtrl->GetID(), (WORD)_iMtrlIdx };
+	return id.llID;
+}
+
 
 void CRenderComponent::SaveToLevelFile(FILE* _File)
 {
-	COMPONENT_TYPE type = GetType();
-	fwrite(&type, sizeof(UINT), 1, _File);
-
-
 	SaveResRef(m_pMesh.Get(), _File);
 
 	UINT iMtrlCount = GetMtrlCount();
@@ -119,6 +167,8 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 {
 	LoadResRef(m_pMesh, _File);
 
+	SetMesh(m_pMesh);
+
 	UINT iMtrlCount = GetMtrlCount();
 	fread(&iMtrlCount, sizeof(UINT), 1, _File);
 
@@ -132,73 +182,4 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 	fread(&m_bDynamicShadow, 1, 1, _File);
 	fread(&m_bFrustumCheck, 1, 1, _File);
 	fread(&m_fBounding, 1, 1, _File);
-}
-
-void CRenderComponent::SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-
-	// 쿼리 문자열 준비
-	const char* szQuery = "INSERT INTO RENDERCOMPONENT(GameObject_ID, Mesh_Key, Mesh_Path, SharedMtrl_Key, SharedMtrl_Path) VALUES (?, ?, ?, ?, ?)";
-	sqlite3_stmt* stmt;
-
-	// 쿼리 준비
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-
-		wstring meshKey, meshPath, mtrlKey, mtrlPath;
-		SaveResRefToDB(m_pMesh.Get(), meshKey, meshPath);
-		SaveResRefToDB(m_pSharedMtrl.Get(), mtrlKey, mtrlPath);
-
-		sqlite3_bind_text16(stmt, 2, meshKey.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text16(stmt, 3, meshPath.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text16(stmt, 4, mtrlKey.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_text16(stmt, 5, mtrlPath.c_str(), -1, SQLITE_TRANSIENT);
-
-		// 쿼리 실행
-		if (sqlite3_step(stmt) != SQLITE_DONE) {
-			// 에러 처리: 쿼리 실행에 실패했을 경우
-			assert(false);
-		}
-
-		// 스테이트먼트 종료
-		sqlite3_finalize(stmt);
-	}
-	else {
-		// 쿼리 준비에 실패했을 경우의 처리
-		assert(false);
-	}
-}
-
-void CRenderComponent::LoadFromDB(int _gameObjectID)
-{
-	sqlite3* db = CSQLMgr::GetInst()->GetDB();
-	const char* szQuery = "SELECT Mesh_Key, Mesh_Path, SharedMtrl_Key, SharedMtrl_Path FROM RENDERCOMPONENT WHERE GameObject_ID = ?";
-	sqlite3_stmt* stmt;
-
-	if (sqlite3_prepare_v2(db, szQuery, -1, &stmt, NULL) == SQLITE_OK) {
-		sqlite3_bind_int(stmt, 1, _gameObjectID);
-
-		if (sqlite3_step(stmt) == SQLITE_ROW) {
-			const wchar_t* meshKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 0));
-			const wchar_t* meshPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 1));
-			const wchar_t* mtrlKey = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 2));
-			const wchar_t* mtrlPath = static_cast<const wchar_t*>(sqlite3_column_text16(stmt, 3));
-
-			LoadResRefFromDB(m_pMesh, meshKey, meshPath);
-			LoadResRefFromDB(m_pSharedMtrl, mtrlKey, mtrlPath);
-
-			SetMaterial(m_pSharedMtrl, 0);
-		}
-		else {
-			// 에러 처리: 데이터를 찾지 못했거나 쿼리에 실패했을 경우
-			assert(false);
-		}
-
-		sqlite3_finalize(stmt);
-	}
-	else {
-		// 쿼리 준비에 실패했을 경우의 처리
-		assert(false);
-	}
 }

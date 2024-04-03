@@ -273,6 +273,8 @@ namespace DirectX
             Vector3 operator+ () const { return *this; }
             Vector3 operator- () const;
 
+            Vector3& operator + (float _f) { x += _f, y += _f, z += _f; return *this; }
+
             // Vector operations
             bool InBounds(const Vector3& Bounds) const;
 

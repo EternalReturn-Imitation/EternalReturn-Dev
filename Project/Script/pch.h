@@ -11,8 +11,16 @@
 #include "framework.h"
 
 #include <Engine\global.h>
+#include <Engine\FSM.h>
+
+#include "ER_define.h"
+#include "ER_struct.h"
 
 #include "CScriptMgr.h"
+#include "ER_BattleSystem.h"
+#include "ER_UIMgr.h"
 
+//Comp
+#include <Engine\CFindPath.h>
 
 #endif //PCH_H

@@ -9,11 +9,14 @@
 #include "TransformUI.h"
 #include "MeshRenderUI.h"
 #include "Collider2DUI.h"
+#include "Collider3DUI.h"
 #include "CameraUI.h"
 #include "Animator2DUI.h"
 #include "TileMapUI.h"
 #include "Light2DUI.h"
 #include "Light3DUI.h"
+#include "BoneUI.h"
+#include "TextUI.h"
 
 #include "MeshDataUI.h"
 #include "TextureUI.h"
@@ -39,7 +42,7 @@ InspectorUI::InspectorUI()
 	SetName("Inspector");
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM] = new TransformUI;
-	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]->SetSize(0.f, 150.f);	
+	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]->SetSize(0.f, 300.f);	
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::MESHRENDER] = new MeshRenderUI;
@@ -49,12 +52,19 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA] = new CameraUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::CAMERA]);
+	
+	m_arrComUI[(UINT)COMPONENT_TYPE::TEXTCOMP] = new TextUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::TEXTCOMP]->SetSize(0.f, 400.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TEXTCOMP]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D] = new Collider2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]);
 
 	// Collider 3D UI
+	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D] = new Collider3DUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D] = new Animator2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D]->SetSize(0.f, 150.f);
@@ -112,6 +122,11 @@ InspectorUI::InspectorUI()
 	m_arrResUI[(UINT)RES_TYPE::SOUND] = new SoundUI;
 	m_arrResUI[(UINT)RES_TYPE::SOUND]->SetSize(0.f, 0.f);
 	AddChildUI(m_arrResUI[(UINT)RES_TYPE::SOUND]);
+
+	m_arrResUI[(UINT)RES_TYPE::BONE] = new BoneUI;
+	m_arrResUI[(UINT)RES_TYPE::BONE]->SetSize(0.f, 0.f);
+	AddChildUI(m_arrResUI[(UINT)RES_TYPE::BONE]);
+
 }
 
 InspectorUI::~InspectorUI()

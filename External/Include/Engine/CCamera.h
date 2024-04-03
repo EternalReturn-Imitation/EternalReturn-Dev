@@ -19,8 +19,8 @@ private:
 
     bool        m_bMainCamera;      // 메인카메라 여부
 
-    float   m_OrthoWidth;   // OrthoGraphic 에서의 가로 투영 범위
-    float   m_OrthoHeight;  // OrthoGraphic 에서의 세로 투영 범위
+    float       m_OrthoWidth;   // OrthoGraphic 에서의 가로 투영 범위
+    float       m_OrthoHeight;  // OrthoGraphic 에서의 세로 투영 범위
 
     PROJ_TYPE   m_ProjType;
 
@@ -35,14 +35,18 @@ private:
 
     int         m_iCamIdx;          // 카메라 우선순위
 
-    tRay                    m_ray;      // 마우스 방향을 향하는 직선
+    tRay        m_ray;      // 마우스 방향을 향하는 직선
 
     bool        m_bDebugView;
     bool        m_bDebugFrustumView;
 
 
-    vector<CGameObject*>    m_vecDeferred;
-    vector<CGameObject*>    m_vecDeferredDecal;
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D;	    // Deferred
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F;	    // Foward ( Opaque, Mask )	
+    map<INT_PTR, vector<tInstObj>>		m_mapSingleObj;		    // Single Object
+
+    //vector<CGameObject*>    m_vecDeferred;
+    //vector<CGameObject*>    m_vecDeferredDecal;
 
     vector<CGameObject*>    m_vecOpaque;
     vector<CGameObject*>    m_vecMask;
@@ -108,6 +112,11 @@ public:
 
     int GetCamIdx() { return m_iCamIdx; }
 
+    void MatrixUpdate();
+
+public:
+    tRaycastOutV3 Raycasting(Vec3* _vertices, tRay _ray);
+
 public:
     void SortObject();
     void SortObject(CCamera* _MainCamera);
@@ -120,16 +129,16 @@ public:
     virtual void begin() override;
     virtual void finaltick() override;
 
-protected:
-    void CalRay();  // 마우스 방향으로 광선 연산
+public:
+    tRay CalRay();  // 마우스 방향으로 광선 연산
 
 private:
     void clear();
     void clear_shadow();
 
     void render_deferred();
-    void render_opaque();
-    void render_mask();
+    void render_forward();
+
     void render_decal();
     void render_transparent();
     void render_postprocess();
@@ -138,18 +147,19 @@ private:
 
     void CalcViewMat();
     void CalcProjMat();
+    void UpdateMatrix();
 
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
 
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
-    virtual void LoadFromDB(int _gameObjectID) override;
-
     CLONE(CCamera);
+
 public:    
     CCamera();
     CCamera(const CCamera& _Other);
     ~CCamera();
+
+    friend class CLight3D;
 };
 

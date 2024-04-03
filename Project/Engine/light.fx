@@ -7,6 +7,7 @@
 struct VS_IN
 {
     float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
 };
 
 struct VS_OUT
@@ -92,17 +93,17 @@ PS_OUT PS_DirLightShader(VS_OUT _in)
         if (fLightDepth + 0.002f <= fDepth)
         {
             // 그림자
-            fShadowPow = 0.9f;
+            fShadowPow = 0.5f;
         }
     }
     
     // 계산된 최종 광원의 세기를 각 타겟(Diffuse, Specular) 에 출력
-    output.vDiffuse = (LightColor.vDiffuse + LightColor.vAmbient); // * (1.f - fShadowPow);
-    output.vSpecular = g_Light3DBuffer[LightIdx].Color.vDiffuse * fSpecPow; // * (1.f - fShadowPow);
+    output.vDiffuse = (LightColor.vDiffuse + LightColor.vAmbient) * (1.f - fShadowPow);
+    output.vSpecular = g_Light3DBuffer[LightIdx].Color.vDiffuse * (1.f - fShadowPow);
     output.vShadow = fShadowPow;
     
-    output.vDiffuse.a = 1.f;
-    output.vSpecular.a = 1.f;
+    // output.vDiffuse.a = 1.f;
+    // output.vSpecular.a = 1.f;
     
     return output;
 }
@@ -202,6 +203,7 @@ PS_OUT PS_PointLightShader(VS_OUT _in)
 #define SpecularTargetTex g_tex_2
 #define EmissiveTargetTex g_tex_3
 #define ShadowTargetTex   g_tex_4
+#define DataTargetTex     g_tex_5
 // =====================================
 VS_OUT VS_MergeShader(VS_IN _in)
 {
@@ -226,16 +228,99 @@ float4 PS_MergeShader(VS_OUT _in) : SV_Target
     float4 vSpecular = SpecularTargetTex.Sample(g_sam_0, vScreenUV);
     float4 vEmissive = EmissiveTargetTex.Sample(g_sam_0, vScreenUV);
     float fShadowPow = ShadowTargetTex.Sample(g_sam_0, vScreenUV).r;
+    float4 vData = DataTargetTex.Sample(g_sam_0, vScreenUV);
     
     vOutColor.xyz = vColor.xyz * vDiffuse.xyz * (1.f - fShadowPow)
                     + (vSpecular.xyz * vColor.a) * (1.f - fShadowPow)
                     + vEmissive.xyz;
+    
+    // 외곽선 감지를 위한 주변 픽셀 샘플링 오프셋
+    float2 offsets[8] =
+    {
+        { -1, -1 },
+        { 0, -1 },
+        { 1, -1 },
+        { -1, 0 },
+        { 1, 0 },
+        { -1, 1 },
+        { 0, 1 },
+        { 1, 1 }
+    };
+    
+    //엣지가 0일땐, 엣지 없음, 1일땐 일반상태(하얀색), 2일땐 마우스가져다 댔을때(빨간색)
+    int iEdgeState = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        float4 sampleData = DataTargetTex.Sample(g_sam_0, vScreenUV + offsets[i] * 0.0013); // 0.001은 해상도에 따라 조정 필요
+        // 초록색 오브젝트와 비-초록색(검은색) 오브젝트 사이의 경계 감지
+        if (vData.g > 0.5 && sampleData.g <= 0.5)
+        {
+            iEdgeState = 1;
+            break;
+        }
+        if (vData.r > 0.5 && sampleData.r <= 0.5)
+        {
+            iEdgeState = 2;
+            break;
+        }
+        if (vData.b > 0.5 && sampleData.b <= 0.5)
+        {
+            iEdgeState = 3;
+            break;
+        }
+    }
+
+    if (iEdgeState == 1)
+    {
+        // 외곽선을 강조하기 위해 색상을 변경 (예: 흰색)
+        vOutColor.xyz = vColor.xyz * 1.f * (1.f - fShadowPow)
+                        + (1.f * vColor.a) * (1.f - fShadowPow)
+                        + vEmissive.xyz;
+        
+        vOutColor *= float4(1.f, 1.f, 1.f, 1.f);
+    }
+    else if (iEdgeState == 2)
+    {        
+        vOutColor = float4(0.0f, 1.0f, 1.0f, 1.0f);
+    }
+    else if (iEdgeState == 3)
+    {
+        vOutColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
+    }
+    else
+    {
+        // 외곽선이 아닌 경우 원래 색상 계산 로직 유지
+        vOutColor.xyz = vColor.xyz * 1.f * (1.f - fShadowPow)
+                        + (1.f * vColor.a) * (1.f - fShadowPow)
+                        + vEmissive.xyz;
+    }    
+    
     vOutColor.a = 1.f;
+    
     
     return vOutColor;
 }
 
 
+// ===============
+// DepthMap Shader
+// MRT : ShadowMap MRT
+// RS : CULL_BACK
+// BS : Default
+// DS : Less
+// ===============
+struct VS_SHADOW_IN
+{
+    float3 vPos : POSITION;
+    float2 vUV : TEXCOORD;
+
+    float3 vTangent : TANGENT;
+    float3 vNormal : NORMAL;
+    float3 vBinormal : BINORMAL;
+
+    float4 vWeights : BLENDWEIGHT;
+    float4 vIndices : BLENDINDICES;
+};
 
 struct VS_SHADOW_OUT
 {
@@ -243,16 +328,24 @@ struct VS_SHADOW_OUT
     float4 vProjPos : POSITION;
 };
 
-VS_SHADOW_OUT VS_ShadowMap(VS_IN _in)
+VS_SHADOW_OUT VS_ShadowMap(VS_SHADOW_IN _in)
 {
     VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
+    
+    float3 backupVPos = _in.vPos;
+    
+    if (g_iAnim)
+    {
+        Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, 0);
+    }
     
     // 사용하는 메쉬가 RectMesh(로컬 스페이스에서 반지름 0.5 짜리 정사각형)
     // 따라서 2배로 키워서 화면 전체가 픽셀쉐이더가 호출될 수 있게 한다.
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
-        
+    
     output.vProjPos = output.vPosition;
-    output.vProjPos.xyz /= output.vProjPos.w;
+    output.vProjPos.xyz /= output.vProjPos.w;    
+    
             
     return output;
 }

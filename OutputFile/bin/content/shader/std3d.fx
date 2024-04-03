@@ -37,6 +37,9 @@ struct VS_OUT
 #define IS_SKYBOX_ENV   g_btexcube_0
 #define SKYBOX_ENV_TEX  g_cube_0
 
+
+#define                     DATATEX                       g_tex_2
+
 VS_OUT VS_Std3D(VS_IN _in)
 {
     VS_OUT output = (VS_OUT) 0.f;
@@ -64,8 +67,7 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
     if(g_btex_0)
     {
         vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
-    }
-    
+    }    
     if (g_btex_1)
     {
         float3 vNormal = g_tex_1.Sample(g_sam_0, _in.vUV).xyz;        

@@ -13,16 +13,30 @@
 #define KEY_RELEASE(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::RELEASE
 #define KEY_PRESSED(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::PRESSED
 
+#define WHEEL_UP CKeyMgr::GetInst()->IsMouseWheelUp()
+#define WHEEL_DOWN CKeyMgr::GetInst()->IsMouseWheelDown()
+
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 
-#define MAX_LAYER 32
+#define MAX_LAYER	32
+#define MAX_MIP		8
+
+#define NaN std::numeric_limits<float>::quiet_NaN()
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 
+#define FONT_RGBA(r, g, b, a) (((((BYTE)a << 24 ) | (BYTE)b << 16) | (BYTE)g << 8) | (BYTE)r)
 
+#define xAlloc(size)		PoolAllocator::Alloc(size)
+#define xrelease(ptr)		PoolAllocator::Release(ptr)
 
-
-
+#include "ObjectPool.h"
+#define onew(object) ObjectPool<object>::Pop();
+//#define odelete(object) ObjectPool<decltype(object)>::Push(&object);
+template<typename T>
+void odelete(T * object) {
+	ObjectPool<T>::Push(object);
+}
 
 
 enum class COMPONENT_TYPE
@@ -36,8 +50,13 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2차원 광원
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
+	TEXTCOMP,			// Text
 
 	BEHAVIORTREE,
+	FINDPATH,
+	
+	// UI
+	UICOMPONENT,
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링
@@ -53,6 +72,29 @@ enum class COMPONENT_TYPE
 	SCRIPT,
 };
 
+enum Component_Flags_
+{
+	_NONE = 0,
+	_TRANSFORM = 1 << 0,
+	_COLLIDER2D = 1 << 1,
+	_COLLIDER3D = 1 << 2,
+	_ANIMATOR2D = 1 << 3,
+	_ANIMATOR3D = 1 << 4,
+	_LIGHT2D = 1 << 5,
+	_LIGHT3D = 1 << 6,
+	_CAMERA = 1 << 7,
+	_TEXT = 1 << 8,
+	_BEHAVIORTREE = 1 << 9,
+	_FINDPATH = 1 << 10,
+	_UICOMPONENT = 1 << 11,
+	_MESHRENDER = 1 << 12,
+	_PARTICLESYSTEM = 1 << 13,
+	_TILEMAP = 1 << 14,
+	_LANDSCAPE = 1 << 15,
+	_SKYBOX = 1 << 16,
+	_DECAL = 1 << 17,
+};
+
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];
 extern const wchar_t* COMPONENT_TYPE_WSTR[(UINT)COMPONENT_TYPE::END];
 
@@ -65,6 +107,7 @@ enum class RES_TYPE
 	MESH,			// 형태
 	TEXTURE,		// 이미지
 	SOUND,
+	BONE,			// 애니메이션 BONE
 
 	GRAPHICS_SHADER,
 	COMPUTE_SHADER,
@@ -112,7 +155,14 @@ enum SCALAR_PARAM
 	MAT_0,
 	MAT_1,
 	MAT_2,
-	MAT_3,	
+	MAT_3,
+
+	ITEX_0,
+	ITEX_1,
+	ITEX_2,
+	ITEX_3,
+	ITEX_4,
+	ITEX_5,
 };
 
 enum TEX_PARAM
@@ -214,6 +264,7 @@ enum class SHADER_DOMAIN
 enum class EVENT_TYPE
 {
 	CREATE_OBJECT,	// wParam : GameObject, lParam : Layer Index
+	CREATE_OBJECT_TO_PARENT, // wParam : ChildObject, lParam : ParentObject
 	DELETE_OBJECT,  // wParam : GameObject
 
 	ADD_CHILD,
@@ -242,6 +293,12 @@ enum class COLLIDER2D_TYPE
 	END,
 };
 
+enum class COLLIDER3D_TYPE
+{
+	SPHERE,
+	CUBE,
+	END,
+};
 extern const char* COLLIDER2D_TYPE_STR[(UINT)COLLIDER2D_TYPE::END];
 extern const wchar_t* COLLIDER2D_TYPE_WSTR[(UINT)COLLIDER2D_TYPE::END];
 
@@ -292,5 +349,18 @@ enum class MRT_TYPE
 
 	SHADOWMAP,
 
+	_3DANIM_EDIT,
+
+	_UI_EDIT,
+
+	END,
+};
+
+enum class FONT
+{
+	KBIZM,
+	Muli_SemiBold,
+	Roboto_Regularl,
+	SairaSemiCondensed_Regular,
 	END,
 };

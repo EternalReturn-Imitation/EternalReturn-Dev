@@ -12,7 +12,7 @@
 #include "ImGui/ImGuizmo.h"
 
 #include <Engine/CKeyMgr.h>
-#include <Script/CCameraMoveScript.h>
+#include <Script/CEditCamControlScript.h>
 
 static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
@@ -30,44 +30,87 @@ int TransformUI::render_update()
 {
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
+	
+	CTransform* transform = GetTarget()->Transform();
 
-	/*Vec3 vPos = GetTarget()->Transform()->GetRelativePos();
-	Vec3 vScale = GetTarget()->Transform()->GetRelativeScale();
-	Vec3 vRotation = GetTarget()->Transform()->GetRelativeRot();
-	vRotation = (vRotation / XM_PI) * 180.f;
-
-	ImGui::Text("Position");
+	// 프리팹 키
+	ImGui::Button("Key", ImVec2(40.f, 0.f)); ImGui::SameLine();
 	ImGui::SameLine();
-	ImGui::DragFloat3("##Relative Position", vPos);
+	// wchar_t -> UTF-8
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+	char szbuffer[256] = {};
+	strcpy_s(szbuffer, converter.to_bytes(transform->GetPrefabKey()).c_str());
 
-	ImGui::Text("Scale   ");
+	ImGui::PushItemWidth(-FLT_MIN);
+	ImGui::InputText("##PrefabKey", szbuffer, sizeof(szbuffer));
+
+	// UTF-8 ->wchar_t
+	std::string utf8String = szbuffer;
+	std::wstring WString = converter.from_bytes(utf8String);
+
+	transform->SetPrefabKey(WString);    // 프리팹키 수정
+
+	ImGui::PushItemWidth(-FLT_MIN);
+	if (ImGui::Button("SAVE##TransformPrepab"))
+	{
+		transform->SavePrefab(WString);
+	}
 	ImGui::SameLine();
-	ImGui::DragFloat3("##Relative Scale", vScale);
+	if (ImGui::Button("SetObjName##transformPrepab"))
+	{
+		transform->SetPrefabKey(GetTarget()->GetName());
+		transform->SavePrefab(GetTarget()->GetName());
+	}
+	bool bAbsolute = transform->IsAbsolute();
 
-	ImGui::Text("Rotation");
-	ImGui::SameLine();
-	ImGui::DragFloat3("##Relative Rotation", vRotation);
+	if (ImGui::Checkbox("##TrasnformAbsolut", &bAbsolute))
+	{
+		bAbsolute = !bAbsolute;
+	}
 
-	GetTarget()->Transform()->SetRelativePos(vPos);
-	GetTarget()->Transform()->SetRelativeScale(vScale);
+	transform->SetAbsolute(bAbsolute);
+	
+	ImGui::Separator();
 
-	vRotation = (vRotation / 180.f) * XM_PI;
-	GetTarget()->Transform()->SetRelativeRot(vRotation);*/
-
+// 	Vec3 vPos = GetTarget()->Transform()->GetRelativePos();
+// 	Vec3 vScale = GetTarget()->Transform()->GetRelativeScale();
+// 	Vec3 vRotation = GetTarget()->Transform()->GetRelativeRot();
+// 	vRotation = (vRotation / XM_PI) * 180.f;
+// 
+// 	ImGui::Text("Position");
+// 	ImGui::SameLine();
+// 	ImGui::DragFloat3("##Relative Position", vPos);
+// 
+// 	ImGui::Text("Scale   ");
+// 	ImGui::SameLine();
+// 	ImGui::DragFloat3("##Relative Scale", vScale);
+// 
+// 	ImGui::Text("Rotation");
+// 	ImGui::SameLine();
+// 	ImGui::DragFloat3("##Relative Rotation", vRotation);
+// 
+// 	GetTarget()->Transform()->SetRelativePos(vPos);
+// 	GetTarget()->Transform()->SetRelativeScale(vScale);
+// 
+// 	vRotation = (vRotation / 180.f) * XM_PI;
+// 	GetTarget()->Transform()->SetRelativeRot(vRotation);
+// 	
+// 	return TRUE;
+	
 	//ImGui 렌더전에 기즈모 렌더를 해야함 ! (타겟오브젝트가 있을경우)
 	if (CRenderMgr::GetInst()->GetGizmoTarget())
 	{
 		CGameObject* TargetObj = CRenderMgr::GetInst()->GetGizmoTarget();
 		if (TargetObj->Transform())// 트랜스폼을 가지고있다면
 		{
-			if (!CRenderMgr::GetInst()->GetMainCam()->GetOwner()->GetScript<CCameraMoveScript>()->GetRBTNPressed()) {
-				if (KEY_TAP(KEY::Q))
-					mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-				else if (KEY_TAP(KEY::W))
-					mCurrentGizmoOperation = ImGuizmo::ROTATE;
-				else if (KEY_TAP(KEY::E))
-					mCurrentGizmoOperation = ImGuizmo::SCALE;
-			}			
+			// if (!CRenderMgr::GetInst()->GetMainCam()->GetOwner()->GetScript<CCameraMoveScript>()->GetRBTNPressed()) {
+			// }
+			if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_1))
+				mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+			else if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_2))
+				mCurrentGizmoOperation = ImGuizmo::ROTATE;
+			else if (KEY_PRESSED(KEY::LSHIFT) && KEY_TAP(KEY::_3))
+				mCurrentGizmoOperation = ImGuizmo::SCALE;
 
 			if (TargetObj->Transform()->GetGizmoOnSet()) //기즈모를 배치할수 있는 오브젝트라면
 				RenderGizmo();  //기즈모 렌더 처리
@@ -116,13 +159,13 @@ void TransformUI::EditTransform(float* cameraView, float* cameraProjection, floa
 		//윈도우 모드일때만 뜨도록 함
 		ImGui::Text("Position");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Tr", matrixTranslation);
+		ImGui::DragFloat3("##Tr", matrixTranslation, 0.01f, 0.f, 0.f, "%.5f");
 		ImGui::Text("Rotation");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Rt", matrixRotation);
+		ImGui::DragFloat3("##Rt", matrixRotation, 0.01f, 0.f, 0.f, "%.5f");
 		ImGui::Text("Scale   ");
 		ImGui::SameLine();
-		ImGui::DragFloat3("##Sc", matrixScale);
+		ImGui::DragFloat3("##Sc", matrixScale, 0.01f, 0.f, 0.f, "%.5f");
 		ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, matrix);
 
 		if (mCurrentGizmoOperation != ImGuizmo::SCALE)
@@ -180,7 +223,7 @@ void TransformUI::EditTransform(float* cameraView, float* cameraProjection, floa
 	int windowY = clientTopLeft.y; // 윈도우의 좌상단 y 좌표
 
 
-	ImGuizmo::SetRect(windowX, windowY, io.DisplaySize.x, io.DisplaySize.y);
+	ImGuizmo::SetRect((float)windowX, (float)windowY, io.DisplaySize.x, io.DisplaySize.y);
 
 	//기즈모 계산 수행
 	ImGuizmo::Manipulate(cameraView, cameraProjection, mCurrentGizmoOperation, mCurrentGizmoMode, matrix, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
@@ -217,13 +260,9 @@ void TransformUI::RenderGizmo()
 
 	if (GizTarget)
 	{
-		Vec3 Rot = GizTarget->Transform()->GetRelativeRot();
-		Vec3 Pos = GizTarget->Transform()->GetRelativePos();
-		Vec3 Scale = GizTarget->Transform()->GetRelativeScale();
-
 		////ImGuizmo::SetRect(100.f, 100.f, 100.f);
 		//ImGuizmo::Manipulate(ViewMatArray, ProjMatArray, ImGuizmo::TRANSLATE, ImGuizmo::WORLD, WorldMatArray);
-		Matrix WorldMat = GizTarget->Transform()->GetWorldMat();
+		Matrix WorldMat = GizTarget->Transform()->GetWorldMatForGizmo();
 		Matrix ViewMat = CRenderMgr::GetInst()->GetMainCam()->GetViewMat();
 		Matrix ProjMat = CRenderMgr::GetInst()->GetMainCam()->GetProjMat();
 

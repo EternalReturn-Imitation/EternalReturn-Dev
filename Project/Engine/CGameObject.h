@@ -12,6 +12,7 @@ class CAnimator3D;
 class CLight2D;
 class CLight3D;
 class CCamera;
+class CText;
 class CRenderComponent;
 class CSkyBox;
 class CTileMap;
@@ -19,6 +20,9 @@ class CDecal;
 class CLandScape;
 class CScript;
 class CBehaviorTree;
+class CCollider3D;
+class CFindPath;
+class CUIComponent;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -28,11 +32,15 @@ class CGameObject :
     public CEntity
 {
 private:
-    CComponent* m_arrCom[(UINT)COMPONENT_TYPE::END];
-    CRenderComponent* m_RenderCom;
+    CComponent*         m_arrCom[(UINT)COMPONENT_TYPE::END];
+    CRenderComponent*   m_RenderCom;
+    CText* m_TextCom;
+
+
+    CUIComponent*           m_UICom;
     vector<CScript*>        m_vecScript;
 
-    CGameObject* m_Parent;
+    CGameObject*            m_Parent;
     vector<CGameObject*>    m_vecChild;
 
     int                     m_iLayerIdx; // 소속된 레이어 인덱스값
@@ -40,17 +48,21 @@ private:
     float                   m_LifeTime;
     float                   m_CurLifeTime;
     bool                    m_bLifeSpan;
+    bool                    m_bEnable;
+    bool                    m_bOutofLayer;
 
 public:
     // 레벨이 시작될 때 호출 or 시작 된 레벨에 합류할 때 호출
     // 생성자
-    void begin();
+    virtual void begin();
 
-    void tick();
+    virtual void tick();
     virtual void finaltick();
     void finaltick_module();
     void render();
     void render_shadowmap();
+
+    void LoadAllPrefabFromObjName();
 
 public:
     void AddComponent(CComponent* _Component);
@@ -65,6 +77,7 @@ public:
     GET_COMPONENT(MeshRender, MESHRENDER);
     GET_COMPONENT(ParticleSystem, PARTICLESYSTEM);
     GET_COMPONENT(Camera, CAMERA);
+    GET_COMPONENT(Text, TEXTCOMP);
     GET_COMPONENT(Collider2D, COLLIDER2D);
     GET_COMPONENT(Light2D, LIGHT2D);
     GET_COMPONENT(TileMap, TILEMAP);
@@ -75,9 +88,13 @@ public:
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
     GET_COMPONENT(LandScape, LANDSCAPE);
+    GET_COMPONENT(Collider3D, COLLIDER3D);
+    GET_COMPONENT(FindPath, FINDPATH);
+    GET_COMPONENT(UIComponent, UICOMPONENT);
 
     CRenderComponent* GetRenderComponent() const { return m_RenderCom; }
-
+    CText* GetTextComponent() const { return m_TextCom; }
+    CUIComponent* GetUIComponent() const { return m_UICom; }
 
     int GetLayerIndex() { return m_iLayerIdx; }
 
@@ -97,7 +114,11 @@ public:
 
     bool IsDead() { return m_bDead; }
     bool IsAncestor(CGameObject* _Target);
-
+    bool IsEnable() { return m_bEnable; }
+    bool IsOutofLayer() { return m_bOutofLayer; }
+    
+    void SetEnable(bool _b) { m_bEnable = _b; }
+    void SetOutOfLayer(bool _b) { m_bOutofLayer = _b; }
 
 private:
     void DisconnectFromParent();

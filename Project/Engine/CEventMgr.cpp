@@ -3,6 +3,7 @@
 
 #include "CLevelMgr.h"
 #include "CLevel.h"
+#include "CLayer.h"
 #include "CGameObject.h"
 #include "CResMgr.h"
 #include "CRenderMgr.h"
@@ -44,6 +45,20 @@ void CEventMgr::tick()
 			m_LevelChanged = true;
 		}
 			break;
+		case EVENT_TYPE::CREATE_OBJECT_TO_PARENT:
+		{
+			CGameObject* ChildObject = (CGameObject*)m_vecEvent[i].wParam;
+			CGameObject* ParentObject = (CGameObject*)m_vecEvent[i].lParam;
+
+			ParentObject->AddChild(ChildObject);
+			if (CLevelMgr::GetInst()->GetCurLevel()->GetState() == LEVEL_STATE::PLAY)
+			{
+				ChildObject->begin();
+			}
+
+			m_LevelChanged = true;
+		}
+		break;
 		case EVENT_TYPE::DELETE_OBJECT:
 		{
 			CGameObject* DeleteObject = (CGameObject*)m_vecEvent[i].wParam;
@@ -55,7 +70,6 @@ void CEventMgr::tick()
 			}			
 		}
 			break;
-
 		case EVENT_TYPE::ADD_CHILD:
 			// wParam : ParentObject, lParam : ChildObject
 		{
@@ -99,6 +113,7 @@ void CEventMgr::tick()
 			CLevel* Level = (CLevel*)m_vecEvent[i].wParam;
 			CLevelMgr::GetInst()->ChangeLevel(Level);
 			CRenderMgr::GetInst()->ClearCamera();
+			CLevelMgr::GetInst()->LevenEnter();
 			m_LevelChanged = true;
 		}
 			break;		
@@ -119,7 +134,12 @@ void CEventMgr::GC_Clear()
 			if (m_vecGC[i]->GetParent())			
 				m_vecGC[i]->DisconnectFromParent();
 			
-			delete m_vecGC[i];
+			if (static_cast<CEntity*>(m_vecGC[i])->GetManagedByMemory()) {
+				//xdelete<CGameObject>(m_vecGC[i]); // 메모리 풀 버전
+				odelete(m_vecGC[i]); //오브젝트 풀 버전
+			}
+			else
+				delete m_vecGC[i];
 
 			m_LevelChanged = true;
 		}		

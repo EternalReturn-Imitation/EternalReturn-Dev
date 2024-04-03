@@ -76,7 +76,7 @@ void ContentUI::Reload()
 		switch (type)
 		{
 		case RES_TYPE::MESHDATA:
-			CResMgr::GetInst()->Load<CMeshData>(m_vecResPath[i], m_vecResPath[i]);
+			CResMgr::GetInst()->Load<CMeshData>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
 		case RES_TYPE::MATERIAL:
 			CResMgr::GetInst()->Load<CMaterial>(strFileKey, m_vecResPath[i], stdDirPath);
@@ -85,7 +85,7 @@ void ContentUI::Reload()
 
 			break;
 		case RES_TYPE::MESH:
-			CResMgr::GetInst()->Load<CMesh>(m_vecResPath[i], m_vecResPath[i]);
+			CResMgr::GetInst()->Load<CMesh>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
 		case RES_TYPE::TEXTURE:
 			CResMgr::GetInst()->Load<CTexture>(strFileKey, m_vecResPath[i], stdDirPath);
@@ -93,6 +93,8 @@ void ContentUI::Reload()
 		case RES_TYPE::SOUND:
 			CResMgr::GetInst()->Load<CSound>(strFileKey, m_vecResPath[i], stdDirPath);
 			break;
+		case RES_TYPE::BONE:
+			CResMgr::GetInst()->Load<CBone>(strFileKey, m_vecResPath[i], stdDirPath);
 		}
 	}
 
@@ -217,6 +219,8 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath, wstring& _File
 		return RES_TYPE::TEXTURE;
 	else if (L".mp3" == strExt || L".wav" == strExt || L".oga" == strExt)
 		return RES_TYPE::SOUND;
+	else if (L".bone" == strExt)
+		return RES_TYPE::BONE;
 	else
 		return RES_TYPE::END;
 }

@@ -3,3 +3,14 @@ stdafx.h
 CScriptMgr.h
 targetver.h
 CSceneSaveLoad.h
+ER_define.h
+ER_struct.h
+ER_ActionScript_Character.h
+ER_GameSystem.h
+ER_ItemMgr.h
+ER_CharacterMgr.h
+ER_BattleSystem.h
+ER_ProjectilePool.h
+ER_UIMgr.h
+ER_DataScript_Projectile.h
+ER_EffectSystem.h

@@ -5,51 +5,85 @@
 #include "CTexture.h"
 #include "CMaterial.h"
 #include "CMesh.h"
+#include "CBone.h"
 
 class CStructuredBuffer;
+
+class CAnim3D;
 
 class CAnimator3D :
     public CComponent
 {
 private:
-    const vector<tMTBone>* m_pVecBones;
-    const vector<tMTAnimClip>* m_pVecClip;
+    map<wstring, CAnim3D*>      m_mapAnim;
+    CAnim3D*                    m_pCurAnim;
 
-    vector<float>				m_vecClipUpdateTime;
-    vector<Matrix>				m_vecFinalBoneMat; // 텍스쳐에 전달할 최종 행렬정보
-    int							m_iFrameCount; // 30
-    double						m_dCurTime;
-    int							m_iCurClip; // 클립 인덱스	
+    int							m_iFrameCount;              // 30
+    float                       m_fPlaySpeed;               // 재생속도 증가
 
-    int							m_iFrameIdx; // 클립의 현재 프레임
-    int							m_iNextFrameIdx; // 클립의 다음 프레임
-    float						m_fRatio;	// 프레임 사이 비율
+    // default Animation
+    int                         m_iFrameIdx;                // 현재 클립의 프레임
+    int                         m_iNextFrameIdx;            // 클립의 다음 프레임
+    float                       m_fRatio;                   // 프레임 사이 비율
 
-    CStructuredBuffer* m_pBoneFinalMatBuffer;  // 특정 프레임의 최종 행렬
-    bool						m_bFinalMatUpdate; // 최종행렬 연산 수행여부
+    double                      m_dCurTime;                 // 현재 시간
+
+    bool                        m_bPlay;                    // 재생 여부
+    bool                        m_bRepeat;                  // 반복 여부
+    bool                        m_bFinish;                  // 완료 여부
+    
+    // Animation transitions Blending
+    CAnim3D*                    m_pPreviousAnim;
+    int                         m_iPreviousAnimFrmIdx;      // 이전 클립의 전환 당시 프레임
+    bool                        m_bAnimTrans;               // 애니메이션 전환 여부
+
+    double                      m_dTransitionUpdateTime;    // 애니메이션 진행 시간
+    float                       m_fTransitionTime;          // 애니메이션 전환 시간
+    float                       m_fTransitionsRatio;        // 애니메이션 전환 비율
+     
+    CStructuredBuffer*          m_pBoneFinalMatBuffer;      // 특정 프레임의 최종 행렬
+    bool						m_bFinalMatUpdate;          // 최종행렬 연산 수행여부
 
 public:
     virtual void finaltick() override;
     void UpdateData();
 
 public:
-    void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; m_vecFinalBoneMat.resize(m_pVecBones->size()); }
-    void SetAnimClip(const vector<tMTAnimClip>* _vecAnimClip);
-    void SetClipTime(int _iClipIdx, float _fTime) { m_vecClipUpdateTime[_iClipIdx] = _fTime; }
-
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
-    UINT GetBoneCount() { return (UINT)m_pVecBones->size(); }
+    UINT GetBoneCount();
     void ClearData();
 
-private:
-    void check_mesh(Ptr<CMesh> _pMesh);
+    map<wstring, CAnim3D*>& GetAnims() { return m_mapAnim; }
+    CAnim3D* AddAnim(Ptr<CBone> _pBone);
+    CAnim3D* GetPreviousAnim() { return m_pPreviousAnim; }
+    CAnim3D* GetCurAnim() { return m_pCurAnim; }
+
+    // int GetCurFrameIdx() { return m_iFrameIdx; }
 
 public:
+    void Play();
+    void Stop();
+    void Reset();
+    void SetFrame(int _Frame);
+
+    void PlaySpeedValue(float _value) { m_fPlaySpeed += _value * 0.1f; }
+
+    int GetCurFrame() { return m_iFrameIdx; }
+
+    CAnim3D* SelectAnimation(const wstring& _AnimName, bool _bRepeat = true);
+
+    bool IsPlay();
+    bool IsFinish();
+
+private:
+    void Check_Bone(Ptr<CBone> _pBone);
+
+public:
+    void SaveCurAnimDataToFile();
+
     virtual void SaveToLevelFile(FILE* _pFile) override;
     virtual void LoadFromLevelFile(FILE* _pFile) override;
 
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
-    virtual void LoadFromDB(int _gameObjectID) override;
 
     CLONE(CAnimator3D);
 
@@ -57,4 +91,6 @@ public:
     CAnimator3D();
     CAnimator3D(const CAnimator3D& _origin);
     ~CAnimator3D();
+
+    friend class CAnim3D;
 };

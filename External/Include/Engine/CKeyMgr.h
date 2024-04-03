@@ -1,5 +1,7 @@
 #pragma once
 
+#include <dinput.h>
+
 enum class KEY
 {
 	UP,		// VK_UP
@@ -17,13 +19,13 @@ enum class KEY
 
 	LBTN,
 	RBTN,
-	
+
 	Q,
 	W,
 	E,
 	R,
 
-	T,Y,U,I,O,P,
+	T, Y, U, I, O, P,
 
 	A,
 	S,
@@ -45,6 +47,24 @@ enum class KEY
 	_7,
 	_8,
 	_9,
+
+	F1,
+	F2,
+	F3,
+	F4,
+	F5,
+	F6,
+	F7,
+	F8,
+	F9,
+	F10,
+	F11,
+	F12,
+
+	APOSTROPHE,
+
+	WheelUp,
+	WheelDown,
 	
 	END,
 };
@@ -78,14 +98,39 @@ private:
 	Vec2				m_vPrevMousePos;
 	Vec2				m_vMouseDir;
 
+	Vec2				m_vUnProjectMousePos;
+
+	bool				bCsrHide;
+
+
+private:
+	IDirectInput8* m_directInput;
+	IDirectInputDevice8* m_mouse;
+
+	bool mouseWheelUp;
+	bool mouseWheelDown;
+
+	DIMOUSESTATE m_mouseState;
+
 public:
 	void init();
 	void tick();
 
+	void SetCsrHide(bool _hide) { bCsrHide = _hide; }
+
+	void DinputInit(HINSTANCE _hinstance, HWND _hwnd);
+
+	void Release();
 
 public:
 	KEY_STATE GetKeyState(KEY _key) { return m_vecKey[(UINT)_key].state; }
 	Vec2 GetMousePos() { return m_vMousePos; }
 	Vec2 GetMouseDir() { return m_vMouseDir; }
+	Vec2 GetUnProjectPos() { return m_vUnProjectMousePos; }
+
+	bool IsMouseWheelUp() { return mouseWheelUp; }
+	bool IsMouseWheelDown() { return mouseWheelDown; }
+
+	void CalcUnProjectPos();
 };
 

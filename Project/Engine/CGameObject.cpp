@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "CGameObject.h"
 
+#include "CRenderMgr.h"
+
 #include "CComponent.h"
 #include "CMeshRender.h"
 
@@ -15,12 +17,16 @@
 CGameObject::CGameObject()
 	: m_arrCom{}
 	, m_RenderCom(nullptr)
+	, m_UICom(nullptr)
 	, m_Parent(nullptr)
 	, m_iLayerIdx(-1)
 	, m_bDead(false)
 	, m_LifeTime(0.f)
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
+	, m_bEnable(true)
+	, m_bOutofLayer(false)
+	, m_TextCom(nullptr)
 {
 }
 
@@ -28,12 +34,16 @@ CGameObject::CGameObject(const CGameObject& _Other)
 	: CEntity(_Other)
 	, m_arrCom{}
 	, m_RenderCom(nullptr)
+	, m_UICom(nullptr)
 	, m_Parent(nullptr)
 	, m_iLayerIdx(-1)
 	, m_bDead(false)
 	, m_LifeTime(0.f)
 	, m_CurLifeTime(0.f)
 	, m_bLifeSpan(false)
+	, m_bEnable(true)
+	, m_bOutofLayer(false)
+	, m_TextCom(nullptr)
 {
 	// Component 복사
 	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
@@ -59,6 +69,10 @@ CGameObject::CGameObject(const CGameObject& _Other)
 
 CGameObject::~CGameObject()
 {
+	// GizumoTarget 초기화
+	if (CRenderMgr::GetInst()->GetGizmoTarget() == this)
+		CRenderMgr::GetInst()->SetGizmoTarget(nullptr);
+
 	Safe_Del_Array(m_arrCom);
 	Safe_Del_Vec(m_vecScript);
 	Safe_Del_Vec(m_vecChild);
@@ -122,7 +136,7 @@ void CGameObject::finaltick()
 
 	for (size_t i = 0; i < m_vecChild.size(); ++i)
 	{
-		m_vecChild[i]->finaltick();
+		m_vecChild[i]->finaltick();		
 	}
 		
 	// 소속 레이어가 없는데 finaltick 이 호출되었다.
@@ -151,12 +165,29 @@ void CGameObject::render()
 {
 	if (nullptr != m_RenderCom)
 		m_RenderCom->render();
+
+	if (nullptr != m_TextCom)
+		m_TextCom->render();
 }
 
 void CGameObject::render_shadowmap()
 {
 	if (nullptr != m_RenderCom)
 		m_RenderCom->render_shadowmap();
+}
+
+void CGameObject::LoadAllPrefabFromObjName()
+{
+	for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
+	{
+		if (nullptr != m_arrCom[i])
+			m_arrCom[i]->LoadPrefab(GetName());
+	}
+
+	for (size_t i = 0; i < m_vecChild.size(); ++i)
+	{
+		m_vecChild[i]->LoadAllPrefabFromObjName();
+	}
 }
 
 void CGameObject::AddComponent(CComponent* _Component)
@@ -185,6 +216,24 @@ void CGameObject::AddComponent(CComponent* _Component)
 			assert(!m_RenderCom);
 			m_RenderCom = pRenderCom;
 		}
+		
+		// UIComponent 확인
+		CUIComponent* pUICom = dynamic_cast<CUIComponent*>(_Component);
+		if (pUICom)
+		{
+			// 1개 이상의 UI 컴포넌트를 보유하고있다면 assert
+			assert(!m_UICom);
+			m_UICom = pUICom;
+		}
+
+		// TextComponent 확인
+		CText* pTextCom = dynamic_cast<CText*>(_Component);
+		if (pTextCom)
+		{
+			// 1개 이상의 UI 컴포넌트를 보유하고있다면 assert
+			assert(!m_TextCom);
+			m_TextCom = pTextCom;
+		}
 	}
 }
 
@@ -206,6 +255,7 @@ void CGameObject::AddChild(CGameObject* _Object)
 	// 부모 자식 연결
 	_Object->m_Parent = this;
 	m_vecChild.push_back(_Object);
+	_Object->m_iLayerIdx = _Object->m_Parent->m_iLayerIdx;
 }
 
 

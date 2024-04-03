@@ -5,16 +5,22 @@
 #include "Client.h"
 
 #include <Engine\CDevice.h>
+#include <Script\ER_GameSystem.h>
+#include <Script\ER_EffectSystem.h>
 #include "CEditorObjMgr.h"
+
+
 
 // ImGui
 #include "ImGuiMgr.h"
 
-#include "TestLevel.h"
+#include "LevelMgr.h"
 
 // 전역 변수:
 HINSTANCE   hInst;                                // 현재 인스턴스입니다.
 HWND        g_hWnd;
+
+
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -25,10 +31,10 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
-{
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(460);
+                     _In_ int       nCmdShow){
+     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+     _CrtDumpMemoryLeaks();
+     //_CrtSetBreakAlloc(124656);
    
     MyRegisterClass(hInstance);
 
@@ -39,27 +45,32 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     // CEngine 초기화
-    if (FAILED(CEngine::GetInst()->init(g_hWnd, 1280, 768)))
+    if (FAILED(CEngine::GetInst()->init(g_hWnd, 1600, 900)))
     {
         return 0;
     }
 
+    // DirectInput 초기화
+    CKeyMgr::GetInst()->DinputInit(hInstance, g_hWnd);
+
     // Editor 초기화
     CEditorObjMgr::GetInst()->init();
-       
+
     // ImGui 초기화
     ImGuiMgr::GetInst()->init(g_hWnd);
-
+    
+    // GameSystem 초기화
+    ER_GameSystem::GetInst()->init();
+    
+    // 에디터용, 에디터미사용시 지워도 되는코드
+    ImGuiMgr::GetInst()->InitGameSystem();
+    
     // 테스트 용 레벨 생성
-    CreateTestLevel();
+    CreateLumiaIsland();
 
     // 메세지 루프
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_CLIENT));
     MSG msg;
-
-
-   
-
 
     while (true)
     {
@@ -80,22 +91,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             // =======
             // 1 Frame
             // =======
+            ER_GameSystem::GetInst()->progress();
+            ER_EffectSystem::GetInst()->progress();
             CEngine::GetInst()->progress();
-            CEditorObjMgr::GetInst()->progress();       
-
-           
+            CEditorObjMgr::GetInst()->progress();           
 
             ImGuiMgr::GetInst()->progress();            
             CDevice::GetInst()->Present(); // 렌더 종료
         }       
     }
-
-   
+    
+    CDevice::GetInst()->ReportLiveObjects();
 
     return (int) msg.wParam;
 }
-
-
 
 //
 //  함수: MyRegisterClass()
@@ -116,7 +125,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CLIENT));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName = nullptr;// MAKEINTRESOURCEW(IDC_CLIENT);
+    wcex.lpszMenuName   = nullptr;// MAKEINTRESOURCEW(IDC_CLIENT);
     wcex.lpszClassName  = L"MyWindow";
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -128,7 +137,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   g_hWnd = CreateWindowW(L"MyWindow", L"MyGame", WS_OVERLAPPEDWINDOW,
+   g_hWnd = CreateWindowW(L"MyWindow", L"Eternal Return", WS_OVERLAPPEDWINDOW & ~(WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX),
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!g_hWnd)

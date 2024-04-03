@@ -50,12 +50,25 @@ public:
     virtual void OnOverlap(CCollider2D* _Other) {}
     virtual void EndOverlap(CCollider2D* _Other) {}
 
+    virtual void BeginOverlap(CCollider3D* _Other) {}
+    virtual void OnOverlap(CCollider3D* _Other) {}
+    virtual void EndOverlap(CCollider3D* _Other) {}
+
+    virtual void BeginRayOverlap() {}
+    virtual void OnRayOverlap() {}
+    virtual void EndRayOverlap() {}
+
+    virtual void CsrOn() {}
+    virtual void CsrTap() {}
+    virtual void CsrRelease() {}
+    virtual void CsrClick() {}
+    virtual void CsrBeginOn() {}
+    virtual void CsrAway() {}
+
+
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
-    virtual void LoadFromLevelFile(FILE* _FILE) override {}
-
-    virtual void SaveToDB(int _gameObjectID, COMPONENT_TYPE _componentType) override;
-    virtual void LoadFromDB(int _gameObjectID) override;
+    virtual void LoadFromLevelFile(FILE* _File) override {}
 
 protected:
     void AddScriptParam(SCRIPT_PARAM eParam, void* _pData, const string& _Desc);

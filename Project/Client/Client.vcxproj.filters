@@ -89,15 +89,6 @@
     <Filter Include="Manager\LevelSaveLoad">
       <UniqueIdentifier>{bd45bcb0-5b2d-4b83-a548-af8817de8f6a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\BehaviorTreeUI">
-      <UniqueIdentifier>{24e2bcc7-4061-4a37-a48c-f4aded1b1455}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\BehaviorTreeUI\NodeInfoUI">
-      <UniqueIdentifier>{0717bc42-0298-4386-9236-c0b130e24664}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="UI\BehaviorTreeUI\BlackBoardList">
-      <UniqueIdentifier>{3aea27f2-766c-4319-ad9c-f949919a3e38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\InspectorUI\ComponentUI\04. Collider2DUI">
       <UniqueIdentifier>{fea9eec1-6d0a-4370-865e-d7872a2047a1}</UniqueIdentifier>
     </Filter>
@@ -133,6 +124,51 @@
     </Filter>
     <Filter Include="ImGui\ImGuizmo">
       <UniqueIdentifier>{1afe48c2-ba8f-4ebb-adf6-d053082044e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\AnimEditObj">
+      <UniqueIdentifier>{ddf01b6b-65d5-4c33-968b-3ad04a7a162c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InspectorUI\ResUI\BoneUI">
+      <UniqueIdentifier>{d53cf3f4-ffd3-4d0b-9058-4e85673ac35c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate">
+      <UniqueIdentifier>{bbd96702-f0b6-4da2-9d34-a2db854516ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\AnimationEditUI">
+      <UniqueIdentifier>{45cd07e6-1e11-4332-ab80-536d4c5b963e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\BehaviorTreeUI">
+      <UniqueIdentifier>{24e2bcc7-4061-4a37-a48c-f4aded1b1455}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\BehaviorTreeUI\NodeInfoUI">
+      <UniqueIdentifier>{0717bc42-0298-4386-9236-c0b130e24664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\BehaviorTreeUI\BlackBoardList">
+      <UniqueIdentifier>{3aea27f2-766c-4319-ad9c-f949919a3e38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\ItemDataUI">
+      <UniqueIdentifier>{b9dfbe2b-23af-42c4-97a3-bf42e4e02529}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\CharacterDataUI">
+      <UniqueIdentifier>{e67530a1-c3f9-4dd7-b0e8-f0c013cec7f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\UITemplate\DebugLogUI">
+      <UniqueIdentifier>{f41112a6-9c6f-402a-a20b-5c12e9b49baa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\13. UIUI">
+      <UniqueIdentifier>{3ede7258-9ea7-4dd8-9a25-49ebaf889adf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\14. Text">
+      <UniqueIdentifier>{a78383b4-319f-4080-8605-0ea540f20edf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level">
+      <UniqueIdentifier>{e4893bb9-6bd5-4ded-9a9c-ade69d609ca2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level\Lumia">
+      <UniqueIdentifier>{675dde2c-c551-47f9-a4d3-75ea2e5c126c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level\Introduce">
+      <UniqueIdentifier>{641d53b3-061a-4ddf-8130-360cc18452c5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -247,7 +283,6 @@
     <ClInclude Include="ParamUI.h">
       <Filter>UI\Module\ParamUI</Filter>
     </ClInclude>
-    <ClInclude Include="TestLevel.h" />
     <ClInclude Include="MenuUI.h">
       <Filter>UI\MenuUI</Filter>
     </ClInclude>
@@ -258,13 +293,13 @@
       <Filter>Manager\LevelSaveLoad</Filter>
     </ClInclude>
     <ClInclude Include="BehaviorTreeListUI.h">
-      <Filter>UI\BehaviorTreeUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI</Filter>
     </ClInclude>
     <ClInclude Include="NodeInfoUI.h">
-      <Filter>UI\BehaviorTreeUI\NodeInfoUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\NodeInfoUI</Filter>
     </ClInclude>
     <ClInclude Include="BlackBoardListUI.h">
-      <Filter>UI\BehaviorTreeUI\BlackBoardList</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\BlackBoardList</Filter>
     </ClInclude>
     <ClInclude Include="Light3DUI.h">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>
@@ -292,6 +327,33 @@
     </ClInclude>
     <ClInclude Include="ParticleSystemUI.h">
       <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimEditUI.h">
+      <Filter>UI\UITemplate\AnimationEditUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimEditObj.h">
+      <Filter>Manager\AnimEditObj</Filter>
+    </ClInclude>
+    <ClInclude Include="BoneUI.h">
+      <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemDataUI.h">
+      <Filter>UI\UITemplate\ItemDataUI</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterDataUI.h">
+      <Filter>UI\UITemplate\CharacterDataUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLogUI.h">
+      <Filter>UI\UITemplate\DebugLogUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelMgr.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="TextUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\14. Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider3DUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\05. Collider3DUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -414,24 +476,20 @@
     <ClCompile Include="ParamUI.cpp">
       <Filter>UI\Module\ParamUI</Filter>
     </ClCompile>
-    <ClCompile Include="TestLevel.cpp" />
     <ClCompile Include="MenuUI.cpp">
       <Filter>UI\MenuUI</Filter>
     </ClCompile>
     <ClCompile Include="ScriptUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\12. ScriptUI</Filter>
     </ClCompile>
-    <ClCompile Include="CLevelSaveLoad.cpp">
-      <Filter>Manager\LevelSaveLoad</Filter>
-    </ClCompile>
     <ClCompile Include="BehaviorTreeListUI.cpp">
-      <Filter>UI\BehaviorTreeUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI</Filter>
     </ClCompile>
     <ClCompile Include="NodeInfoUI.cpp">
-      <Filter>UI\BehaviorTreeUI\NodeInfoUI</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\NodeInfoUI</Filter>
     </ClCompile>
     <ClCompile Include="BlackBoardListUI.cpp">
-      <Filter>UI\BehaviorTreeUI\BlackBoardList</Filter>
+      <Filter>UI\UITemplate\BehaviorTreeUI\BlackBoardList</Filter>
     </ClCompile>
     <ClCompile Include="Light3DUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\09. Light3DUI</Filter>
@@ -456,6 +514,39 @@
     </ClCompile>
     <ClCompile Include="ParticleSystemUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\11. ParticleSystemUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimEditUI.cpp">
+      <Filter>UI\UITemplate\AnimationEditUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimEditObj.cpp">
+      <Filter>Manager\AnimEditObj</Filter>
+    </ClCompile>
+    <ClCompile Include="BoneUI.cpp">
+      <Filter>UI\InspectorUI\ResUI\BoneUI</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemDataUI.cpp">
+      <Filter>UI\UITemplate\ItemDataUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterDataUI.cpp">
+      <Filter>UI\UITemplate\CharacterDataUI</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLogUI.cpp">
+      <Filter>UI\UITemplate\DebugLogUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Lumia_Island.cpp">
+      <Filter>Level\Lumia</Filter>
+    </ClCompile>
+    <ClCompile Include="TextUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\14. Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3DUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\05. Collider3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroduceLevel.cpp">
+      <Filter>Level\Introduce</Filter>
+    </ClCompile>
+    <ClCompile Include="CLevelSaveLoad.cpp">
+      <Filter>Manager\LevelSaveLoad</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

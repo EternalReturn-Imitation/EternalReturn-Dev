@@ -5,6 +5,9 @@
 #include "CAnimator2D.h"
 #include "CAnimator3D.h"
 
+#include "CResMgr.h"
+#include "CStructuredBuffer.h"
+
 CMeshRender::CMeshRender()
 	: CRenderComponent(COMPONENT_TYPE::MESHRENDER)
 {
@@ -33,7 +36,7 @@ void CMeshRender::render()
 	}
 
 	// Animator3D 업데이트
-	if (Animator3D())
+	if (Animator3D() && Animator3D()->GetCurAnim())
 	{
 		Animator3D()->UpdateData();
 
@@ -43,7 +46,7 @@ void CMeshRender::render()
 				continue;
 
 			GetMaterial(i)->SetAnim3D(true); // Animation Mesh 알리기
-			GetMaterial(i)->SetBoneCount(Animator3D()->GetBoneCount());
+			GetMaterial(i)->SetBoneCount(Animator3D()->GetBoneCount()); // 보유중인 뼈 갯수 알리기
 		}
 	}
 
@@ -68,4 +71,50 @@ void CMeshRender::render()
 
 	if (Animator3D())
 		Animator3D()->ClearData();
+
+	if (GetOwner()->GetName() == L"Monster")
+		int a = 0;
+}
+
+void CMeshRender::render(UINT _iSubset)
+{
+	if (nullptr == GetMesh() || nullptr == GetMaterial(_iSubset))
+		return;
+
+	// Transform 에 UpdateData 요청
+	Transform()->UpdateData();
+
+	// Animator2D 컴포넌트가 있다면
+	if (Animator2D())
+	{
+		Animator2D()->UpdateData();
+	}
+
+	// Animator3D 업데이트
+	if (Animator3D())
+	{
+		Animator3D()->UpdateData();
+		GetMaterial(_iSubset)->SetAnim3D(true); // Animation Mesh 알리기
+		GetMaterial(_iSubset)->SetBoneCount(Animator3D()->GetBoneCount()); // 보유중인 뼈 갯수 알리기
+	}
+
+	// 사용할 재질 업데이트
+	GetMaterial(_iSubset)->UpdateData();
+
+	// 사용할 메쉬 업데이트 및 렌더링
+	GetMesh()->render(_iSubset);
+
+	// Animation 관련 정보 제거
+	if (Animator2D())
+		Animator2D()->Clear();
+
+	if (Animator3D())
+		Animator3D()->ClearData();
+
+}
+
+void CMeshRender::render_shadowmap()
+{
+	CRenderComponent::render_shadowmap();
+
 }

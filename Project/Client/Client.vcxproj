@@ -121,6 +121,10 @@
       <MinFilesInUnityFile>10</MinFilesInUnityFile>
       <MaxFilesInUnityFile>20</MaxFilesInUnityFile>
       <UnityFilesDirectory>$(ProjectDir)</UnityFilesDirectory>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>26495</DisableSpecificWarnings>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/Ylsymbol %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,15 +155,21 @@
   <ItemGroup>
     <ClInclude Include="Animator2DUI.h" />
     <ClInclude Include="BlackBoardListUI.h" />
+    <ClInclude Include="BoneUI.h" />
     <ClInclude Include="CameraUI.h" />
+    <ClInclude Include="AnimEditUI.h" />
+    <ClInclude Include="CAnimEditObj.h" />
     <ClInclude Include="CEditorObjMgr.h" />
     <ClInclude Include="CGameObjectEx.h" />
+    <ClInclude Include="CharacterDataUI.h" />
     <ClInclude Include="CLevelSaveLoad.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Collider2DUI.h" />
+    <ClInclude Include="Collider3DUI.h" />
     <ClInclude Include="ComponentUI.h" />
     <ClInclude Include="ComputeShaderUI.h" />
     <ClInclude Include="ContentUI.h" />
+    <ClInclude Include="DebugLogUI.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphicsShaderUI.h" />
     <ClInclude Include="ImGuiMgr.h" />
@@ -175,6 +185,7 @@
     <ClInclude Include="ImGui\ImSequencer.h" />
     <ClInclude Include="ImGui\ImZoomSlider.h" />
     <ClInclude Include="InspectorUI.h" />
+    <ClInclude Include="ItemDataUI.h" />
     <ClInclude Include="Light2DUI.h" />
     <ClInclude Include="Light3DUI.h" />
     <ClInclude Include="ListUI.h" />
@@ -195,25 +206,32 @@
     <ClInclude Include="ScriptUI.h" />
     <ClInclude Include="SoundUI.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TestLevel.h" />
+    <ClInclude Include="TextUI.h" />
     <ClInclude Include="TextureUI.h" />
     <ClInclude Include="TileMapUI.h" />
     <ClInclude Include="TransformControllerUI.h" />
     <ClInclude Include="TransformUI.h" />
     <ClInclude Include="TreeUI.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="LevelMgr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator2DUI.cpp" />
     <ClCompile Include="BlackBoardListUI.cpp" />
+    <ClCompile Include="BoneUI.cpp" />
     <ClCompile Include="CameraUI.cpp" />
+    <ClCompile Include="AnimEditUI.cpp" />
+    <ClCompile Include="CAnimEditObj.cpp" />
     <ClCompile Include="CEditorObjMgr.cpp" />
     <ClCompile Include="CGameObjectEx.cpp" />
+    <ClCompile Include="CharacterDataUI.cpp" />
     <ClCompile Include="CLevelSaveLoad.cpp" />
     <ClCompile Include="Collider2DUI.cpp" />
+    <ClCompile Include="Collider3DUI.cpp" />
     <ClCompile Include="ComponentUI.cpp" />
     <ClCompile Include="ComputeShaderUI.cpp" />
     <ClCompile Include="ContentUI.cpp" />
+    <ClCompile Include="DebugLogUI.cpp" />
     <ClCompile Include="GraphicsShaderUI.cpp" />
     <ClCompile Include="ImGuiMgr.cpp" />
     <ClCompile Include="ImGui\GraphEditor.cpp" />
@@ -229,9 +247,12 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="ImGui\ImSequencer.cpp" />
     <ClCompile Include="InspectorUI.cpp" />
+    <ClCompile Include="IntroduceLevel.cpp" />
+    <ClCompile Include="ItemDataUI.cpp" />
     <ClCompile Include="Light2DUI.cpp" />
     <ClCompile Include="Light3DUI.cpp" />
     <ClCompile Include="ListUI.cpp" />
+    <ClCompile Include="Lumia_Island.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MaterialUI.cpp" />
     <ClCompile Include="MenuUI.cpp" />
@@ -251,7 +272,7 @@
     <ClCompile Include="ResUI.cpp" />
     <ClCompile Include="ScriptUI.cpp" />
     <ClCompile Include="SoundUI.cpp" />
-    <ClCompile Include="TestLevel.cpp" />
+    <ClCompile Include="TextUI.cpp" />
     <ClCompile Include="TextureUI.cpp" />
     <ClCompile Include="TileMapUI.cpp" />
     <ClCompile Include="TransformControllerUI.cpp" />

@@ -5,6 +5,11 @@
 
 #include <Engine\global.h>
 #include <Engine\CEngine.h>
+#include <Engine\CKeyMgr.h>
+
+#include <Engine\debug.h>
+
+
 
 
 // Engine Library

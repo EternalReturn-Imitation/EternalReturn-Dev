@@ -16,7 +16,6 @@ ImGuiMgr::ImGuiMgr()
     : m_hMainHwnd(nullptr)
     , m_hObserver(nullptr)
 {
-
 }
 
 ImGuiMgr::~ImGuiMgr()
@@ -52,6 +51,9 @@ void ImGuiMgr::init(HWND _hWnd)
     //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;     // FIXME-DPI: Experimental. THIS CURRENTLY DOESN'T WORK AS EXPECTED. DON'T USE IN USER APP!
     //io.ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports; // FIXME-DPI: Experimental.
 
+    // 한글 폰트 입력
+    io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 18, NULL, io.Fonts->GetGlyphRangesKorean());
+
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsLight();
@@ -70,6 +72,7 @@ void ImGuiMgr::init(HWND _hWnd)
 
     // Tool 용 UI 생성
     CreateUI();
+
 
     // Content 폴더 감시
     wstring strContentPath = CPathMgr::GetInst()->GetContentPath();
@@ -150,6 +153,10 @@ void ImGuiMgr::render()
 #include "MenuUI.h"
 
 #include "BehaviorTreeListUI.h"
+#include "AnimEditUI.h"
+#include "ItemDataUI.h"
+#include "CharacterDataUI.h"
+#include "DebugLogUI.h"
 
 void ImGuiMgr::CreateUI()
 {
@@ -181,11 +188,32 @@ void ImGuiMgr::CreateUI()
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
+    // [Custom]
+
     // BehaviorTree
     pUI = new BehaviorTreeListUI;
     pUI->SetActive(false);
     m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
+    // AnimEditUI
+    pUI = new AnimEditUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    // ItemDataUI
+    pUI = new ItemDataUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    // CharacterUI
+    pUI = new CharacterDataUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
+
+    // DebugLogUI
+    pUI = new DebugLogUI;
+    pUI->SetActive(false);
+    m_mapUI.insert(make_pair(pUI->GetID(), pUI));
 
 
     for (const auto& pair : m_mapUI)
@@ -225,4 +253,10 @@ void ImGuiMgr::InitInspector()
     {
         pair.second->init();
     }
+}
+
+void ImGuiMgr::InitGameSystem()
+{
+    ((ItemDataUI*)FindUI("##ItemDataUI"))->RegistItemMgr();
+    ((CharacterDataUI*)FindUI("##CharacterDataUI"))->RegistCharacters();
 }

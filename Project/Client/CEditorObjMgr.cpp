@@ -1,20 +1,25 @@
 #include "pch.h"
 #include "CEditorObjMgr.h"
 
-
-
 #include "CGameObjectEx.h"
+#include "CAnimEditObj.h"
+
 #include <Engine\components.h>
 
 #include <Engine\CResMgr.h>
 #include <Engine\CRenderMgr.h>
 #include <Engine\CTimeMgr.h>
 #include <Engine\CKeyMgr.h>
+#include <Engine\CRenderMgr.h>
+#include <Engine\CMRT.h>
 
-#include <Script\CCameraMoveScript.h>
+#include <Script\CEditCamControlScript.h>
 
 CEditorObjMgr::CEditorObjMgr()
 	: m_DebugShape{}
+	, m_pTexRenderObj(nullptr)
+	, m_bRenderTex(false)
+	, m_bDebugRender(true)
 {
 
 }
@@ -23,11 +28,14 @@ CEditorObjMgr::~CEditorObjMgr()
 {
 	Safe_Del_Vec(m_vecEditorObj);
 	Safe_Del_Array(m_DebugShape);
+	
+	if (nullptr != m_pTexRenderObj)
+		odelete(m_pTexRenderObj);
 }
 
 void CEditorObjMgr::init()
 {
-	// µð¹ö±× ½¦ÀÌÇÁ »ý¼º
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT] = new CGameObjectEx;
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT]->AddComponent(new CTransform);
 	m_DebugShape[(UINT)SHAPE_TYPE::RECT]->AddComponent(new CMeshRender);
@@ -58,43 +66,55 @@ void CEditorObjMgr::init()
 	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"FrustumMesh_Debug"));
 	m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeFrustumMtrl"), 0);
 
-	// EditorObject »ý¼º
+	// EditorObject ï¿½ï¿½ï¿½ï¿½
 	CGameObjectEx* pEditorCamObj = new CGameObjectEx;
 	pEditorCamObj->AddComponent(new CTransform);
 	pEditorCamObj->AddComponent(new CCamera);
-	pEditorCamObj->AddComponent(new CCameraMoveScript);
+	pEditorCamObj->AddComponent(new CEditCamControlScript);
 
-	pEditorCamObj->Camera()->SetFar(100000.f);
+	pEditorCamObj->Camera()->SetFOV(Deg2Rad(30));
 	pEditorCamObj->Camera()->SetLayerMaskAll(true);
 	pEditorCamObj->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pEditorCamObj->Camera()->SetMainCamera();
 
+	pEditorCamObj->Transform()->SetRelativeRot(Vec3(Deg2Rad(54.f), Deg2Rad(-45.f), 0.f));
+	//pEditorCamObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 35.f, 0.f));
+	pEditorCamObj->Transform()->SetRelativePos(Vec3(-52.84728f, 25.f, 27.10118f));
+	//pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -1800.f));
+	pEditorCamObj->Camera()->SetFar(10000.f);
+
 	m_vecEditorObj.push_back(pEditorCamObj);
+	//Vec3 pos = pEditorCamObj->Transform()->GetRelativePos();
+	//Vec3 rot = pEditorCamObj->Transform()->GetRelativePos();
+	//rot.y = rot.y = -1.5708f;
+	//pEditorCamObj->Transform()->SetRelativeRot(rot);
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
+
 }
-
-
 
 void CEditorObjMgr::progress()
 {
-	// DebugShape Á¤º¸ °¡Á®¿À±â
+	// DebugShape Update
 	vector<tDebugShapeInfo>& vecInfo = CRenderMgr::GetInst()->GetDebugShapeInfo();
 	m_DebugShapeInfo.insert(m_DebugShapeInfo.end(), vecInfo.begin(), vecInfo.end());
 	vecInfo.clear();
 
 
 	tick();
-
 	render();
 }
 
-
 void CEditorObjMgr::tick()
 {
+	if (KEY_TAP(KEY::F1))
+		m_bDebugRender = !m_bDebugRender;
+
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
 		m_vecEditorObj[i]->tick();
 	}
+	
 
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
@@ -104,12 +124,29 @@ void CEditorObjMgr::tick()
 
 void CEditorObjMgr::render()
 {
+	DebugRender();
+
+	EditorRender();
+}
+
+void CEditorObjMgr::DebugRender()
+{
+	if (!m_bDebugRender)
+	{
+		vector<tDebugShapeInfo>::iterator iter = m_DebugShapeInfo.begin();
+		
+		while(iter != m_DebugShapeInfo.end())
+		{
+			iter = m_DebugShapeInfo.erase(iter);
+		}
+
+		return;
+	}
+
 	for (size_t i = 0; i < m_vecEditorObj.size(); ++i)
 	{
 		m_vecEditorObj[i]->render();
 	}
-
-
 
 	// DebugShape Render
 	CGameObjectEx* pShapeObj = nullptr;
@@ -130,7 +167,7 @@ void CEditorObjMgr::render()
 			break;
 		case SHAPE_TYPE::SPHERE:
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::SPHERE];
-			break;		
+			break;
 		case SHAPE_TYPE::FRUSTUM:
 			pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::FRUSTUM];
 			break;
@@ -167,4 +204,24 @@ void CEditorObjMgr::render()
 			++iter;
 		}
 	}
+
+}
+
+void CEditorObjMgr::EditorRender()
+{
+	if (m_pTexRenderObj)
+	{
+		m_pTexRenderObj->tick();
+		m_pTexRenderObj->update();
+
+		m_pTexRenderObj->render();
+	}
+}
+
+void CEditorObjMgr::SetTexRender(CAnimEditObj* _pObj)
+{
+	if (nullptr != m_pTexRenderObj)
+		m_pTexRenderObj = nullptr;
+
+	m_pTexRenderObj = _pObj;
 }

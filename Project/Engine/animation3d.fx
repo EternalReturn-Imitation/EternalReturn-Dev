@@ -208,12 +208,15 @@ struct tFrameTrans
 
 StructuredBuffer<tFrameTrans> g_arrFrameTrans : register(t16);
 StructuredBuffer<matrix> g_arrOffset : register(t17);
+StructuredBuffer<tFrameTrans> g_arrPreviousFrameTrans : register(t18);
 RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 
 // ===========================
 // Animation3D Compute Shader
 #define BoneCount   g_int_0
 #define CurFrame    g_int_1
+#define EndFrame    g_int_2
+#define bAnimTrans  g_int_3
 #define Ratio       g_float_0
 // ===========================
 [numthreads(256, 1, 1)]
@@ -221,24 +224,48 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
 {
     if (BoneCount <= _iThreadIdx.x)
         return;
+    
+    uint iFrameDataIndex = 0;
+    uint iNextFrameDataIdx = 0;
+    
+    float4 vScale = float4(0.f, 0.f, 0.f, 1.f);
+    float4 vTrans = float4(0.f, 0.f, 0.f, 1.f);
+    float4 qRot = float4(0.f, 0.f, 0.f, 1.f);
+    
+    // 애니메이션 전환
+    if(bAnimTrans)
+    {
+        iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
+        iNextFrameDataIdx = _iThreadIdx.x;
+        
+        // 앞프레임 값 
+        
+        
+        vScale = lerp(g_arrPreviousFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans[iNextFrameDataIdx].vScale, Ratio);
+        vTrans = lerp(g_arrPreviousFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iNextFrameDataIdx].vTranslate, Ratio);
+        qRot = QuternionLerp(g_arrPreviousFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iNextFrameDataIdx].qRot, Ratio);
+    }
+    else
+    {
+        // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
+        iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
+        if (EndFrame < CurFrame + 1)
+            iNextFrameDataIdx = BoneCount * (0) + _iThreadIdx.x;    // 마지막프레임이면 첫번째 프레임으로 돌아간다.
+        else
+            iNextFrameDataIdx = BoneCount * (CurFrame + 1) + _iThreadIdx.x;
+
+        vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans[iNextFrameDataIdx].vScale, Ratio);
+        vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iNextFrameDataIdx].vTranslate, Ratio);
+        qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iNextFrameDataIdx].qRot, Ratio);
+    }
 
     // 오프셋 행렬을 곱하여 최종 본행렬을 만들어낸다.		
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
     matrix matBone = (matrix) 0.f;
 
-    // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
-    uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
-    uint iNextFrameDataIdx = BoneCount * (CurFrame + 1) + _iThreadIdx.x;
-
-    float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans[iNextFrameDataIdx].vScale, Ratio);
-    float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iNextFrameDataIdx].vTranslate, Ratio);
-    float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iNextFrameDataIdx].qRot, Ratio);
 
     // 최종 본행렬 연산
     MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
-
-    // 최종 본행렬 연산    
-    //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
 
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
 

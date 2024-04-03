@@ -10,10 +10,9 @@
 #include "CPrefab.h"
 #include "CSound.h"
 #include "CMeshData.h"
+#include "CBone.h"
 
 #include "CPathMgr.h"
-#include "CSQLMgr.h"
-
 
 class CResMgr :
     public CSingleton<CResMgr>
@@ -22,6 +21,10 @@ class CResMgr :
 private:
     map<wstring, Ptr<CRes>> m_arrRes[(UINT)RES_TYPE::END];
     bool                    m_Changed;
+
+    vector<D3D11_INPUT_ELEMENT_DESC>	m_vecLayoutInfo;
+    UINT								m_iLayoutOffset_0;
+    UINT								m_iLayoutOffset_1;
 
 public:
     void init();
@@ -34,7 +37,7 @@ private:
     void CreateDefaultComputeShader();
     void CreateDefaultMaterial();
 
-
+    void AddInputLayout(DXGI_FORMAT _eFormat, const char* _strSemanticName, UINT _iSlotNum, UINT _iSemanticIdx);
 
 public:
     const map<wstring, Ptr<CRes>>& GetResources(RES_TYPE _Type) { return m_arrRes[(UINT)_Type]; }
@@ -45,7 +48,10 @@ public:
 
     Ptr<CTexture> CreateTexture(const wstring& _strKey, ComPtr<ID3D11Texture2D> _Tex2D);
 
-    Ptr<CMeshData> LoadFBX(const wstring& _strPath);
+    Ptr<CMeshData> LoadFBX(const wstring& _strPath, int singleMeshData = 0);
+    Ptr<CBone> LoadFBXBone(const wstring& _strPath);
+
+    const vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutInfo() { return m_vecLayoutInfo; }
 
     bool IsResourceChanged() { return m_Changed; }
 
@@ -78,11 +84,14 @@ RES_TYPE GetResType()
     const type_info& prefab = typeid(CPrefab);
     const type_info& gs = typeid(CGraphicsShader);
     const type_info& cs = typeid(CComputeShader);
+    const type_info& bone = typeid(CBone);
 
     if (typeid(T).hash_code() == mesh.hash_code())
         return RES_TYPE::MESH;
     if (typeid(T).hash_code() == meshdata.hash_code())
         return RES_TYPE::MESHDATA;
+    if (typeid(T).hash_code() == bone.hash_code())
+        return RES_TYPE::BONE;
     if (typeid(T).hash_code() == gs.hash_code())
         return RES_TYPE::GRAPHICS_SHADER;
     if (typeid(T).hash_code() == cs.hash_code())
@@ -117,8 +126,8 @@ template<typename T>
 inline void CResMgr::AddRes(const wstring& _strKey, Ptr<T> _Res)
 {
     // 중복키로 리소스 추가하려는 경우
-    assert(!FindRes<T>(_strKey).Get());
-
+    // assert(!FindRes<T>(_strKey).Get());
+    
     RES_TYPE type = GetResType<T>();
     m_arrRes[(UINT)type].insert(make_pair(_strKey, _Res.Get()));
     _Res->SetKey(_strKey);
@@ -148,6 +157,8 @@ inline void CResMgr::AddRes(const wstring& _strKey, const wstring& _strPath, con
     m_arrRes[(UINT)type].insert(make_pair(FileKey, _Res.Get()));
     _Res->SetKey(FileKey);
     _Res->SetRelativePath(FilePath);
+    // _Res->SetDirectoryPath()
+
 
     m_Changed = true;
 }

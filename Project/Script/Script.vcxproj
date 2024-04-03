@@ -93,6 +93,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -130,6 +131,7 @@
       <MinFilesInUnityFile>10</MinFilesInUnityFile>
       <MaxFilesInUnityFile>20</MaxFilesInUnityFile>
       <UnityFilesDirectory>$(ProjectDir)</UnityFilesDirectory>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -172,28 +174,117 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CCameraMoveScript.h" />
-    <ClInclude Include="CCloudScript.h" />
-    <ClInclude Include="CGravityScript.h" />
-    <ClInclude Include="CMissileScript.h" />
+    <ClInclude Include="CEditCamControlScript.h" />
+    <ClInclude Include="CFollowMainCamScript.h" />
     <ClInclude Include="CMonsterScript.h" />
     <ClInclude Include="CPlanetScript.h" />
-    <ClInclude Include="CPlayerScript.h" />
     <ClInclude Include="CScriptMgr.h" />
-    <ClInclude Include="CTestScript.h" />
+    <ClInclude Include="ER_ActionScript_Aya.h" />
+    <ClInclude Include="ER_ActionScript_Character.h" />
+    <ClInclude Include="ER_ActionScript_Hyunwoo.h" />
+    <ClInclude Include="ER_ActionScript_Jackie.h" />
+    <ClInclude Include="ER_ActionScript_Rio.h" />
+    <ClInclude Include="ER_ActionScript_Yuki.h" />
+    <ClInclude Include="ER_ArrowEffectScript.h" />
+    <ClInclude Include="ER_AyaBAEffect.h" />
+    <ClInclude Include="ER_AyaQEffect.h" />
+    <ClInclude Include="ER_AyaREffect.h" />
+    <ClInclude Include="ER_AyaWBulletEffect.h" />
+    <ClInclude Include="ER_BattleSystem.h" />
+    <ClInclude Include="ER_BulletEffectScript.h" />
+    <ClInclude Include="ER_CamControllerScript.h" />
+    <ClInclude Include="ER_CharacterMgr.h" />
+    <ClInclude Include="ER_Cursor.h" />
+    <ClInclude Include="ER_DataScript_Arrow.h" />
+    <ClInclude Include="ER_DataScript_Bullet.h" />
+    <ClInclude Include="ER_DataScript_Character.h" />
+    <ClInclude Include="ER_DataScript_Item.h" />
+    <ClInclude Include="ER_DataScript_LandMeshBase.h" />
+    <ClInclude Include="ER_DataScript_Projectile.h" />
+    <ClInclude Include="ER_define.h" />
+    <ClInclude Include="ER_DataScript_ItemBox.h" />
+    <ClInclude Include="ER_EffectScript.h" />
+    <ClInclude Include="ER_EffectSystem.h" />
+    <ClInclude Include="ER_GameSystem.h" />
+    <ClInclude Include="ER_ItemMgr.h" />
+    <ClInclude Include="ER_PlayerScript.h" />
+    <ClInclude Include="ER_PlayerScript_Range.h" />
+    <ClInclude Include="ER_ProjectileScript.h" />
+    <ClInclude Include="ER_RioBAEffect.h" />
+    <ClInclude Include="ER_RioQEffect.h" />
+    <ClInclude Include="ER_struct.h" />
+    <ClInclude Include="ER_UIMgr.h" />
+    <ClInclude Include="ER_UIScript_CraftSlot.h" />
+    <ClInclude Include="ER_UIScript_Gauge.h" />
+    <ClInclude Include="ER_UIScript_ItemSlot.h" />
+    <ClInclude Include="ER_UIScript_SkillSlot.h" />
+    <ClInclude Include="ER_UIScript_SkillUpBtn.h" />
+    <ClInclude Include="ER_UIScript_StatusBarGauge.h" />
+    <ClInclude Include="ER_UIScript_TrackingStatusBar.h" />
+    <ClInclude Include="ER_YukiBAEffect.h" />
+    <ClInclude Include="ER_YukiEEffect.h" />
+    <ClInclude Include="ER_YukiQEffect.h" />
+    <ClInclude Include="ER_YukiREffect.h" />
+    <ClInclude Include="ER_YukiWEffect.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ER_UIScript_ItemBox.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CCameraMoveScript.cpp" />
-    <ClCompile Include="CCloudScript.cpp" />
-    <ClCompile Include="CGravityScript.cpp" />
-    <ClCompile Include="CMissileScript.cpp" />
+    <ClCompile Include="CEditCamControlScript.cpp" />
+    <ClCompile Include="CFollowMainCamScript.cpp" />
     <ClCompile Include="CMonsterScript.cpp" />
     <ClCompile Include="CPlanetScript.cpp" />
-    <ClCompile Include="CPlayerScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
-    <ClCompile Include="CTestScript.cpp" />
+    <ClCompile Include="ER_ActionScript_Aya.cpp" />
+    <ClCompile Include="ER_ActionScript_Character.cpp" />
+    <ClCompile Include="ER_ActionScript_Character_func.cpp" />
+    <ClCompile Include="ER_ActionScript_Hyunwoo.cpp" />
+    <ClCompile Include="ER_ActionScript_Jackie.cpp" />
+    <ClCompile Include="ER_ActionScript_Init.cpp" />
+    <ClCompile Include="ER_ActionScript_Rio.cpp" />
+    <ClCompile Include="ER_ActionScript_Yuki.cpp" />
+    <ClCompile Include="ER_ArrowEffectScript.cpp" />
+    <ClCompile Include="ER_AyaBAEffect.cpp" />
+    <ClCompile Include="ER_AyaQEffect.cpp" />
+    <ClCompile Include="ER_AyaREffect.cpp" />
+    <ClCompile Include="ER_AyaWBulletEffect.cpp" />
+    <ClCompile Include="ER_BattleSystem.cpp" />
+    <ClCompile Include="ER_BulletEffectScript.cpp" />
+    <ClCompile Include="ER_CamControllerScript.cpp" />
+    <ClCompile Include="ER_CharacterMgr.cpp" />
+    <ClCompile Include="ER_CharacterMgr_Init.cpp" />
+    <ClCompile Include="ER_Cursor.cpp" />
+    <ClCompile Include="ER_DataScript_Arrow.cpp" />
+    <ClCompile Include="ER_DataScript_Bullet.cpp" />
+    <ClCompile Include="ER_DataScript_Character.cpp" />
+    <ClCompile Include="ER_DataScript_Item.cpp" />
+    <ClCompile Include="ER_DataScript_ItemBox.cpp" />
+    <ClCompile Include="ER_DataScript_LandMeshBase.cpp" />
+    <ClCompile Include="ER_EffectScript.cpp" />
+    <ClCompile Include="ER_DataScript_Projectile.cpp" />
+    <ClCompile Include="ER_EffectSystem.cpp" />
+    <ClCompile Include="ER_GameSystem.cpp" />
+    <ClCompile Include="ER_ItemMgr.cpp" />
+    <ClCompile Include="ER_ItemMgr_Init.cpp" />
+    <ClCompile Include="ER_PlayerScript.cpp" />
+    <ClCompile Include="ER_RioBAEffect.cpp" />
+    <ClCompile Include="ER_RioQEffect.cpp" />
+    <ClCompile Include="ER_UIMgr.cpp" />
+    <ClCompile Include="ER_PlayerScript_Range.cpp" />
+    <ClCompile Include="ER_UIScript_CraftSlot.cpp" />
+    <ClCompile Include="ER_UIScript_Gauge.cpp" />
+    <ClCompile Include="ER_UIScript_ItemBox.cpp" />
+    <ClCompile Include="ER_UIScript_ItemSlot.cpp" />
+    <ClCompile Include="ER_UIScript_SkillSlot.cpp" />
+    <ClCompile Include="ER_UIScript_SkillUpBtn.cpp" />
+    <ClCompile Include="ER_UIScript_StatusBarGauge.cpp" />
+    <ClCompile Include="ER_UIScript_TrackingStatusBar.cpp" />
+    <ClCompile Include="ER_YukiBAEffect.cpp" />
+    <ClCompile Include="ER_YukiEEffect.cpp" />
+    <ClCompile Include="ER_YukiQEffect.cpp" />
+    <ClCompile Include="ER_YukiREffect.cpp" />
+    <ClCompile Include="ER_YukiWEffect.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -201,6 +292,7 @@ call CodeGen.exe</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Script.cpp" />
+    <ClCompile Include="ER_GameSystem_ResourceLoad.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

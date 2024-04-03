@@ -5,14 +5,18 @@
 #include "CLevel.h"
 #include "CLayer.h"
 #include "CGameObject.h"
-#include "CTransform.h"
 #include "CRenderMgr.h"
 #include "ptr.h"
 #include "CResMgr.h"
+#include "components.h"
+#include <mutex>
+
+mutex m_aFuncMutex;
 
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 {
 	_NewObject->Transform()->SetRelativePos(_vWorldPos);
+	_NewObject->SetOutOfLayer(false);
 
 	tEvent evn = {};
 
@@ -23,8 +27,25 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 
+void SpawnGameObject(CGameObject* _NewObject, const wstring& _LayerName)
+{
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
+	_NewObject->SetOutOfLayer(false);
+	tEvent evn = {};
+
+	evn.Type = EVENT_TYPE::CREATE_OBJECT;
+	evn.wParam = (DWORD_PTR)_NewObject;
+	evn.lParam = CLevelMgr::GetInst()->GetCurLevel()->FindLayerByName(_LayerName)->GetLayerIndex();
+
+	CEventMgr::GetInst()->AddEvent(evn);
+}
+
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _LayerName)
 {
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
+	_NewObject->SetOutOfLayer(false);
 	_NewObject->Transform()->SetRelativePos(_vWorldPos);
 
 	tEvent evn = {};
@@ -36,8 +57,41 @@ void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, const wstring& _L
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 
+void SpawnGameObjectToParent(CGameObject* _NewObject, CGameObject* _ParentObject)
+{
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
+	tEvent evn = {};
+
+	evn.Type = EVENT_TYPE::CREATE_OBJECT_TO_PARENT;
+	evn.wParam = (DWORD_PTR)_NewObject;
+	evn.lParam = (DWORD_PTR)_ParentObject;
+
+	CEventMgr::GetInst()->AddEvent(evn);
+}
+
+void SpawnChlidGameObject(CGameObject* _ParentObject, const wstring& _LayerName)
+{
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
+	vector<CGameObject*> vecChildObj = _ParentObject->GetChild();
+	
+	int iChildCnt = (int)vecChildObj.size();
+
+	for (int i = 0; i < iChildCnt; ++i)
+	{
+		SpawnChlidGameObject(vecChildObj[i], _LayerName);
+		vecChildObj[i]->SetOutOfLayer(false);
+	}
+
+	SpawnGameObject(_ParentObject,_LayerName);
+
+}
+
 void DestroyObject(CGameObject* _DeletObject)
 {
+	lock_guard<mutex> lockGuard(m_aFuncMutex);
+
 	if (_DeletObject->IsDead())
 		return;
 
@@ -49,7 +103,101 @@ void DestroyObject(CGameObject* _DeletObject)
 	CEventMgr::GetInst()->AddEvent(evn);
 }
 
+void AddComponents(CGameObject* _Object, int CreateCompType)
+{
+	if (CreateCompType & _TRANSFORM)
+	{
+		CTransform* comp = onew(CTransform);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _COLLIDER2D)
+	{
+		CCollider2D* comp = onew(CCollider2D);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _COLLIDER3D)
+	{
+		CCollider3D* comp = onew(CCollider3D);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _ANIMATOR2D)
+	{
+		CAnimator2D* comp = onew(CAnimator2D);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _ANIMATOR3D)
+	{
+		CAnimator3D* comp = onew(CAnimator3D);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _LIGHT2D)
+	{
+		CLight2D* comp = onew(CLight2D);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _LIGHT3D)
+	{
+		CLight3D* comp = onew(CLight3D);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _CAMERA)
+	{
+		CCamera* comp = onew(CCamera);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _TEXT)
+	{
+		CText* comp = onew(CText);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _BEHAVIORTREE)
+	{
+		CBehaviorTree* comp = onew(CBehaviorTree);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _FINDPATH)
+	{
+		CFindPath* comp = onew(CFindPath);
+		_Object->AddComponent(comp);
+	}
 
+	if (CreateCompType & _UICOMPONENT)
+	{
+		CUIComponent* comp = onew(CUIComponent);
+		_Object->AddComponent(comp);
+	}
+
+	if (CreateCompType & _MESHRENDER)
+	{
+		CMeshRender* comp = onew(CMeshRender);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _PARTICLESYSTEM)
+	{
+		CParticleSystem* comp = onew(CParticleSystem);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _TILEMAP)
+	{
+		CTileMap* comp = onew(CTileMap);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _LANDSCAPE)
+	{
+		CLandScape* comp = onew(CLandScape);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _SKYBOX)
+	{
+		CSkyBox* comp = onew(CSkyBox);
+		_Object->AddComponent(comp);
+	}
+	if (CreateCompType & _DECAL)
+	{
+		CDecal* comp = onew(CDecal);
+		_Object->AddComponent(comp);
+	}
+}
 
 void DrawDebugRect(Vec3 _vWorldPos, Vec2 _vWorldScale, Vec4 _vColor
 	, Vec3 _vRotation, float _fTime, bool DepthTest)
@@ -255,6 +403,26 @@ wstring ToWString(string _string)
 	return wString;
 }
 
+string ToUpper(string _string)
+{
+	std::string result;
+	std::locale loc;
+	for (char ch : _string) {
+		result += std::toupper(ch, loc);
+	}
+	return result;
+}
+
+wstring ToUpper(wstring _wstring)
+{
+	std::wstring result;
+	std::locale loc;
+	for (wchar_t ch : _wstring) {
+		result += std::toupper(ch, loc);
+	}
+	return result;
+}
+
 wstring GetRelativePath(const wstring& _strBase, const wstring& _strPath)
 {
 	wstring strRelativePath;
@@ -298,6 +466,132 @@ Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat)
 		}
 	}
 	return mat;
+}
+
+int GetSizeofFormat(DXGI_FORMAT _eFormat)
+{
+	int iRetByte = 0;
+	switch (_eFormat)
+	{
+	case DXGI_FORMAT_R32G32B32A32_TYPELESS:
+	case DXGI_FORMAT_R32G32B32A32_FLOAT:
+	case DXGI_FORMAT_R32G32B32A32_UINT:
+	case DXGI_FORMAT_R32G32B32A32_SINT:
+		iRetByte = 128;
+		break;
+
+	case DXGI_FORMAT_R32G32B32_TYPELESS:
+	case DXGI_FORMAT_R32G32B32_FLOAT:
+	case DXGI_FORMAT_R32G32B32_UINT:
+	case DXGI_FORMAT_R32G32B32_SINT:
+		iRetByte = 96;
+		break;
+	case DXGI_FORMAT_R16G16B16A16_TYPELESS:
+	case DXGI_FORMAT_R16G16B16A16_FLOAT:
+	case DXGI_FORMAT_R16G16B16A16_UNORM:
+	case DXGI_FORMAT_R16G16B16A16_UINT:
+	case DXGI_FORMAT_R16G16B16A16_SNORM:
+	case DXGI_FORMAT_R16G16B16A16_SINT:
+	case DXGI_FORMAT_R32G32_TYPELESS:
+	case DXGI_FORMAT_R32G32_FLOAT:
+	case DXGI_FORMAT_R32G32_UINT:
+	case DXGI_FORMAT_R32G32_SINT:
+	case DXGI_FORMAT_R32G8X24_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+	case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+	case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+		iRetByte = 64;
+		break;
+	case DXGI_FORMAT_R10G10B10A2_TYPELESS:
+	case DXGI_FORMAT_R10G10B10A2_UNORM:
+	case DXGI_FORMAT_R10G10B10A2_UINT:
+	case DXGI_FORMAT_R11G11B10_FLOAT:
+	case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+	case DXGI_FORMAT_R8G8B8A8_UNORM:
+	case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+	case DXGI_FORMAT_R8G8B8A8_UINT:
+	case DXGI_FORMAT_R8G8B8A8_SNORM:
+	case DXGI_FORMAT_R8G8B8A8_SINT:
+	case DXGI_FORMAT_R16G16_TYPELESS:
+	case DXGI_FORMAT_R16G16_FLOAT:
+	case DXGI_FORMAT_R16G16_UNORM:
+	case DXGI_FORMAT_R16G16_UINT:
+	case DXGI_FORMAT_R16G16_SNORM:
+	case DXGI_FORMAT_R16G16_SINT:
+	case DXGI_FORMAT_R32_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT:
+	case DXGI_FORMAT_R32_FLOAT:
+	case DXGI_FORMAT_R32_UINT:
+	case DXGI_FORMAT_R32_SINT:
+	case DXGI_FORMAT_R24G8_TYPELESS:
+	case DXGI_FORMAT_D24_UNORM_S8_UINT:
+	case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+	case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+	case DXGI_FORMAT_B8G8R8A8_UNORM:
+	case DXGI_FORMAT_B8G8R8X8_UNORM:
+		iRetByte = 32;
+		break;
+	case DXGI_FORMAT_R8G8_TYPELESS:
+	case DXGI_FORMAT_R8G8_UNORM:
+	case DXGI_FORMAT_R8G8_UINT:
+	case DXGI_FORMAT_R8G8_SNORM:
+	case DXGI_FORMAT_R8G8_SINT:
+	case DXGI_FORMAT_R16_TYPELESS:
+	case DXGI_FORMAT_R16_FLOAT:
+	case DXGI_FORMAT_D16_UNORM:
+	case DXGI_FORMAT_R16_UNORM:
+	case DXGI_FORMAT_R16_UINT:
+	case DXGI_FORMAT_R16_SNORM:
+	case DXGI_FORMAT_R16_SINT:
+	case DXGI_FORMAT_B5G6R5_UNORM:
+	case DXGI_FORMAT_B5G5R5A1_UNORM:
+		iRetByte = 16;
+		break;
+	case DXGI_FORMAT_R8_TYPELESS:
+	case DXGI_FORMAT_R8_UNORM:
+	case DXGI_FORMAT_R8_UINT:
+	case DXGI_FORMAT_R8_SNORM:
+	case DXGI_FORMAT_R8_SINT:
+	case DXGI_FORMAT_A8_UNORM:
+		iRetByte = 8;
+		break;
+		// Compressed format; http://msdn2.microsoft.com/en-us/library/bb694531(VS.85).aspx
+	case DXGI_FORMAT_BC2_TYPELESS:
+	case DXGI_FORMAT_BC2_UNORM:
+	case DXGI_FORMAT_BC2_UNORM_SRGB:
+	case DXGI_FORMAT_BC3_TYPELESS:
+	case DXGI_FORMAT_BC3_UNORM:
+	case DXGI_FORMAT_BC3_UNORM_SRGB:
+	case DXGI_FORMAT_BC5_TYPELESS:
+	case DXGI_FORMAT_BC5_UNORM:
+	case DXGI_FORMAT_BC5_SNORM:
+		iRetByte = 128;
+		break;
+		// Compressed format; http://msdn2.microsoft.com/en-us/library/bb694531(VS.85).aspx
+	case DXGI_FORMAT_R1_UNORM:
+	case DXGI_FORMAT_BC1_TYPELESS:
+	case DXGI_FORMAT_BC1_UNORM:
+	case DXGI_FORMAT_BC1_UNORM_SRGB:
+	case DXGI_FORMAT_BC4_TYPELESS:
+	case DXGI_FORMAT_BC4_UNORM:
+	case DXGI_FORMAT_BC4_SNORM:
+		iRetByte = 64;
+		break;
+		// Compressed format; http://msdn2.microsoft.com/en-us/library/bb694531(VS.85).aspx
+	case DXGI_FORMAT_R9G9B9E5_SHAREDEXP:
+		iRetByte = 32;
+		break;
+		// These are compressed, but bit-size information is unclear.
+	case DXGI_FORMAT_R8G8_B8G8_UNORM:
+	case DXGI_FORMAT_G8R8_G8B8_UNORM:
+		iRetByte = 32;
+		break;
+	case DXGI_FORMAT_UNKNOWN:
+	default:
+		return -1;
+	}
+
+	return iRetByte / 8;
 }
 
 void SaveResRef(Ptr<CRes> _Res, FILE* _File)
@@ -344,45 +638,19 @@ float Deg2Rad(float _Degree)
 	return _Degree * XM_PI / 180;
 }
 
-wstring SaveResRefToDB(Ptr<CRes> _Res)
+float roundToDecimal(double value, int decimalPlaces)
 {
-	std::wstringstream wss;
-
-	int i = 0;
-	if (nullptr == _Res)
-	{
-		wss << L"0\n";
-	}
-	else
-	{
-		wss << L"1\n";
-		wss << _Res->GetKey() << L"\n";
-		wss << _Res->GetRelativePath() << L"\n";
-	}
-	
-	return wss.str();
+	float factor = (float)pow(10, decimalPlaces);
+	return round((float)value * factor) / factor;
 }
 
-void SaveResRefToDB(Ptr<CRes> _Res, wstring& _Key, wstring& _RelativePath)
-{
-	if (nullptr == _Res)
-	{
-		_Key = L"0";
-		_RelativePath = L"0";
-	}
-	else
-	{
-		_Key = _Res->GetKey();
-		_RelativePath = _Res->GetRelativePath();
-	}
-}
 
 //template<typename T>
 //void LoadResRefFromDB(Ptr<T>& _Res, std::wstringstream& wss) {
 //	int exists;
 //	wss >> exists;
 //	std::wstring line;
-//	std::getline(wss, line); // 숫자 뒤의 개행 문자를 소비
+//	std::getline(wss, line); // 
 //
 //	if (exists) {
 //		std::wstring strKey, strRelativePath;
@@ -439,3 +707,30 @@ std::vector<int> WStringToIntArray(const std::wstring& str)
 	}
 	return intArray;
 }
+
+
+
+float CTruncate(float value, int decimalPlaces) {
+	float factor = (float)std::pow(10.0, decimalPlaces);
+	return std::floor(value * factor) / factor;
+}
+
+//memoryMgr init
+#include "MemoryMgr.h"
+
+
+MemoryMgr* GMemory = nullptr;
+
+class CoreGlobal
+{
+public:
+	CoreGlobal()
+	{
+		GMemory = new MemoryMgr();
+	}
+
+	~CoreGlobal()
+	{
+		delete GMemory;
+	}
+} GCoreGlobal;

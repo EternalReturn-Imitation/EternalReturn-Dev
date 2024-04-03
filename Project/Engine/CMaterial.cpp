@@ -49,6 +49,36 @@ void CMaterial::UpdateData()
 	pMtrlBuffer->UpdateData();
 }
 
+void CMaterial::UpdateData_Inst()
+{
+	if (nullptr == m_pShader)
+		return;
+
+	m_pShader->UpdateData_Inst();
+
+	// Texture Update
+	for (UINT i = 0; i < TEX_END; ++i)
+	{
+		if (nullptr == m_arrTex[i])
+		{
+			m_Const.arrTex[i] = 0;
+			CTexture::Clear(i);
+			continue;
+		}
+
+		else
+		{
+			m_Const.arrTex[i] = 1;
+			m_arrTex[i]->UpdateData(i, PIPELINE_STAGE::PS_ALL);
+		}
+	}
+
+	// Constant Update
+	CConstBuffer* pMtrlBuffer = CDevice::GetInst()->GetConstBuffer(CB_TYPE::MATERIAL);
+	pMtrlBuffer->SetData(&m_Const);
+	pMtrlBuffer->UpdateData();
+}
+
 void CMaterial::SetScalarParam(SCALAR_PARAM _Param, const void* _Src)
 {
 	switch (_Param)
@@ -85,7 +115,11 @@ void CMaterial::SetScalarParam(SCALAR_PARAM _Param, const void* _Src)
 	case MAT_2:
 	case MAT_3:
 		m_Const.arrMat[_Param - MAT_0] = *((Matrix*)_Src);
-		break;	
+		break;
+
+	case ITEX_5:
+		m_Const.arrTex[_Param - MAT_0] = *((int*)_Src);
+		break;
 	}
 }
 
@@ -158,6 +192,15 @@ int CMaterial::Save(const wstring& _strRelativePath)
 		return E_FAIL;
 
 	wstring strFilePath = CPathMgr::GetInst()->GetContentPath();
+
+	path path_content = CPathMgr::GetInst()->GetContentPath();
+	path path_material = path_content.wstring() + L"material\\";
+	
+	if (false == exists(path_material))
+	{
+		create_directory(path_material);
+	}
+
 	strFilePath += _strRelativePath;
 	
 	FILE* pFile = nullptr;

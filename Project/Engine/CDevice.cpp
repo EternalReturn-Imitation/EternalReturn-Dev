@@ -4,18 +4,22 @@
 #include "CEngine.h"
 #include "CConstBuffer.h"
 
+#include <d3d11sdklayers.h>
+
 #include "CResMgr.h"
 
 CDevice::CDevice()
     : m_hWnd(nullptr)  
     , m_ViewPort{}
     , m_arrConstBuffer{}
+    , m_pDebug(nullptr)
 {
 }
 
 CDevice::~CDevice()
 {
     Safe_Del_Array(m_arrConstBuffer);
+    m_pDebug->Release();
 }
 
 int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
@@ -24,8 +28,6 @@ int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
     m_vRenderResolution = Vec2((float)_iWidth, (float)_iHeight);
 
     GlobalData.Resolution = m_vRenderResolution;
-
-
 
     int iFlag = 0;
 #ifdef _DEBUG
@@ -101,12 +103,22 @@ int CDevice::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
         return E_FAIL;
     }
 
+    // 디버거 생성
+    if (SUCCEEDED(m_Device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_pDebug)))) 
+    {
+        // 디버그 인터페이스를 사용하여 디버깅 작업 수행
+    }
 
     // 상수버퍼 생성
     CreateConstBuffer();
 
 
     return S_OK; // E_FAIL;
+}
+
+void CDevice::ReportLiveObjects()
+{
+    m_pDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 }
 
 int CDevice::CreateSwapChain()
@@ -391,12 +403,14 @@ int CDevice::CreateSampler()
     tSamDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.Filter   = D3D11_FILTER_ANISOTROPIC;    
+    tSamDesc.MaxLOD = D3D11_FLOAT32_MAX;
     DEVICE->CreateSamplerState(&tSamDesc, m_Sampler[0].GetAddressOf());
 
     tSamDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    tSamDesc.MaxLOD = D3D11_FLOAT32_MAX;
     DEVICE->CreateSamplerState(&tSamDesc, m_Sampler[1].GetAddressOf());
 
     CONTEXT->VSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());

@@ -11,6 +11,11 @@ CLayer::CLayer()
 CLayer::~CLayer()
 {
 	Safe_Del_Vec(m_vecParentObj);
+	vector<CGameObject*>::iterator iter = m_vecObject.begin();
+	while (iter != m_vecObject.end())
+	{
+		iter = m_vecObject.erase(iter);
+	}
 }
 
 void CLayer::begin()

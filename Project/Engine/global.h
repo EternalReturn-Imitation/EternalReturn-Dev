@@ -3,11 +3,13 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <random>
 #include <sstream>
 
+using std::queue;
 using std::vector;
 using std::list;
 using std::map;
@@ -33,7 +35,7 @@ using namespace std::experimental::filesystem;
 using namespace Microsoft::WRL;
 
 #include <d3d11.h>					// DirectX11
-#include <d3dcompiler.h>			// Shaderê´€ë ¨ í—¤ë”
+#include <d3dcompiler.h>			// Shader header
 #include <DirectXMath.h>			// DX Math
 #include <DirectXPackedVector.h>	
 
@@ -67,6 +69,12 @@ typedef Vector4 Vec4;
 
 #include "CSingleton.h"
 
-#include "SQLLight/sqlite3.h"
-#pragma comment(lib, "SQLLite/sqlite3.lib")
-#pragma comment(lib, "SQLLite/sqlite3.dll")
+#include "debug.h"
+#include <bitset>
+#include <set>
+#include <iomanip>
+
+//¸Ş¸ğ¸® ¸Å´ÏÀú °ü·Ã
+#include "MemoryMgr.h"
+#include "CustomContainer.h"
+#include "ObjectPool.h"

@@ -18,6 +18,8 @@
 OutlinerUI::OutlinerUI()
     : UI("##Outliner")
 	, m_Tree(nullptr)
+	, m_dwRSelectedObj(nullptr)
+	, m_bOpenMenu(false)
 {
     SetName("Outliner");
 
@@ -29,8 +31,8 @@ OutlinerUI::OutlinerUI()
 
 	m_Tree->AddDynamic_Select(this, (UI_DELEGATE_1)&OutlinerUI::SetTargetToInspector);
 	m_Tree->AddDynamic_DragDrop(this, (UI_DELEGATE_2)&OutlinerUI::DragDrop);
+	m_Tree->AddDynamic_RSelect(this, (UI_DELEGATE_1)&OutlinerUI::OpenObjMenu);
 	m_Tree->SetDragDropID("GameObject");
-
 
 	AddChildUI(m_Tree);
 }
@@ -55,6 +57,32 @@ void OutlinerUI::tick()
 
 int OutlinerUI::render_update()
 {
+	// MenupopupÀ» ¿¬´Ù
+	if(m_bOpenMenu)
+		ImGui::OpenPopup("##OutLinerObjMenu");
+
+	if (ImGui::BeginPopup("##OutLinerObjMenu"))
+	{
+		m_bOpenMenu = false;
+		ImGui::Text("menu");
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Delete..##GameObjDelete"))
+		{
+			DestroyObject(m_dwRSelectedObj);
+			m_dwRSelectedObj = nullptr;
+			ImGui::CloseCurrentPopup();
+		}
+
+		if (ImGui::MenuItem("Close##CloseObjMenu"))
+		{
+			m_dwRSelectedObj = nullptr;
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
     return 0;
 }
 
@@ -149,4 +177,13 @@ void OutlinerUI::DragDrop(DWORD_PTR _DragNode, DWORD_PTR _DropNode)
 	evn.wParam = (DWORD_PTR)pDropObj;
 	evn.lParam = (DWORD_PTR)pDragObj;
 	CEventMgr::GetInst()->AddEvent(evn);
+}
+
+void OutlinerUI::OpenObjMenu(TreeNode* _data)
+{
+	TreeNode* pSelectedNode = (TreeNode*)_data;
+	m_dwRSelectedObj = (CGameObject*)pSelectedNode->GetData();
+	
+	m_bOpenMenu = true;
+	
 }
