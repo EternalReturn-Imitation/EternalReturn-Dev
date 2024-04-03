@@ -688,6 +688,16 @@ void ER_ActionScript_Hyunwoo::Skill_EUpdate(tFSMData& param)
 
 void ER_ActionScript_Hyunwoo::Skill_EExit(tFSMData& param)
 {
+    // clear
+    param.bData[0] = false;
+    param.bData[1] = false;
+
+    param.fData[0] = 0.f;
+    param.fData[1] = 0.f;
+    param.fData[2] = 0.f;
+    param.fData[3] = 0.f;
+    param.v2Data = Vec2();
+    param.iData[0] = 0;
 }
 
 void ER_ActionScript_Hyunwoo::Skill_REnter(tFSMData& param)
@@ -722,11 +732,21 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
 {
     if (param.iData[0] <= 1)
     {
-        if (KEY_PRESSED(KEY::R))
+        if (IsPlayer())
         {
-            param.fData[0] += DT;
+            if (KEY_PRESSED(KEY::R))
+            {
+                param.fData[0] += DT;
+            }
+            else if (KEY_RELEASE(KEY::R))
+            {
+                STOPSOUND(SKILLR_CHARGING);
+                ERCHARSOUND(SKILLR_HIT);
+                Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_End", false);
+                param.iData[0] = 2;
+            }
         }
-        else if (KEY_RELEASE(KEY::R))
+        else
         {
             STOPSOUND(SKILLR_CHARGING);
             ERCHARSOUND(SKILLR_HIT);
@@ -734,6 +754,8 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
             param.iData[0] = 2;
 
             GetOwner()->GetScript<HyunwooREffect>()->DeleteREffect();
+            if(param.iData[0] != 2)
+                param.fData[0] += DT;
         }
     }
 

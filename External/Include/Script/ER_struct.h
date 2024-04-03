@@ -184,6 +184,16 @@ public:
 		return false;
 	}
 
+	bool IsAbleUse(int _CharacterSP)
+	{
+		int UsedSP = _CharacterSP - iUseSP[iSkillLevel];
+
+		if (iSkillLevel == 0 || UsedSP < 0)
+			return false;
+
+		return IsUsable;
+	}
+
 	const int& Int1() { return iValue1[iSkillLevel]; }
 	const int& Int2() { return iValue2[iSkillLevel]; }
 	const float& Float1() { return fValue1[iSkillLevel]; } 

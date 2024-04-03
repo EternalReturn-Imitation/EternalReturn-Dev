@@ -10,7 +10,7 @@ void ER_ArrowEffectScript::begin()
 
 void ER_ArrowEffectScript::tick()
 {
-	if (m_pParticle != nullptr);
+	if (m_pParticle != nullptr)
 		m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
 }
 
@@ -67,7 +67,7 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	particle_data.vVelocityDir = Vec3(1.f, 0.f, 1.f);
 	particle_data.Speed = 2.5f;
 
-	particle_data.SpawnRate = 50.f;
+	particle_data.SpawnRate = 50;
 
 	particle_data.EndDrag = -1.f;
 

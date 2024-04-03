@@ -118,7 +118,6 @@ void ER_ActionScript_Character::Attack(tFSMData& _Data)
 		if (IsInRange((CGameObject*)_Data.lParam, _Data.fData[0]))
 		{
 			STATEDATA_SET(ATTACK, _Data);			// 입력받은 데이터로 세팅
-			SetStateGrade(eAccessGrade::BASIC);	// 모션중 취소가능
 			ChangeState(ER_CHAR_ACT::ATTACK);
 		}
 		else

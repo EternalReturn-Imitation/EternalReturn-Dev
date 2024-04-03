@@ -593,7 +593,7 @@ void ER_ActionScript_Rio::Skill_WEnter(tFSMData& param)
             Skill->Use(&tmpsp);
             Animator3D()->SelectAnimation(L"Rio_Long_Skill_W", false);
             SetRotationToTarget(GetFocusPoint());
-            SetStateGrade(eAccessGrade::ADVANCED);
+            SetStateGrade(eAccessGrade::UTMOST);
             param.bData[0] = true;
             param.bData[1] = false;
             param.v4Data = GetFocusDir();
@@ -613,7 +613,7 @@ void ER_ActionScript_Rio::Skill_WEnter(tFSMData& param)
             Skill2->Use(&tmpsp);
             Animator3D()->SelectAnimation(L"Rio_Short_Skill_W", false);
             SetRotationToTarget(GetFocusPoint());
-            SetStateGrade(eAccessGrade::ADVANCED);
+            SetStateGrade(eAccessGrade::UTMOST);
             param.bData[0] = true;
             param.bData[1] = false;
             param.v4Data = GetFocusDir();
@@ -736,7 +736,7 @@ void ER_ActionScript_Rio::Skill_EEnter(tFSMData& param)
     {
         Animator3D()->SelectAnimation(L"Rio_Short_Skill_E", false);
 
-        SetRotationToTarget(GetFocusPoint());
+
         SetStateGrade(eAccessGrade::UTMOST);
 
         // 방향 전환
