@@ -38,7 +38,10 @@
 #include "ER_UIScript_StatusBarGauge.h"
 #include "ER_UIScript_TrackingStatusBar.h"
 #include "ER_YukiBAEffect.h"
+#include "ER_YukiEEffect.h"
 #include "ER_YukiQEffect.h"
+#include "ER_YukiREffect.h"
+#include "ER_YukiWEffect.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -79,7 +82,10 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_UIScript_StatusBarGauge");
 	_vec.push_back(L"ER_UIScript_TrackingStatusBar");
 	_vec.push_back(L"ER_YukiBAEffect");
+	_vec.push_back(L"ER_YukiEEffect");
 	_vec.push_back(L"ER_YukiQEffect");
+	_vec.push_back(L"ER_YukiREffect");
+	_vec.push_back(L"ER_YukiWEffect");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -158,8 +164,14 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_UIScript_TrackingStatusBar;
 	if (L"ER_YukiBAEffect" == _strScriptName)
 		return new ER_YukiBAEffect;
+	if (L"ER_YukiEEffect" == _strScriptName)
+		return new ER_YukiEEffect;
 	if (L"ER_YukiQEffect" == _strScriptName)
 		return new ER_YukiQEffect;
+	if (L"ER_YukiREffect" == _strScriptName)
+		return new ER_YukiREffect;
+	if (L"ER_YukiWEffect" == _strScriptName)
+		return new ER_YukiWEffect;
 	return nullptr;
 }
 
@@ -278,8 +290,17 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_YUKIBAEFFECT:
 		return new ER_YukiBAEffect;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIEEFFECT:
+		return new ER_YukiEEffect;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_YUKIQEFFECT:
 		return new ER_YukiQEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIREFFECT:
+		return new ER_YukiREffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_YUKIWEFFECT:
+		return new ER_YukiWEffect;
 		break;
 	}
 	return nullptr;
@@ -437,8 +458,20 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_YukiBAEffect";
 		break;
 
+	case SCRIPT_TYPE::ER_YUKIEEFFECT:
+		return L"ER_YukiEEffect";
+		break;
+
 	case SCRIPT_TYPE::ER_YUKIQEFFECT:
 		return L"ER_YukiQEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIREFFECT:
+		return L"ER_YukiREffect";
+		break;
+
+	case SCRIPT_TYPE::ER_YUKIWEFFECT:
+		return L"ER_YukiWEffect";
 		break;
 
 	}

@@ -84,71 +84,71 @@ void CreateTestEnemy()
 
 void TestObject()
 {
-	CGameObject* testParticle = new CGameObject;
-	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	CParticleSystem* Particle = testParticle->ParticleSystem();
-	
-	tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
-	
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
-	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
-	
-	particle_data.StartScale = 1.f;
-	particle_data.EndScale = 1.f;
-	
-	particle_data.vSpawnScaleMin = Vec3(0.3f, 0.3f, 0.3f);
-	particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
-	particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
-	
-	particle_data.MinLifeTime = 1.f;
-	particle_data.MaxLifeTime = 1.f;
-	
-	particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
-	particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
-	
-	
-	particle_data.AddVelocityType = 1;
-	particle_data.vVelocityDir = Vec3(0.f, 0.f, 0.f);
-	particle_data.Speed = 0.3f;
-	
-	particle_data.SpawnRate = 20;
-	
-	particle_data.StartDrag = 2.f;
-	particle_data.EndDrag = 10.f;
-	
-	particle_data.fNoiseTerm = 2.f;
-	particle_data.fNoiseForce = 2.f;
-		
-	//Particle->SetMaxParticleCount(10);
-	Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Fx_UI_Tierlight_OW.png"));
-	Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
-	Particle->SetParticleSpawnNum(100);
-	
-	SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-
+	//CGameObject* testParticle = new CGameObject;
+	//AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
+	//CParticleSystem* Particle = testParticle->ParticleSystem();
+	//
+	//tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
+	//
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::SCALE_CHANGE] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::COLOR_CHANGE] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::NOISE_FORCE] = false;
+	//particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = false;
+	//
+	//particle_data.StartScale = 1.f;
+	//particle_data.EndScale = 1.f;
+	//
+	//particle_data.vSpawnScaleMin = Vec3(0.3f, 0.3f, 0.3f);
+	//particle_data.vSpawnScaleMax = Vec3(0.3f, 0.3f, 0.3f);
+	//particle_data.vBoxShapeScale = Vec3(0.001f, 0.001f, 0.001f);
+	//
+	//particle_data.MinLifeTime = 1.f;
+	//particle_data.MaxLifeTime = 1.f;
+	//
+	//particle_data.vStartColor = Vec3(1.f, 1.f, 1.f);
+	//particle_data.vEndColor = Vec3(0.6f, 0.6f, 0.6f);
+	//
+	//
+	//particle_data.AddVelocityType = 1;
+	//particle_data.vVelocityDir = Vec3(0.f, 0.f, 0.f);
+	//particle_data.Speed = 0.3f;
+	//
+	//particle_data.SpawnRate = 20;
+	//
+	//particle_data.StartDrag = 2.f;
+	//particle_data.EndDrag = 10.f;
+	//
+	//particle_data.fNoiseTerm = 2.f;
+	//particle_data.fNoiseForce = 2.f;
+	//	
+	////Particle->SetMaxParticleCount(10);
+	//Particle->SetParticleTexture(CResMgr::GetInst()->FindRes<CTexture>(L"Fx_UI_Tierlight_OW.png"));
+	//Particle->SetParticleInfo(particle_data);   // 파티클 데이터 세팅
+	//Particle->SetParticleSpawnNum(100);
+	//
+	//SpawnGameObject(testParticle, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+	//
 	//CGameObject* dummy = new CGameObject();
 	//AddComponents(dummy, _TRANSFORM);
 	//
 	//SpawnGameObject(dummy, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
-	//
-	//CGameObject* tdExample = new CGameObject();
-	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
-	//tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-	//	
-	//Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Sword_05.png");
-	//tdExample->Animator2D()->CreateAnimation(L"FX_BI_Sword_05", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 1, 4);
-	//tdExample->Animator2D()->Play(L"FX_BI_Sword_05", true);
-	//
-	//tdExample->Transform()->SetRelativeScale(Vec3(4.0f, 4.0f, 4.0f));
-	//
-	////dummy->AddChild(tdExample);
-	//SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
+	
+	CGameObject* tdExample = new CGameObject();
+	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+		
+	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_SwordLine_01SE.png");
+	tdExample->Animator2D()->CreateAnimation(L"FX_BI_SwordLine_01SE", animAtlas, Vec2(0.f, 0.f), Vec2(42.6f, 681.6f), Vec2(42.6f, 681.6f), 12, 12);
+	tdExample->Animator2D()->Play(L"FX_BI_SwordLine_01SE", true);
+	
+	tdExample->Transform()->SetRelativeScale(Vec3(1.0f, 12.0f, 1.0f));
+	
+	//dummy->AddChild(tdExample);
+	SpawnGameObject(tdExample, Vec3(-64.84728f, 3.21305f, 35.10118f), 0);
 
 	//CGameObject* tdExample = new CGameObject();
 	//AddComponents(tdExample, _TRANSFORM | _MESHRENDER);

@@ -172,6 +172,15 @@
     <Filter Include="Script\ER\EffectScript\Yuki\QEffect">
       <UniqueIdentifier>{8224c224-8dab-4a3b-a38a-2e861584b588}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\WEffect">
+      <UniqueIdentifier>{0b6c631a-5285-4656-9c34-24dea823f890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\EEffect">
+      <UniqueIdentifier>{9006fd66-eb56-4a54-8797-fbf953675083}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\EffectScript\Yuki\REffect">
+      <UniqueIdentifier>{656be287-a5a4-4f4c-8926-f3809b30e845}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -327,6 +336,15 @@
     </ClInclude>
     <ClInclude Include="ER_YukiQEffect.h">
       <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiWEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\WEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiEEffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\EEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_YukiREffect.h">
+      <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -491,6 +509,15 @@
     </ClCompile>
     <ClCompile Include="ER_YukiQEffect.cpp">
       <Filter>Script\ER\EffectScript\Yuki\QEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiWEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\WEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiEEffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\EEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_YukiREffect.cpp">
+      <Filter>Script\ER\EffectScript\Yuki\REffect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

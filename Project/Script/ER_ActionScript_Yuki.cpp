@@ -13,6 +13,9 @@
 //이펙트 관련
 #include "ER_YukiBAEffect.h"
 #include "ER_YukiQEffect.h"
+#include "ER_YukiWEffect.h"
+#include "ER_YukiEEffect.h"
+#include "ER_YukiREffect.h"
 
 ER_ActionScript_Yuki::ER_ActionScript_Yuki()
     : ER_ActionScript_Character(SCRIPT_TYPE::ER_ACTIONSCRIPT_YUKI)
@@ -28,9 +31,15 @@ void ER_ActionScript_Yuki::begin()
     ER_ActionScript_Character::begin();
     ER_YukiBAEffect* BAEffect = onew(ER_YukiBAEffect);
     ER_YukiQEffect* QEffect = onew(ER_YukiQEffect);
+    ER_YukiWEffect* WEffect = onew(ER_YukiWEffect);
+    ER_YukiEEffect* EEffect = onew(ER_YukiEEffect);
+    ER_YukiREffect* REffect = onew(ER_YukiREffect);
 
     GetOwner()->AddComponent(BAEffect);
     GetOwner()->AddComponent(QEffect);
+    GetOwner()->AddComponent(WEffect);
+    GetOwner()->AddComponent(EEffect);
+    GetOwner()->AddComponent(REffect);
 }
 
 void ER_ActionScript_Yuki::WaitEnter(tFSMData& param)
@@ -508,6 +517,8 @@ void ER_ActionScript_Yuki::Skill_WEnter(tFSMData& param)
 
         ERCHARSOUND(SKILLW_MOTION);
 
+        GetOwner()->GetScript<ER_YukiWEffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
+
         Animator3D()->SelectAnimation(L"Yuki_SkillW_Upper_Wait", false);
         SetStateGrade(eAccessGrade::UTMOST);
     }
@@ -635,6 +646,8 @@ void ER_ActionScript_Yuki::Skill_EUpdate(tFSMData& param)
             BATTLE_SKILL(GetOwner(), (CGameObject*)param.lParam, ER_ActionScript_Yuki, SkillE, skill, 0);
 
             param.bData[1] = true;
+
+            GetOwner()->GetScript<ER_YukiEEffect>()->SpawnEffect(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
         }
 
         if (Animator3D()->IsFinish())
@@ -704,6 +717,8 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                 param.bData[1] = false;
                 param.iData[0] = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
                 param.iData[1] = 31;    // End Anim Hit Frame
+
+                GetOwner()->GetScript<ER_YukiREffect>()->AreaSpawn(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
 
                 // 스킬 발동
                 GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_Loop", false);
