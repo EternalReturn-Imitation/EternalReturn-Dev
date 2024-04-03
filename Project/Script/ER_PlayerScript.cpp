@@ -186,7 +186,7 @@ void ER_PlayerScript::tick()
 	{
 		// 제작 가능 아이템 수가 1개 이상인 경우 가장 앞에있는 아이템으로 제작진행
 		vector<UINT> CraftList = (*(GetOwner()->GetScript<ER_DataScript_Character>()->GetCraftListAdress()));
-		if (1 <= CraftList.size())
+		if (!CraftList.empty())
 		{
 			data.iData[0] = CraftList[0];
 			m_pActionScript->Craft(data);
