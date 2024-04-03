@@ -21,7 +21,7 @@ void ER_AyaWBulletEffect::tick()
 		std::uniform_real_distribution<> dis(1.0, 2.0);
 
 		// 랜덤 실수 생성
-		float randomValue = dis(gen);
+		float randomValue = (float)dis(gen);
 
 		CGameObject* dummyParent = new CGameObject();
 		AddComponents(dummyParent, _TRANSFORM);
@@ -48,8 +48,8 @@ void ER_AyaWBulletEffect::tick()
 	}
 
 	//파티클 이동
-	if (m_pParticle != nullptr);
-	m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
+	if (m_pParticle != nullptr)
+		m_pParticle->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
 }
 
 void ER_AyaWBulletEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
