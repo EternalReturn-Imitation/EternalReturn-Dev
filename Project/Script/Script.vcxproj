@@ -214,7 +214,6 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_ItemMgr.h" />
     <ClInclude Include="ER_PlayerScript.h" />
     <ClInclude Include="ER_PlayerScript_Range.h" />
-    <ClInclude Include="ER_ProjectileScript.h" />
     <ClInclude Include="ER_RioBAEffect.h" />
     <ClInclude Include="ER_RioQEffect.h" />
     <ClInclude Include="ER_struct.h" />

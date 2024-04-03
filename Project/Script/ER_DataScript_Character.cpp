@@ -331,11 +331,6 @@ void ER_DataScript_Character::tick()
 
 bool ER_DataScript_Character::SwapItem(CGameObject** _DragItem, CGameObject** _DropItem)
 {
-	std::thread t1(&ER_DataScript_Character::SwapItem, this);
-	t1.detach();
-
-	lock_guard<mutex> lockGuard(m_mMutex);
-
 	ER_DataScript_Item* DragItem = nullptr;
 	int DragItemType = -1;
 	bool DragItemEquiped = false;
@@ -561,11 +556,6 @@ void ER_DataScript_Character::ItemInfoUpdate()
 
 bool ER_DataScript_Character::CraftItem(UINT _Item)
 {
-	// std::thread t1(&ER_DataScript_Character::CraftItem, this);
-	// t1.detach();
-	// 
-	// lock_guard<mutex> lockGuard(m_mMutex);
-
 	// 해당 아이템을 만들기위한 재료 슬롯 검색
 	ER_RECIPE recipe = {};
 	recipe.recipe = ER_ItemMgr::GetInst()->m_umapIngredient.find(_Item)->second;
