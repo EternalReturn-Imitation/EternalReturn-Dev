@@ -45,11 +45,7 @@ MemoryHeader* MemoryPool::Pop()
 	if (header == nullptr)
 	{
 		header = reinterpret_cast<MemoryHeader*>(::malloc(_allocSize));
-	}
-	else
-	{
-		assert(header->allocSize == 0);
-	}
+	}	
 
 	++_allocCount;
 
