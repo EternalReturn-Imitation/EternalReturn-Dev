@@ -12,9 +12,11 @@ ER_AyaBAEffect
 ER_AyaQEffect
 ER_AyaREffect
 ER_AyaWBulletEffect
-ER_BulletEffectScript
+ER_BulletEffectScrip
+ER_AIScript_Aya
 ER_AIScript_Hyunwoo
 ER_AIScript_Rio
+ER_AIScript_Yuki
 ER_CamControllerScript
 ER_Cursor
 ER_DataScript_Arrow

@@ -16,8 +16,10 @@
 #include "ER_AyaREffect.h"
 #include "ER_AyaWBulletEffect.h"
 #include "ER_BulletEffectScript.h"
+#include "ER_AIScript_Aya.h"
 #include "ER_AIScript_Hyunwoo.h"
 #include "ER_AIScript_Rio.h"
+#include "ER_AIScript_Yuki.h"
 #include "ER_CamControllerScript.h"
 #include "ER_Cursor.h"
 #include "ER_DataScript_Arrow.h"
@@ -56,15 +58,17 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_ActionScript_Hyunwoo");
 	_vec.push_back(L"ER_ActionScript_Jackie");
 	_vec.push_back(L"ER_ActionScript_Rio");
-	_vec.push_back(L"ER_ActionScript_Yuki");
+	_vec.push_back(L"ER_ActionScript_Yuki")
 	_vec.push_back(L"ER_ArrowEffectScript");
 	_vec.push_back(L"ER_AyaBAEffect");
 	_vec.push_back(L"ER_AyaQEffect");
 	_vec.push_back(L"ER_AyaREffect");
 	_vec.push_back(L"ER_AyaWBulletEffect");
 	_vec.push_back(L"ER_BulletEffectScript");
+	_vec.push_back(L"ER_AIScript_Aya");
 	_vec.push_back(L"ER_AIScript_Hyunwoo");
 	_vec.push_back(L"ER_AIScript_Rio");
+	_vec.push_back(L"ER_AIScript_Yuki");
 	_vec.push_back(L"ER_CamControllerScript");
 	_vec.push_back(L"ER_Cursor");
 	_vec.push_back(L"ER_DataScript_Arrow");
@@ -113,7 +117,7 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 	if (L"ER_ActionScript_Rio" == _strScriptName)
 		return new ER_ActionScript_Rio;
 	if (L"ER_ActionScript_Yuki" == _strScriptName)
-		return new ER_ActionScript_Yuki;
+		return new ER_ActionScript_Yuki
 	if (L"ER_ArrowEffectScript" == _strScriptName)
 		return new ER_ArrowEffectScript;
 	if (L"ER_AyaBAEffect" == _strScriptName)
@@ -126,10 +130,14 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_AyaWBulletEffect;
 	if (L"ER_BulletEffectScript" == _strScriptName)
 		return new ER_BulletEffectScript;
+	if (L"ER_AIScript_Aya" == _strScriptName)
+		return new ER_AIScript_Aya;
 	if (L"ER_AIScript_Hyunwoo" == _strScriptName)
 		return new ER_AIScript_Hyunwoo;
 	if (L"ER_AIScript_Rio" == _strScriptName)
 		return new ER_AIScript_Rio;
+	if (L"ER_AIScript_Yuki" == _strScriptName)
+		return new ER_AIScript_Yuki;
 	if (L"ER_CamControllerScript" == _strScriptName)
 		return new ER_CamControllerScript;
 	if (L"ER_Cursor" == _strScriptName)
@@ -235,11 +243,17 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_BULLETEFFECTSCRIPT:
 		return new ER_BulletEffectScript;
+	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_AYA:
+		return new ER_AIScript_Aya;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_HYUNWOO:
 		return new ER_AIScript_Hyunwoo;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_RIO:
 		return new ER_AIScript_Rio;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_AISCRIPT_YUKI:
+		return new ER_AIScript_Yuki;
 		break;
 	case (UINT)SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:
 		return new ER_CamControllerScript;
@@ -390,12 +404,20 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_BulletEffectScript";
 		break;
 
+	case SCRIPT_TYPE::ER_AISCRIPT_AYA:
+		return L"ER_AIScript_Aya";
+		break;
+
 	case SCRIPT_TYPE::ER_AISCRIPT_HYUNWOO:
 		return L"ER_AIScript_Hyunwoo";
 		break;
 
 	case SCRIPT_TYPE::ER_AISCRIPT_RIO:
 		return L"ER_AIScript_Rio";
+		break;
+
+	case SCRIPT_TYPE::ER_AISCRIPT_YUKI:
+		return L"ER_AIScript_Yuki";
 		break;
 
 	case SCRIPT_TYPE::ER_CAMCONTROLLERSCRIPT:

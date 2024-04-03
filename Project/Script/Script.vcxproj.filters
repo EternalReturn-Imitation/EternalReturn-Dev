@@ -196,6 +196,12 @@
     <Filter Include="Script\ER\AIScript\Hyunwoo">
       <UniqueIdentifier>{de525295-241a-40b9-b1a3-e2f2ec012ebf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\ER\AIScript\Yuki">
+      <UniqueIdentifier>{8953cb7c-17f7-4697-ae34-a9249ed208e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\ER\AIScript\Aya">
+      <UniqueIdentifier>{b4362a62-92bf-45e2-927e-6e60945d6d77}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -369,6 +375,12 @@
     </ClInclude>
     <ClInclude Include="ER_AIScript_Hyunwoo.h">
       <Filter>Script\ER\AIScript\Hyunwoo</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AIScript_Yuki.h">
+      <Filter>Script\ER\AIScript\Yuki</Filter>
+    </ClInclude>
+    <ClInclude Include="ER_AIScript_Aya.h">
+      <Filter>Script\ER\AIScript\Aya</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -554,6 +566,12 @@
     </ClCompile>
     <ClCompile Include="ER_AIScript_Hyunwoo.cpp">
       <Filter>Script\ER\AIScript\Hyunwoo</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript_Yuki.cpp">
+      <Filter>Script\ER\AIScript\Yuki</Filter>
+    </ClCompile>
+    <ClCompile Include="ER_AIScript_Aya.cpp">
+      <Filter>Script\ER\AIScript\Aya</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
