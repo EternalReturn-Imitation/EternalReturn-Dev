@@ -73,7 +73,7 @@ HRESULT BB::FindBBData(const wstring& _BBKey, int& _Dest)
 
 	if (type == L"int")
 	{
-		_Dest = *((int*)Data->pDataPtr);
+		_Dest = *(int*)Data->pDataPtr;
 		return S_OK;
 	}
 
@@ -93,14 +93,14 @@ HRESULT BB::FindBBData(const wstring& _BBKey, float& _Dest)
 
 	if (type == L"float")
 	{
-		_Dest = *((float*)Data->pDataPtr);
+		_Dest = *(float*)Data->pDataPtr;
 		return S_OK;
 	}
 
 	return  S_FALSE;
 }
 
-HRESULT BB::FindBBData(const wstring& _BBKey, CGameObject** _Dest)
+HRESULT BB::FindBBData(const wstring& _BBKey, CGameObject* _Dest)
 {
 	unordered_map<wstring, tBBData*>::iterator iter
 		= m_BBDataList.find(_BBKey);
@@ -113,7 +113,7 @@ HRESULT BB::FindBBData(const wstring& _BBKey, CGameObject** _Dest)
 
 	if (type == L"GameObject")
 	{
-		*_Dest = (CGameObject*)(Data->pDataPtr);
+		_Dest = (CGameObject*)(Data->pDataPtr);
 		return S_OK;
 	}
 
@@ -139,88 +139,6 @@ HRESULT BB::FindBBData(const wstring& _BBKey, wstring& _Dest)
 	}
 
 	return  S_FALSE;
-}
-
-HRESULT BB::SetBBData(const wstring& _BBKey, int _Src)
-{
-	unordered_map<wstring, tBBData*>::iterator iter
-		= m_BBDataList.find(_BBKey);
-
-	if (iter == m_BBDataList.end())
-		return S_FALSE;
-
-
-	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
-
-	if (type == L"int")
-	{
-		*(int*)(iter->second->pDataPtr) = _Src;
-		return S_OK;
-	}
-
-	return S_OK;
-}
-
-HRESULT BB::SetBBData(const wstring& _BBKey, float _Src)
-{
-	unordered_map<wstring, tBBData*>::iterator iter
-		= m_BBDataList.find(_BBKey);
-
-	if (iter == m_BBDataList.end())
-		return S_FALSE;
-
-	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
-
-	if (type == L"float")
-	{
-		*(int*)(iter->second->pDataPtr) = _Src;
-		return S_OK;
-	}
-
-	return S_OK;
-}
-
-HRESULT BB::SetBBData(const wstring& _BBKey, CGameObject* _Src)
-{
-	unordered_map<wstring, tBBData*>::iterator iter
-		= m_BBDataList.find(_BBKey);
-
-	if (iter == m_BBDataList.end())
-		return S_FALSE;
-
-	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
-
-	if (type == L"GameObject")
-	{
-		iter->second->pDataPtr = (DWORD_PTR)_Src;
-		return S_OK;
-	}
-
-
-	return S_OK;
-}
-
-HRESULT BB::SetBBData(const wstring& _BBKey, const wstring& _Src)
-{
-	unordered_map<wstring, tBBData*>::iterator iter
-		= m_BBDataList.find(_BBKey);
-
-	if (iter == m_BBDataList.end())
-		return S_FALSE;
-
-	tBBData* Data = iter->second;
-	const wchar_t* type = Data->strDataType;
-
-	if (type == L"wstring")
-	{
-		iter->second->strData = _Src;
-		return S_OK;
-	}
-
-	return S_OK;
 }
 
 void BB::DeleteBBData(const wstring& _BBKey)

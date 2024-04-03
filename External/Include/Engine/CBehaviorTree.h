@@ -42,13 +42,8 @@ public:
 
     HRESULT FindBBData(const wstring& _BBKey, int& _Dest);
     HRESULT FindBBData(const wstring& _BBKey, float& _Dest);
-    HRESULT FindBBData(const wstring& _BBKey, CGameObject** _Dest);
+    HRESULT FindBBData(const wstring& _BBKey, CGameObject* _Dest);
     HRESULT FindBBData(const wstring& _BBKey, wstring& _Dest);
-
-    HRESULT SetBBData(const wstring& _BBKey, int _Src);
-    HRESULT SetBBData(const wstring& _BBKey, float _Src);
-    HRESULT SetBBData(const wstring& _BBKey, CGameObject* _Src);
-    HRESULT SetBBData(const wstring& _BBKey, const wstring& _Src);
 
     void DeleteBBData(const wstring& _BBKey);
 
@@ -140,8 +135,6 @@ public:
 public:
     BTNode();
     virtual ~BTNode();
-
-    friend class Root_Node;
 };
 
 // ========================= 루트 노드 =========================
@@ -155,30 +148,6 @@ public:
     virtual BT_STATUS Run() override;
     void SetRunningNode(BTNode* pNode) { m_RunningNode = pNode; }
     void SetOwner(CGameObject* _Owner) { m_pOwner = _Owner; }
-
-    // ========= 자식 노드 =========
-    template<typename T>
-    T* AddChild()
-    {
-        T* ChildNode = new T();
-
-        // 생성하는 객체가 BTNode 상속이 아니면 생성불가
-        if (nullptr == dynamic_cast<BTNode*>(ChildNode))
-        {
-            delete ChildNode;
-            return nullptr;
-        }
-
-        ChildNode->SetRootNode((BTNode*)this);     // 루트 노드 설정
-        m_Child.emplace_back(ChildNode);        // 자식 노드로 추가
-        ChildNode->SetParentNode(this);         // 부모노드 설정
-        ChildNode->m_pOwner = m_pOwner;         // 게임오브젝트 등록
-        m_ChildCnt++;                           // 자식갯수 추가
-
-        return ChildNode;
-    }
-
-    void ClearRunningNode() { if (m_RunningNode != nullptr) m_RunningNode = nullptr; }
 
     // ========= 블랙 보드 =========
     BB* GetBlackBoard() { return m_BlackBoard; }

@@ -62,7 +62,6 @@ ER_DataScript_Character::ER_DataScript_Character(const ER_DataScript_Character& 
 	}
 
 	m_IngredientList = _origin.m_IngredientList;
-	m_NeedFarmingItems = _origin.m_NeedFarmingItems;
 }
 
 ER_DataScript_Character::~ER_DataScript_Character()
@@ -211,7 +210,7 @@ void ER_DataScript_Character::init()
 	
 	for (int i = 0; i < 5; ++i)
 	{
-		ER_ItemMgr::GetInst()->GetIngredient(m_RootItem[i], &m_IngredientList, &m_NeedFarmingItems);
+		ER_ItemMgr::GetInst()->GetIngredient(m_RootItem[i], &m_IngredientList);
 	}
 }
 
@@ -230,31 +229,19 @@ void ER_DataScript_Character::begin()
 
 	UINT StartWeapon = 0;
 	if (m_strKey == L"Aya")
-	{
 		StartWeapon = 20;
-		m_SkillPoint = 1;
-	}
 	else if (m_strKey == L"Hyunwoo")
-	{
 		StartWeapon = 18;
-		m_SkillPoint = 1;
-	}
 	else if (m_strKey == L"Jackie")
-	{
 		StartWeapon = 108;
-		m_SkillPoint = 1;
-	}
-	else if (m_strKey == L"Yuki")
-	{
-		StartWeapon = 9;
-		m_SkillPoint = 1;
-	}
 	else if (m_strKey == L"Rio")
 	{
 		m_SkillList[(UINT)SKILLIDX::Q_1]->iSkillLevel = 1;
 		m_SkillList[(UINT)SKILLIDX::Q_2]->iSkillLevel = 1;
 		StartWeapon = 28;
 	}
+	else if (m_strKey == L"Yuki")
+		StartWeapon = 9;
 
 	m_Equipment[0] = ER_ItemMgr::GetInst()->GetItemObj(StartWeapon)->Clone();
 	m_Equipment[0]->GetScript<ER_DataScript_Item>()->m_bEquiped = true;
@@ -485,13 +472,6 @@ void ER_DataScript_Character::AcquireItem(CGameObject** _BoxSlot)
 		m_Inventory[emptyslot] = (*_BoxSlot);
 		m_Inventory[emptyslot]->GetScript<ER_DataScript_Item>()->m_bEquiped = false;
 		*_BoxSlot = nullptr;
-
-		// 습득한 아이템이 필요 파밍아이템이었다면 리스트를 갱신해준다
-		unordered_map<UINT, int>::iterator iter = m_NeedFarmingItems.find(Item->GetCode());
-		if (iter->second == 1)
-			m_NeedFarmingItems.erase(iter);
-		else
-			iter->second--;
 
 		StatusUpdate();
 		ItemInfoUpdate();

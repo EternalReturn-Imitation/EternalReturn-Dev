@@ -30,7 +30,7 @@ private:
 	void random();
 
 	void GetIngredient(UINT _ItemID, std::queue<UINT>* _IngredientQueue);
-	void GetIngredient(UINT _ItemID, unordered_map<UINT, int>* _Ingrediendmap, unordered_map<UINT, int>* _NeedFarmingMap);
+	void GetIngredient(UINT _ItemID, unordered_map<UINT, int>* _Ingrediendmap);
 
 public:
 	int SearchRecipe(UINT _ingr_1, UINT _ingr_2, int& _res);
@@ -38,8 +38,6 @@ public:
 	CGameObject* GetItemObj(int _i) { return m_vecItem[_i]; }
 
 	void SpawnItemLevel();
-
-	vector<CGameObject*> GetItemBoxList(int _AreaIdx) { return m_vecItemBox[_AreaIdx]; }
 
 	void RegistItemBox(CGameObject* _pItemBox,LUMIAISLAND _areaName) { m_vecItemBox[(UINT)_areaName].push_back(_pItemBox); }
 	

@@ -237,13 +237,11 @@ void ER_ActionScript_Rio::FarmingEnter(tFSMData& param)
     CGameObject* ItemObj = ((CGameObject*)param.lParam);
 
     ER_DataScript_ItemBox* ItemBox = ItemObj->GetScript<ER_DataScript_ItemBox>();
-    if (IsPlayer())
-        ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
+    ER_UIMgr::GetInst()->OpenItemBoxUI(ItemBox);
 }
 void ER_ActionScript_Rio::FarmingExit(tFSMData& param)
 {
-    if (IsPlayer())
-        ER_UIMgr::GetInst()->CloseItemBoxUI();
+    ER_UIMgr::GetInst()->CloseItemBoxUI();
 }
 
 void ER_ActionScript_Rio::CraftEnter(tFSMData& param)

@@ -191,10 +191,8 @@ call CodeGen.exe</Command>
     <ClInclude Include="ER_AyaREffect.h" />
     <ClInclude Include="ER_AyaWBulletEffect.h" />
     <ClInclude Include="ER_AIScript.h" />
-    <ClInclude Include="ER_AIScript_Aya.h" />
     <ClInclude Include="ER_AIScript_Hyunwoo.h" />
     <ClInclude Include="ER_AIScript_Rio.h" />
-    <ClInclude Include="ER_AIScript_Yuki.h" />
     <ClInclude Include="ER_BattleSystem.h" />
     <ClInclude Include="ER_BulletEffectScript.h" />
     <ClInclude Include="ER_CamControllerScript.h" />
@@ -256,10 +254,8 @@ call CodeGen.exe</Command>
     <ClCompile Include="ER_AyaREffect.cpp" />
     <ClCompile Include="ER_AyaWBulletEffect.cpp" />
     <ClCompile Include="ER_AIScript.cpp" />
-    <ClCompile Include="ER_AIScript_Aya.cpp" />
     <ClCompile Include="ER_AIScript_Hyunwoo.cpp" />
     <ClCompile Include="ER_AIScript_Rio.cpp" />
-    <ClCompile Include="ER_AIScript_Yuki.cpp" />
     <ClCompile Include="ER_BattleSystem.cpp" />
     <ClCompile Include="ER_BulletEffectScript.cpp" />
     <ClCompile Include="ER_CamControllerScript.cpp" />

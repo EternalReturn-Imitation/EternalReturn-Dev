@@ -15,9 +15,6 @@ ER_AIScript_Hyunwoo::~ER_AIScript_Hyunwoo()
 
 void ER_AIScript_Hyunwoo::init()
 {
-	RegistAllItemBox((UINT)LUMIAISLAND::SCHOOL);
-	Selector_Node* Sel_BattleCommand = SetERCharacterAIBase();
-	SetBattleStartTime(120.f);
 }
 
 void ER_AIScript_Hyunwoo::begin()
