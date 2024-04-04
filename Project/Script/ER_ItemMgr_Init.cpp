@@ -205,15 +205,15 @@ void ER_ItemMgr::SpawnItemLevel()
 	std::random_device rd;
 	std::mt19937 gen(rd());
 
-	const wchar_t* CharKey[5] = {L"Aya",L"Hyunwoo",L"Jackie",L"Rio",L"Yuki"};
+	const wchar_t* CharKey[2] = {L"Rio",L"Yuki"};
 
 	vector<UINT> vecRootItem;
 
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 2; ++i)
 	{
 		UINT* RootItem = ER_CharacterMgr::GetInst()->GetCharacetr(CharKey[i])->GetScript<ER_DataScript_Character>()->GetRootItem();
 		
-		for (int j = 0; j < 5; ++j)
+		for (int j = 0; j < 2; ++j)
 		{
 			vecRootItem.push_back(RootItem[j]);
 		}

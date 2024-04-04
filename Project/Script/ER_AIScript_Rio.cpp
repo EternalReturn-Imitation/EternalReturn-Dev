@@ -15,9 +15,16 @@ ER_AIScript_Rio::~ER_AIScript_Rio()
 
 void ER_AIScript_Rio::init()
 {
-	RegistAllItemBox((UINT)LUMIAISLAND::ARCHERY);
+	RegistAllItemBox((UINT)LUMIAISLAND::SCHOOL);
 	Selector_Node* Sel_BattleCommand = SetERCharacterAIBase();
 	SetBattleStartTime(30.f);
+
+	//블랙보드 가져와서 0으로 배틀, 파밍 모드 초기화
+	// 이후 해당 노드 만듬.
+	BB* blackBoard = BehaviorTree()->GetRootNode()->GetBlackBoard();
+	int a = 0;
+	blackBoard->AddBBData(L"Farming_Mode", a);
+	blackBoard->AddBBData(L"Battle_Mode", a);
 
 	// BehaviorTree 구성
 	// 스킬 선택
@@ -64,4 +71,16 @@ void ER_AIScript_Rio::begin()
 
 void ER_AIScript_Rio::tick()
 {
+	if (KEY_TAP(KEY::F7)) {
+		//파밍 버튼
+		BB* blackBoard = BehaviorTree()->GetRootNode()->GetBlackBoard();
+		blackBoard->SetBBData(L"Farming_Mode", 1);
+		blackBoard->SetBBData(L"Battle_Mode", 0);
+	}
+	else if (KEY_TAP(KEY::F8)) {
+		//전투 버튼
+		BB* blackBoard = BehaviorTree()->GetRootNode()->GetBlackBoard();
+		blackBoard->SetBBData(L"Farming_Mode", 0);
+		blackBoard->SetBBData(L"Battle_Mode", 1);
+	}
 }

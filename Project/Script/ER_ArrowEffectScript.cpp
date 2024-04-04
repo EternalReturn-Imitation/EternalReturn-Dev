@@ -23,6 +23,8 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
 
+	tdExample->MeshRender()->GetDynamicMaterial(0);
+
 	Vec3 rot = Vec3(XMConvertToRadians(180.f), 0.f, XMConvertToRadians(90.f));
 	tdExample->Transform()->SetRelativeRot(rot);
 
@@ -37,8 +39,8 @@ void ER_ArrowEffectScript::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	CGameObject* testParticle = new CGameObject;
 	testParticle->SetName(L"arrowParticle01");
 	AddComponents(testParticle, _TRANSFORM | _PARTICLESYSTEM);
-	CParticleSystem* Particle = testParticle->ParticleSystem();
 
+	CParticleSystem* Particle = testParticle->ParticleSystem();
 	tParticleModule particle_data = Particle->GetParticleInfo();      // 파티클데이터 얻기
 
 	particle_data.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = true;

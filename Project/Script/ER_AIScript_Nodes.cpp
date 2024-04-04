@@ -20,6 +20,40 @@
 // ======[ Condition Node : 판단 노드 ]=====
 // ========================================
 
+// 파밍 판단 모드
+class Con_IsFarmingMode : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		int temp = -1;
+		GetBlackBoard()->FindBBData(L"Farming_Mode", temp);
+		if (temp == 1) {
+			return BT_SUCCESS;
+		}
+		else {
+			return BT_FAILURE;
+		}
+	}
+};
+
+// 배틀 판단 모드
+class Con_IsBattleMode : public Task_Node
+{
+public:
+	virtual BT_STATUS Run() override
+	{
+		int temp = -1;
+		GetBlackBoard()->FindBBData(L"Battle_Mode", temp);
+		if (temp == 1) {
+			return BT_SUCCESS;
+		}
+		else {
+			return BT_FAILURE;
+		}
+	}
+};
+
 // 캐릭터 생존 판단 노드
 class Con_IsArrive : public Task_Node
 {

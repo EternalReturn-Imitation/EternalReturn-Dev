@@ -106,13 +106,13 @@ Selector_Node* ER_AIScript::SetERCharacterAIBase()
 	Selector_Node* Sel_ExecuteAICommand = Sel_CheckArrive->AddChild<Selector_Node>();
 
 	// Seq_CheckGameTime : GameTime 점검 시퀀스
-	Sequence_Node* Seq_CheckGameTime = Sel_ExecuteAICommand->AddChild<Sequence_Node>();
+	Sequence_Node* Seq_CheckIsFarimg = Sel_ExecuteAICommand->AddChild<Sequence_Node>();
 
 	// Con_IsBeforeTime : 지정한 시간이 지나기 전인지 판단
-	Seq_CheckGameTime->AddChild <Con_IsBeforeTime>();
+	Seq_CheckIsFarimg->AddChild <Con_IsFarmingMode>();
 
 	// Sel_ExploreCommand : 탐색(성장) 관련 명령 셀렉터
-	Selector_Node* Sel_ExploreCommand = Seq_CheckGameTime->AddChild<Selector_Node>();
+	Selector_Node* Sel_ExploreCommand = Seq_CheckIsFarimg->AddChild<Selector_Node>();
 
 	// =========================== [   스킬성장   ] ===========================
 	Sequence_Node* Seq_SkillUp = Sel_ExploreCommand->AddChild<Sequence_Node>();
@@ -149,9 +149,9 @@ Selector_Node* ER_AIScript::SetERCharacterAIBase()
 
 
 	// Sel_BattleCommand : 전투관련 명령 셀렉터
-	Seq_CheckGameTime = Sel_ExecuteAICommand->AddChild<Sequence_Node>();
-	Seq_CheckGameTime->AddChild<Con_IsAfterTime>();
-	Selector_Node* Sel_BattleCommand = Seq_CheckGameTime->AddChild<Selector_Node>();
+	Sequence_Node* Seq_CheckIsBattle = Sel_ExecuteAICommand->AddChild<Sequence_Node>();
+	Seq_CheckIsBattle->AddChild<Con_IsBattleMode>();
+	Selector_Node* Sel_BattleCommand = Seq_CheckIsBattle->AddChild<Selector_Node>();
 
 	return Sel_BattleCommand;
 }

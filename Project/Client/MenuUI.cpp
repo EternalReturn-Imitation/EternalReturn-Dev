@@ -181,27 +181,27 @@ int MenuUI::render_update()
 
                 CurLevel->ChangeState(LEVEL_STATE::PAUSE);
             }
-            else if (ImGui::MenuItem("Stop", nullptr, nullptr, StopEnable))
-            {
-                CKeyMgr::GetInst()->SetCsrHide(false);
-                ShowCursor(true);
-
-                CurLevel->ChangeState(LEVEL_STATE::STOP);
-                CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Temp.lv");
-                // CLevel* pNewLevel = CLevelSaveLoad::LoadLevelByDB();
-
-                // 충돌체 매니저 초기화
-                CCollisionMgr::GetInst()->Clear();
-
-                tEvent evn = {};
-                evn.Type = EVENT_TYPE::LEVEL_CHANGE;
-                evn.wParam = DWORD_PTR(pNewLevel);
-                CEventMgr::GetInst()->AddEvent(evn);
-
-                // InspectorUI
-                InspectorUI* Inspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
-                Inspector->SetTargetObject(nullptr);
-            }
+            //else if (ImGui::MenuItem("Stop", nullptr, nullptr, StopEnable))
+            //{
+            //    CKeyMgr::GetInst()->SetCsrHide(false);
+            //    ShowCursor(true);
+            //
+            //    CurLevel->ChangeState(LEVEL_STATE::STOP);
+            //    CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Temp.lv");
+            //    // CLevel* pNewLevel = CLevelSaveLoad::LoadLevelByDB();
+            //
+            //    // 충돌체 매니저 초기화
+            //    CCollisionMgr::GetInst()->Clear();
+            //
+            //    tEvent evn = {};
+            //    evn.Type = EVENT_TYPE::LEVEL_CHANGE;
+            //    evn.wParam = DWORD_PTR(pNewLevel);
+            //    CEventMgr::GetInst()->AddEvent(evn);
+            //
+            //    // InspectorUI
+            //    InspectorUI* Inspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
+            //    Inspector->SetTargetObject(nullptr);
+            //}
 
             ImGui::EndMenu();
         }
