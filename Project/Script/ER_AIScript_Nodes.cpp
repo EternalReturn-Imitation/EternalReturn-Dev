@@ -605,12 +605,29 @@ public:
 		// 파밍이 종료되면 FSMState를 Wait로 바꾸어 FarmingState를 종료해주고 ExploreItemBox를 갱신해준다.
 
 		// 대기명령
+		float FarmingWaitTime = 0.f;
+		GetBlackBoard()->FindBBData(L"FarmingWaitTime", FarmingWaitTime);
+		if (FarmingWaitTime <= 5.f)
+		{
+			FarmingWaitTime += DT;
+			GetBlackBoard()->SetBBData(L"FarmingWaitTime", FarmingWaitTime);
+			
+			BTNode* node = this;
+			((Root_Node*)GetRootNode())->SetRunningNode(node);
+			
+			return BT_RUNNING;
+		}
+
 		ER_ActionScript_Character* Action = GetOwner()->GetScript<ER_ActionScript_Character>();
 		tFSMData FSMData = {};
 		Action->Wait(FSMData);
 
 		if (Action->GetCurState() == (ER_ActionScript_Character::ER_CHAR_ACT::WAIT))
 		{
+			// 대기시간 초기화
+			FarmingWaitTime = 0.f;
+			GetBlackBoard()->SetBBData(L"FarmingWaitTime", FarmingWaitTime);
+
 			// ExploreItemBox 갱신
 			CGameObject* ItemBox = GetOwner()->GetScript<ER_AIScript>()->GetNextItemBox();
 			GetBlackBoard()->SetBBData(L"ExploreItemBox", ItemBox);

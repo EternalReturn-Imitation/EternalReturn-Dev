@@ -85,12 +85,12 @@ Selector_Node* ER_AIScript::SetERCharacterAIBase()
 
 	// 공용 BlackBoard 설정
 	BB* BlackBoard = m_pBehaviorTree->GetRootNode()->GetBlackBoard();
-	int CraftItemID = -1;
 	CGameObject* ItemBox = m_queueItemBox.front();
-	BlackBoard->AddBBData(L"CraftItemID", CraftItemID);
+	BlackBoard->AddBBData(L"CraftItemID", -1);
 	BlackBoard->AddBBData(L"ExploreItemBox", ItemBox);
 	BlackBoard->AddBBData(L"CurActiveSkill", -1);
 	BlackBoard->AddBBData(L"CheckTime", 0.f);
+	BlackBoard->AddBBData(L"FarmingWaitTime", 0.f);
 
 	// =========================== [   1   ] ===========================
 	// 루트 할당

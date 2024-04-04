@@ -163,38 +163,38 @@ void ER_DataScript_Character::LevelUP()
 	{
 		m_Stats->iLevel++;	// Level 1 증가
 		m_SkillPoint++;		// 스킬 포인트 1 증가
+
+		// [ 이펙트 ]
+		// 레벨업 이펙트 및 애니메이션 재생
+		thread t(&ER_EffectSystem::SpawnLevelUpEffect, ER_EffectSystem::GetInst(), GetOwner());
+		t.detach();
+
+		// 레벨업 효과음 재생
+		// 플레이어 캐리터 화면 안에 들어와있을때만 재생
+		{
+			Vec3 PlayerPos = ER_GameSystem::GetInst()->GetPlayerCharacter()->Transform()->GetRelativePos();
+			Vec3 CharacterPos = Transform()->GetRelativePos();
+			float ListenDist = Vec3::Distance(PlayerPos, CharacterPos);
+
+			if (ListenDist < 18.f)
+				m_LevelUpSound->Play(1, 0.5, true);
+		}
+
+		// 레벨업 갱신 전 데이터
+		int LevelUpDefHP = m_Stats->iMaxHP;
+		int LevelUpDefSP = m_Stats->iMaxSP;
+
+		// [ 스테이터스 최종 반영 ]
+		StatusUpdate();
+
+		// 갱신 후 최대 HP/SP 증가한 차이값만큼 현재 HP / SP에 반영해 회복해준다.
+
+		LevelUpDefHP = m_Stats->iMaxHP - LevelUpDefHP;
+		LevelUpDefSP = m_Stats->iMaxSP - LevelUpDefSP;
+
+		m_Stats->iHP += LevelUpDefHP;
+		m_Stats->iSP += LevelUpDefSP;
 	}
-
-	// [ 이펙트 ]
-	// 레벨업 이펙트 및 애니메이션 재생
-	thread t(&ER_EffectSystem::SpawnLevelUpEffect, ER_EffectSystem::GetInst(), ER_GameSystem::GetInst()->GetPlayerCharacter());
-	t.detach();
-
-	// 레벨업 효과음 재생
-	// 플레이어 캐리터 화면 안에 들어와있을때만 재생
-	{
-		Vec3 PlayerPos = ER_GameSystem::GetInst()->GetPlayerCharacter()->Transform()->GetRelativePos();
-		Vec3 CharacterPos = Transform()->GetRelativePos();
-		float ListenDist = Vec3::Distance(PlayerPos, CharacterPos);
-
-		if (ListenDist < 18.f)
-			m_LevelUpSound->Play(1, 0.5, true);
-	}
-
-	// 레벨업 갱신 전 데이터
-	int LevelUpDefHP = m_Stats->iMaxHP;
-	int LevelUpDefSP = m_Stats->iMaxSP;
-
-	// [ 스테이터스 최종 반영 ]
-	StatusUpdate();
-
-	// 갱신 후 최대 HP/SP 증가한 차이값만큼 현재 HP / SP에 반영해 회복해준다.
-
-	LevelUpDefHP = m_Stats->iMaxHP - LevelUpDefHP;
-	LevelUpDefSP = m_Stats->iMaxSP - LevelUpDefSP;
-
-	m_Stats->iHP += LevelUpDefHP;
-	m_Stats->iSP += LevelUpDefSP;
 }
 
 void ER_DataScript_Character::init()

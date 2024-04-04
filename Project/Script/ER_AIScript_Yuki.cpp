@@ -15,7 +15,7 @@ ER_AIScript_Yuki::~ER_AIScript_Yuki()
 
 void ER_AIScript_Yuki::init()
 {
-	RegistAllItemBox((UINT)LUMIAISLAND::SANDYBEACH);
+	RegistAllItemBox((UINT)LUMIAISLAND::UPTOWN);
 	Selector_Node* Sel_BattleCommand = SetERCharacterAIBase();
 	SetBattleStartTime(180.f);
 
