@@ -177,7 +177,7 @@ HRESULT BB::SetBBData(const wstring& _BBKey, float _Src)
 
 	if (type == L"float")
 	{
-		*(int*)(iter->second->pDataPtr) = _Src;
+		*(float*)(iter->second->pDataPtr) = _Src;
 		return S_OK;
 	}
 

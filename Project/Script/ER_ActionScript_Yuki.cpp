@@ -724,6 +724,8 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                     param.iData[0] = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
                     param.iData[1] = 31;    // End Anim Hit Frame
 
+                    GetOwner()->GetScript<ER_YukiREffect>()->AreaSpawn(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
+
                     // 스킬 발동
                     GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_Loop", false);
                     SetStateGrade(eAccessGrade::UTMOST);
@@ -753,7 +755,6 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                 param.iData[0] = 1; // 0. 기본, 1. 스킬 조준, 2. 스킬 차징 공격, 3. 스킬 표식 공격
                 param.iData[1] = 31;    // End Anim Hit Frame
 
-                GetOwner()->GetScript<ER_YukiREffect>()->AreaSpawn(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
 
                 // 스킬 발동
                 GetOwner()->Animator3D()->SelectAnimation(L"Yuki_SkillR_Loop", false);
