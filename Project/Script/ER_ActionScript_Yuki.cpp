@@ -746,6 +746,8 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
             Vec3 vTargetPoint = param.v4Data;
             SetRotationToTarget(vTargetPoint);
 
+            GetOwner()->GetScript<ER_YukiREffect>()->AreaSpawn(Transform()->GetRelativePos(), Transform()->GetRelativeRot());
+
             tSkill_Info* Skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
 
             if (Skill->Use(&GetStatus()->iSP))
