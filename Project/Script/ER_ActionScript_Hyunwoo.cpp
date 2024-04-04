@@ -744,18 +744,9 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
                 ERCHARSOUND(SKILLR_HIT);
                 Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_End", false);
                 param.iData[0] = 2;
+            
+                GetOwner()->GetScript<HyunwooREffect>()->DeleteREffect();
             }
-        }
-        else
-        {
-            STOPSOUND(SKILLR_CHARGING);
-            ERCHARSOUND(SKILLR_HIT);
-            Animator3D()->SelectAnimation(L"Hyunwoo_SkillR_End", false);
-            param.iData[0] = 2;
-
-            GetOwner()->GetScript<HyunwooREffect>()->DeleteREffect();
-            if(param.iData[0] != 2)
-                param.fData[0] += DT;
         }
     }
 
@@ -791,7 +782,7 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
 
             vector<CGameObject*> vecChar = ER_GameSystem::GetInst()->GetCharacters();
             Vec3 vPos = Transform()->GetRelativePos();
-            Vec3 SkillPos = vPos + (param.v4Data * 0.5f);
+            Vec3 SkillPos = vPos + (param.v4Data * 4.f);
 
             for (auto Target : vecChar)
             {
@@ -804,7 +795,7 @@ void ER_ActionScript_Hyunwoo::Skill_RUpdate(tFSMData& param)
                 float DebufTime = 6.f;
                 float DecreaseDef = skill->Float2();
 
-                if (2.f < dist)
+                if (3.f < dist)
                     continue;
 
                 // 스킬 타격
