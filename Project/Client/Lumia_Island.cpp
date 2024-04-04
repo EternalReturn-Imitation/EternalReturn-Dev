@@ -72,9 +72,9 @@ void CreateTestPlayer()
 }
 void CreateTestEnemy()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-76.9f, 0.0f, 37.6f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
+	//ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
+	//ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-76.9f, 0.0f, 37.6f));
+	//ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
 }
 void TestObject()
 {
@@ -206,12 +206,12 @@ void SetMapCollider()
 
 void LumiaIsland()
 {
-	Create_Archery();
-	Create_Forest();
-	Create_Hotel();
-	Create_SandyBeach();
+	//Create_Archery();
+	//Create_Forest();
+	//Create_Hotel();
+	//Create_SandyBeach();
 	Create_School();
-	Create_Uptown();
+	//Create_Uptown();
 }
 
 #define REVERSE90RAD	-1.5708f
