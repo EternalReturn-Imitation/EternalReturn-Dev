@@ -6,7 +6,7 @@ class CRes :
 {
 private:
     const RES_TYPE  m_Type;
-    int             m_iRefCount;
+    atomic<int>     m_iRefCount;
 
     wstring         m_strKey;
     wstring         m_strRelativePath;
@@ -20,7 +20,7 @@ protected:
     void SetDirectoryPath(const wstring& _strPath) { m_strDirectoryPath = _strPath; }
 
 private:
-    void AddRef() { ++m_iRefCount; }
+    void AddRef() { m_iRefCount.fetch_add(1); }
     void Release();
 
 

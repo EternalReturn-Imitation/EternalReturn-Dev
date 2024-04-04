@@ -6,7 +6,6 @@ class Ptr
 private:
 	T*		m_Res;
 
-
 public:
 	T* Get() const { return m_Res; }
 

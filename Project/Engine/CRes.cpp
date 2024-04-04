@@ -23,7 +23,7 @@ CRes::~CRes()
 
 void CRes::Release()
 {
-	--m_iRefCount;
+	m_iRefCount.fetch_sub(1);
 
 	if (0 == m_iRefCount)
 	{

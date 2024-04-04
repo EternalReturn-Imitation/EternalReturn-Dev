@@ -205,7 +205,7 @@ void ER_ItemMgr::SpawnItemLevel()
 	std::random_device rd;
 	std::mt19937 gen(rd());
 
-	const wchar_t* CharKey[2] = {L"Rio",L"Yuki"};
+	const wchar_t* CharKey[2] = {L"Yuki",L"Yuki"};
 
 	vector<UINT> vecRootItem;
 
