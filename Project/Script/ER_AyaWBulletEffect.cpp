@@ -31,7 +31,9 @@ void ER_AyaWBulletEffect::tick()
 		SpawnGameObject(dummyParent, GetOwner()->Transform()->GetRelativePos(), L"Effect");
 #pragma region effect
 		CGameObject* tdExample = onew(CGameObject);
+		tdExample->SetName(L"AyaWBulletEffect");
 		AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
+		tdExample->MeshRender()->GetDynamicMaterial(0);
 		tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
 
@@ -56,10 +58,11 @@ void ER_AyaWBulletEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 {
 #pragma region effect
 	CGameObject* tdExample = onew(CGameObject);
+	tdExample->SetName(L"AyaWBulletAnim02");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 	Vec3 rot = Vec3(XMConvertToRadians(180.f), 0.f, XMConvertToRadians(90.f));
 	tdExample->Transform()->SetRelativeRot(rot);
 	tdExample->Transform()->SetRelativeScale(Vec3(8.0f, 8.0f, 8.0f));

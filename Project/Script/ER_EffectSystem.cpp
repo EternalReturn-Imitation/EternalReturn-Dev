@@ -234,9 +234,11 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 
 	//히트 이펙트1(바람) 스폰
 	CGameObject* windHitEffect = onew(CGameObject);
+	windHitEffect->SetName(L"WindHitEffect");
 	AddComponents(windHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	windHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	windHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	windHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"wWind.png");
 	windHitEffect->Animator2D()->CreateAnimation(L"wWind", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 1, 15);
@@ -246,9 +248,11 @@ void ER_EffectSystem::SpawnRioHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveDi
 	
 	//히트 이벡트2(타격) 스폰
 	CGameObject* attackHitEffect = onew(CGameObject);
+	attackHitEffect->SetName(L"attackHitEffect01");
 	AddComponents(attackHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	attackHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	attackHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	attackHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"rioHit2_Orange.png");
 	attackHitEffect->Animator2D()->CreateAnimation(L"rioHit2_Orange", animAtlas, Vec2(0.f, 0.f), Vec2(1024.f, 1024.f), Vec2(1024.f, 1024.f), 1, 15);
@@ -334,9 +338,11 @@ void ER_EffectSystem::SpawnAyaHitEffect(Vec3 _pos)
 
 	//히트 이펙트1(총) 스폰
 	CGameObject* gunHitEffect = onew(CGameObject);
+	gunHitEffect->SetName(L"gunHitEffect01");
 	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	gunHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"Fx_ShootGlowSE_04.png");
 	gunHitEffect->Animator2D()->CreateAnimation(L"Fx_ShootGlowSE_04", animAtlas, Vec2(0.f, 0.f), Vec2(64.f, 64.f), Vec2(64.f, 64.f), 4, 12);
@@ -378,9 +384,11 @@ void ER_EffectSystem::SpawnYukiHitEffect(Vec3 _pos)
 
 	//히트 이펙트1(총) 스폰
 	CGameObject* gunHitEffect = onew(CGameObject);
+	gunHitEffect->SetName(L"YukiHitEffect02");
 	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	gunHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"qburst01.png");
 	gunHitEffect->Animator2D()->CreateAnimation(L"qburst01", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 4, 12);
@@ -422,9 +430,11 @@ void ER_EffectSystem::SpawnHyunwooHitEffect(Vec3 _pos)
 
 	//히트 이펙트1(총) 스폰
 	CGameObject* gunHitEffect = onew(CGameObject);
+	gunHitEffect->SetName(L"HyunwooHitEffect");
 	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	gunHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_Hit_01.png");
 	gunHitEffect->Animator2D()->CreateAnimation(L"FX_BI_Hit_01", animAtlas, Vec2(511.8f, 0.f), Vec2(170.6666f, 171.f), Vec2(170.6666f, 171.f), 6, 12);
@@ -466,9 +476,11 @@ void ER_EffectSystem::SpawnRioWHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveD
 
 	//maskWind 스폰
 	CGameObject* maskWind = onew(CGameObject);
+	maskWind->SetName(L"RioHitEffect");
 	AddComponents(maskWind, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	maskWind->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	maskWind->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	maskWind->MeshRender()->GetDynamicMaterial(0);
 
 	maskWind->Transform()->SetRelativeScale(maskWind->Transform()->GetRelativeScale() * 4.f);
 
@@ -528,9 +540,11 @@ void ER_EffectSystem::SpawnRioRHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveD
 
 	//히트 이펙트1(바람) 스폰
 	CGameObject* windHitEffect = onew(CGameObject);
+	windHitEffect->SetName(L"RioRHitEffect");
 	AddComponents(windHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	windHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	windHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	windHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"wWind.png");
 	windHitEffect->Animator2D()->CreateAnimation(L"wWind", animAtlas, Vec2(0.f, 0.f), Vec2(100.f, 100.f), Vec2(100.f, 100.f), 1, 15);
@@ -540,10 +554,11 @@ void ER_EffectSystem::SpawnRioRHitEffect(Vec3 _pos, Vec3 _dir, Vec3 _effectMoveD
 
 	//히트 이벡트2(타격) 스폰
 	CGameObject* attackHitEffect = onew(CGameObject);
+	attackHitEffect->SetName(L"SpawnRioRHitEffect02");
 	AddComponents(attackHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	attackHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	attackHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	attackHitEffect->MeshRender()->GetDynamicMaterial(0);
 	animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"rioHit2_Orange.png");
 	attackHitEffect->Animator2D()->CreateAnimation(L"rioHit2_Orange", animAtlas, Vec2(0.f, 0.f), Vec2(1024.f, 1024.f), Vec2(1024.f, 1024.f), 1, 15);
 	attackHitEffect->Animator2D()->Play(L"rioHit2_Orange", true);
@@ -605,9 +620,11 @@ void ER_EffectSystem::SpawnYukiQHitEffect(Vec3 _pos)
 {
 	//히트 이펙트1(총) 스폰
 	CGameObject* swordHitEffect = onew(CGameObject);
+	swordHitEffect->SetName(L"YukiQHitEffect01");
 	AddComponents(swordHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	swordHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	swordHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	swordHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	swordHitEffect->Transform()->SetRelativeRot(Vec3(0.f, Deg2Rad(-15.f), 0.f));
 	swordHitEffect->Transform()->SetRelativeScale(Vec3(1.0f, 12.0f, 1.0f));
@@ -644,9 +661,11 @@ void ER_EffectSystem::SpawnYukiR1HitEffect(Vec3 _pos, CGameObject* _hitter)
 {
 	//히트 이펙트1(총) 스폰
 	CGameObject* swordHitEffect = onew(CGameObject);
+	swordHitEffect->SetName(L"YukiRHitEffect01");
 	AddComponents(swordHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	swordHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	swordHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	swordHitEffect->MeshRender()->GetDynamicMaterial(0);
 
 	swordHitEffect->Transform()->SetRelativeRot(Vec3(Deg2Rad(60.f), Deg2Rad(-45.f), 0.f));
 	swordHitEffect->Transform()->SetRelativeScale(Vec3(1.5f, 1.5f, 1.5f));
@@ -695,10 +714,11 @@ void ER_EffectSystem::SpawnYukiR2HitEffect(Vec3 _pos)
 
 	//히트 이펙트1(총) 스폰
 	CGameObject* gunHitEffect = onew(CGameObject);
+	gunHitEffect->SetName(L"YukiR2HitEffect01");
 	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	gunHitEffect->MeshRender()->GetDynamicMaterial(0);
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"qburst_Violet01.png");
 	gunHitEffect->Animator2D()->CreateAnimation(L"qburst_Violet01", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 4, 12);
 	gunHitEffect->Animator2D()->Play(L"qburst_Violet01", true);
@@ -748,9 +768,11 @@ void ER_EffectSystem::SpawnHyunwooQHitEffect(Vec3 _pos, CGameObject* _hitter)
 
 	//히트 이펙트1 스폰
 	CGameObject* qHitEffect01 = onew(CGameObject);
+	qHitEffect01->SetName(L"HyunwooQHitEffect");
 	AddComponents(qHitEffect01, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	qHitEffect01->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	qHitEffect01->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	qHitEffect01->MeshRender()->GetDynamicMaterial(0);
 
 	qHitEffect01->Transform()->SetRelativeRot(Vec3(Deg2Rad(5.f), 0.f, 0.f));
 	qHitEffect01->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));
@@ -763,10 +785,11 @@ void ER_EffectSystem::SpawnHyunwooQHitEffect(Vec3 _pos, CGameObject* _hitter)
 
 	//히트 이펙트1 스폰
 	CGameObject* qHitEffect02 = onew(CGameObject);
+	qHitEffect02->SetName(L"HyunwooQHitEffect02");
 	AddComponents(qHitEffect02, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	qHitEffect02->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	qHitEffect02->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	qHitEffect02->MeshRender()->GetDynamicMaterial(0);
 	qHitEffect02->Transform()->SetRelativeRot(Vec3(-Deg2Rad(5.f), 0.f, 0.f));
 	qHitEffect02->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));
 
@@ -824,10 +847,11 @@ void ER_EffectSystem::SpawnHyunwooEHitEffect(Vec3 _pos, Vec3 _dir, CGameObject* 
 
 	//히트 이펙트1(총) 스폰
 	CGameObject* gunHitEffect = onew(CGameObject);
+	gunHitEffect->SetName(L"HyunwooEHitEffect");
 	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	gunHitEffect->MeshRender()->GetDynamicMaterial(0);
 	gunHitEffect->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), Deg2Rad(90.f), 0.f));
 
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"FX_BI_William_Skill04_ExpLine01.png");
@@ -897,10 +921,11 @@ void ER_EffectSystem::SpawnLevelUpEffect(CGameObject* _Owner)
 
 	//레벨업 이펙트 스폰
 	CGameObject* gunHitEffect = onew(CGameObject);
+	gunHitEffect->SetName(L"LevelUpEffectAnim");
 	AddComponents(gunHitEffect, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	gunHitEffect->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	gunHitEffect->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	gunHitEffect->MeshRender()->GetDynamicMaterial(0);
 	gunHitEffect->Transform()->SetRelativeRot(Vec3(Deg2Rad(30.f), -Deg2Rad(45.f), 0.f));
 	gunHitEffect->Transform()->SetRelativePos(Vec3(0.f, 3.0f, 0.f));
 

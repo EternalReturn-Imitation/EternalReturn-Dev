@@ -20,9 +20,11 @@ void HyunwooEEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent01, _pos, L"Effect");
 
 	CGameObject* tdExample01 = new CGameObject();
+	tdExample01->SetName(L"HyunwooEEffect");
 	AddComponents(tdExample01, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample01->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample01->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	tdExample01->MeshRender()->GetDynamicMaterial(0);
 
 	tdExample01->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
 	tdExample01->Transform()->SetRelativeScale(Vec3(0.5f, 3.0f, 2.0f));

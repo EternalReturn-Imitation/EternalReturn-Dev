@@ -30,9 +30,11 @@ void ER_RioBAEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent, _pos, L"Effect");
 
 	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"RioBAEffect");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 
 	tdExample->Transform()->SetAbsolute(true);
 

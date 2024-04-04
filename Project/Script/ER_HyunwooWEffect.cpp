@@ -29,9 +29,11 @@ void ER_HyunwooWEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent01, _pos, L"Effect");
 
 	CGameObject* tdExample01 = new CGameObject();
+	tdExample01->SetName(L"HyunwooWEffect01");
 	AddComponents(tdExample01, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample01->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample01->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	tdExample01->MeshRender()->GetDynamicMaterial(0);
 
 	tdExample01->Transform()->SetRelativeRot(Vec3(Deg2Rad(60.f), -Deg2Rad(45.f), 0.f));
 	tdExample01->Transform()->SetRelativeScale(Vec3(4.0f, 4.0f, 4.0f));
@@ -45,9 +47,11 @@ void ER_HyunwooWEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	dummyParent01->AddChild(tdExample01);
 
 	CGameObject* tdExample02 = new CGameObject();
+	tdExample02->SetName(L"HyunwooWEffect02");
 	AddComponents(tdExample02, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample02->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample02->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	tdExample02->MeshRender()->GetDynamicMaterial(0);
 
 	tdExample02->Transform()->SetRelativeRot(Vec3(Deg2Rad(60.f), -Deg2Rad(45.f), 0.f));
 	tdExample02->Transform()->SetRelativeScale(Vec3(1.2f, 1.2f, 1.2f));

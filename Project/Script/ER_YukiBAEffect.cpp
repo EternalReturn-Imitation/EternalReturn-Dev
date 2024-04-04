@@ -24,9 +24,11 @@ void ER_YukiBAEffect::SpawnFirstEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent, _pos, L"Effect");
 
 	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"YukiBAEffect01");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 
 	tdExample->Transform()->SetRelativeRot(Vec3(Deg2Rad(70.f), 0.f, 0.f));
 	tdExample->Transform()->SetRelativeScale(Vec3(4.0f, 4.0f, 4.0f));
@@ -52,10 +54,11 @@ void ER_YukiBAEffect::SpawnSecondEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent, _pos, L"Effect");
 
 	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"YukiBAEffect01");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 	tdExample->Transform()->SetRelativeRot(Vec3(Deg2Rad(70.f), 0.f, 0.f));
 	tdExample->Transform()->SetRelativeScale(Vec3(4.0f, 4.0f, 4.0f));
 

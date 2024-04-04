@@ -16,10 +16,11 @@ void ER_AyaREffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 void ER_AyaREffect::RangeSpawn(Vec3 _pos)
 {
 	CGameObject* tdExample01 = onew(CGameObject);
+	tdExample01->SetName(L"AyaREffectAnim2D");
 	AddComponents(tdExample01, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample01->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample01->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	tdExample01->MeshRender()->GetDynamicMaterial(0);
 	tdExample01->Transform()->SetRelativePos(_pos);
 	tdExample01->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
 	tdExample01->Transform()->SetRelativeScale(Vec3(16.f, 16.f, 16.f));
@@ -88,10 +89,11 @@ void ER_AyaREffect::AttackSpawn(Vec3 _pos)
 	float offsetY = 0.f;
 	for (int i = 0; i < 6; ++i) {
 		tdExample01 = onew(CGameObject);
+		tdExample01->SetName(L"AyaREffectAnim01");
 		AddComponents(tdExample01, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 		tdExample01->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 		tdExample01->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-		
+		tdExample01->MeshRender()->GetDynamicMaterial(0);
 		tdExample01->Transform()->SetRelativePos(Vec3(0.f,0.f,-offsetY));
 		offsetY += 0.4f;
 		tdExample01->Transform()->SetRelativeScale(Vec3(scaleArr[i], scaleArr[i], scaleArr[i]));

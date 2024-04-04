@@ -26,10 +26,11 @@ void ER_HyunwooBAEffect::SpawnFirstEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent, _pos, L"Effect");
 
 	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"HyunwooBAFirstEffect01");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 	Vec3 pos = tdExample->Transform()->GetRelativePos();
 	pos.x += 0.6f;
 	tdExample->Transform()->SetRelativePos(pos);
@@ -59,9 +60,11 @@ void ER_HyunwooBAEffect::SpawnSecondEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent, _pos, L"Effect");
 
 	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"HyunwooBAEffect02");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 
 	Vec3 pos = tdExample->Transform()->GetRelativePos();
 	pos.x -= 0.5f;

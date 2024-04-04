@@ -37,9 +37,11 @@ void ER_YukiWEffect::tick()
 void ER_YukiWEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 {
 	CGameObject* tdExample = new CGameObject();
+	tdExample->SetName(L"YukiWEffect");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 
 	tdExample->Transform()->SetRelativeRot(Vec3(Deg2Rad(90.f), 0.f, 0.f));
 	tdExample->Transform()->SetRelativeScale(Vec3(2.0f, 2.0f, 2.0f));

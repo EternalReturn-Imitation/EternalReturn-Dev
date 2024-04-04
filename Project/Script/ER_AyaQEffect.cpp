@@ -19,10 +19,11 @@ void ER_AyaQEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	SpawnGameObject(dummyParent, _pos, L"Effect");
 #pragma region effect
 	CGameObject* tdExample = onew(CGameObject);
+	tdExample->SetName(L"QEffectAnim");
 	AddComponents(tdExample, _TRANSFORM | _MESHRENDER | _ANIMATOR2D);
 	tdExample->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
 	tdExample->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std2DAnimMtrl"), 0);
-
+	tdExample->MeshRender()->GetDynamicMaterial(0);
 	Ptr<CTexture> animAtlas = CResMgr::GetInst()->FindRes<CTexture>(L"rShot.png");
 	tdExample->Animator2D()->CreateAnimation(L"rShot", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 1, 15);
 	tdExample->Animator2D()->Play(L"rShot", true);
