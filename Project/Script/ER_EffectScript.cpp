@@ -23,6 +23,18 @@ void ER_EffectScript::EffectRotation(CGameObject* _targetObj, Vec3 _startScale, 
 
 	float scaleIncreasing = (_endScale.x - _startScale.x) / exeCount;
 
+	//애니메이션의 알파값이 사라지는 시간
+	float alphaTime = 0.1f;
+	if (_endTime < 0.2f)
+		alphaTime = 0.05f;
+
+	//타겟 오브젝트가 애니메이터 2D를 가지고 있을 때만 계산
+	bool alphaTrigger;
+	if (_targetObj->Animator2D())
+		alphaTrigger = true;
+	else
+		alphaTrigger = false;
+
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -47,6 +59,11 @@ void ER_EffectScript::EffectRotation(CGameObject* _targetObj, Vec3 _startScale, 
 			rot.z -= exeCount / 100.f;
 		_targetObj->Transform()->SetRelativeRot(rot);
 
+		if ((_endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
+			_targetObj->Animator2D()->SetAlphaEraseTime(alphaTime);
+			alphaTrigger = false;
+		}
+
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
 	}
 
@@ -64,6 +81,18 @@ void ER_EffectScript::SpawnAnimationEffect(CGameObject* _targetObj, float _endTi
 
 	float exeCount = _endTime * 1000.f / restTime; //실행되는 횟수
 
+	//애니메이션의 알파값이 사라지는 시간
+	float alphaTime = 0.1f;
+	if (_endTime < 0.2f)
+		alphaTime = 0.05f;
+
+	//타겟 오브젝트가 애니메이터 2D를 가지고 있을 때만 계산
+	bool alphaTrigger;
+	if (_targetObj->Animator2D())
+		alphaTrigger = true;
+	else
+		alphaTrigger = false;
+
 	while (true) {
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime);
@@ -71,6 +100,13 @@ void ER_EffectScript::SpawnAnimationEffect(CGameObject* _targetObj, float _endTi
 		//시간이 지나면 종료
 		if (elapsedTime.count() >= _endTime * 1000.f)
 			break;
+
+		if ((_endTime * 1000.f) - elapsedTime.count() <= alphaTime * 1000.f && alphaTrigger) {
+			if(_targetObj->Animator2D())
+				_targetObj->Animator2D()->SetAlphaEraseTime(alphaTime);
+			alphaTrigger = false;
+		}
+
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(restTime));
 	}

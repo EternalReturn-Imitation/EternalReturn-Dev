@@ -6,6 +6,7 @@
 #include "ER_DataScript_Item.h"
 #include "ER_ItemMgr.h"
 #include "ER_GameSystem.h"
+#include "ER_EffectSystem.h"
 #include "ER_PlayerScript.h"
 
 ER_DataScript_Character::ER_DataScript_Character()
@@ -166,6 +167,8 @@ void ER_DataScript_Character::LevelUP()
 
 	// [ 이펙트 ]
 	// 레벨업 이펙트 및 애니메이션 재생
+	thread t(&ER_EffectSystem::SpawnLevelUpEffect, ER_EffectSystem::GetInst(), ER_GameSystem::GetInst()->GetPlayerCharacter());
+	t.detach();
 
 	// 레벨업 효과음 재생
 	// 플레이어 캐리터 화면 안에 들어와있을때만 재생

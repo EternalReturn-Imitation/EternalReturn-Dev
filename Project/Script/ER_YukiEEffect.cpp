@@ -62,7 +62,7 @@ void ER_YukiEEffect::SpawnEffect(Vec3 _pos, Vec3 _dir, float _scale)
 	tdExample02->Animator2D()->CreateAnimation(L"FX_BI_Sword_01_Violet01", animAtlas, Vec2(0.f, 0.f), Vec2(256.f, 256.f), Vec2(256.f, 256.f), 1, 1);
 	tdExample02->Animator2D()->Play(L"FX_BI_Sword_01_Violet01", true);
 	
-	dummyParent01->AddChild(tdExample02);
+	dummyParent02->AddChild(tdExample02);
 
 	std::thread t1(&ER_EffectScript::SpawnAnimationEffect, this, tdExample01, 0.2f, dummyParent01);
 	t1.detach();

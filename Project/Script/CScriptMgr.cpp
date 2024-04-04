@@ -29,6 +29,9 @@
 #include "ER_DataScript_ItemBox.h"
 #include "ER_DataScript_LandMeshBase.h"
 #include "ER_EffectScript.h"
+#include "ER_HyunwooBAEffect.h"
+#include "ER_HyunwooQEffect.h"
+#include "ER_HyunwooWEffect.h"
 #include "ER_PlayerScript.h"
 #include "ER_PlayerScript_Range.h"
 #include "ER_RioBAEffect.h"
@@ -47,6 +50,8 @@
 #include "ER_YukiQEffect.h"
 #include "ER_YukiREffect.h"
 #include "ER_YukiWEffect.h"
+#include "HyunwooEEffect.h"
+#include "HyunwooREffect.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
@@ -78,6 +83,9 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_DataScript_ItemBox");
 	_vec.push_back(L"ER_DataScript_LandMeshBase");
 	_vec.push_back(L"ER_EffectScript");
+	_vec.push_back(L"ER_HyunwooBAEffect");
+	_vec.push_back(L"ER_HyunwooQEffect");
+	_vec.push_back(L"ER_HyunwooWEffect");
 	_vec.push_back(L"ER_PlayerScript");
 	_vec.push_back(L"ER_PlayerScript_Range");
 	_vec.push_back(L"ER_RioBAEffect");
@@ -96,6 +104,8 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"ER_YukiQEffect");
 	_vec.push_back(L"ER_YukiREffect");
 	_vec.push_back(L"ER_YukiWEffect");
+	_vec.push_back(L"HyunwooEEffect");
+	_vec.push_back(L"HyunwooREffect");
 }
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
@@ -156,6 +166,12 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_DataScript_LandMeshBase;
 	if (L"ER_EffectScript" == _strScriptName)
 		return new ER_EffectScript;
+	if (L"ER_HyunwooBAEffect" == _strScriptName)
+		return new ER_HyunwooBAEffect;
+	if (L"ER_HyunwooQEffect" == _strScriptName)
+		return new ER_HyunwooQEffect;
+	if (L"ER_HyunwooWEffect" == _strScriptName)
+		return new ER_HyunwooWEffect;
 	if (L"ER_PlayerScript" == _strScriptName)
 		return new ER_PlayerScript;
 	if (L"ER_PlayerScript_Range" == _strScriptName)
@@ -192,6 +208,10 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new ER_YukiREffect;
 	if (L"ER_YukiWEffect" == _strScriptName)
 		return new ER_YukiWEffect;
+	if (L"HyunwooEEffect" == _strScriptName)
+		return new HyunwooEEffect;
+	if (L"HyunwooREffect" == _strScriptName)
+		return new HyunwooREffect;
 	return nullptr;
 }
 
@@ -283,6 +303,15 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::ER_EFFECTSCRIPT:
 		return new ER_EffectScript;
 		break;
+	case (UINT)SCRIPT_TYPE::ER_HYUNWOOBAEFFECT:
+		return new ER_HyunwooBAEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_HYUNWOOQEFFECT:
+		return new ER_HyunwooQEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::ER_HYUNWOOWEFFECT:
+		return new ER_HyunwooWEffect;
+		break;
 	case (UINT)SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return new ER_PlayerScript;
 		break;
@@ -336,6 +365,12 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::ER_YUKIWEFFECT:
 		return new ER_YukiWEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::HYUNWOOEEFFECT:
+		return new HyunwooEEffect;
+		break;
+	case (UINT)SCRIPT_TYPE::HYUNWOOREFFECT:
+		return new HyunwooREffect;
 		break;
 	}
 	return nullptr;
@@ -457,6 +492,18 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"ER_EffectScript";
 		break;
 
+	case SCRIPT_TYPE::ER_HYUNWOOBAEFFECT:
+		return L"ER_HyunwooBAEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_HYUNWOOQEFFECT:
+		return L"ER_HyunwooQEffect";
+		break;
+
+	case SCRIPT_TYPE::ER_HYUNWOOWEFFECT:
+		return L"ER_HyunwooWEffect";
+		break;
+
 	case SCRIPT_TYPE::ER_PLAYERSCRIPT:
 		return L"ER_PlayerScript";
 		break;
@@ -527,6 +574,14 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::ER_YUKIWEFFECT:
 		return L"ER_YukiWEffect";
+		break;
+
+	case SCRIPT_TYPE::HYUNWOOEEFFECT:
+		return L"HyunwooEEffect";
+		break;
+
+	case SCRIPT_TYPE::HYUNWOOREFFECT:
+		return L"HyunwooREffect";
 		break;
 
 	}

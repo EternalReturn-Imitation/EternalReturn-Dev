@@ -69,10 +69,10 @@ void CreateTestPlayer()
 }
 void CreateTestEnemy()
 {
+
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-131.8f, 1.f, 52.8f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(45.f, 0.4f, -68.f));
 	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-101.4f, -0.15f, 83.4f));
-
 }
 
 void SetLayer(CLevel* _Level)

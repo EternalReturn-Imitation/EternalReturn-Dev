@@ -803,6 +803,8 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
                 Target->GetScript<ER_DataScript_Character>()->GetStatusEffect()->
                     ActiveEffect((UINT)eStatus_Effect::DECREASE_SPD, DebufTime, SpeedValue);
 
+                skill->strName = L"Yuki_R1";
+
                 // 데미지 판정
                 IsHit = true;
                 BATTLE_SKILL(GetOwner(), Target, ER_ActionScript_Yuki, SkillR1, skill, 0);
@@ -841,6 +843,8 @@ void ER_ActionScript_Yuki::Skill_RUpdate(tFSMData& param)
 
                 // 스킬데미지에 타겟의 최대체력을 얻기위해 lParam 값으로 전달
                 param.lParam = (DWORD_PTR)Target;
+
+                skill->strName = L"Yuki_R2";
 
                 // 데미지 판정
                 IsHit = true;

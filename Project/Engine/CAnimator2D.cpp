@@ -11,6 +11,8 @@ CAnimator2D::CAnimator2D()
 	: CComponent(COMPONENT_TYPE::ANIMATOR2D)
 	, m_pCurAnim(nullptr)
 	, m_bRepeat(false)
+	, m_fAlphaValue(1.0f)
+	, m_fAlphaEraseTime(-1.f)
 {
 }
 
@@ -21,6 +23,11 @@ CAnimator2D::~CAnimator2D()
 
 void CAnimator2D::finaltick()
 {
+	if (m_fAlphaEraseTime > 0.f) {
+		m_fAlphaEraseTime -= DT;
+		m_fAlphaValue -= m_fAlphaValue / m_fAlphaEraseTime * DT;
+	}
+
 	if (nullptr != m_pCurAnim)
 	{
 		if (m_bRepeat && m_pCurAnim->IsFinish())
@@ -45,6 +52,7 @@ void CAnimator2D::UpdateData()
 	pMtrl->SetScalarParam(VEC2_1, &frm.SliceUV);
 	pMtrl->SetScalarParam(VEC2_2, &frm.Offset);
 	pMtrl->SetScalarParam(VEC2_3, &vBackSize);
+	pMtrl->SetScalarParam(FLOAT_0, &m_fAlphaValue);
 
 	pMtrl->SetTexParam(TEX_0, m_pCurAnim->GetAtlasTex());
 }
