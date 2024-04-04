@@ -1073,7 +1073,7 @@ int ER_ActionScript_Aya::SkillW()
 int ER_ActionScript_Aya::SkillR()
 {
     tSkill_Info* skill = m_Data->GetSkill((UINT)SKILLIDX::R_1);
-    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.2f);
+    int Dmg = (int)(skill->Int1() + GetStatus()->iAttackPower * 0.5f);
     Dmg += Dmg * GetStatus()->iSkillAmplification;
 
     return Dmg;

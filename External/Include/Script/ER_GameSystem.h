@@ -1,6 +1,8 @@
 #pragma once
 #include <Engine\CSingleton.h>
 
+#include <Engine\CSound.h>
+
 class ER_Cursor;
 
 class ER_GameSystem
@@ -11,6 +13,8 @@ private:
 	CGameObject* m_pPlayerCharacter;
 	vector<CGameObject*> m_pCharacters;
 	CGameObject* m_pCursor;
+
+	Ptr<CSound> m_BGMSound;
 
 	float	m_fGameTime;
 	bool	m_bGaming;

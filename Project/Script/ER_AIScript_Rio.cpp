@@ -17,7 +17,7 @@ void ER_AIScript_Rio::init()
 {
 	RegistAllItemBox((UINT)LUMIAISLAND::ARCHERY);
 	Selector_Node* Sel_BattleCommand = SetERCharacterAIBase();
-	SetBattleStartTime(30.f);
+	SetBattleStartTime(100.f);
 
 	// BehaviorTree 구성
 	// 스킬 선택

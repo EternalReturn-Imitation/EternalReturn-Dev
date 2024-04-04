@@ -71,5 +71,5 @@ void CTimeMgr::render()
 		m_iCallCount = 0;
 	}
 
-	CFontMgr::GetInst()->DrawFont(szBuff, 10, 20, 16, FONT_RGBA(255, 0, 0, 255));
+	CFontMgr::GetInst()->DrawFont(szBuff, 10, 0, 16, FONT_RGBA(255, 0, 0, 255));
 }

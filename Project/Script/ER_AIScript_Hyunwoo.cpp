@@ -14,9 +14,9 @@ ER_AIScript_Hyunwoo::~ER_AIScript_Hyunwoo()
 
 void ER_AIScript_Hyunwoo::init()
 {
-	RegistAllItemBox((UINT)LUMIAISLAND::SCHOOL);
+	RegistAllItemBox((UINT)LUMIAISLAND::FOREST);
 	Selector_Node* Sel_BattleCommand = SetERCharacterAIBase();
-	SetBattleStartTime(50.f);
+	SetBattleStartTime(240.f);
 
 	// BehaviorTree 구성
 	// 스킬 선택

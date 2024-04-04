@@ -15,9 +15,9 @@ ER_AIScript_Yuki::~ER_AIScript_Yuki()
 
 void ER_AIScript_Yuki::init()
 {
-	RegistAllItemBox((UINT)LUMIAISLAND::HOTEL);
+	RegistAllItemBox((UINT)LUMIAISLAND::SANDYBEACH);
 	Selector_Node* Sel_BattleCommand = SetERCharacterAIBase();
-	SetBattleStartTime(0.f);
+	SetBattleStartTime(180.f);
 
 	// BehaviorTree 구성
 	// 스킬 선택

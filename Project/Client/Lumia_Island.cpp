@@ -65,13 +65,13 @@ void CreateLumiaIsland()
 
 void CreateTestPlayer()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Aya", Vec3(-69.3f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Player(L"Aya", Vec3(35.34f, 0.55f, -59.82f));
 }
 void CreateTestEnemy()
 {
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-80.4f, 1.00345f, 44.8f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(-76.9f, 0.0f, 37.6f));
-	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-71.9f, 0.0f, 37.6f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Rio", Vec3(-131.8f, 1.f, 52.8f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Yuki", Vec3(45.f, 0.4f, -68.f));
+	ER_CharacterMgr::GetInst()->SpawnCharacter_Enemy(L"Hyunwoo", Vec3(-101.4f, -0.15f, 83.4f));
 
 }
 
